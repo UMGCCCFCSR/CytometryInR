@@ -13,6 +13,15 @@ toc-depth: 5
 [![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 :::
 
+For the YouTube livestream recording, see [here](https://www.youtube.com/live/9AvU24FxY-4?si=HnP2AH8KOj0hmyZv&t=231)
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/9AvU24FxY-4?si=HnP2AH8KOj0hmyZv&amp;start=231" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+
+For screen-shot slides, click [here](/course/02_FilePaths/slides.qmd)
+
+---
+
 Welcome to the second week of [Cytometry in R](/Schedule.qmd)! This week we will learn about file.path, namely, how to communicate to our computer (and R) where various files are stored. 
 
 :::{.callout-important}
@@ -42,11 +51,11 @@ We will start working on our own "coding mindsets" by working with file paths, a
 
 ---
 
-# Set Up
+## Set Up
 
 Before we begin, let's make sure you get the data needed for today transferred to your local computer, and then get the .fcs files copied over from there to your own working project folder. This is the process you will repeat each week throughout the course. 
 
-## New Repository
+### New Repository
 
 First off, login to your GitHub account. Once there, you will select the options to create a new repository (similar to what you did during [Using GitHub](/course/00_GitHub/index.qmd#github-repository))
 
@@ -96,6 +105,8 @@ Your new repository will then be imported from GitHub. Once this is done, create
 
 ---
 
+### Sync
+
 With this done, return to GitHub and open your [forked version](/course/00_GitHub/index.qmd#forking-cytometryinr) of the CytometryInR course folder. If you haven't yet done so, click on [sync](/course/00_Homeworks/index.qmd#sync-your-fork) to bring in this week's code and datasets. 
 
 ![](images/0008_Sync.png)
@@ -112,6 +123,8 @@ Returning to Positron, you will need to switch Project Folders, switching from W
 
 ---
 
+### Pull
+
 Once CytometryInR project folder has opened, you will need to [pull](/course/00_Git/index.qmd#pull) in the new data from GitHub to your local computer. 
 
 ![](images/0007_PullCytometryInR.png)
@@ -120,6 +133,8 @@ Once CytometryInR project folder has opened, you will need to [pull](/course/00_
 
 ---
 
+### Copy Files to Week2
+
 Once this is done, you will see within the course folder, containing this weeks folder (02_FilePaths). Within it there is a data folder with .fcs files. To avoid causing conflicts when bringing in next week's materials, you will want to manually copy over these .fcs files (via your File Explorer) to the data folder within your "Week2" Project Folder. 
 
 ![](images/0009_Copy.png)
@@ -127,6 +142,8 @@ Once this is done, you will see within the course folder, containing this weeks 
 <br> 
 
 ---
+
+### Commit and Push
 
 When you reopen your Week2 project folder in Positron, you should now be able to see the .fcs files within the data folder. Next, from the action bar on the far left, select the Source Control tab. Stage all the changes (as was done in [Using Git](/course/00_Git/)), and write a short commit message. 
 
@@ -156,13 +173,16 @@ And with this setup complete, you are now ready to proceed. Remember, run code a
 
 Now that we are back in our Week2 folder, let's start by seeing our current location similarly to how our computer perceives it. 
 
-We will use  `getwd()` function (ie. get working directory) to return the location of the folder we are currently inside of. For example, when generating the website from the index.qmd file in 02_FilePaths, we see the following
+We will use  `getwd()` function (ie. get working directory) to return the location of the folder we are currently inside of. For example, when `getwd()` is run within my Week2 project folder, I see the following location
 
 ```{r}
+#| eval: FALSE
 getwd()
 ```
 
-This location is the **Working Directory**, as viewed from the computer's perspective.
+![](images/0000_ReplacementGetWD.png)
+
+This returns a file path. The final location (Week2 in this case) is the **Working Directory**. Your computer when working in R will be descern other locations in relation to this directory.
 
 <br>
 
@@ -173,8 +193,11 @@ This location is the **Working Directory**, as viewed from the computer's perspe
 Within this working directory, we have a variety of project folders and files related to the course. We can see the folders that are present using the `list.dirs()` function. 
 
 ```{r}
+#| eval: FALSE
 list.dirs(path=".", full.names=FALSE, recursive=FALSE)
 ```
+
+![](images/0000_ReplacementListFiles.png)
 
 Within this `list.dirs()` function, we are specifying two arguments with which we will be working with later today, *full.names* and *recursive*. For now, lets set their arguments to FALSE, which means they conditions they implement are inactive (turned off). 
 
@@ -185,18 +208,27 @@ Within this `list.dirs()` function, we are specifying two arguments with which w
 The path argument is currently set to ".", which is a stand-in for the present directory. In R, if an argument is not specified directly, it is inferred based on an order of expected arguments. Thus, if not present, we could still get the same output as seen before. 
 
 ```{r}
+#| eval: FALSE
 list.dirs(full.names=FALSE, recursive=FALSE)
 ```
+
+![](images/0000_ReplacementListFiles.png)
 
 <br>
 
 ---
 
-Among the list of folders, we have two *hidden folders* (denoted by the "." in front of the folder name), ie the ".git" and ".quarto" folders. If you are working within Positron, the hidden quarto file is shown in a lighter gray color. 
+Within Positron, in addition to visible folders, we also have *hidden folders* (denoted by the "." in front of the folder name when using `list.dirs()`). In the case of one of our course website folders, we can see a ".quarto" folder shown in a lighter gray . The ".git" folder we saw from `list.dirs()` is typically hidden when viewing from Positron. 
 
 ![](images/02_HiddenFolder.png)
 
-The three not-hidden folders are also listed. We will see how to navigate these in a second. 
+In the case of Week2, the two not-hidden folders we created are listed. We will see how to navigate these in a second. 
+
+<br>
+
+---
+
+![](images/0000_ReplacementView.png)
 
 <br>
 
@@ -225,6 +257,8 @@ When we run this, we create a variable, that will appear within the right-sideba
 #| eval: TRUE
 WhatDayDidIWriteThis <- "Saturday"
 ```
+
+![](images/04_VariableList.png)
 
 <br>
 
@@ -273,7 +307,7 @@ Top_Secret_Meeting_Day <- "Saturday"
 
 The above (with individual words separated by _) is collectively known as snake case. The alternate way to help delineate variable names is "camelCase", with first letter of each word being capitalized (seen in the previous example). 
 
-[](https://pbs.twimg.com/media/FxVpCpqaIAE_iqU?format=jpg&name=4096x4096)
+![](images/CamelCase.jpeg)
 
 <br>
 
@@ -454,16 +488,526 @@ Fluorophores[c(1,4)]
 
 We will revisit these concepts throughout the course, with what we have covered today, this will help us create file.paths and select fcs files that we want to work with via index number. 
 
-# Your Turn
+## Listing Files
+
+After this detour into variables and indexing, let's return our focus to how to use these in context of file paths. Working from within our Week2 project folder, let's see what directories (folders) are present
+
+```{r}
+#| eval: FALSE
+list.dirs(path=".", full.names=FALSE, recursive=FALSE)
+```
+
+![](images/00.png)
+
+<br>
+
+---
+
+We can also list any files that are present within our working directory using the `list.files()` function. 
+
+```{r}
+#| eval: FALSE
+list.files()
+```
+
+![](images/01.png)
+
+In this case, in addition to our filepaths.qmd file, we can see the LICENSE and README files created when we set up the repository. 
+
+<br>
+
+---
+
+We can also specify a particular folder we want to show items present within by changing the path argument. For example, if we wanted to see the contents of the "data" folder
+
+```{r}
+#| eval: FALSE
+list.files(path="data", full.names=FALSE, recursive=FALSE)
+```
+
+![](images/02.png)
+
+Which in this case returns the fcs files we copied over at the start of this lesson. 
+
+<br>
+
+---
+
+In this case, there are no folders under "data". Let's go ahead and create a new one, calling it target. 
+
+![](images/03.png)
+
+<br>
+
+---
+
+## Creating directories
+
+Alternatively, we can also create a folder via R using the `dir.create()` function. Since we want it within data, we would modify the path accordingly
+
+```{r}
+#| eval: FALSE
+NewFolderLocation <- file.path("data", "target2")
+
+dir.create(path=NewFolderLocation)
+```
+
+![](images/04.png)
+
+<br>
+
+---
+
+Before continuing, let's copy the first two .fcs files into both target and target2. 
+
+<br>
+
+![](images/06.png)
+
+---
+
+Given our working directory is set the top-level of the Week2 project folder, we can't just check inside nested target folders directly. If we attempt to: 
+
+```{r}
+list.files(path="target", full.names=FALSE, recursive=FALSE)
+```
+
+<br>
+
+---
+
+No files are returned (ie, character(0)), since from our computers perspective, "target" doesn't exist within the active working directory. 
+
+```{r}
+file.exists("target")
+```
+
+<br>
+
+---
+
+On the other hand, within it's view, it knows that the data folder exist
+
+```{r}
+#| eval: FALSE
+file.exists("data")
+```
+
+![](images/05.png)
+
+So here we encounter the first challenge when communicating to our computer where to search for and find files. We need to provide a file.path that incorporates the path of folders between where the computer is currently at (ie. the working directory) and the target file itself. 
+
+<br>
+
+---
 
 ## File Paths
 
-Editing a Quarto bug, this segment will be available later today - David
+One way we can do this is through a file.path argument. We could potentially provide this by adding either a / or a \ into the path argument, depending on your computers operating system. 
 
+```{r}
+#| eval: FALSE
+list.files(path="data/target", full.names=FALSE, recursive=FALSE)
+```
+
+![](images/07.png)
+
+<br>
+
+While this works in your particular context, if you are sharing the code with others who have a different operating system, these hard-coded / or \ will cause the code for them to error out at these particular steps. 
+
+---
+
+For that reason, it is better to assemble a file.path using the `file.path()` function. This function takes into account the operating system, removing your need to have to worry about this particular computing nuance, and write code that is reproducible and replicable for everyone. 
+
+```{r}
+FolderLocation <- file.path("data", "target")
+FolderLocation
+```
+
+```{r}
+#| eval: FALSE
+list.files(path=FolderLocation, full.names=FALSE, recursive=FALSE)
+```
+
+![](images/07.png)
+
+<br>
+
+---
+
+We can also append additional locations to existing file paths, by including the variable name within the `file.path()` we are creating. 
+
+```{r}
+FolderLocation <- "data"
+ScreenshotFolder <- file.path(FolderLocation, "target")
+ScreenshotFolder
+```
+
+```{r}
+#| eval: FALSE
+
+list.files(path=ScreenshotFolder, full.names=FALSE, recursive=FALSE)
+```
+
+![](images/07.png)
+
+<br>
+
+---
+
+Additionally, `list.files()` has the ability to filter for files that contain a particular character string. This can be useful is we are searching for ".fcs" or ".csv" files, but also for files that contain a particular word. In the case of the ScreenshotFolders
+
+```{r}
+#| eval: FALSE
+list.files(path=ScreenshotFolder, pattern="ND050", full.names=FALSE, recursive=FALSE)
+```
+
+![](images/08.png)
+
+You will notice, the index numbers are in the context of what is filtered, not all the folder contents. 
+
+<br>
+
+---
+
+## Selecting for Patterns
+
+You will notice, in the above example, we provided a character string ("ND050") that was used to return files that contained the matching pattern. If we currently listed the files within data, we get a return that looks like this:
+
+```{r}
+#| eval: FALSE
+list.files("data", full.names=FALSE, recursive=FALSE)
+```
+
+![](images/09.png)
+
+<br>
+
+---
+
+As you can see, we are getting back both folders and individual .fcs files. We could consequently change the pattern to provide a character string that will only return the .fcs files.  We will go ahead and assign this list to a variable named files, for later retrieval. 
+
+```{r}
+#| eval: FALSE
+files <- list.files("data", pattern=".fcs", full.names=FALSE, recursive=FALSE)
+files
+```
+
+![](images/10.png)
+
+<br>
+
+---
+
+One of the R packages we will be using througout the course is the `stringr` package. It contains two functions that can be useful when identifying more complicated character strings. In this case, if we run the `str_detect()` function to identify which of the .fcs files within the files variable contains the "INF" character string, we get a vector of logical (ie. True or FALSE) outputs corresponding to each file. 
+
+```{r}
+# install.packages("stringr") # CRAN
+library(stringr)
+```
+
+```{r}
+#| eval: FALSE
+str_detect(files, "INF")
+```
+
+![](images/11.png)
+
+<br>
+
+---
+
+Similar to how we indexed the Fluorophore list (ex. Fluorophore[1:2]) which returned a subset, we can similarly use this logical vector to subset files that returned as TRUE for containing the pattern "INF"
+
+```{r}
+#| eval: FALSE
+files[str_detect(files, "INF")]
+```
+
+![](images/12.png)
+
+<br>
+
+---
+
+Let's go ahead and save these subsetted file names to a new variable, called Infants. 
+
+```{r}
+#| eval: FALSE
+Infants <- files[str_detect(files, "INF")]
+```
+
+## Conditionals
+
+One useful thing is that within R, we can set conditions on whether something is carried out. The most typical conditional you will encounter are the "If" statements. They typically take a form that resembles the following. 
+
+```{r}
+#| eval: FALSE
+
+NeedCoffee <- TRUE
+
+if (NeedCoffee){
+    print("Take a break")
+}
+```
+
+<br>
+
+---
+
+In this case of the above, if the variable within the () is equal to true, the code within the {} will be executed. 
+
+```{r}
+
+NeedCoffee <- TRUE
+
+if (NeedCoffee){
+    print("Take a break")
+}
+```
+
+<br>
+
+---
+
+By contrast, when the variable within the () is equal to false, the code within the {} will not be executed. 
+
+```{r}
+NeedCoffee <- FALSE
+
+if (NeedCoffee){
+    print("Take a break")
+}
+```
+
+<br>
+
+---
+
+These "If" statements will trigger as long as the specified condition within the () is TRUE. For a different example:
+
+```{r}
+RowNumber <- 299
+2 + RowNumber > 300
+```
+
+```{r}
+if (2 + RowNumber > 3){
+    print("Stop Iterating")
+}
+```
+
+<br>
+
+---
+
+When you add an ! in front a conditional, it flips the expected outcome. 
+
+```{r}
+ItsRaining <- TRUE
+
+if (ItsRaining){print("Bring an Umbrella")}
+```
+
+```{r}
+!ItsRaining
+```
+
+```{r}
+if (!ItsRaining){print("Bring an Umbrella")}
+```
+
+```{r}
+ItsRaining <- TRUE
+
+if (!ItsRaining){print("Bring Sunglasses")}
+
+```
+
+<br>
+
+---
+
+We will explore more complicated conditionals throughout the course, but for now, let's implement a couple simple ones in the context of copying over the .fcs files in Infants over to a new target3 folder. 
+
+## Conditionals in practice
+
+First off, let's write a conditional to check if there is a target3 folder within data. 
+
+```{r}
+#| eval: FALSE
+files_present <- list.files("data", full.names=FALSE, recursive=FALSE)
+files_present
+```
+
+![](images/13.png)
+
+<br>
+
+---
+
+```{r}
+#| eval: FALSE
+
+FolderTarget3 <- file.path("data", "target3")
+dir.exists(FolderTarget3)
+```
+
+![](images/14.png)
+
+<br>
+
+---
+
+We can write a conditional to create a folder if one does not yet exist. 
+
+```{r}
+#| eval: FALSE
+if (!dir.exists(FolderTarget3)){
+    dir.create(FolderTarget3)
+}
+```
+
+![](images/15.png)
+
+<br>
+
+---
+
+## Copying Files
+
+To copy files to another folder location, we use the `file.copy()` function. It has two arguments that we will be working with, from being the .fcs files, and to being the folder location we wish to transfer them to. If we tried using them as we currently have them:
+
+```{r}
+#| eval: FALSE
+
+# Variable Infants containing 4 .fcs file names
+
+file.copy(from=Infants, to=FolderTarget3)
+```
+
+![](images/16.png)
+
+<br>
+
+---
+
+The reason for this error is we are only working with a partial file path, as viewed from our Working directory. In this case, what is needed is the full file.path, so the file.path should also include the upstream folders from your current working directory. 
+
+```{r}
+#| eval: FALSE
+getwd()
+``` 
+
+![](images/17.png)
+
+<br>
+
+---
+
+
+In this case, we can update the .fcs files location by switching the full.names argument within `list.files()` from FALSE, to TRUE. 
+
+```{r}
+#| eval: FALSE
+files_present <- list.files("data", full.names=TRUE, recursive=FALSE)
+files_present
+```
+
+![](images/18.png)
+
+And filter for those containing "INF" again
+
+```{r}
+#| eval: FALSE
+Infants <- files_present[str_detect(files_present, "INF")]
+```
+
+And then try again:
+
+```{r}
+#| eval: FALSE
+
+# Variable Infants containing 4 .fcs file names
+
+file.copy(from=Infants, to=FolderTarget3)
+```
+
+![](images/19.png)
+
+<br>
+
+---
+
+## Removing files.
+
+Just like we can add files via R, we can also remove them. However, when we remove them via this route, they are removed permanently, not sent to the recycle bin. We will revisit how later on in the course after you have gained additional experience with file.paths. 
+
+```{r}
+#| eval: FALSE
+?unlink()
+```
+
+## Basename
+
+If we look at Infants with the full.names=TRUE, we see the additional pathing folder has been added, allowing us to successfully copy over the files. 
+
+```{r}
+#| eval: FALSE
+Infants
+```
+
+![](images/20.png)
+
+<br>
+
+---
+
+If we were trying to retrieve just the local file names from the full.names, we could do so with `basename()` function. We will use this in combination with additional arguments later in the course
+
+```{r}
+#| eval: FALSE
+
+basename(Infants)
+```
+
+![](images/22.png)
+
+## Recursive
+
+And finally that we have created additional nested folders and populated them with fcs files, let's see what setting `list.files()` recursive argument to TRUE
+
+```{r}
+#| eval: FALSE
+all_files_present <- list.files(full.names=TRUE, recursive=TRUE)
+all_files_present 
+```
+
+![](images/RecursiveTrue.png)
+
+<br>
+
+---
+
+In this case, all files in all folders within the working directory are shown. This can be useful when exploring folder contents, but if there are a lot of files present within the folder, it will take a while to return the list. 
+
+<br>
+
+---
+
+
+## Saving changes to Version Control
+
+And as is good practice, to maintain version control, let's stage all the files and folders we created today within the Week2 Project Folder, write a commit message, and send these files back to GitHub until they are needed again next time. 
+
+![](images/23.png)
+
+---
 
 # Wrap-Up
 
-In this session, we started to learn about how variables (objects) are created in R using the assignment arrow, how they are named, and the general structure (character, numeric, logical) that they are represented as. We also learned about working directories, file.paths and how to locate files of interest. 
+In this session, we started to learn about working directories, file.paths and how to locate files of interest. We also learned how variables (objects) are created in R using the assignment arrow, how they are named, and the general structure (character, numeric, logical) that they are represented as. 
 
 This will prove valuable in the next several weeks when working with .fcs files, as the majority of functions we will use for Bioconductor project R packages need file.paths to locate both .fcs files as well as .csv files that contain metadata. 
 
@@ -474,6 +1018,12 @@ Next week, having installed the required R packages, and learned a little about 
 ![](images/Week2Exit.jpg)
 
 # Additional Resources
+
+[Riffomonas: Using paths in R and why you shouldn't be using setwd (CC179)](https://youtu.be/StqDYjM6ULo?si=ba2on5rNphQ9AL-B)
+
+[Project-oriented workflow](https://tidyverse.org/blog/2017/12/workflow-vs-script/)
+
+[Paths, working directories, and projects in R; Learn R Video 13](https://youtu.be/lJcuXBFP7Co?si=dqptQ3UGGjmTYqnB)
 
 [Demystifying File Paths in R: Navigate Nested Folders with Dr. Padilla](https://youtu.be/yeiT5Kj_uG8?si=UySsolzbTxbgGMF6)
 

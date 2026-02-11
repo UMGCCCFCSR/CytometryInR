@@ -327,6 +327,7 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 </div>
 <section id="specify-file.path-and-identify-files" class="level2">
 <h2 class="anchored" data-anchor-id="specify-file.path-and-identify-files">Specify file.path and identify files</h2>
+<p>Due to the counts being conducter on two separate instruments, the number of columns differs, so they will need to be loaded into separate GatingSet objects.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"course"</span>, <span class="st">"02_FilePaths"</span>, <span class="st">"data"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>Existing <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".fcs"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
@@ -336,6 +337,7 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 </section>
 <section id="load-.fcs-files-into-a-gatingset" class="level2">
 <h2 class="anchored" data-anchor-id="load-.fcs-files-into-a-gatingset">Load .fcs files into a GatingSet</h2>
+<p>Load in files to their respective GatingSet objects</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cs1 <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(List1, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>gs1 <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(cs1)</span>
@@ -347,6 +349,7 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 </section>
 <section id="downsample-each-sample-and-pass-back-to-the-folder" class="level1">
 <h1>Downsample each sample and pass back to the folder</h1>
+<p>From here, each file in the Gating set is passed to <code>Utility_Downsample()</code>, subsampling for 100 events. In this case, subsets argument is set to “root”, so all events. If we had implemented gates, we could have selected a particular population from which to downsample.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">walk</span>(<span class="at">.x=</span>gs1, <span class="at">.f=</span>Luciernaga<span class="sc">::</span>Utility_Downsample,</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="at">sample.name=</span><span class="fu">c</span>(<span class="st">"$PROJ"</span>, <span class="st">"GROUPNAME"</span>, <span class="st">"TUBENAME"</span>),</span>

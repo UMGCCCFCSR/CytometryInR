@@ -22,6 +22,8 @@ library(Luciernaga) #DavidRach/Luciernaga
 
 ## Specify file.path and identify files
 
+Due to the counts being conducter on two separate instruments, the number of columns differs, so they will need to be loaded into separate GatingSet objects. 
+
 ```{r}
 #| eval: FALSE
 StorageLocation <- file.path("course", "02_FilePaths", "data")
@@ -31,6 +33,8 @@ List2 <- Existing[3:8] # 4L Aurora
 ```
 
 ## Load .fcs files into a GatingSet
+
+Load in files to their respective GatingSet objects
 
 ```{r}
 #| eval: FALSE
@@ -42,6 +46,8 @@ gs2 <- GatingSet(cs2)
 ```
 
 # Downsample each sample and pass back to the folder
+
+From here, each file in the Gating set is passed to `Utility_Downsample()`, subsampling for 100 events. In this case, subsets argument is set to "root", so all events. If we had implemented gates, we could have selected a particular population from which to downsample. 
 
 ```{r}
 #| eval: FALSE

@@ -1,0 +1,1718 @@
+---
+title: "02 - File Paths"
+author: "David Rach"
+date: 02-09-2026
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    incremental: true
+page-layout: full
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Welcome to the second week of [Cytometry in R](/Schedule.qmd)! This week we will learn about file.path, namely, how to communicate to our computer (and R) where various files are stored. 
+:::
+:::
+
+::: {.fragment}
+:::{.callout-important}
+Before getting started, please make sure you have completed the creating a [GitHub](/course/00_GitHub/index.qmd) and [Workstation Setup](/course/00_WorkstationSetup/index.qmd) walk-throughs, since we will begin where they left off once the required software was successfully installed. Having read-through how to use [version control](/course/00_Git/index.qmd) using Git will additionally be useful. 
+:::
+:::
+
+---
+
+# Background
+
+```{r}
+#| include: FALSE
+library(BiocStyle)
+```
+
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When flow cytometrist first start learning how to code, we tend to think big picture: "I want to take my files, normalize them, cluster them, analyze them, and finally plot them". When we first start writing code, we tend to plan what we will write in similarly broad strokes. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Our computers by contrast "think" in small incremental steps: "First locate this folder, list the files present, select these specific ones, import them into R, load the normalization package, pass the first file in, etc.". These steps when combined algorithmically add up to form the bigger picture.
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The challenge when first starting to learn how to code is developing a coding mindset in which we think not in broad strokes, but about what the next step will be programmatically. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We will start working on our own "coding mindsets" by working with file paths, as they communicate to our computer where to find our experiment files, and tend to be one of the early points of conflict and frustration. In the process, we will also cover additional concepts of R programming generally, including how to create/name variables, and look up the class/type of a particular object. 
+:::
+:::
+
+---
+
+## Set Up
+
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Before we begin, let's make sure you get the data needed for today transferred to your local computer, and then get the .fcs files copied over from there to your own working project folder. This is the process you will repeat each week throughout the course. 
+:::
+:::
+
+---
+
+### New Repository
+
+::: {.fragment}
+::: {.callout-tip title="."}
+First off, login to your GitHub account. Once there, you will select the options to create a new repository (similar to what you did during [Using GitHub](/course/00_GitHub/index.qmd#github-repository))
+:::
+:::
+
+---
+
+![](images/0001_NewRepo.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For this week, let's set this new repository up as a private repository, and call it Week2. This will keep things consistent with the file.paths we will be showing in the examples. 
+:::
+:::
+
+---
+
+![](images/0002_PrivateRepo.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Once the new repository has been created, copy the URL. 
+:::
+:::
+
+---
+
+![](images/0003_Url.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next, open up Positron, set the interpreter to use R, and then select the option to bring in a "New Folder from Git".
+:::
+:::
+
+---
+
+![](images/0004_NewGit.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Paste in your new repository's url. Additionally, if you want to match file.paths shown in the examples, set your storage location to your local Documents folder (please note the start of the file.path will look differently depending on whether you are on Windows, MacOS, or Linux).
+:::
+:::
+
+---
+
+![](images/0005_SaveDocuments.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Your new repository will then be imported from GitHub. Once this is done, create two subfolders (data and images) and a new .qmd file (naming it filepaths.qmd).
+:::
+:::
+
+---
+
+![](images/0006_BasicInfrastructure.png)
+
+---
+
+### Sync
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With this done, return to GitHub and open your [forked version](/course/00_GitHub/index.qmd#forking-cytometryinr) of the CytometryInR course folder. If you haven't yet done so, click on [sync](/course/00_Homeworks/index.qmd#sync-your-fork) to bring in this week's code and datasets. 
+:::
+:::
+
+---
+
+![](images/0008_Sync.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Returning to Positron, you will need to switch Project Folders, switching from Week2 over to CytometryInR.
+:::
+:::
+
+---
+
+![](images/0007_SwitchFolders.png)
+
+---
+
+### Pull
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Once CytometryInR project folder has opened, you will need to [pull](/course/00_Git/index.qmd#pull) in the new data from GitHub to your local computer. 
+:::
+:::
+
+---
+
+![](images/0007_PullCytometryInR.png)
+
+---
+
+### Copy Files to Week2
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Once this is done, you will see within the course folder, containing this weeks folder (02_FilePaths). Within it there is a data folder with .fcs files. To avoid causing conflicts when bringing in next week's materials, you will want to manually copy over these .fcs files (via your File Explorer) to the data folder within your "Week2" Project Folder. 
+:::
+:::
+
+---
+
+![](images/0009_Copy.png)
+
+---
+
+### Commit and Push
+
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When you reopen your Week2 project folder in Positron, you should now be able to see the .fcs files within the data folder. Next, from the action bar on the far left, select the Source Control tab. Stage all the changes (as was done in [Using Git](/course/00_Git/)), and write a short commit message. 
+:::
+:::
+
+---
+
+![](images/0010_Commit.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With these files now being tracked by version control, push (ie. send) your changes to GitHub so that they are remotely backed up.
+:::
+:::
+
+---
+
+![](images/0011_Push.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And with this setup complete, you are now ready to proceed. Remember, run code and write notes in your working project folder (Week2 or otherwise named) to avoid conflicts next week in the CytometryInR folder when you are trying to bring in the Week #3 code and datasets. 
+:::
+:::
+
+---
+
+# Walk Through
+
+## Working Directory
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Now that we are back in our Week2 folder, let's start by seeing our current location similarly to how our computer perceives it. 
+
+We will use  `getwd()` function (ie. get working directory) to return the location of the folder we are currently inside of. For example, when `getwd()` is run within my Week2 project folder, I see the following location
+:::
+:::
+
+---
+
+```{r}
+#| eval: FALSE
+getwd()
+```
+
+![](images/0000_ReplacementGetWD.png)
+
+::: {.fragment}
+::: {.callout-tip title="."}
+
+This returns a file path. The final location (Week2 in this case) is the **Working Directory**. Your computer when working in R will be descern other locations in relation to this directory.
+
+:::
+:::
+
+---
+
+## Directories
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Within this working directory, we have a variety of project folders and files related to the course. We can see the folders that are present using the `list.dirs()` function. 
+:::
+:::
+
+::: {.fragment}
+![](images/0000_ReplacementView.png)
+:::
+
+::: fragment
+```{r}
+#| eval: FALSE
+list.dirs(path=".", full.names=FALSE, recursive=FALSE)
+```
+
+![](images/0000_ReplacementListFiles.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Within this `list.dirs()` function, we are specifying two arguments with which we will be working with later today, *full.names* and *recursive*. For now, lets set their arguments to FALSE, which means they conditions they implement are inactive (turned off). 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The path argument is currently set to ".", which is a stand-in for the present directory. In R, if an argument is not specified directly, it is inferred based on an order of expected arguments. Thus, if not present, we could still get the same output as seen before. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+list.dirs(full.names=FALSE, recursive=FALSE)
+```
+
+![](images/0000_ReplacementListFiles.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Within Positron, in addition to visible folders, we also have *hidden folders* (denoted by the "." in front of the folder name when using `list.dirs()`). In the case of one of our course website folders, we can see a ".quarto" folder shown in a lighter gray . The ".git" folder we saw from `list.dirs()` is typically hidden when viewing from Positron. 
+:::
+:::
+
+::: {.fragment}
+
+![](images/02_HiddenFolder.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In the case of Week2, the two not-hidden folders we created are listed. We will see how to navigate these in a second. 
+:::
+:::
+
+::: {.fragment}
+
+![](images/0000_ReplacementView.png)
+
+:::
+
+---
+
+## Variables
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Before exploring file paths, we need to have some basic R code knowledge that we can use to work with them. Within R, we have the ability to assign particular values (be they character strings, numbers or logicals) to objects (ie. variables) that can be used when called upon later. 
+
+For example:
+
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+WhatDayDidIWriteThis <- "Saturday"
+```
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this case, the variable name is what the assignment arrow ("<-") is pointing at. In this case, WhatDayDidIWriteThis
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When we run this, we create a variable, that will appear within the right-sidebar.
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: TRUE
+WhatDayDidIWriteThis <- "Saturday"
+```
+
+:::
+
+---
+
+![](images/04_VariableList.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+These variables can subsequently be retrieved by printing (ie. running) the name of the variable
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+WhatDayDidIWriteThis 
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+You can create variables with almost any name you can think of
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+TopSecretMeetingDay <- "Saturday"
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With a few exceptions. R doesn't play well with spaces:
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| error: TRUE
+Top Secret Meeting Day <- "Saturday"
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+But does play well with underscores:
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+Top_Secret_Meeting_Day <- "Saturday"
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The above (with individual words separated by _) is collectively known as snake case. The alternate way to help delineate variable names is "camelCase", with first letter of each word being capitalized (seen in the previous example). 
+:::
+:::
+
+---
+
+![](images/CamelCase.jpeg)
+
+---
+
+```{r}
+TopSecretMeetingDay
+```
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+You can overwrite a Variable name by assigning a different value to it:
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+TopSecretMeetingDay <- "Monday"
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+TopSecretMeetingDay
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+You can also remove individual variables via the `rm` function
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+rm(Top_Secret_Meeting_Day)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Or if trying to remove all, via the right sidebar
+:::
+:::
+
+---
+
+![](images/10_RemoveVariables.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In the prior case, we are creating a variable that is a "string" of character values, due to our use of "" around the word. We can see this when we use the `str()` function. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+Fluorophores <- "FITC"
+str(Fluorophores)
+```
+
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The "chr" in front denotating that Fluorophores contains a character string. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+This could also be retrieved using the `class()` function. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+class(Fluorophores)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Alternatively, we could assign a numeric value to a variable
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+Fluorophores <- 29
+str(Fluorophores)
+```
+
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Which returns "num", ie. numeric.
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can also specify a logical (ie. True or FALSE) to a particular object
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+IsPerCPCy5AGoodFluorophore <- FALSE
+str(IsPerCPCy5AGoodFluorophore)
+```
+
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Which returns logi in front, denoting this variable contains a logical value. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Last week, when we were installing `dplyr`, the reason that installation failed was `install.packages()` expects a character string. However, when we left off the "", it looked within our local environments created variables for the dplyr variable, couldn't find it, and thus failed. 
+
+We could of course, have assigned a character value to a variable name, and then used that variable name, which would have worked. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+
+PackageToInstall <- "dplyr"
+
+install.packages(PackageToInstall)
+```
+
+:::
+
+---
+
+## Indexing
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Not all variables contain single objects. 
+
+For example, we can modify Fluorophores and add additional entries:
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+Fluorophores <- c("BV421", "FITC", "PE", "APC")
+str(Fluorophores)
+```
+
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The c stands for concatenate. It concatenates the objects into a larger object, known as a vector. 
+
+In this case, you notice in addition to the specification the values are characters, we get a [1:4], denoting four objects are present. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can similarly retrieve this information using the `length()` function
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+length(Fluorophores)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When multiple objects are present, we can specify them individidually by providing their index number within square brackets []. 
+:::
+:::
+
+
+::: {.fragment}
+
+```{r}
+Fluorophores[1]
+```
+
+:::
+
+---
+
+::: {.fragment}
+
+```{r}
+Fluorophores[3]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Or specify in sequence using a colon (:)
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+Fluorophores[3:4]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Or if not adjacent, reusing `c` within the square brackets
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+Fluorophores[c(1,4)]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We will revisit these concepts throughout the course, with what we have covered today, this will help us create file.paths and select fcs files that we want to work with via index number. 
+:::
+:::
+
+## Listing Files
+
+::: {.fragment}
+::: {.callout-tip title="."}
+After this detour into variables and indexing, let's return our focus to how to use these in context of file paths. Working from within our Week2 project folder, let's see what directories (folders) are present
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+list.dirs(path=".", full.names=FALSE, recursive=FALSE)
+```
+
+:::
+
+::: {.fragment}
+
+![](images/00.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can also list any files that are present within our working directory using the `list.files()` function. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+list.files()
+```
+
+:::
+
+::: {.fragment}
+
+![](images/01.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this case, in addition to our filepaths.qmd file, we can see the LICENSE and README files created when we set up the repository. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can also specify a particular folder we want to show items present within by changing the path argument. For example, if we wanted to see the contents of the "data" folder
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+list.files(path="data", full.names=FALSE, recursive=FALSE)
+```
+
+:::
+
+::: {.fragment}
+
+![](images/02.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Which in this case returns the fcs files we copied over at the start of this lesson. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this case, there are no folders under "data". Let's go ahead and create a new one, calling it target. 
+:::
+:::
+
+---
+
+![](images/03.png)
+
+---
+
+## Creating directories
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Alternatively, we can also create a folder via R using the `dir.create()` function. Since we want it within data, we would modify the path accordingly
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+NewFolderLocation <- file.path("data", "target2")
+
+dir.create(path=NewFolderLocation)
+```
+
+:::
+
+---
+
+![](images/04.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Before continuing, let's copy the first two .fcs files into both target and target2. 
+:::
+:::
+
+---
+
+![](images/06.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Given our working directory is set the top-level of the Week2 project folder, we can't just check inside nested target folders directly. If we attempt to: 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+list.files(path="target", full.names=FALSE, recursive=FALSE)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+No files are returned (ie, character(0)), since from our computers perspective, "target" doesn't exist within the active working directory. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+file.exists("target")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+On the other hand, within it's view, it knows that the data folder exist
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+file.exists("data")
+```
+
+:::
+
+::: {.fragment}
+
+![](images/05.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So here we encounter the first challenge when communicating to our computer where to search for and find files. We need to provide a file.path that incorporates the path of folders between where the computer is currently at (ie. the working directory) and the target file itself. 
+:::
+:::
+
+---
+
+## File Paths
+
+::: {.fragment}
+::: {.callout-tip title="."}
+One way we can do this is through a file.path argument. We could potentially provide this by adding either a / or a \ into the path argument, depending on your computers operating system. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+list.files(path="data/target", full.names=FALSE, recursive=FALSE)
+```
+
+:::
+
+::: {.fragment}
+
+![](images/07.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+While this works in your particular context, if you are sharing the code with others who have a different operating system, these hard-coded / or \ will cause the code for them to error out at these particular steps. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For that reason, it is better to assemble a file.path using the `file.path()` function. This function takes into account the operating system, removing your need to have to worry about this particular computing nuance, and write code that is reproducible and replicable for everyone. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+FolderLocation <- file.path("data", "target")
+FolderLocation
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+list.files(path=FolderLocation, full.names=FALSE, recursive=FALSE)
+```
+
+:::
+
+::: {.fragment}
+
+![](images/07.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can also append additional locations to existing file paths, by including the variable name within the `file.path()` we are creating.
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+FolderLocation <- "data"
+ScreenshotFolder <- file.path(FolderLocation, "target")
+ScreenshotFolder
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+
+list.files(path=ScreenshotFolder, full.names=FALSE, recursive=FALSE)
+```
+
+:::
+
+::: {.fragment}
+
+![](images/07.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Additionally, `list.files()` has the ability to filter for files that contain a particular character string. This can be useful is we are searching for ".fcs" or ".csv" files, but also for files that contain a particular word. In the case of the ScreenshotFolders
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+list.files(path=ScreenshotFolder, pattern="ND050", full.names=FALSE, recursive=FALSE)
+```
+
+:::
+
+::: {.fragment}
+
+![](images/08.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+You will notice, the index numbers are in the context of what is filtered, not all the folder contents. 
+:::
+:::
+
+---
+
+## Selecting for Patterns
+
+::: {.fragment}
+::: {.callout-tip title="."}
+You will notice, in the above example, we provided a character string ("ND050") that was used to return files that contained the matching pattern. If we currently listed the files within data, we get a return that looks like this:
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+list.files("data", full.names=FALSE, recursive=FALSE)
+```
+
+:::
+
+::: {.fragment}
+
+![](images/09.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As you can see, we are getting back both folders and individual .fcs files. We could consequently change the pattern to provide a character string that will only return the .fcs files.  We will go ahead and assign this list to a variable named files, for later retrieval. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+files <- list.files("data", pattern=".fcs", full.names=FALSE, recursive=FALSE)
+files
+```
+
+:::
+
+::: {.fragment}
+
+![](images/10.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+One of the R packages we will be using througout the course is the `stringr` package. It contains two functions that can be useful when identifying more complicated character strings. In this case, if we run the `str_detect()` function to identify which of the .fcs files within the files variable contains the "INF" character string, we get a vector of logical (ie. True or FALSE) outputs corresponding to each file. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+# install.packages("stringr") # CRAN
+library(stringr)
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+str_detect(files, "INF")
+```
+
+:::
+
+::: {.fragment}
+
+![](images/11.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Similar to how we indexed the Fluorophore list (ex. Fluorophore[1:2]) which returned a subset, we can similarly use this logical vector to subset files that returned as TRUE for containing the pattern "INF"
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+files[str_detect(files, "INF")]
+```
+
+:::
+
+::: {.fragment}
+
+![](images/12.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's go ahead and save these subsetted file names to a new variable, called Infants. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+Infants <- files[str_detect(files, "INF")]
+```
+
+:::
+
+## Conditionals
+
+::: {.fragment}
+::: {.callout-tip title="."}
+One useful thing is that within R, we can set conditions on whether something is carried out. The most typical conditional you will encounter are the "If" statements. They typically take a form that resembles the following. 
+:::
+:::
+
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+
+NeedCoffee <- TRUE
+
+if (NeedCoffee){
+    print("Take a break")
+}
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this case of the above, if the variable within the () is equal to true, the code within the {} will be executed. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+
+NeedCoffee <- TRUE
+
+if (NeedCoffee){
+    print("Take a break")
+}
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+By contrast, when the variable within the () is equal to false, the code within the {} will not be executed. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+NeedCoffee <- FALSE
+
+if (NeedCoffee){
+    print("Take a break")
+}
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+These "If" statements will trigger as long as the specified condition within the () is TRUE. For a different example:
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+RowNumber <- 299
+2 + RowNumber > 300
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+if (2 + RowNumber > 3){
+    print("Stop Iterating")
+}
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When you add an ! in front a conditional, it flips the expected outcome. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+ItsRaining <- TRUE
+
+if (ItsRaining){print("Bring an Umbrella")}
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+!ItsRaining
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+if (!ItsRaining){print("Bring an Umbrella")}
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+ItsRaining <- TRUE
+
+if (!ItsRaining){print("Bring Sunglasses")}
+
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We will explore more complicated conditionals throughout the course, but for now, let's implement a couple simple ones in the context of copying over the .fcs files in Infants over to a new target3 folder. 
+:::
+:::
+
+## Conditionals in practice
+
+::: {.fragment}
+::: {.callout-tip title="."}
+First off, let's write a conditional to check if there is a target3 folder within data. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+files_present <- list.files("data", full.names=FALSE, recursive=FALSE)
+files_present
+```
+
+:::
+
+::: {.fragment}
+
+![](images/13.png)
+
+:::
+
+---
+
+```{r}
+#| eval: FALSE
+
+FolderTarget3 <- file.path("data", "target3")
+dir.exists(FolderTarget3)
+```
+
+::: {.fragment}
+
+![](images/14.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can write a conditional to create a folder if one does not yet exist. 
+:::
+:::
+
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+if (!dir.exists(FolderTarget3)){
+    dir.create(FolderTarget3)
+}
+```
+
+:::
+
+::: {.fragment}
+
+![](images/15.png)
+
+:::
+
+---
+
+## Copying Files
+
+::: {.fragment}
+::: {.callout-tip title="."}
+To copy files to another folder location, we use the `file.copy()` function. It has two arguments that we will be working with, from being the .fcs files, and to being the folder location we wish to transfer them to. If we tried using them as we currently have them:
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+
+# Variable Infants containing 4 .fcs file names
+
+file.copy(from=Infants, to=FolderTarget3)
+```
+
+:::
+
+::: {.fragment}
+
+![](images/16.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The reason for this error is we are only working with a partial file path, as viewed from our Working directory. In this case, what is needed is the full file.path, so the file.path should also include the upstream folders from your current working directory. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+getwd()
+``` 
+
+:::
+
+::: {.fragment}
+
+![](images/17.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this case, we can update the .fcs files location by switching the full.names argument within `list.files()` from FALSE, to TRUE. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+files_present <- list.files("data", full.names=TRUE, recursive=FALSE)
+files_present
+```
+
+:::
+
+::: {.fragment}
+
+![](images/18.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And filter for those containing "INF" again
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+Infants <- files_present[str_detect(files_present, "INF")]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And then try again:
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+
+# Variable Infants containing 4 .fcs file names
+
+file.copy(from=Infants, to=FolderTarget3)
+```
+
+:::
+
+::: {.fragment}
+
+![](images/19.png)
+
+:::
+
+---
+
+## Removing files.
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Just like we can add files via R, we can also remove them. However, when we remove them via this route, they are removed permanently, not sent to the recycle bin. We will revisit how later on in the course after you have gained additional experience with file.paths. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+?unlink()
+```
+
+:::
+
+## Basename
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we look at Infants with the full.names=TRUE, we see the additional pathing folder has been added, allowing us to successfully copy over the files. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+Infants
+```
+
+:::
+
+::: {.fragment}
+
+![](images/20.png)
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we were trying to retrieve just the local file names from the full.names, we could do so with `basename()` function. We will use this in combination with additional arguments later in the course
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+
+basename(Infants)
+```
+
+:::
+
+::: {.fragment}
+
+![](images/22.png)
+
+:::
+
+---
+
+## Recursive
+
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And finally that we have created additional nested folders and populated them with fcs files, let's see what setting `list.files()` recursive argument to TRUE
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+all_files_present <- list.files(full.names=TRUE, recursive=TRUE)
+all_files_present 
+```
+
+:::
+
+---
+
+![](images/RecursiveTrue.png)
+
+---
+
+
+::: {.fragment}
+::: {.callout-tip title="."}
+
+In this case, all files in all folders within the working directory are shown. This can be useful when exploring folder contents, but if there are a lot of files present within the folder, it will take a while to return the list. 
+
+:::
+:::
+
+
+## Saving changes to Version Control
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And as is good practice, to maintain version control, let's stage all the files and folders we created today within the Week2 Project Folder, write a commit message, and send these files back to GitHub until they are needed again next time. 
+:::
+:::
+
+---
+
+![](images/23.png)
+
+---
+
+# Wrap-Up
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this session, we started to learn about working directories, file.paths and how to locate files of interest. We also learned how variables (objects) are created in R using the assignment arrow, how they are named, and the general structure (character, numeric, logical) that they are represented as. 
+
+This will prove valuable in the next several weeks when working with .fcs files, as the majority of functions we will use for Bioconductor project R packages need file.paths to locate both .fcs files as well as .csv files that contain metadata. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+One of the most frequent errors that beginners encounter when trying to load in .fcs files into the `flowCore` package is not providing the full file.path to the .fcs file of interest. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next week, having installed the required R packages, and learned a little about variables and file.paths, we will dive into our first cytometry focused session. We will be cracking open an .fcs file and exploring how things are stored within. In the process of seeing how the file contents are organized, we will continue to learn and practice how to create variables, and general object structure types within R. Until then, have a wonderful week!
+:::
+:::
+
+---
+
+![](images/Week2Exit.jpg)
+
+---
+
+# Additional Resources
+
+[Riffomonas: Using paths in R and why you shouldn't be using setwd (CC179)](https://youtu.be/StqDYjM6ULo?si=ba2on5rNphQ9AL-B)
+
+[Project-oriented workflow](https://tidyverse.org/blog/2017/12/workflow-vs-script/)
+
+[Paths, working directories, and projects in R; Learn R Video 13](https://youtu.be/lJcuXBFP7Co?si=dqptQ3UGGjmTYqnB)
+
+[Demystifying File Paths in R: Navigate Nested Folders with Dr. Padilla](https://youtu.be/yeiT5Kj_uG8?si=UySsolzbTxbgGMF6)
+
+# Take-home Problems
+
+:::{.callout-tip title="Problem 1"}
+Plug in an external hard-drive or USB into your computer. Manually, create a folder within called "TargetFolder". Try to programmatically specify the file path to identify the folders and files present on your external drive. Then, try to copy your .fcs files from their current folder on your desktop to the TargetFolder on your drive using R. Remember, just copy, no deletion, you need to walk before you can run :D
+:::
+
+---
+
+:::{.callout-tip title="Problem 2"}
+In this session, we used list.files with the full.names argument, as well as the `basename()` function to identify specific files. But what if you wanted a particular directory. Run list.files with recursive set to TRUE, and then search online to find an R function that would retrieve the "" directory. 
+:::
+
+---
+
+:::{.callout-tip title="Problem 3"}
+R packages often come with internal datasets, that are typically used for use in the help documentation examples. These can be accessed through the use of the `system.file()` function. See an example below. 
+
+Using what we have learned about file.path navigation, search your way down the file.directory of the `flowSOM` and `flowWorkspace` packages, and identify any .fcs files that are present for use in the documentation. 
+:::
+
+---
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
