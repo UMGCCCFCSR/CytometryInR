@@ -1,0 +1,33 @@
+---
+title: "Week 2 Take Home problems"
+embed-resources: true
+format: html
+---
+
+## Problem 1
+
+In my case the USB drive showed up as E:
+
+```{r}
+FilesToCopy <- list.files(path="course/02_FilePaths/data", full.names=TRUE, recursive=FALSE)
+TargetFolder <- file.path("E:", "TargetFolder")
+if (dir.exists(TargetFolder)){file.copy(from=FilesToCopy, to=TargetFolder)}
+if (!dir.exists(TargetFolder)){print("Drive disconnected")}
+```
+
+## Problem 2
+```{r}
+Files <- list.files(path="course/02_FilePaths/data", full.names=TRUE, recursive=TRUE)
+FileToGetPath <- Files[1]
+normalizePath(path=FileToGetPath, winslash="/", mustWork=TRUE)
+```
+
+## Problem 3
+
+```{r}
+system.file(package="flowWorkspace")
+list.files(path="C:/Users/kquay/AppData/Local/R/win-library/4.5/flowWorkspace", pattern=".fcs", full.names=FALSE, recursive=TRUE)
+list.files(path="C:/Users/kquay/AppData/Local/R/win-library/4.5/flowSOM", pattern=".fcs", full.names=FALSE, recursive=TRUE)
+```
+
+We can see that the flowWorkspace package contains no .fcs files in its documentation, but the flowSOM package contains 1 called '68983.fcs' located in the 'extdata' subfolder.
