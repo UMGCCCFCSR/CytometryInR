@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Cytometry in R</title>
+<title>Week 1 Homework NJ – Cytometry in R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,27 +20,62 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ec4236e849263924bc4118252a4b1e74.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-ec4236e849263924bc4118252a4b1e74.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -82,18 +117,18 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-sidebar floating nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./images/hex.svg" alt="" class="navbar-logo light-content">
-    <img src="./images/hex.svg" alt="" class="navbar-logo dark-content">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../images/hex.svg" alt="" class="navbar-logo light-content">
+    <img src="../../../images/hex.svg" alt="" class="navbar-logo dark-content">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">Cytometry in R</span>
     </a>
   </div>
@@ -104,15 +139,15 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../../../index.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./Schedule.html"> 
+    <a class="nav-link" href="../../../Schedule.html"> 
 <span class="menu-text">Schedule</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./course/index.html"> 
+    <a class="nav-link" href="../../../course/index.html"> 
 <span class="menu-text">Course</span></a>
   </li>  
 </ul>
@@ -137,6 +172,16 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 </div>
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Week 1 Homework NJ</li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
   <div id="quarto-announcement" data-announcement-id="517fd7fd2923fd64fe81c4cc75c6fa55" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
 <p>See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
 </div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
@@ -144,135 +189,140 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Getting Started</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/00_GitHub/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - GitHub</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/00_WorkstationSetup/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Workstation Setup</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/00_Positron/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Positron</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/00_Git/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/00_Quarto/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Quarto</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/00_Homeworks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Getting Help</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/00_Floreada/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Floreada</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../../course/01_InstallingRPackages/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Intro to R</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/01_InstallingRPackages/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">01 - Installing R Packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/02_FilePaths/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">02 - File Paths</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Cytometry Core</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Beyond the Sandbox</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">The World is your Oyster</span></span>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#about" id="toc-about" class="nav-link active" data-scroll-target="#about">About</a>
-  <ul>
-  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation">Motivation</a></li>
-  </ul></li>
-  <li><a href="#course-details" id="toc-course-details" class="nav-link" data-scroll-target="#course-details">Course Details</a>
-  <ul>
-  <li><a href="#course-materials" id="toc-course-materials" class="nav-link" data-scroll-target="#course-materials">Course Materials</a></li>
-  <li><a href="#in-person-baltimore" id="toc-in-person-baltimore" class="nav-link" data-scroll-target="#in-person-baltimore">In-Person (Baltimore)</a></li>
-  <li><a href="#online-worldwide" id="toc-online-worldwide" class="nav-link" data-scroll-target="#online-worldwide">Online (Worldwide)</a></li>
-  <li><a href="#recordings" id="toc-recordings" class="nav-link" data-scroll-target="#recordings">Recordings</a></li>
-  <li><a href="#discussion-forum" id="toc-discussion-forum" class="nav-link" data-scroll-target="#discussion-forum">Discussion Forum</a></li>
-  <li><a href="#optional-take-home-problems" id="toc-optional-take-home-problems" class="nav-link" data-scroll-target="#optional-take-home-problems">Optional Take-Home Problems</a></li>
-  <li><a href="#cost" id="toc-cost" class="nav-link" data-scroll-target="#cost">Cost</a></li>
-  <li><a href="#computing-requirements" id="toc-computing-requirements" class="nav-link" data-scroll-target="#computing-requirements">Computing Requirements</a></li>
-  </ul></li>
-  <li><a href="#license" id="toc-license" class="nav-link" data-scroll-target="#license">License</a></li>
-  </ul>
-</nav>
-    </div>
+        
+    <div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Week 1.docx"><i class="bi bi-file-word"></i>MS Word</a></li></ul></div></div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
 
-
-
-
-<p><img src="images/WebsiteBanner.png" class="img-fluid" style="width:100.0%"></p>
-<div style="text-align: right;">
-<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://img.shields.io/badge/license-AGPLv3-blue.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Week 1 Homework NJ</h1>
 </div>
-<p>Cytometry in R is a free weekly mini-course being offered both in-person and online by the <a href="https://www.medschool.umaryland.edu/cibr/core/umgccc_flow/">Flow Cytometry Shared Resource</a> staff at the <a href="https://www.umms.org/umgccc">University of Maryland Greenebaum Comprehensive Cancer Center</a>. Its primary audience is for those with prior flow cytometry knowledge, who have limited previous experience with the programming language <a href="https://www.r-project.org/">R</a>. However, we&nbsp;welcome everyone regardless of their existing &nbsp;flow cytometry&nbsp; or coding experience.</p>
-<p>This course is a passion project arising from our desire to contribute back to the community. We are excited that so many of you have chosen to sign up, and look forward to helping you get started on your own learning journeys.</p>
-<p>For more information on topics-covered, please see our <a href="./Schedule.html">schedule</a>.</p>
-<p>If you did not previously complete the interest form, and would like to be added to our mailing list, please complete the form <a href="https://docs.google.com/forms/d/e/1FAIpQLScPK4V_WNSgQvZNq7aIHpoiX8pi3kiuCfI0Tp7hQkVJS3HPtQ/viewform?usp=publish-editor">here</a></p>
-<p><br></p>
-<section id="about" class="level1">
-<h1>About</h1>
-<p><img src="images/Signatures.png" class="img-fluid" style="width:75.0%"></p>
-<section id="motivation" class="level3">
-<h3 class="anchored" data-anchor-id="motivation">Motivation</h3>
-<p>While many cytometry enthusiast express an interest in learning how to carry out flow cytometry analyses in R, they often do not know where to start. Additionally, many of the limited existing resources are focused towards users with intermediate bioinformatic skills, contributing to a greater barrier for entry for those just starting out. Our motivation in offering this mini-course tailored towards beginners is to make the learning journey smoother than the one we ourselves experienced.</p>
-<p><br></p>
-<p>While designing the course, we kept the following concepts in mind:</p>
-<ul>
-<li><p>Beginning coders benefit both by having detailed examples that they can initially work through on their own time, as well as less defined problems that through troubleshooting enable the acquisition of the thought-process and skills needed for coding.</p></li>
-<li><p>Some topics will take individuals a longer time to fully grasp. Providing a format and resources that enable being able to revisit the material multiple times is incredibly helpful. Likewise, life is busy, and missing a workshop session is highly probable. If this happens, it shouldn’t make or break the ability of the individual to understanding the rest of the course.</p></li>
-<li><p>Consistency is key, and being able to apply what you are learning to your own datasets, files, and questions of interest helps achieve this.</p></li>
-</ul>
-<p><br></p>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="problem-1" class="level1">
+<h1>Problem 1</h1>
+<p>We installed PeacoQC during this session, but we didn’t have time to explore what functions are present within the package. Using what you have learned about accessing documentation, figure out and list what functions it contains</p>
 </section>
-</section>
-<section id="course-details" class="level1">
-<h1>Course Details</h1>
-<p><img src="images/subsetting.png" class="img-fluid" style="width:50.0%"></p>
-<p>Each week, the mini-course will cover a particular topic for an hour. This individual class is offered on multiple days, at different times, both in-person and online. We invite you to attend the one that best fits your schedule each week. If life gets busy and you can’t make regular day, the online livestream recordings will be available on <a href="https://www.youtube.com/@CytometryInR">YouTube</a>.</p>
-<p><br> <br></p>
-<section id="course-materials" class="level3">
-<h3 class="anchored" data-anchor-id="course-materials">Course Materials</h3>
-<p><img src="images/histograms.png" class="img-fluid" style="width:50.0%"></p>
-<p>We will release the course materials for the upcoming week on Sundays 2200 EST (Monday 0300 GMT+0) via our <a href="https://umgcccfcsr.github.io/CytometryInR/">course website</a> and <a href="https://github.com/UMGCCCFCSR/CytometryInR">GitHub</a>. These materials will normally be <a href="https://aeturrell.github.io/coding-for-economists/wrkflow-quarto.html">Quarto Markdown</a> documents containing code, explanation, and other resources needed for that week. If you have your own data, you can use your own data! If you don’t have any data, we will make sure to provide some of our own available data for each lesson so that you can use it and be able to follow along.</p>
-<p>In our commitment to open-source and open-science, all teaching materials are freely offered under a <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.en">CC-BY-SA</a> license, while all code examples are offered under the <a href="https://www.gnu.org/licenses/agpl-3.0.en.html">AGPL3-0</a> copyleft license.</p>
-<p><br> <br></p>
-</section>
-<section id="in-person-baltimore" class="level3">
-<h3 class="anchored" data-anchor-id="in-person-baltimore">In-Person (Baltimore)</h3>
-<p><img src="images/PopUpLab.jpeg" class="img-fluid" style="width:33.0%"></p>
-<p>For those who are local and attending in person, the class will be offered on Monday, Tuesday and Thursday from 4-5 pm EST in <a href="https://www.google.com/maps/dir//Bressler+Research+Bldg,+Baltimore,+MD+21201/data=!4m6!4m5!1m1!4e2!1m2!1m1!1s0x89c803589865590b:0xd23603e6659b23f7?sa=X&amp;ved=1t:707&amp;ictx=111">Bressler Research Building</a> Conference Room 7-035 (around the corner from the Flow Core).</p>
-<p>We invite you to make whichever session best fits your schedule. If you have your own laptop, feel free to bring it. If you don’t have a laptop, please reach out, the Flow Core has 6 laptops running Linux that we can lend out to participants for use during the session.</p>
-<p>For those who arrive early, we will have a limited number of second screens with provided mouse and keyboard that you can plug a laptop into via HDMI cable to set up a larger workstation. For those arriving later, the room has enough space (and electrical plugs) for up to 20 people, but you will need to balance a laptop on your lap.</p>
-<p><br> <br></p>
-</section>
-<section id="online-worldwide" class="level3">
-<h3 class="anchored" data-anchor-id="online-worldwide">Online (Worldwide)</h3>
-<p><img src="images/WorldwideSignups.png" class="img-fluid" style="width:66.0%"></p>
-<p>For those joining us virtually, we will have three separate livestreams throughout the week on <a href="https://www.youtube.com/@CytometryInR">YouTube</a>. These will be offered on:</p>
-<ul>
-<li>Tuesday 2200 EST (Wednesday 0300 GMT+0)</li>
-<li>Wednesday 1600 EST (Wednesday 2100 GMT+0)</li>
-<li>Thursday 1000 EST (Thursday 1500 GMT+0)</li>
-</ul>
-<p><br> <br></p>
-</section>
-<section id="recordings" class="level3">
-<h3 class="anchored" data-anchor-id="recordings">Recordings</h3>
-<p><img src="images/WorldwideSignups.png" class="img-fluid" style="width:66.0%"></p>
-<p>All three livestreams will be recorded and available on <a href="https://www.youtube.com/@CytometryInR">YouTube</a> immediately afterwards. Our plan is to eventually circle back after the course and properly edit them (ie. less minutes of random background noise, highlighting the relevant lines of code, time-stamps, subtitles, translations, etc.) later on as time allows, so that they can serve as a more permanent resource.&nbsp; <br> <br></p>
-</section>
-<section id="discussion-forum" class="level3">
-<h3 class="anchored" data-anchor-id="discussion-forum">Discussion Forum</h3>
-<p><img src=".\course/00_Homeworks/images/Discussion.png" class="img-fluid" style="width:66.0%"></p>
-<p>We will be using our GitHub <a href="https://github.com/UMGCCCFCSR/CytometryInR/discussions">Discussions</a> page as a community forum. This will allow us to answer questions, and benefit from insights from others in the community. One advantage of having so many people signed up for the course is that if you have a question, someone else likely does as well, so go start a post and ask it!</p>
-<p><br> <br></p>
-</section>
-<section id="optional-take-home-problems" class="level3">
-<h3 class="anchored" data-anchor-id="optional-take-home-problems">Optional Take-Home Problems</h3>
-<p><img src="images/WorldwideSignups.png" class="img-fluid" style="width:66.0%"></p>
-<p>Each week, we will offer optional take-home problems. These are intended to allow you to work with your own data on similar problems, but in a not-so-structured manner. Challenges that you and overcome during the process will help grow your problem solving and debugging skills, and help solidify concepts covered during the course.</p>
-<p>To get feedback on these problems, you can reach out to the community on the <a href="https://github.com/UMGCCCFCSR/CytometryInR/discussions">Discussions page</a>, or once far enough open a pull request to the <a href="">homework</a> branch and we will provide additional feedback.</p>
-<p><br> <br></p>
-</section>
-<section id="cost" class="level3">
-<h3 class="anchored" data-anchor-id="cost">Cost</h3>
-<p>Is there a cost to participate? No, it’s absolutely free! Is there a catch? Yes, you learn R, and may wind up with strong feelings about <a href="https://rdrr.io/bioc/flowCore/man/flowFrame-class.html">flowframes</a> vs.&nbsp;<a href="https://rdrr.io/bioc/flowWorkspace/man/cytoframe.html">cytoframes</a>. This is also our first year offering this course, so we will sporadically ask you to fill out a feedback forms to help us improve.</p>
-<p><img src="https://imgs.xkcd.com/comics/flowchart_2x.png" class="img-fluid" style="width:25.0%"></p>
-<p><br> <br></p>
-</section>
-<section id="computing-requirements" class="level3">
-<h3 class="anchored" data-anchor-id="computing-requirements">Computing Requirements</h3>
-<p><img src="images/TidyData.png" class="img-fluid" style="width:50.0%"></p>
-<p>For those attending online, you will need a computer with internet access. Operating system shouldn’t matter, as we will be offering code examples for Windows, Mac and Linux. As with all things flow-cytometry software, having a faster CPU with multiple cores, more RAM and greater storage space is generally helpful, but not a deal breaker.</p>
-<p><br></p>
-<p>You will need to be able to install the required software (<a href="https://cran.rstudio.com/">R</a>, <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a>, <a href="https://positron.posit.co/">Positron</a>, <a href="https://quarto.org/">Quarto</a>, and <a href="https://git-scm.com/">Git</a>) as well as install and compile R packages from the <a href="https://cran.r-project.org/">CRAN</a> and <a href="https://www.bioconductor.org/">Bioconductor</a> repositories (as well as a few GitHub-based R packages). Installation walkthroughs for each computer operating system can be found <a href="./course/00_WorkstationSetup/index.html">here</a>.</p>
-<p>For those using university or company administered computers, please be aware that you may not have the necessary permissions to install these directly, and may need to reach out to your IT department to help get these initial requirements set up. If you are using your own computer, congratulations, you are your system administrator, and should already have the necessary permissions.</p>
-<p><br></p>
-<p>For those attending in-person, we have set up a pop-up computer lab in the conference room. For those who arrive early, we have a limited number of second screens with provided mouse and keyboard that you can plug a laptop into via HDMI cable to set up a workstation. For those arriving later, the room has enough space (and electrical plugs) for 20 people, but you will need to balance a laptop on your lap. If you have your own laptop, feel free to bring it. If you don’t have a laptop, the flow core has 6 loaner laptops running Linux that we can let participants use for that session.</p>
-<p><br></p>
-</section>
-</section>
-<section id="license" class="level1">
-<h1>License</h1>
-<p>In our commitment to open-science and open-source, all teaching materials are freely offered under a <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.en">CC-BY-SA</a> license, while all code examples are offered under the <a href="https://www.gnu.org/licenses/agpl-3.0.en.html">AGPL3-0</a> copyleft license.</p>
-<p><br> <br></p>
-<div style="text-align: right;">
-<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://www.gnu.org/graphics/agplv3-with-text-162x68.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
+<section id="answer-1" class="level1">
+<h1>Answer 1</h1>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PeacoQC)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span>(<span class="st">"package:PeacoQC"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "PeacoQC"        "PeacoQCHeatmap" "PlotPeacoQC"    "RemoveDoublets"
+[5] "RemoveMargins" </code></pre>
+</div>
 </div>
 
 
@@ -689,7 +739,7 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
       &nbsp;
     </div>
     <div class="nav-footer-right">
-<p><img src=".\images/AGPL3.png" class="img-fluid" alt="AGPL-3.0"> <img src=".\images/CCBYSA.png" class="img-fluid" alt="CC-BY-SA"></p>
+<p><img src="../../..\images/AGPL3.png" class="img-fluid" alt="AGPL-3.0"> <img src="../../..\images/CCBYSA.png" class="img-fluid" alt="CC-BY-SA"></p>
 </div>
   </div>
 </footer>
