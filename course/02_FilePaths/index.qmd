@@ -13,7 +13,10 @@ toc-depth: 5
 [![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 :::
 
-For the YouTube livestream schedule, see [here](https://www.youtube.com/@CytometryInR)
+For the YouTube livestream recording, see [here](https://www.youtube.com/live/fwSu97DYlaU?si=R3DpH9dRuUCexJMN)
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/fwSu97DYlaU?si=R3DpH9dRuUCexJMN&amp;start=22" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 
 For screen-shot slides, click [here](/course/02_FilePaths/slides.qmd)
 
@@ -170,13 +173,16 @@ And with this setup complete, you are now ready to proceed. Remember, run code a
 
 Now that we are back in our Week2 folder, let's start by seeing our current location similarly to how our computer perceives it. 
 
-We will use  `getwd()` function (ie. get working directory) to return the location of the folder we are currently inside of. For example, when `getwd()` is run in the process of generating the webpage for 02_FilePaths, we see the following location
+We will use  `getwd()` function (ie. get working directory) to return the location of the folder we are currently inside of. For example, when `getwd()` is run within my Week2 project folder, I see the following location
 
 ```{r}
+#| eval: FALSE
 getwd()
 ```
 
-This location is the **Working Directory**, as viewed from the computer's perspective.
+![](images/0000_ReplacementGetWD.png)
+
+This returns a file path. The final location (Week2 in this case) is the **Working Directory**. Your computer when working in R will be descern other locations in relation to this directory.
 
 <br>
 
@@ -187,8 +193,11 @@ This location is the **Working Directory**, as viewed from the computer's perspe
 Within this working directory, we have a variety of project folders and files related to the course. We can see the folders that are present using the `list.dirs()` function. 
 
 ```{r}
+#| eval: FALSE
 list.dirs(path=".", full.names=FALSE, recursive=FALSE)
 ```
+
+![](images/0000_ReplacementListFiles.png)
 
 Within this `list.dirs()` function, we are specifying two arguments with which we will be working with later today, *full.names* and *recursive*. For now, lets set their arguments to FALSE, which means they conditions they implement are inactive (turned off). 
 
@@ -199,18 +208,27 @@ Within this `list.dirs()` function, we are specifying two arguments with which w
 The path argument is currently set to ".", which is a stand-in for the present directory. In R, if an argument is not specified directly, it is inferred based on an order of expected arguments. Thus, if not present, we could still get the same output as seen before. 
 
 ```{r}
+#| eval: FALSE
 list.dirs(full.names=FALSE, recursive=FALSE)
 ```
+
+![](images/0000_ReplacementListFiles.png)
 
 <br>
 
 ---
 
-Among the list of folders, we have two *hidden folders* (denoted by the "." in front of the folder name), ie the ".git" and ".quarto" folders. If you are working within Positron, the hidden quarto file is shown in a lighter gray color. 
+Within Positron, in addition to visible folders, we also have *hidden folders* (denoted by the "." in front of the folder name when using `list.dirs()`). In the case of one of our course website folders, we can see a ".quarto" folder shown in a lighter gray . The ".git" folder we saw from `list.dirs()` is typically hidden when viewing from Positron. 
 
 ![](images/02_HiddenFolder.png)
 
-The three not-hidden folders are also listed. We will see how to navigate these in a second. 
+In the case of Week2, the two not-hidden folders we created are listed. We will see how to navigate these in a second. 
+
+<br>
+
+---
+
+![](images/0000_ReplacementView.png)
 
 <br>
 
@@ -239,6 +257,8 @@ When we run this, we create a variable, that will appear within the right-sideba
 #| eval: TRUE
 WhatDayDidIWriteThis <- "Saturday"
 ```
+
+![](images/04_VariableList.png)
 
 <br>
 
@@ -287,7 +307,7 @@ Top_Secret_Meeting_Day <- "Saturday"
 
 The above (with individual words separated by _) is collectively known as snake case. The alternate way to help delineate variable names is "camelCase", with first letter of each word being capitalized (seen in the previous example). 
 
-[](https://pbs.twimg.com/media/FxVpCpqaIAE_iqU?format=jpg&name=4096x4096)
+![](images/CamelCase.jpeg)
 
 <br>
 
@@ -594,7 +614,7 @@ list.files(path="data/target", full.names=FALSE, recursive=FALSE)
 
 <br>
 
-While this works in your particular context, if you are sharing the code with others who have a different operating system, these hard-coded / or \ will cause the code for them to error out at these particular steps. 
+While this works in your particular context, if you are sharing the code with others who have a different operating system, these hard-coded "/" or "\" will cause the code for them to error out at these particular steps. 
 
 ---
 
@@ -625,6 +645,8 @@ ScreenshotFolder
 ```
 
 ```{r}
+#| eval: FALSE
+
 list.files(path=ScreenshotFolder, full.names=FALSE, recursive=FALSE)
 ```
 
@@ -651,7 +673,7 @@ You will notice, the index numbers are in the context of what is filtered, not a
 
 ## Selecting for Patterns
 
-You will notice, in the above example, we provided a character string ("ND050") that was used to return files that contained the matching pattern. If we currently listed the files within data, we get a return that looks like this:
+If we currently listed the files within data, we get a return that looks like this:
 
 ```{r}
 #| eval: FALSE
@@ -721,7 +743,7 @@ Infants <- files[str_detect(files, "INF")]
 One useful thing is that within R, we can set conditions on whether something is carried out. The most typical conditional you will encounter are the "If" statements. They typically take a form that resembles the following. 
 
 ```{r}
-#|eval: FALSE
+#| eval: FALSE
 
 NeedCoffee <- TRUE
 
@@ -785,12 +807,15 @@ When you add an ! in front a conditional, it flips the expected outcome.
 ```{r}
 ItsRaining <- TRUE
 
-if (!ItsRaining){print("Bring an Umbrella")}
-
+if (ItsRaining){print("Bring an Umbrella")}
 ```
 
 ```{r}
 !ItsRaining
+```
+
+```{r}
+if (!ItsRaining){print("Bring an Umbrella")}
 ```
 
 ```{r}
@@ -949,6 +974,29 @@ basename(Infants)
 
 ![](images/22.png)
 
+## Recursive
+
+And finally that we have created additional nested folders and populated them with fcs files, let's see what setting `list.files()` recursive argument to TRUE
+
+```{r}
+#| eval: FALSE
+all_files_present <- list.files(full.names=TRUE, recursive=TRUE)
+all_files_present 
+```
+
+![](images/RecursiveTrue.png)
+
+<br>
+
+---
+
+In this case, all files in all folders within the working directory are shown. This can be useful when exploring folder contents, but if there are a lot of files present within the folder, it will take a while to return the list. 
+
+<br>
+
+---
+
+
 ## Saving changes to Version Control
 
 And as is good practice, to maintain version control, let's stage all the files and folders we created today within the Week2 Project Folder, write a commit message, and send these files back to GitHub until they are needed again next time. 
@@ -986,13 +1034,18 @@ Plug in an external hard-drive or USB into your computer. Manually, create a fol
 :::
 
 :::{.callout-tip title="Problem 2"}
-In this session, we used list.files with the full.names argument, as well as the `basename()` function to identify specific files. But what if you wanted a particular directory. Run list.files with recursive set to TRUE, and then search online to find an R function that would retrieve the "" directory. 
+In this session, we used `list.files()` with the "full.names argument" set to TRUE, as well as the `basename()` function to identify specific files. But what if you wanted a particular directory. Run `list.files()` with "full.names argument" and "recursive" argument set to TRUE, and then search online to find an R function that would retrieve the "" individual directory folders. 
 :::
 
 :::{.callout-tip title="Problem 3"}
 R packages often come with internal datasets, that are typically used for use in the help documentation examples. These can be accessed through the use of the `system.file()` function. See an example below. 
 
-Using what we have learned about file.path navigation, search your way down the file.directory of the `flowSOM` and `flowWorkspace` packages, and identify any .fcs files that are present for use in the documentation. 
+```{r}
+#| eval: FALSE
+system.file("extdata", package = "FlowSOM")
+```
+
+Using what we have learned about file.path navigation, search your way down the file.directory of the `FlowSOM` and `flowWorkspace` packages, and identify any .fcs files that are present for use in the documentation. 
 :::
 
 
