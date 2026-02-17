@@ -955,7 +955,7 @@ DescriptionList$`$VOL`
 :::
 
 :::{.callout-tip title="Software"}
-Volume amount acquired during acquisition. 
+Software used and version
 :::
 
 ::: {.fragment}
@@ -966,7 +966,7 @@ DescriptionList$CREATOR
 
 :::
 
-You will notice at this point, the keyword names including a "$" symbol have stopped, so tick marks are no longer required. The only $ remaining is being used as a selector for a particular item in the list.
+You will notice at this point, the keyword names including a "$" symbol have stopped, so tick marks are no longer required (except when there is a space in the name). The only $ remaining is being used as a selector for a particular item in the list.
 
 ```{r}
 #| class-output: "scroll-output"
@@ -1002,7 +1002,7 @@ DescriptionList$GROUPNAME
 
 ## Laser Metadata
 
-And finally, some of the values associated with the individual lasers particular values as far as delays and area scaling factors for a particular day (also useful when plotted). 
+Next up, there is a small stretch of keywords containing the values associated with the individual lasers as far as delays and area scaling factors for a particular day (also useful when [plotted](https://umgccfcss.github.io/InstrumentQC/Aurora5L.html)). 
 
 
 ```{r}
@@ -1032,7 +1032,7 @@ Detectors
 
 ## flowCore Parameters
 
-Depending on the arguments selected during `read.FCS()`, we might also encounter additional keywords that are added in by flowCore. For example
+Depending on the arguments selected during `read.FCS()`, we might also encounter additional keywords that are added in by flowCore. For example, we do not see these keywords when "transformation" is set to FALSE.
 
 ```{r}
 flowCoreCheck <- read.FCS(filename=firstfile,
@@ -1068,7 +1068,7 @@ Detectors
 
 ---
 
-For some flow cytometry R packages, you will encounter these keywords integrated into the exported downstream .fcs file when opening it again in commercial software. It is likely the package authors forgot to set the transformation argument to FALSE, which is why these keywords persist. 
+For some flow cytometry R packages, you will notice when opening their exported .fcs outputs in commercial software that these flowCore keywords have ended up integrated. It is likely somewhere in the package code the author forgot to add set transformation to FALSE, which is why we are seeing these flowCore keywords after the fact. 
 
 # Take Away
 
@@ -1076,7 +1076,7 @@ Today we broke open an .fcs file and explored how the underlying data is organiz
 
 In context of our continuing analogy, with each function being a tool, and an R package a toolbox, each tool in the toolbox works on different types of objects. A hammer needs nails, screwdrivers need screws, a paintbrush needs paint and a wall, etc. Object types help define these requirements, so when we use a function, knowing what type can help determine what we provide to it in order for it to work properly and not error out. 
 
-Next week, we will dive into the world of tidyverse, working specifically with these intermediate object types matrices and data.frames. If everything can in these objects can be thought of as rows and columns, can we select and filter for these more efficiently to get the data we need, and leave behind anything we don't? We will find out next week. 
+Next week, we will dive into the world of [tidyverse](https://tidyverse.org/), working specifically with these intermediate object types matrices and data.frames. The basic premise is to think of all data as rows and columns, the reasoning behind this approach which can be found [here](https://vita.had.co.nz/papers/tidy-data.html).
 
 ![](images/TakeAway.jpg)
 
@@ -1085,6 +1085,10 @@ Next week, we will dive into the world of tidyverse, working specifically with t
 ---
 
 # Additional Resources
+
+[Data File Standard for Flow Cytometry, Version FCS 3.1](https://pmc.ncbi.nlm.nih.gov/articles/PMC2892967/)
+
+[R Programming - R Data Types: Vectors and Lists](https://youtu.be/p01ckVx-678?si=BQp6SFTWfZzz2-wI)
 
 [Base Types vs. Object-Oriented Objects](https://adv-r.hadley.nz/base-types.html)
 

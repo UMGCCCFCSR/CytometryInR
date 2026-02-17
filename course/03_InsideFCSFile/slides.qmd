@@ -1,0 +1,1968 @@
+---
+title: "03 - Inside an FCS File"
+author: "David Rach"
+date: 02-16-2026
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    incremental: true
+page-layout: full
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+---
+
+# Background
+
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Welcome to the Week #3! Having subjected everyone to two R-focused weeks, this week will have more of a cytometry-focus as we slice into an .fcs file. We will hopefully gather greater understanding of how an .fcs file is structured and what additional kinds of information we can retrieve (while becoming increasingly puzzled why different manufacturers insist on using different keyword names for the exact same things). 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We will also gain additional exposure to more object types in R (vectors, list, matrices and data.frames). Continuing the analogy from last week, if every function is the equivalent of a tool in a toolbox, each tool requires certain types of things to do its job properly (hammer ~ nail, screwdriver ~ screws, paintbrush ~ paint, etc.). Being able to identify what type/kind of object a particular variable we have created in R is will allow us to pass it to the correct function that will allow us to work with that object type.
+:::
+:::
+
+---
+
+:::{.callout-important title="Housekeeping"}
+We are building off concepts that were covered in [Week #1 (Installing R packages)](/course/01_InstallingRPackages/index.qmd) and especially [Week #2 (File Paths)](/course/02_FilePaths/index.qmd). 
+For those who are flow cytometry beginners, please see [UChicago Flow](https://youtu.be/gC4brjHbLkk?si=li98x7KlLXUFWGX3) Flow Basics Series for additional context.
+:::
+
+
+:::{.callout-tip title="Today's Goal"}
+If you find yourself at some point going "I have no idea what is going on", please pause, take a break, and circle back later in the day. Our goal is not to have you memorize how to quickly access 100 archaic keywords, but rather showcase a typical object exploration workflow. So don't power through, but rather circle back when you are in an exploring mindset. Consider what kind of information from within an .fcs file you'd like to retrieve, and then explore/navigate your way through the various paths until you find the information that you were looking for. 
+:::
+
+---
+
+:::{.callout-important title="Housekeeping"}
+As we do [every week](/course/02_FilePaths/index.qmd#new-repository), on GitHub, sync your forked-version of the CytometryInR course to bring in the most recent updates. Then within Positron, pull in those changes to your local computer. From there, copy the data folder to a separate project folder you have created. This will prevent any merge issues bringing in new data next week. 
+:::
+
+---
+
+# Walk Through
+
+---
+
+## Getting Set Up
+
+---
+
+### Set up File Paths
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having copied over the new data to your working project folder (Week 3 or whatever your chosen name), let's identify the file paths between our working directory and the fcs files. If you retained the same project organization structure we had during Week #2, it may look similar to the following: 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+#| include: FALSE
+
+# Please note, this code-chunk is only for use when writing the code. Please switch eval to false and next code blocks eval to true before rendering
+
+PathToDataFolder <- file.path(getwd(), "course", "03_InsideFCSFile", "data")
+```
+
+```{r}
+#| eval: TRUE
+PathToDataFolder <- file.path("data")
+```
+
+```{r}
+PathToDataFolder
+```
+
+:::
+
+---
+
+### Locate .fcs files
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We will now locate our .fcs files. As we saw last week, our computer will need the full file.paths to these individual files, so we will set the `list.files()` "full.names" argument to TRUE. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: TRUE
+fcs_files <- list.files(PathToDataFolder, pattern=".fcs", full.names=TRUE)
+fcs_files
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+By contrast, if the "full.names" argument was set to FALSE, we would have retrieved just the file names
+:::
+:::
+
+::: {.fragment}
+```{r}
+list.files(PathToDataFolder, pattern=".fcs", full.names=FALSE)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+This would have been the equivalent of running the `basename` function on the "full.names=TRUE" output.
+:::
+:::
+
+::: {.fragment}
+```{r}
+basename(fcs_files)
+```
+
+:::
+
+
+---
+
+## flowCore
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We will be using the `flowCore` package, which is the oldest and most-frequently downloaded flow cytometry package on [Bioconductor](https://www.bioconductor.org/packages/release/BiocViews.html#___FlowCytometry).
+:::
+:::
+
+---
+
+::: {.fragment}
+
+```{r}
+#| include: FALSE
+#| warning: FALSE
+#| message: FALSE
+
+# I have attached this code for anyone that is interested in seeing how these plots were made. The content is not part of today's lesson, so if you are just starting off, we will cover the details of data-tidying and creating ggplot objects over the next several weeks. Best, David
+
+# Load required packages via a library call
+
+library(dplyr) # CRAN
+library(stringr) # CRAN
+library(ggplot2) # CRAN
+#library(plotly) # Using the :: to access 
+
+# Loading in the dataset contained within the .csv file
+BioconductorFlow_path <- file.path(PathToDataFolder, "BioconductorFlow.csv")
+BioconductorFlowPackages <- read.csv(BioconductorFlow_path, check.names=FALSE)
+BioconductorFlowPackages <- BioconductorFlowPackages |>
+     arrange(desc(since)) |> mutate(package = factor(package, levels = package))
+
+# Newer Base R Pipe : |> 
+# Older mostly equivalent Magrittr Pipe %>% 
+```
+
+---
+
+```{r}
+#| echo: FALSE
+#| fig-height: 9
+
+# Notice the code-chunk eval arguments above dictate the shape of the final rendered plot. 
+
+# Taking the imported dataset and passing it to ggplot2 to create the first plot. 
+
+plot <- ggplot(BioconductorFlowPackages,
+ aes(x = 0, xend = since, y = package, yend = package)) +
+  geom_segment(linewidth = 2, color = "steelblue") +
+  scale_x_continuous(trans = "reverse", 
+  breaks = seq(0, max(BioconductorFlowPackages$since), by = 5)) +
+  labs(
+    x = "Years in Bioconductor",
+    y = NULL,
+    title = "Bioconductor Flow Cytometry R packages"
+  ) +
+  theme_bw()
+
+# Taking the static plot and making it interactive using the plotly package
+
+plotly::ggplotly(plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+
+```{r}
+#| include: FALSE
+
+# Retrieving the names of Bioconductor flow cytometry R packages in correct release order. 
+
+HistoricalOrder <- BioconductorFlowPackages |> pull(package)
+
+# Bringing in 2025 package usage dataset from a .csv file
+BioconductorUsage_path <- file.path(PathToDataFolder, "BioconductorDownloads.csv")
+BioconductorUsage <- read.csv(BioconductorUsage_path, check.names=FALSE)
+BioconductorUsage <- BioconductorUsage |> dplyr::filter(Month %in% "all")
+
+# Note, dplyr::filter is used due to flowCore also having a filter function, which causes conflicts once it is attached to the local environment. 
+
+# Combining both data.frames for use in the plot
+
+Dataset <- left_join(BioconductorFlowPackages, BioconductorUsage, by="package")
+
+# Rearranging the order in which packages are displayed
+
+Dataset$package <- factor(Dataset$package, levels=HistoricalOrder)
+```
+
+---
+
+```{r}
+#| echo: FALSE
+
+# Generating the 2nd plot with ggplot2
+
+plot <- ggplot(Dataset, aes(x = since, y = Nb_of_distinct_IPs)) +
+  geom_point(aes(color = package), size = 3, alpha = 0.7) + 
+  labs(
+    x = "Years in Bioconductor",
+    y = "Number of Yearly Downloads",
+    title = "",
+    color = "Package"
+  ) +
+  theme_bw()
+
+# Making it interactive with plotly
+
+plotly::ggplotly(plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+flowCore is also one of the many Bioconductor packages maintained by [Mike Jiang](https://github.com/mikejiang). In many ways (as those who completed the optional take-home problems for Week #1 know) reminiscent of this [xkcd](https://xkcd.com/2347/) comic:
+:::
+:::
+
+---
+
+![](images/BioconductorXKCD.png)
+
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As with all our R packages, we first need to make sure `flowCore` is attached to our local environment via the library call. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+library(flowCore)
+```
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The function we will be using today is the `read.FCS()` function. Do you remember how to access the help documentation?
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| code-fold: TRUE
+#| eval: FALSE
+
+# Or when in Positron, hovering over the highlighted function name within the code-chunk
+
+?flowCore::read.FCS
+```
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+To start, lets select just the first .fcs file. We will do this by indexing the first item within fcs_files via the square brackets []. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+firstfile <- fcs_files[1]
+firstfile
+```
+:::
+
+---
+
+## flowFrame
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For `read.FCS()`, it accepts several arguments. The argument "filename" is where we provide our file.path to .fcs file that we wish to load into R. Let's go ahead and do so
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+
+read.FCS(filename=firstfile)
+
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Please note, if you are doing this with your own .fcs files, you will need to provide two additional arguments, "transformation" = FALSE, and "truncate_max_range" = FALSE for the files to be read in correctly. We will revisit the reasons why in Week #5.
+:::
+:::
+
+::: {.fragment}
+```{r}
+read.FCS(filename=firstfile, transformation = FALSE, truncate_max_range = FALSE)
+```
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this case, we can see the .fcs file has been read into R as a "flowFrame" object. We can also see the file name, as well as details about the number of cells, and number of columns (whether detectors (for raw spectral flow data) or fluorophores (for unmixed spectral flow data)). 
+:::
+:::
+
+---
+
+![](images/00_flowFrame.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Directly below we see what resembles a table. At first glance, the only column with an immediately discernable purpose is the one with the name column, which is listing the detectors present on a [Cytek Aurora](https://bpb-us-w2.wpmucdn.com/voices.uchicago.edu/dist/2/1824/files/2021/10/Aurora-Configuration.png). 
+:::
+:::
+
+---
+
+![](images/01_flowFrameDetectors.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And finally, at the bottom we reach a line that tells us that for this .fcs files, 599 keyword can be found in a description slot. 
+:::
+:::
+
+---
+
+![](images/02_KeywordsFiveNineNine.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So let's get our bearings, we have loaded in an .fcs file to R, but let's use some of the concepts we covered last week to try to understand a bit about what type or class of object we are working with. From the output, we saw the words flowFrame object, so let's read it back in again, but assign it to an variable/object called flowFrame so that we can use the type-discerning functions we worked with last week on.
+:::
+:::
+
+::: {.fragment}
+```{r}
+flowFrame <- read.FCS(filename=firstfile, transformation = FALSE, truncate_max_range = FALSE)
+```
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we create this variable, if we have the session tab selected on our right secondary side bar, we see it appear:
+:::
+:::
+
+---
+
+![](images/03_SessionTab.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we were to use the type-determining functions we learned last week
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+#| include: FALSE
+# This is the whole ball game
+str(flowFrame)
+```
+
+```{r}
+class(flowFrame)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+flowFrames are a class of object with a structure defined within the `flowCore` package. They are used to work with the data contained within individual .fcs files. Looking again at the right secondary side bar, we can see that it shows up as a ""S4 class flowFrame package flowCore""" with 3 slots, with the words flowFrame adjacent to it. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+A perfectly valid first reaction to first reading this is "well how should I know what any of this means?".  Powering through this initial discomfort, let's go ahead and click on the dropdown arrow next to the variables name and see if we get any additional clarity on the issue. 
+:::
+:::
+
+---
+
+![](images/04_Slots.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When we do so, three additional drop-downs appear. Based on the previous line that mentioned 3 slots, we could infer that each line corresponds to one of those slots. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+What we are encountering with flowFrame is our first example of an S4 object type. These more-complicated object types are quite common for the various [Bioconductor](https://adv-r.hadley.nz/s4.html) affilitated R packages.
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+These objects will usually appear with either S4 or S3 in their metadata, and are made up of various simpler object types that are cobbled together within the larger object, usually occupying individual slots. 
+:::
+:::
+
+
+::: {.fragment}
+::: {.callout-tip title="."}
+What advantage this bundling provides will be something we revisit throughout the course as you encounter more of these S4/S3 objects. 
+:::
+:::
+
+---
+
+### exprs
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The first slot within the flowFrame object shows up with the name "exprs".  For the exprs object, glancing at it's middle column, we can based on the 100 rows and 61 columns, that it is likely a matrix-style object. We might also recall we saw similar numbers in the printed output when we ran   `read.FCS()`earlier.
+:::
+:::
+
+---
+
+![](images/00_flowFrame.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Which likely means that "exprs" slot is where the MFI data for the individual acquired cells within our .fcs file is being stored. Within Positron, for a matrix object, we can click on the little grid symbol on the far right to open up the table within editor. 
+:::
+:::
+
+---
+
+![](images/05_OpenTable.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we utilize the scroll bars, we can see that the individual detectors (in the case of uploading a raw spectral fcs file, they would appear as fluorophores for unmixed spectral or conventional fcs files) occupy the individual columns, which are named. The rows are not named, but number 100, matching the number of cells present in the .fcs file. Additionally, on the far left there is a little summary table about the overall data. 
+:::
+:::
+
+---
+
+![](images/06_TableInEditor.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's go ahead and assign this matrix to a new variable/object so that we can explore it later. Since flowFrame is an S4 object, it's slots can be individually accessed by adding the @ symbol and the respective slot name. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+MFI_Matrix <- flowFrame@exprs
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Alternatively, we can use the Bioconductor helper function `exprs()` to get data held in that slot
+:::
+:::
+
+::: {.fragment}
+```{r}
+MFI_Matrix_Alternate <- exprs(flowFrame)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In the case of the above, this displayed text output to the console would be unwiedly to display all at once. If we wanted to only see the first five rows, we could use the `head()` function, and provide a value of 5. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+head(MFI_Matrix, 5)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+This is much more workable, especially on a small laptop screen. We can see that there are names for each column corresponding to detector/fluorophore/metal depending on the .fcs file we are accessing. Lets retrieve these column names using the `colnames()` function. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+ColumnNames <- colnames(MFI_Matrix)
+ColumnNames
+```
+
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Something interesting occurred when this occurred, we can see in addition to the detector names directly above each a "$P#N" pattern appear, with # standing for increasing numbers. If we recall, we saw something similar in the first output column when we first ran `read.FCS()`. 
+:::
+:::
+
+---
+
+![](images/00_flowFrame.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets break out the `str()` and `class()` functions from last week and see what we can find out about why this is occuring. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+str(ColumnNames)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this case we can see that we don't just have a vector (list) similar to what we saw with Fluorophores object last week, because instead of a chr [1:61] we get back a Named chr [1:61] designation. What we see is that in this case, each value has a corresponding index name as well. (ex. $P1N, $P2N, etc.) Let's double check with `class()` function. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+class(ColumnNames)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can see that everything is character, but it doesn't inform us that each index was named. This is one of the reasons it is best when trying to see what type of an object something is, to use multiple functions, to avoid missing some important details. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we were trying to remove the names, being left with just the values (similar to what we saw with the vector-style list last week), we could use the `unname()` function:
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+unname(ColumnNames)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's return to the right sidebar to continue our exploration, by clicking on the dropdown arrow for exprs in the side-bar
+:::
+:::
+
+---
+
+![](images/07_ExprsExpanded.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The output is less user-friendly than what we saw when clicking on the little grid. If we scroll down far enough, we get down as far as [,61], which corresponds to the total number of columns. 
+:::
+:::
+
+---
+
+![](images/08_LessFriendly.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In base R, column order can be defined by placing the corresponding column index number after a comma ",". So for this case, the first column would be designated would be [,1] while the last column would be designated [,61]. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+MFI_Matrix[,1]
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+MFI_Matrix[,61]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+What would happen if used a column index number that didn't exist? Let's check. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| error: TRUE
+
+MFI_Matrix[,350]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We get back an error message telling us the subscript is out of bounds.
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So if columns are specified by a number after the comma (ex. [,1]), how are rows specified? In R, rows would be specified by a number before the comma [1,]
+:::
+:::
+
+::: {.fragment}
+```{r}
+MFI_Matrix[1,]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And while not the focus of today, we could retrieve individual values from a matrix by specifying both a row and a column index number. So for example, if we wanted the MFI value for the UV1-A detector for the first acquired cell (knowing that UV1-A is the 2nd column):
+:::
+:::
+
+::: {.fragment}
+```{r}
+MFI_Matrix[1,2]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+From our exploration, this looks to be all the information contained within the "exprs" slot, so let's back up and check on the next slot. 
+:::
+:::
+
+---
+
+### parameters
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we look at the next slot in the flowFrame object, we can see that parameters looks like it is going to be another more complex object, as it is showing up as an AnnotatedDataFrame object (defined by the Biobase R package, and itself contains 4 slots). 
+:::
+:::
+
+---
+
+![](images/09_Parameters.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having carved our way this far into the heart of an .fcs file, we are not about to call it quits now, so [CHARGE](https://youtu.be/92gP2J0CUjc?t=72) my fellow cytometrist!!! Click that drop-down arrow!
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having survived our charge into the unknown, the four parameter slots appear to be "varMetadata", "data", "dimLabels" and "._classVersion_". 
+:::
+:::
+
+---
+
+![](images/10_ParameterSlots.png)
+
+---
+
+#### varMetadata
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Fortunately for us, both "varMetadata" and "data" at least appear to be table-like objects of a type known as a  "data.frame", so lets click on the grid to open in our editor window. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In the case of varMetadata, we seem to have retrieved a column of metadata names. 
+:::
+:::
+
+---
+
+![](images/11_varMetadata.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+These look reminiscent of what we saw at the top of the `read.FCS()` column outputs previously
+:::
+:::
+
+---
+
+![](images/12_varMetadata2.png)
+
+---
+
+#### data
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Clicking on the grid for parameters's data slot will end opening the actual content that was displayed.
+:::
+:::
+
+---
+
+![](images/13_data.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's try to retrieve the data contained within this slot and save it as it's own variable/object within our R session. First, we need to open flowFrame object, then use @ to get inside its parameters slot. Since parameters is also a complex object (AnnotatedDataFrame specifically), we will need to use another @ to get inside its data slot:
+:::
+:::
+
+::: {.fragment}
+```{r}
+ParameterData <- flowFrame@parameters@data
+
+head(ParameterData, 10)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And similarly, we could access with the Bioconductor helper function `parameters()`, but we would need to specify the accessor for data outside the parenthesis. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+ParameterData_Alternate <- parameters(flowFrame)@data
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we ran the `str()` function, we get the following insight into ParameterData's object type
+:::
+:::
+
+::: {.fragment}
+```{r}
+str(ParameterData)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can see this class of object is a "data.frame". This is one of the more common object types in R, and we will be seeing these extensively throughout the course. We see that each of the columns appears to be designated by a $ followed by the column name, and then type of column (numeric, character, etc). 
+:::
+:::
+
+---
+
+![](images/15_dataframe.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we are trying to see these columns in R, we notice that data.frame is not like the previous S4 class objets we interacted with, as the @ symbol after doesn't bring up any suggestions
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+ParameterData@
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+By contrast, adding the $ we saw when using the `str()` function does retrieve the underlying information
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+ParameterData$
+```
+:::
+
+---
+
+![](images/15_Suggestions.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As you become more familiar with R, remembering to check what kind of object you are working with, and how to access the contents will with practice become more familiar to you.
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Similar to what we saw with a matrix, we can subset a data.frame based on the column or row index using square brackets []. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+ParameterData[,1]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The individual detectors or fluorophore appear under "name". For now, based on what we know, the $P# appears to be some sort of name being used as an internal consistent reference to the respective. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+"desc" is appearing empty for this raw spectral fcs file, but if you were to checked an unmixed file, this would be occupied the marker/ligand name assigned to it during the experiment setup.
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+"range", "minRange" and "maxRange" are beyond the scope of today, but are used by both instrument manufacturers and software vendors when setting appropiate scaling for a plot. For the actual details, see the [Flow Cytometry Standard](https://web.archive.org/web/20150209122542/http://www.isac-net.org/images/stories/documents/Standards/fcs3.1_normativespecification_20090813.pdf) documentation.
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having exhausted our options under parameters "varMetadata" and "data" slots, let's continue to the next slot. 
+:::
+:::
+
+---
+
+#### dimLabels
+
+![](images/16_DimLabels.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this case, not much is returned. Yey! 
+:::
+:::
+
+::: {.fragment}
+```{r}
+flowFrame@parameters@dimLabels
+```
+
+:::
+
+---
+
+#### classVersion
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Continuing on to the last slot ".__classVersion__"
+:::
+:::
+
+::: {.fragment}
+```{r}
+flowFrame@parameters@.__classVersion__
+```
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Also mercifully short, both of these seem to be more involved in defining the S4 class object, and don't contain anything we need to retrieve today. 
+:::
+:::
+
+---
+
+### Description
+
+::: {.fragment}
+::: {.callout-tip title="."}
+At this point, we have explored both "exprs" and "parameter" slots for the flowFrame object we created. Let's tackle the final slot, named description. 
+:::
+:::
+
+::: {.fragment}
+![](images/17_Description.png)
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When doing so, a very large list is opened within the Positron variables window.  While we could scroll through it, it might be easier to retrieve certain number of rows via the console to make interpreting this more structured. 
+:::
+:::
+
+---
+
+![](images/18_List.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+To retrieve the list itself, we would need to access the description slot of the flowFrame object. Since it is a slot, we will need to use the @ accessor. 
+:::
+:::
+
+
+<style>
+.scroll-output {
+  max-height: 200px;
+  overflow-y: auto;
+}
+</style>
+
+::: {.fragment}
+```{r}
+DescriptionList <- flowFrame@description
+```
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| class-output: "scroll-output"
+DescriptionList 
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The returned list is a little too large to reasonably explore. We can attempt to subset using the `head()` function as shown below
+:::
+:::
+
+::: {.fragment}
+```{r}
+head(DescriptionList, 5)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Alternatively, it might be better to subset based on position index
+:::
+:::
+
+::: {.fragment}
+```{r}
+DescriptionList[1:10]
+```
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And just as we saw for exprs and parameters, there is also a Bioconductor helper `keyword()` function to access this same information directly from the flowFrame. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+DescriptionList_Alternate <- keyword(flowFrame)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we run the `class()` function, we can see that DescriptionList is an actual "list". 
+:::
+:::
+
+::: {.fragment}
+```{r}
+class(DescriptionList)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+This is in contrast to the vectors we have previously generated. While these are also list like, they are what are known as as atomic list, which contain values that are all either characters, numerics or logicals. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Fluorophores <- c("BV421", "FITC", "PE", "APC")
+class(Fluorophores)
+```
+
+:::
+
+::: {.fragment}
+```{r}
+PanelAntibodyCounts <- c(5, 12, 19, 26, 34, 46, 51)
+class(PanelAntibodyCounts)
+```
+
+:::
+
+::: {.fragment}
+```{r}
+SpecimenIndexToKeep <- c(TRUE, TRUE, FALSE, TRUE)
+class(SpecimenIndexToKeep)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+A list on the other hand is not restricted to contain objects composed entirely of a certain atomic type. For example, I could include the three previous vectors into a list using the `list()` function.
+:::
+:::
+
+::: {.fragment}
+```{r}
+MyListofVectors <- list(Fluorophores, PanelAntibodyCounts, SpecimenIndexToKeep)
+str(MyListofVectors)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can see that with the Description/Keyword list we retrieved from our flowFrame shares a somewhat similar format.
+:::
+:::
+
+::: {.fragment}
+```{r}
+str(DescriptionList[1:10])
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+But in this case, there are also names present ($BEGINANALYSIS, $BEGINDATA, etc). What if we had tried to provide names to our List of Vectors? Would the format match?
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When we assigned a name to each of the vectors (by providing an equal to = ), we get the same kind of structure format to what we see in Description. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+MyNamedListofVectors <- list(FluorophoresNamed=Fluorophores,
+                        PanelAntibodyCountsNamed=PanelAntibodyCounts,
+                        SpecimenIndexToKeepNamed=SpecimenIndexToKeep)
+
+str(MyNamedListofVectors)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We could then subsequently be able to isolate items from that list using the $ operator. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+MyNamedListofVectors$
+```
+
+:::
+
+::: {.fragment}
+![](images/20_ListAccess.png)
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Alternatively, we could also access by list index position
+:::
+:::
+
+::: {.fragment}
+```{r}
+MyNamedListofVectors[1]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Remembering back to the original output from `read.FCS()` we remember that it mentioned 599 keywords being in the description slot, so now we know that this is what was being referenced. 
+:::
+:::
+
+---
+
+![](images/00_flowFrame.png)
+
+---
+
+# Keyword Madness
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Rather than go through the keywords individually (in which case we would be here through tomorrow), let's take a birds eye view of the contents of this list. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| class-output: "scroll-output"
+Subset <- DescriptionList[1:18]
+Subset
+```
+
+:::
+
+---
+
+## Early Metadata
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Within the initial portion, we are getting back metadata keywords related to where and how the particular file was acquired. Keywords of potential interest include:
+:::
+:::
+
+::: {.fragment}
+:::{.callout-tip title="Start Time"}
+What time was the .fcs file acquired
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$`$BTIM`
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="Cytometer"}
+What type of cytometer was the .fcs file acquired on
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$`$CYT`
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="Cytometer Serial Number"}
+Manufacturer Serial Number of the Cytometer
+:::
+:::
+
+::: {.fragment}
+```{r}
+DescriptionList$`$CYTSN`
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="FCS File Acquisition Date"}
+What was the date of acquisition
+:::
+:::
+
+::: {.fragment}
+```{r}
+DescriptionList$`$DATE`
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="Acquisition End Time"}
+What time was acquisition stopped
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$`$ETIM`
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="File Name"}
+Name of the .fcs file
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$`$FIL`
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="Operator"}
+Who acquired the .fcs file
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$`$OP`
+```
+
+:::
+
+---
+
+## Detector Values
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The next major stretch of keywords encode parameter values associated with the individual detectors for at the time of acquisition. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| class-output: "scroll-output"
+Detectors <- DescriptionList[20:384]
+Detectors
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Fortunately for all involved, there is a consistently repeating pattern for the keywords corresponding to each detector. We can see that here for $P7B,  $P7E, $P7N, $P7R, $P7TYPE, $P7V
+:::
+:::
+
+---
+
+![](images/21_DetectorIteration.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When referencing to the [Flow Cytometry Standard](https://web.archive.org/web/20150209122542/http://www.isac-net.org/images/stories/documents/Standards/fcs3.1_normativespecification_20090813.pdf) documentation, here are what the particular keyword letters mean:
+:::
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="B"}
+Number of bits reserved for parameter number n
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$`$P7B`
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="E"}
+Amplification type for parameter n. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$`$P7E`
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="N"}
+Short Name for parameter n. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$`$P7N`
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="R"}
+Range for parameter number n. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$`$P7R`
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="TYPE"}
+Detector type for parameter n. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$`$P7TYPE`
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="V"}
+Detector voltage for parameter n. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$`$P7V`
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+While not immediately obvious, understanding what these keywords encoded has proven useful for our core. In our case, we have built an automated [InstrumentQC dashboard](https://umgccfcss.github.io/InstrumentQC/Aurora3L.html) for all the instruments at our core. 
+:::
+:::
+
+---
+
+![](images/InstrumentQC.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+By extracting out from our daily QC bead .fcs files the stored **N (Detector Name)** and **V (Gain/Voltage)** values for all the individual detectors, it allows us to plot Levey-Jennings Plots for our individual instruments, giving us usually around a months warning before an individual laser begins to fail. This helps with scheduling the Field-Service Engineer visit before it starts impacting the actual data. 
+:::
+:::
+
+---
+
+![](images/LeveyJennings.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+While most of the detectors keywords are similar (only changing there individual name and voltage) there are a couple exceptions. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For the FSC/SSC parameters, instead of Raw_Fluorescence value for Type, we see the corresponding Scatter value get return. This in term is what is used by various commercial softwares to show those axis as linear instead of biexponential when selected. 
+:::
+:::
+
+---
+
+![](images/22_FSC.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+This is similarly the case for the Time parameter, where in addition to Type being set to Time, the range also appears different to Raw/Scatters value. 
+:::
+:::
+
+---
+
+![](images/23_Time.png)
+
+---
+
+## Middle Metadata
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Once we are out of the detector keywords, we find the last of the $Metadata associated keywords.
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| class-output: "scroll-output"
+Detectors <- DescriptionList[385:398]
+Detectors
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Among those of potential interest
+:::
+:::
+
+::: {.fragment}
+:::{.callout-tip title="Proj"}
+Often corresponding to the experiment file name 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$`$PROJ`
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="Spillover"}
+Where the internal spillover matrix is stored (we will revisit during compensation)
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$`$SPILLOVER`
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="TOT"}
+Total events (in this case my downsampled 100 cells)
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$`$TOT`
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="Volume"}
+Volume amount acquired during acquisition. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$`$VOL`
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="Software"}
+Software used and version
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$CREATOR
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+You will notice at this point, the keyword names including a "$" symbol have stopped, so tick marks are no longer required (except when there is a space in the name). The only $ remaining is being used as a selector for a particular item in the list.
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| class-output: "scroll-output"
+Detectors <- DescriptionList[390:398]
+Detectors
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="FILENAME"}
+Basically the full file.path to the .fcs file of interest. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$FILENAME
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="GROUPNAME"}
+The Name assigned to the acquisition Group. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+DescriptionList$GROUPNAME
+```
+
+:::
+
+---
+
+## Laser Metadata
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next up, there is a small stretch of keywords containing the values associated with the individual lasers as far as delays and area scaling factors for a particular day (also useful when [plotted](https://umgccfcss.github.io/InstrumentQC/Aurora5L.html)). 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| class-output: "scroll-output"
+Detectors <- DescriptionList[399:410]
+Detectors
+```
+
+:::
+
+---
+
+## Display
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Then there is a stretch matching whether a particular detector needs to be displayed as linear (in the case of time and scatter) or as log (for individual detectors). 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| class-output: "scroll-output"
+Detectors <- DescriptionList[412:472]
+Detectors
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And a few final keywords with threshold, window scaling and other user selected settings. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| class-output: "scroll-output"
+Detectors <- DescriptionList[473:476]
+Detectors
+```
+
+:::
+
+---
+
+## flowCore Parameters
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Depending on the arguments selected during `read.FCS()`, we might also encounter additional keywords that are added in by flowCore. For example, we do not see these keywords when "transformation" is set to FALSE.
+:::
+:::
+
+::: {.fragment}
+```{r}
+flowCoreCheck <- read.FCS(filename=firstfile,
+ transformation = FALSE, truncate_max_range = FALSE)
+
+flowCoreCheck
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| class-output: "scroll-output"
+NoChange <- keyword(flowCoreCheck)
+Detectors <- NoChange [476:500]
+Detectors
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+By contrast, if we had set "transformation" to TRUE:
+:::
+:::
+
+::: {.fragment}
+```{r}
+flowCoreCheck <- read.FCS(filename=firstfile,
+ transformation = TRUE, truncate_max_range = FALSE)
+
+flowCoreCheck
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| class-output: "scroll-output"
+YesChange <- keyword(flowCoreCheck)
+Detectors <- YesChange [476:500]
+Detectors
+```
+
+:::
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For some flow cytometry R packages, you will notice when opening their exported .fcs outputs in commercial software that these flowCore keywords have ended up integrated. It is likely somewhere in the package code the author forgot to add set transformation to FALSE, which is why we are seeing these flowCore keywords after the fact. 
+:::
+:::
+
+---
+
+# Take Away
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Today we broke open an .fcs file and explored how the underlying data is organized and stored once it is brought into R. In the process, we continued to build familiarity with some of the basic R knowledge, going from smaller simpler objects we encountered in week 2 to matrices and data.frames, to complex objects with multiple slots typical of what we encounter in the Bioconductor packages. We will build on these initial observations on the weeks to come. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In context of our continuing analogy, with each function being a tool, and an R package a toolbox, each tool in the toolbox works on different types of objects. A hammer needs nails, screwdrivers need screws, a paintbrush needs paint and a wall, etc. Object types help define these requirements, so when we use a function, knowing what type can help determine what we provide to it in order for it to work properly and not error out. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next week, we will dive into the world of [tidyverse](https://tidyverse.org/), working specifically with these intermediate object types matrices and data.frames. The basic premise is to think of all data as rows and columns, the reasoning behind this approach which can be found [here](https://vita.had.co.nz/papers/tidy-data.html).
+:::
+:::
+
+---
+
+![](images/TakeAway.jpg)
+
+---
+
+# Additional Resources
+
+[Data File Standard for Flow Cytometry, Version FCS 3.1](https://pmc.ncbi.nlm.nih.gov/articles/PMC2892967/)
+
+[R Programming - R Data Types: Vectors and Lists](https://youtu.be/p01ckVx-678?si=BQp6SFTWfZzz2-wI)
+
+[Base Types vs. Object-Oriented Objects](https://adv-r.hadley.nz/base-types.html)
+
+---
+
+# Take-home Problems
+
+:::{.callout-tip title="Problem 1"}
+Today's walkthrough focused on a raw spectral flow cytometry file. Within a subfolder in data you will also find an unmixed .fcs file (2025_07_26...). Using what learned to day, investigate it, and see if you can catalog the main differences that occured to the keyword, parameters and exprs. Did any keywords get added, changed, deleted entirely? etc.
+:::
+
+---
+
+:::{.callout-tip title="Problem 2"}
+Today's files were for spectral .fcs files from a Cytek Aurora within a subfolder in data you will also find a conventional flow cytometry file (2025-10_22...). Similarly, explore and see if you find any major differences (beyond the different detector or fluorophore names which will vary based on antibody panel used, etc)
+:::
+
+---
+
+:::{.callout-tip title="Problem 3"}
+If you have access to commercial software, take one of the .fcs files and try to see if you can see similar internal information from within the software. For those without commercial access, try the equivalent process using [Floreada.io](/course/00_Floreada/index.qmd). 
+:::
+
+---
+
+![](images/TakeAway.jpg)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
