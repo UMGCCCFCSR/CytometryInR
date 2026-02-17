@@ -22,12 +22,16 @@ execute:
 
 ---
 
+::: {.fragment}
 ::: {.callout-tip title="."}
 Welcome to the second week of [Cytometry in R](/Schedule.qmd)! This week we will learn about file.path, namely, how to communicate to our computer (and R) where various files are stored. 
 :::
+:::
 
+::: {.fragment}
 :::{.callout-important}
 Before getting started, please make sure you have completed the creating a [GitHub](/course/00_GitHub/index.qmd) and [Workstation Setup](/course/00_WorkstationSetup/index.qmd) walk-throughs, since we will begin where they left off once the required software was successfully installed. Having read-through how to use [version control](/course/00_Git/index.qmd) using Git will additionally be useful. 
+:::
 :::
 
 ---
@@ -46,11 +50,15 @@ When flow cytometrist first start learning how to code, we tend to think big pic
 :::
 :::
 
+---
+
 ::: {.fragment}
 ::: {.callout-tip title="."}
 Our computers by contrast "think" in small incremental steps: "First locate this folder, list the files present, select these specific ones, import them into R, load the normalization package, pass the first file in, etc.". These steps when combined algorithmically add up to form the bigger picture.
 :::
 :::
+
+---
 
 ::: {.fragment}
 ::: {.callout-tip title="."}
@@ -77,8 +85,9 @@ Before we begin, let's make sure you get the data needed for today transferred t
 :::
 :::
 
-### New Repository
+---
 
+### New Repository
 
 ::: {.fragment}
 ::: {.callout-tip title="."}
@@ -249,19 +258,24 @@ And with this setup complete, you are now ready to proceed. Remember, run code a
 ::: {.callout-tip title="."}
 Now that we are back in our Week2 folder, let's start by seeing our current location similarly to how our computer perceives it. 
 
-We will use  `getwd()` function (ie. get working directory) to return the location of the folder we are currently inside of. For example, when `getwd()` is run in the process of generating the webpage for 02_FilePaths, we see the following location
+We will use  `getwd()` function (ie. get working directory) to return the location of the folder we are currently inside of. For example, when `getwd()` is run within my Week2 project folder, I see the following location
 :::
 :::
 
 ---
 
 ```{r}
+#| eval: FALSE
 getwd()
 ```
 
+![](images/0000_ReplacementGetWD.png)
+
 ::: {.fragment}
 ::: {.callout-tip title="."}
-This location is the **Working Directory**, as viewed from the computer's perspective.
+
+This returns a file path. The final location (Week2 in this case) is the **Working Directory**. Your computer when working in R will be descern other locations in relation to this directory.
+
 :::
 :::
 
@@ -275,9 +289,21 @@ Within this working directory, we have a variety of project folders and files re
 :::
 :::
 
+::: {.fragment}
+![](images/0000_ReplacementView.png)
+:::
+
+::: fragment
 ```{r}
+#| eval: FALSE
 list.dirs(path=".", full.names=FALSE, recursive=FALSE)
 ```
+
+![](images/0000_ReplacementListFiles.png)
+
+:::
+
+---
 
 ::: {.fragment}
 ::: {.callout-tip title="."}
@@ -293,28 +319,42 @@ The path argument is currently set to ".", which is a stand-in for the present d
 :::
 :::
 
+::: {.fragment}
 ```{r}
+#| eval: FALSE
 list.dirs(full.names=FALSE, recursive=FALSE)
 ```
 
+![](images/0000_ReplacementListFiles.png)
+
+:::
+
 ---
 
 ::: {.fragment}
 ::: {.callout-tip title="."}
-Among the list of folders, we have two *hidden folders* (denoted by the "." in front of the folder name), ie the ".git" and ".quarto" folders. If you are working within Positron, the hidden quarto file is shown in a lighter gray color. 
+Within Positron, in addition to visible folders, we also have *hidden folders* (denoted by the "." in front of the folder name when using `list.dirs()`). In the case of one of our course website folders, we can see a ".quarto" folder shown in a lighter gray . The ".git" folder we saw from `list.dirs()` is typically hidden when viewing from Positron. 
 :::
 :::
 
----
+::: {.fragment}
 
 ![](images/02_HiddenFolder.png)
 
+:::
+
 ---
 
 ::: {.fragment}
 ::: {.callout-tip title="."}
-The three not-hidden folders are also listed. We will see how to navigate these in a second. 
+In the case of Week2, the two not-hidden folders we created are listed. We will see how to navigate these in a second. 
 :::
+:::
+
+::: {.fragment}
+
+![](images/0000_ReplacementView.png)
+
 :::
 
 ---
@@ -330,10 +370,13 @@ For example:
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 WhatDayDidIWriteThis <- "Saturday"
 ```
+:::
 
 ::: {.fragment}
 ::: {.callout-tip title="."}
@@ -349,10 +392,18 @@ When we run this, we create a variable, that will appear within the right-sideba
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: TRUE
 WhatDayDidIWriteThis <- "Saturday"
 ```
+
+:::
+
+---
+
+![](images/04_VariableList.png)
 
 ---
 
@@ -362,9 +413,13 @@ These variables can subsequently be retrieved by printing (ie. running) the name
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 WhatDayDidIWriteThis 
 ```
+
+:::
 
 ---
 
@@ -374,9 +429,13 @@ You can create variables with almost any name you can think of
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 TopSecretMeetingDay <- "Saturday"
 ```
+
+:::
 
 ---
 
@@ -386,10 +445,14 @@ With a few exceptions. R doesn't play well with spaces:
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| error: TRUE
 Top Secret Meeting Day <- "Saturday"
 ```
+
+:::
 
 ---
 
@@ -399,9 +462,13 @@ But does play well with underscores:
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 Top_Secret_Meeting_Day <- "Saturday"
 ```
+
+:::
 
 ---
 
@@ -413,7 +480,7 @@ The above (with individual words separated by _) is collectively known as snake 
 
 ---
 
-[](https://pbs.twimg.com/media/FxVpCpqaIAE_iqU?format=jpg&name=4096x4096)
+![](images/CamelCase.jpeg)
 
 ---
 
@@ -429,13 +496,21 @@ You can overwrite a Variable name by assigning a different value to it:
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 TopSecretMeetingDay <- "Monday"
 ```
 
+:::
+
+::: {.fragment}
+
 ```{r}
 TopSecretMeetingDay
 ```
+
+:::
 
 ---
 
@@ -445,9 +520,13 @@ You can also remove individual variables via the `rm` function
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 rm(Top_Secret_Meeting_Day)
 ```
+
+:::
 
 ---
 
@@ -469,10 +548,14 @@ In the prior case, we are creating a variable that is a "string" of character va
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 Fluorophores <- "FITC"
 str(Fluorophores)
 ```
+
+:::
 
 ::: {.fragment}
 ::: {.callout-tip title="."}
@@ -488,9 +571,13 @@ This could also be retrieved using the `class()` function.
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 class(Fluorophores)
 ```
+
+:::
 
 ---
 
@@ -500,10 +587,14 @@ Alternatively, we could assign a numeric value to a variable
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 Fluorophores <- 29
 str(Fluorophores)
 ```
+
+:::
 
 ::: {.fragment}
 ::: {.callout-tip title="."}
@@ -519,10 +610,14 @@ We can also specify a logical (ie. True or FALSE) to a particular object
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 IsPerCPCy5AGoodFluorophore <- FALSE
 str(IsPerCPCy5AGoodFluorophore)
 ```
+
+:::
 
 ::: {.fragment}
 ::: {.callout-tip title="."}
@@ -540,6 +635,8 @@ We could of course, have assigned a character value to a variable name, and then
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 
@@ -547,6 +644,8 @@ PackageToInstall <- "dplyr"
 
 install.packages(PackageToInstall)
 ```
+
+:::
 
 ---
 
@@ -560,10 +659,14 @@ For example, we can modify Fluorophores and add additional entries:
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 Fluorophores <- c("BV421", "FITC", "PE", "APC")
 str(Fluorophores)
 ```
+
+:::
 
 ::: {.fragment}
 ::: {.callout-tip title="."}
@@ -581,9 +684,13 @@ We can similarly retrieve this information using the `length()` function
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 length(Fluorophores)
 ```
+
+:::
 
 ---
 
@@ -593,15 +700,24 @@ When multiple objects are present, we can specify them individidually by providi
 :::
 :::
 
+
+::: {.fragment}
+
 ```{r}
 Fluorophores[1]
 ```
 
+:::
+
 ---
+
+::: {.fragment}
 
 ```{r}
 Fluorophores[3]
 ```
+
+:::
 
 ---
 
@@ -611,9 +727,13 @@ Or specify in sequence using a colon (:)
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 Fluorophores[3:4]
 ```
+
+:::
 
 ---
 
@@ -623,9 +743,13 @@ Or if not adjacent, reusing `c` within the square brackets
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 Fluorophores[c(1,4)]
 ```
+
+:::
 
 ---
 
@@ -643,14 +767,20 @@ After this detour into variables and indexing, let's return our focus to how to 
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 list.dirs(path=".", full.names=FALSE, recursive=FALSE)
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/00.png)
+
+:::
 
 ---
 
@@ -660,14 +790,20 @@ We can also list any files that are present within our working directory using t
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 list.files()
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/01.png)
+
+:::
 
 ---
 
@@ -685,14 +821,20 @@ We can also specify a particular folder we want to show items present within by 
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 list.files(path="data", full.names=FALSE, recursive=FALSE)
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/02.png)
+
+:::
 
 ---
 
@@ -724,12 +866,16 @@ Alternatively, we can also create a folder via R using the `dir.create()` functi
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 NewFolderLocation <- file.path("data", "target2")
 
 dir.create(path=NewFolderLocation)
 ```
+
+:::
 
 ---
 
@@ -755,9 +901,13 @@ Given our working directory is set the top-level of the Week2 project folder, we
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 list.files(path="target", full.names=FALSE, recursive=FALSE)
 ```
+
+:::
 
 ---
 
@@ -767,9 +917,13 @@ No files are returned (ie, character(0)), since from our computers perspective, 
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 file.exists("target")
 ```
+
+:::
 
 ---
 
@@ -779,14 +933,20 @@ On the other hand, within it's view, it knows that the data folder exist
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 file.exists("data")
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/05.png)
+
+:::
 
 ---
 
@@ -802,18 +962,24 @@ So here we encounter the first challenge when communicating to our computer wher
 
 ::: {.fragment}
 ::: {.callout-tip title="."}
-One way we can do this is through a file.path argument. We could potentially provide this by adding either a / or a \ into the path argument, depending on your computers operating system. 
+One way we can do this is through a file.path argument. We could potentially provide this by adding either a "/" or a "\" into the path argument, depending on your computers operating system. 
 :::
 :::
+
+::: {.fragment}
 
 ```{r}
 #| eval: FALSE
 list.files(path="data/target", full.names=FALSE, recursive=FALSE)
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/07.png)
+
+:::
 
 ---
 
@@ -831,19 +997,29 @@ For that reason, it is better to assemble a file.path using the `file.path()` fu
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 FolderLocation <- file.path("data", "target")
 FolderLocation
 ```
+
+:::
+
+::: {.fragment}
 
 ```{r}
 #| eval: FALSE
 list.files(path=FolderLocation, full.names=FALSE, recursive=FALSE)
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/07.png)
+
+:::
 
 ---
 
@@ -851,7 +1027,9 @@ list.files(path=FolderLocation, full.names=FALSE, recursive=FALSE)
 ::: {.callout-tip title="."}
 We can also append additional locations to existing file paths, by including the variable name within the `file.path()` we are creating.
 :::
-::: 
+:::
+
+::: {.fragment}
 
 ```{r}
 FolderLocation <- "data"
@@ -859,13 +1037,23 @@ ScreenshotFolder <- file.path(FolderLocation, "target")
 ScreenshotFolder
 ```
 
+:::
+
+::: {.fragment}
+
 ```{r}
+#| eval: FALSE
+
 list.files(path=ScreenshotFolder, full.names=FALSE, recursive=FALSE)
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/07.png)
+
+:::
 
 ---
 
@@ -875,14 +1063,20 @@ Additionally, `list.files()` has the ability to filter for files that contain a 
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 list.files(path=ScreenshotFolder, pattern="ND050", full.names=FALSE, recursive=FALSE)
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/08.png)
+
+:::
 
 ---
 
@@ -898,18 +1092,24 @@ You will notice, the index numbers are in the context of what is filtered, not a
 
 ::: {.fragment}
 ::: {.callout-tip title="."}
-You will notice, in the above example, we provided a character string ("ND050") that was used to return files that contained the matching pattern. If we currently listed the files within data, we get a return that looks like this:
+If we currently listed the files within data, we get a return that looks like this:
 :::
 :::
+
+::: {.fragment}
 
 ```{r}
 #| eval: FALSE
 list.files("data", full.names=FALSE, recursive=FALSE)
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/09.png)
+
+:::
 
 ---
 
@@ -919,15 +1119,21 @@ As you can see, we are getting back both folders and individual .fcs files. We c
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 files <- list.files("data", pattern=".fcs", full.names=FALSE, recursive=FALSE)
 files
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/10.png)
+
+:::
 
 ---
 
@@ -937,19 +1143,29 @@ One of the R packages we will be using througout the course is the `stringr` pac
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 # install.packages("stringr") # CRAN
 library(stringr)
 ```
+
+:::
+
+::: {.fragment}
 
 ```{r}
 #| eval: FALSE
 str_detect(files, "INF")
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/11.png)
+
+:::
 
 ---
 
@@ -959,14 +1175,20 @@ Similar to how we indexed the Fluorophore list (ex. Fluorophore[1:2]) which retu
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 files[str_detect(files, "INF")]
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/12.png)
+
+:::
 
 ---
 
@@ -976,10 +1198,14 @@ Let's go ahead and save these subsetted file names to a new variable, called Inf
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 Infants <- files[str_detect(files, "INF")]
 ```
+
+:::
 
 ## Conditionals
 
@@ -989,8 +1215,11 @@ One useful thing is that within R, we can set conditions on whether something is
 :::
 :::
 
+
+::: {.fragment}
+
 ```{r}
-#|eval: FALSE
+#| eval: FALSE
 
 NeedCoffee <- TRUE
 
@@ -998,6 +1227,8 @@ if (NeedCoffee){
     print("Take a break")
 }
 ```
+
+:::
 
 ---
 
@@ -1007,6 +1238,8 @@ In this case of the above, if the variable within the () is equal to true, the c
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 
 NeedCoffee <- TRUE
@@ -1016,6 +1249,8 @@ if (NeedCoffee){
 }
 ```
 
+:::
+
 ---
 
 ::: {.fragment}
@@ -1023,6 +1258,8 @@ if (NeedCoffee){
 By contrast, when the variable within the () is equal to false, the code within the {} will not be executed. 
 :::
 :::
+
+::: {.fragment}
 
 ```{r}
 NeedCoffee <- FALSE
@@ -1032,6 +1269,8 @@ if (NeedCoffee){
 }
 ```
 
+:::
+
 ---
 
 ::: {.fragment}
@@ -1040,16 +1279,24 @@ These "If" statements will trigger as long as the specified condition within the
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 RowNumber <- 299
 2 + RowNumber > 300
 ```
+
+:::
+
+::: {.fragment}
 
 ```{r}
 if (2 + RowNumber > 3){
     print("Stop Iterating")
 }
 ```
+
+:::
 
 ---
 
@@ -1059,16 +1306,33 @@ When you add an ! in front a conditional, it flips the expected outcome.
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 ItsRaining <- TRUE
 
-if (!ItsRaining){print("Bring an Umbrella")}
-
+if (ItsRaining){print("Bring an Umbrella")}
 ```
+
+:::
+
+::: {.fragment}
 
 ```{r}
 !ItsRaining
 ```
+
+:::
+
+::: {.fragment}
+
+```{r}
+if (!ItsRaining){print("Bring an Umbrella")}
+```
+
+:::
+
+::: {.fragment}
 
 ```{r}
 ItsRaining <- TRUE
@@ -1076,6 +1340,8 @@ ItsRaining <- TRUE
 if (!ItsRaining){print("Bring Sunglasses")}
 
 ```
+
+:::
 
 ---
 
@@ -1093,15 +1359,21 @@ First off, let's write a conditional to check if there is a target3 folder withi
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 files_present <- list.files("data", full.names=FALSE, recursive=FALSE)
 files_present
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/13.png)
+
+:::
 
 ---
 
@@ -1112,9 +1384,11 @@ FolderTarget3 <- file.path("data", "target3")
 dir.exists(FolderTarget3)
 ```
 
----
+::: {.fragment}
 
 ![](images/14.png)
+
+:::
 
 ---
 
@@ -1124,6 +1398,9 @@ We can write a conditional to create a folder if one does not yet exist.
 :::
 :::
 
+
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 if (!dir.exists(FolderTarget3)){
@@ -1131,9 +1408,13 @@ if (!dir.exists(FolderTarget3)){
 }
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/15.png)
+
+:::
 
 ---
 
@@ -1145,6 +1426,8 @@ To copy files to another folder location, we use the `file.copy()` function. It 
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 
@@ -1153,9 +1436,13 @@ To copy files to another folder location, we use the `file.copy()` function. It 
 file.copy(from=Infants, to=FolderTarget3)
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/16.png)
+
+:::
 
 ---
 
@@ -1165,14 +1452,20 @@ The reason for this error is we are only working with a partial file path, as vi
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 getwd()
 ``` 
 
----
+:::
+
+::: {.fragment}
 
 ![](images/17.png)
+
+:::
 
 ---
 
@@ -1182,15 +1475,21 @@ In this case, we can update the .fcs files location by switching the full.names 
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 files_present <- list.files("data", full.names=TRUE, recursive=FALSE)
 files_present
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/18.png)
+
+:::
 
 ---
 
@@ -1200,10 +1499,14 @@ And filter for those containing "INF" again
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 Infants <- files_present[str_detect(files_present, "INF")]
 ```
+
+:::
 
 ---
 
@@ -1213,6 +1516,8 @@ And then try again:
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 
@@ -1221,9 +1526,13 @@ And then try again:
 file.copy(from=Infants, to=FolderTarget3)
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/19.png)
+
+:::
 
 ---
 
@@ -1235,10 +1544,14 @@ Just like we can add files via R, we can also remove them. However, when we remo
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 ?unlink()
 ```
+
+:::
 
 ## Basename
 
@@ -1248,14 +1561,20 @@ If we look at Infants with the full.names=TRUE, we see the additional pathing fo
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 Infants
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/20.png)
+
+:::
 
 ---
 
@@ -1265,17 +1584,58 @@ If we were trying to retrieve just the local file names from the full.names, we 
 :::
 :::
 
+::: {.fragment}
+
 ```{r}
 #| eval: FALSE
 
 basename(Infants)
 ```
 
----
+:::
+
+::: {.fragment}
 
 ![](images/22.png)
 
+:::
+
 ---
+
+## Recursive
+
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And finally that we have created additional nested folders and populated them with fcs files, let's see what setting `list.files()` recursive argument to TRUE
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+all_files_present <- list.files(full.names=TRUE, recursive=TRUE)
+all_files_present 
+```
+
+:::
+
+---
+
+![](images/RecursiveTrue.png)
+
+---
+
+
+::: {.fragment}
+::: {.callout-tip title="."}
+
+In this case, all files in all folders within the working directory are shown. This can be useful when exploring folder contents, but if there are a lot of files present within the folder, it will take a while to return the list. 
+
+:::
+:::
+
 
 ## Saving changes to Version Control
 
@@ -1340,15 +1700,20 @@ Plug in an external hard-drive or USB into your computer. Manually, create a fol
 ---
 
 :::{.callout-tip title="Problem 2"}
-In this session, we used list.files with the full.names argument, as well as the `basename()` function to identify specific files. But what if you wanted a particular directory. Run list.files with recursive set to TRUE, and then search online to find an R function that would retrieve the "" directory. 
+In this session, we used `list.files()` with the "full.names argument" set to TRUE, as well as the `basename()` function to identify specific files. But what if you wanted a particular directory. Run `list.files()` with "full.names argument" and "recursive" argument set to TRUE, and then search online to find an R function that would retrieve the "" individual directory folders. 
 :::
 
 ---
 
 :::{.callout-tip title="Problem 3"}
-R packages often come with internal datasets, that are typically used for use in the help documentation examples. These can be accessed through the use of the `system.file()` function. See an example below. 
+R packages often come with internal datasets, that are typically used for use in the help documentation examples. These can be accessed through the use of the `system.file()` function. See an example code below. 
 
-Using what we have learned about file.path navigation, search your way down the file.directory of the `flowSOM` and `flowWorkspace` packages, and identify any .fcs files that are present for use in the documentation. 
+```{r}
+#| eval: FALSE
+system.file("extdata", package = "FlowSOM")
+```
+
+Using what we have learned about file.path navigation, search your way down the file.directory of the `FlowSOM` and `flowWorkspace` packages, and identify any .fcs files that are present for use in the documentation. 
 :::
 
 ---

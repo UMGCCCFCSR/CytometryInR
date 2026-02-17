@@ -224,6 +224,7 @@ David Rach
 </section>
 <section class="slide level2">
 
+<div class="fragment">
 <div title=".">
 <div class="callout callout-tip callout-titled callout-style-default">
 <div class="callout-body">
@@ -239,6 +240,8 @@ David Rach
 </div>
 </div>
 </div>
+</div>
+<div class="fragment">
 <div class="callout callout-important callout-titled callout-style-default">
 <div class="callout-body">
 <div class="callout-title">
@@ -249,6 +252,7 @@ David Rach
 </div>
 <div class="callout-content">
 <p>Before getting started, please make sure you have completed the creating a <a href="../../course/00_GitHub/index.html">GitHub</a> and <a href="../../course/00_WorkstationSetup/index.html">Workstation Setup</a> walk-throughs, since we will begin where they left off once the required software was successfully installed. Having read-through how to use <a href="../../course/00_Git/index.html">version control</a> using Git will additionally be useful.</p>
+</div>
 </div>
 </div>
 </div>
@@ -276,6 +280,9 @@ David Rach
 </div>
 </div>
 </div>
+</section>
+<section class="slide level2">
+
 <div class="fragment">
 <div title=".">
 <div class="callout callout-tip callout-titled callout-style-default">
@@ -293,6 +300,9 @@ David Rach
 </div>
 </div>
 </div>
+</section>
+<section class="slide level2">
+
 <div class="fragment">
 <div title=".">
 <div class="callout callout-tip callout-titled callout-style-default">
@@ -350,6 +360,9 @@ David Rach
 </div>
 </div>
 </div>
+</section>
+<section class="slide level2">
+
 <h3 id="new-repository">New Repository</h3>
 <div class="fragment">
 <div title=".">
@@ -683,7 +696,7 @@ David Rach
 </div>
 <div class="callout-content">
 <p>Now that we are back in our Week2 folder, let’s start by seeing our current location similarly to how our computer perceives it.</p>
-<p>We will use <code>getwd()</code> function (ie. get working directory) to return the location of the folder we are currently inside of. For example, when <code>getwd()</code> is run in the process of generating the webpage for 02_FilePaths, we see the following location</p>
+<p>We will use <code>getwd()</code> function (ie. get working directory) to return the location of the folder we are currently inside of. For example, when <code>getwd()</code> is run within my Week2 project folder, I see the following location</p>
 </div>
 </div>
 </div>
@@ -694,11 +707,9 @@ David Rach
 
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">getwd</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "/home/david/Documents/CytometryInR/course/02_FilePaths"</code></pre>
 </div>
-</div>
-<div class="fragment">
+
+<img data-src="images/0000_ReplacementGetWD.png" class="r-stretch"><div class="fragment">
 <div title=".">
 <div class="callout callout-tip callout-titled callout-style-default">
 <div class="callout-body">
@@ -709,7 +720,7 @@ David Rach
 <p><strong>.</strong></p>
 </div>
 <div class="callout-content">
-<p>This location is the <strong>Working Directory</strong>, as viewed from the computer’s perspective.</p>
+<p>This returns a file path. The final location (Week2 in this case) is the <strong>Working Directory</strong>. Your computer when working in R will be descern other locations in relation to this directory.</p>
 </div>
 </div>
 </div>
@@ -735,12 +746,18 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
+<p><img data-src="images/0000_ReplacementView.png"></p>
+</div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">list.dirs</span>(<span class="at">path=</span><span class="st">"."</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "data"   "images"</code></pre>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">list.dirs</span>(<span class="at">path=</span><span class="st">"."</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p><img data-src="images/0000_ReplacementListFiles.png"></p>
 </div>
+</section>
+<section class="slide level2">
+
 <div class="fragment">
 <div title=".">
 <div class="callout callout-tip callout-titled callout-style-default">
@@ -778,11 +795,11 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">list.dirs</span>(<span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "data"   "images"</code></pre>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">list.dirs</span>(<span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p><img data-src="images/0000_ReplacementListFiles.png"></p>
 </div>
 </section>
 <section class="slide level2">
@@ -798,17 +815,16 @@ David Rach
 <p><strong>.</strong></p>
 </div>
 <div class="callout-content">
-<p>Among the list of folders, we have two <em>hidden folders</em> (denoted by the “.” in front of the folder name), ie the “.git” and “.quarto” folders. If you are working within Positron, the hidden quarto file is shown in a lighter gray color.</p>
+<p>Within Positron, in addition to visible folders, we also have <em>hidden folders</em> (denoted by the “.” in front of the folder name when using <code>list.dirs()</code>). In the case of one of our course website folders, we can see a “.quarto” folder shown in a lighter gray . The “.git” folder we saw from <code>list.dirs()</code> is typically hidden when viewing from Positron.</p>
 </div>
 </div>
 </div>
 </div>
+</div>
+<div class="fragment">
+<p><img data-src="images/02_HiddenFolder.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/02_HiddenFolder.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -822,11 +838,14 @@ David Rach
 <p><strong>.</strong></p>
 </div>
 <div class="callout-content">
-<p>The three not-hidden folders are also listed. We will see how to navigate these in a second.</p>
+<p>In the case of Week2, the two not-hidden folders we created are listed. We will see how to navigate these in a second.</p>
 </div>
 </div>
 </div>
 </div>
+</div>
+<div class="fragment">
+<p><img data-src="images/0000_ReplacementView.png"></p>
 </div>
 </section>
 <section id="variables" class="slide level2">
@@ -849,8 +868,10 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>WhatDayDidIWriteThis <span class="ot">&lt;-</span> <span class="st">"Saturday"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>WhatDayDidIWriteThis <span class="ot">&lt;-</span> <span class="st">"Saturday"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 <div class="fragment">
 <div title=".">
@@ -889,10 +910,16 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>WhatDayDidIWriteThis <span class="ot">&lt;-</span> <span class="st">"Saturday"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>WhatDayDidIWriteThis <span class="ot">&lt;-</span> <span class="st">"Saturday"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 </section>
+<section class="slide level2">
+
+
+<img data-src="images/04_VariableList.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -912,10 +939,12 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>WhatDayDidIWriteThis </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>WhatDayDidIWriteThis </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Saturday"</code></pre>
+</div>
 </div>
 </div>
 </section>
@@ -938,8 +967,10 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>TopSecretMeetingDay <span class="ot">&lt;-</span> <span class="st">"Saturday"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>TopSecretMeetingDay <span class="ot">&lt;-</span> <span class="st">"Saturday"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 </section>
 <section class="slide level2">
@@ -961,12 +992,14 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>Top Secret Meeting Day <span class="ot">&lt;-</span> <span class="st">"Saturday"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>Top Secret Meeting Day <span class="ot">&lt;-</span> <span class="st">"Saturday"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in parse(text = input): &lt;text&gt;:1:5: unexpected symbol
 1: Top Secret
         ^</code></pre>
+</div>
 </div>
 </div>
 </section>
@@ -989,8 +1022,10 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>Top_Secret_Meeting_Day <span class="ot">&lt;-</span> <span class="st">"Saturday"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a>Top_Secret_Meeting_Day <span class="ot">&lt;-</span> <span class="st">"Saturday"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 </section>
 <section class="slide level2">
@@ -1015,12 +1050,12 @@ David Rach
 </section>
 <section class="slide level2">
 
-<p><a href="https://pbs.twimg.com/media/FxVpCpqaIAE_iqU?format=jpg&amp;name=4096x4096"></a></p>
-</section>
+
+<img data-src="images/CamelCase.jpeg" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>TopSecretMeetingDay</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>TopSecretMeetingDay</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Saturday"</code></pre>
 </div>
@@ -1045,13 +1080,17 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>TopSecretMeetingDay <span class="ot">&lt;-</span> <span class="st">"Monday"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>TopSecretMeetingDay <span class="ot">&lt;-</span> <span class="st">"Monday"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>TopSecretMeetingDay</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>TopSecretMeetingDay</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Monday"</code></pre>
+</div>
 </div>
 </div>
 </section>
@@ -1074,8 +1113,10 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">rm</span>(Top_Secret_Meeting_Day)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">rm</span>(Top_Secret_Meeting_Day)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 </section>
 <section class="slide level2">
@@ -1121,11 +1162,13 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>Fluorophores <span class="ot">&lt;-</span> <span class="st">"FITC"</span></span>
-<span id="cb21-2"><a></a><span class="fu">str</span>(Fluorophores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>Fluorophores <span class="ot">&lt;-</span> <span class="st">"FITC"</span></span>
+<span id="cb18-2"><a></a><span class="fu">str</span>(Fluorophores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> chr "FITC"</code></pre>
+</div>
 </div>
 </div>
 <div class="fragment">
@@ -1165,10 +1208,12 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">class</span>(Fluorophores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">class</span>(Fluorophores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "character"</code></pre>
+</div>
 </div>
 </div>
 </section>
@@ -1191,11 +1236,13 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>Fluorophores <span class="ot">&lt;-</span> <span class="dv">29</span></span>
-<span id="cb25-2"><a></a><span class="fu">str</span>(Fluorophores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>Fluorophores <span class="ot">&lt;-</span> <span class="dv">29</span></span>
+<span id="cb22-2"><a></a><span class="fu">str</span>(Fluorophores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> num 29</code></pre>
+</div>
 </div>
 </div>
 <div class="fragment">
@@ -1235,11 +1282,13 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>IsPerCPCy5AGoodFluorophore <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb27-2"><a></a><span class="fu">str</span>(IsPerCPCy5AGoodFluorophore)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>IsPerCPCy5AGoodFluorophore <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb24-2"><a></a><span class="fu">str</span>(IsPerCPCy5AGoodFluorophore)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> logi FALSE</code></pre>
+</div>
 </div>
 </div>
 <div class="fragment">
@@ -1280,10 +1329,12 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>PackageToInstall <span class="ot">&lt;-</span> <span class="st">"dplyr"</span></span>
-<span id="cb29-2"><a></a></span>
-<span id="cb29-3"><a></a><span class="fu">install.packages</span>(PackageToInstall)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>PackageToInstall <span class="ot">&lt;-</span> <span class="st">"dplyr"</span></span>
+<span id="cb26-2"><a></a></span>
+<span id="cb26-3"><a></a><span class="fu">install.packages</span>(PackageToInstall)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 </section>
 <section id="indexing" class="slide level2">
@@ -1306,11 +1357,13 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>Fluorophores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"BV421"</span>, <span class="st">"FITC"</span>, <span class="st">"PE"</span>, <span class="st">"APC"</span>)</span>
-<span id="cb30-2"><a></a><span class="fu">str</span>(Fluorophores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>Fluorophores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"BV421"</span>, <span class="st">"FITC"</span>, <span class="st">"PE"</span>, <span class="st">"APC"</span>)</span>
+<span id="cb27-2"><a></a><span class="fu">str</span>(Fluorophores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> chr [1:4] "BV421" "FITC" "PE" "APC"</code></pre>
+</div>
 </div>
 </div>
 <div class="fragment">
@@ -1351,10 +1404,12 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">length</span>(Fluorophores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">length</span>(Fluorophores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 4</code></pre>
+</div>
 </div>
 </div>
 </section>
@@ -1377,19 +1432,23 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>Fluorophores[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>Fluorophores[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "BV421"</code></pre>
+</div>
 </div>
 </div>
 </section>
 <section class="slide level2">
 
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a>Fluorophores[<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>Fluorophores[<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "PE"</code></pre>
+</div>
 </div>
 </div>
 </section>
@@ -1412,10 +1471,12 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a>Fluorophores[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a>Fluorophores[<span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "PE"  "APC"</code></pre>
+</div>
 </div>
 </div>
 </section>
@@ -1438,10 +1499,12 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>Fluorophores[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>Fluorophores[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">4</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "BV421" "APC"  </code></pre>
+</div>
 </div>
 </div>
 </section>
@@ -1484,14 +1547,15 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a><span class="fu">list.dirs</span>(<span class="at">path=</span><span class="st">"."</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">list.dirs</span>(<span class="at">path=</span><span class="st">"."</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/00.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/00.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -1511,14 +1575,15 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="fu">list.files</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a><span class="fu">list.files</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/01.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/01.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -1558,14 +1623,15 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="fu">list.files</span>(<span class="at">path=</span><span class="st">"data"</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">list.files</span>(<span class="at">path=</span><span class="st">"data"</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/02.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/02.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -1629,10 +1695,12 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>NewFolderLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"target2"</span>)</span>
-<span id="cb45-2"><a></a></span>
-<span id="cb45-3"><a></a><span class="fu">dir.create</span>(<span class="at">path=</span>NewFolderLocation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>NewFolderLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"target2"</span>)</span>
+<span id="cb42-2"><a></a></span>
+<span id="cb42-3"><a></a><span class="fu">dir.create</span>(<span class="at">path=</span>NewFolderLocation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 </section>
 <section class="slide level2">
@@ -1682,10 +1750,12 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">list.files</span>(<span class="at">path=</span><span class="st">"target"</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="fu">list.files</span>(<span class="at">path=</span><span class="st">"target"</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>character(0)</code></pre>
+</div>
 </div>
 </div>
 </section>
@@ -1708,10 +1778,12 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="fu">file.exists</span>(<span class="st">"target"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">file.exists</span>(<span class="st">"target"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] FALSE</code></pre>
+</div>
 </div>
 </div>
 </section>
@@ -1734,14 +1806,15 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a><span class="fu">file.exists</span>(<span class="st">"data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a><span class="fu">file.exists</span>(<span class="st">"data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/05.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/05.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -1775,20 +1848,21 @@ David Rach
 <p><strong>.</strong></p>
 </div>
 <div class="callout-content">
-<p>One way we can do this is through a file.path argument. We could potentially provide this by adding either a / or a &nbsp;into the path argument, depending on your computers operating system.</p>
+<p>One way we can do this is through a file.path argument. We could potentially provide this by adding either a “/” or a “" into the path argument, depending on your computers operating system.</p>
 </div>
 </div>
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="fu">list.files</span>(<span class="at">path=</span><span class="st">"data/target"</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="fu">list.files</span>(<span class="at">path=</span><span class="st">"data/target"</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/07.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/07.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -1828,21 +1902,24 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a>FolderLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"target"</span>)</span>
-<span id="cb52-2"><a></a>FolderLocation</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a>FolderLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"target"</span>)</span>
+<span id="cb49-2"><a></a>FolderLocation</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data/target"</code></pre>
 </div>
 </div>
+</div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a><span class="fu">list.files</span>(<span class="at">path=</span>FolderLocation, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="fu">list.files</span>(<span class="at">path=</span>FolderLocation, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/07.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/07.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -1862,25 +1939,25 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a>FolderLocation <span class="ot">&lt;-</span> <span class="st">"data"</span></span>
-<span id="cb55-2"><a></a>ScreenshotFolder <span class="ot">&lt;-</span> <span class="fu">file.path</span>(FolderLocation, <span class="st">"target"</span>)</span>
-<span id="cb55-3"><a></a>ScreenshotFolder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a>FolderLocation <span class="ot">&lt;-</span> <span class="st">"data"</span></span>
+<span id="cb52-2"><a></a>ScreenshotFolder <span class="ot">&lt;-</span> <span class="fu">file.path</span>(FolderLocation, <span class="st">"target"</span>)</span>
+<span id="cb52-3"><a></a>ScreenshotFolder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data/target"</code></pre>
 </div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a><span class="fu">list.files</span>(<span class="at">path=</span>ScreenshotFolder, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>character(0)</code></pre>
 </div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a><span class="fu">list.files</span>(<span class="at">path=</span>ScreenshotFolder, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/07.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/07.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -1900,14 +1977,15 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="fu">list.files</span>(<span class="at">path=</span>ScreenshotFolder, <span class="at">pattern=</span><span class="st">"ND050"</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">list.files</span>(<span class="at">path=</span>ScreenshotFolder, <span class="at">pattern=</span><span class="st">"ND050"</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/08.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/08.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -1941,20 +2019,21 @@ David Rach
 <p><strong>.</strong></p>
 </div>
 <div class="callout-content">
-<p>You will notice, in the above example, we provided a character string (“ND050”) that was used to return files that contained the matching pattern. If we currently listed the files within data, we get a return that looks like this:</p>
+<p>If we currently listed the files within data, we get a return that looks like this:</p>
 </div>
 </div>
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a></a><span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a><span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/09.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/09.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -1974,15 +2053,16 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">pattern=</span><span class="st">".fcs"</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span>
-<span id="cb61-2"><a></a>files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">pattern=</span><span class="st">".fcs"</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span>
+<span id="cb57-2"><a></a>files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/10.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/10.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -2002,18 +2082,21 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a></a><span class="co"># install.packages("stringr") # CRAN</span></span>
-<span id="cb62-2"><a></a><span class="fu">library</span>(stringr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a><span class="co"># install.packages("stringr") # CRAN</span></span>
+<span id="cb58-2"><a></a><span class="fu">library</span>(stringr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a><span class="fu">str_detect</span>(files, <span class="st">"INF"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="fu">str_detect</span>(files, <span class="st">"INF"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/11.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/11.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -2033,14 +2116,15 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a>files[<span class="fu">str_detect</span>(files, <span class="st">"INF"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a></a>files[<span class="fu">str_detect</span>(files, <span class="st">"INF"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/12.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/12.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -2060,8 +2144,10 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a>Infants <span class="ot">&lt;-</span> files[<span class="fu">str_detect</span>(files, <span class="st">"INF"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a>Infants <span class="ot">&lt;-</span> files[<span class="fu">str_detect</span>(files, <span class="st">"INF"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 </section>
 <section id="conditionals" class="slide level2">
@@ -2083,16 +2169,13 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a></a><span class="co">#|eval: FALSE</span></span>
-<span id="cb66-2"><a></a></span>
-<span id="cb66-3"><a></a>NeedCoffee <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb66-4"><a></a></span>
-<span id="cb66-5"><a></a><span class="cf">if</span> (NeedCoffee){</span>
-<span id="cb66-6"><a></a>    <span class="fu">print</span>(<span class="st">"Take a break"</span>)</span>
-<span id="cb66-7"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Take a break"</code></pre>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a></a>NeedCoffee <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb62-2"><a></a></span>
+<span id="cb62-3"><a></a><span class="cf">if</span> (NeedCoffee){</span>
+<span id="cb62-4"><a></a>    <span class="fu">print</span>(<span class="st">"Take a break"</span>)</span>
+<span id="cb62-5"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </div>
 </section>
@@ -2115,14 +2198,16 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a></a>NeedCoffee <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb68-2"><a></a></span>
-<span id="cb68-3"><a></a><span class="cf">if</span> (NeedCoffee){</span>
-<span id="cb68-4"><a></a>    <span class="fu">print</span>(<span class="st">"Take a break"</span>)</span>
-<span id="cb68-5"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a>NeedCoffee <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb63-2"><a></a></span>
+<span id="cb63-3"><a></a><span class="cf">if</span> (NeedCoffee){</span>
+<span id="cb63-4"><a></a>    <span class="fu">print</span>(<span class="st">"Take a break"</span>)</span>
+<span id="cb63-5"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Take a break"</code></pre>
+</div>
 </div>
 </div>
 </section>
@@ -2145,12 +2230,14 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a></a>NeedCoffee <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
-<span id="cb70-2"><a></a></span>
-<span id="cb70-3"><a></a><span class="cf">if</span> (NeedCoffee){</span>
-<span id="cb70-4"><a></a>    <span class="fu">print</span>(<span class="st">"Take a break"</span>)</span>
-<span id="cb70-5"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a>NeedCoffee <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span>
+<span id="cb65-2"><a></a></span>
+<span id="cb65-3"><a></a><span class="cf">if</span> (NeedCoffee){</span>
+<span id="cb65-4"><a></a>    <span class="fu">print</span>(<span class="st">"Take a break"</span>)</span>
+<span id="cb65-5"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 </section>
 <section class="slide level2">
@@ -2172,19 +2259,23 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a>RowNumber <span class="ot">&lt;-</span> <span class="dv">299</span></span>
-<span id="cb71-2"><a></a><span class="dv">2</span> <span class="sc">+</span> RowNumber <span class="sc">&gt;</span> <span class="dv">300</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a></a>RowNumber <span class="ot">&lt;-</span> <span class="dv">299</span></span>
+<span id="cb66-2"><a></a><span class="dv">2</span> <span class="sc">+</span> RowNumber <span class="sc">&gt;</span> <span class="dv">300</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>
 </div>
+</div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a></a><span class="cf">if</span> (<span class="dv">2</span> <span class="sc">+</span> RowNumber <span class="sc">&gt;</span> <span class="dv">3</span>){</span>
-<span id="cb73-2"><a></a>    <span class="fu">print</span>(<span class="st">"Stop Iterating"</span>)</span>
-<span id="cb73-3"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a></a><span class="cf">if</span> (<span class="dv">2</span> <span class="sc">+</span> RowNumber <span class="sc">&gt;</span> <span class="dv">3</span>){</span>
+<span id="cb68-2"><a></a>    <span class="fu">print</span>(<span class="st">"Stop Iterating"</span>)</span>
+<span id="cb68-3"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Stop Iterating"</code></pre>
+</div>
 </div>
 </div>
 </section>
@@ -2207,21 +2298,35 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a></a>ItsRaining <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb75-2"><a></a></span>
-<span id="cb75-3"><a></a><span class="cf">if</span> (<span class="sc">!</span>ItsRaining){<span class="fu">print</span>(<span class="st">"Bring an Umbrella"</span>)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a></a>ItsRaining <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb70-2"><a></a></span>
+<span id="cb70-3"><a></a><span class="cf">if</span> (ItsRaining){<span class="fu">print</span>(<span class="st">"Bring an Umbrella"</span>)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Bring an Umbrella"</code></pre>
 </div>
+</div>
+</div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a></a><span class="sc">!</span>ItsRaining</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a></a><span class="sc">!</span>ItsRaining</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] FALSE</code></pre>
 </div>
 </div>
+</div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a>ItsRaining <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
-<span id="cb78-2"><a></a></span>
-<span id="cb78-3"><a></a><span class="cf">if</span> (<span class="sc">!</span>ItsRaining){<span class="fu">print</span>(<span class="st">"Bring Sunglasses"</span>)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a></a><span class="cf">if</span> (<span class="sc">!</span>ItsRaining){<span class="fu">print</span>(<span class="st">"Bring an Umbrella"</span>)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a></a>ItsRaining <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb75-2"><a></a></span>
+<span id="cb75-3"><a></a><span class="cf">if</span> (<span class="sc">!</span>ItsRaining){<span class="fu">print</span>(<span class="st">"Bring Sunglasses"</span>)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 </section>
 <section class="slide level2">
@@ -2263,26 +2368,26 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a></a>files_present <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span>
-<span id="cb79-2"><a></a>files_present</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a></a>files_present <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">full.names=</span><span class="cn">FALSE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span>
+<span id="cb76-2"><a></a>files_present</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/13.png"></p>
 </div>
 </section>
 <section class="slide level2">
 
-
-<img data-src="images/13.png" class="r-stretch"></section>
-<section class="slide level2">
-
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a>FolderTarget3 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"target3"</span>)</span>
-<span id="cb80-2"><a></a><span class="fu">dir.exists</span>(FolderTarget3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a></a>FolderTarget3 <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"target3"</span>)</span>
+<span id="cb77-2"><a></a><span class="fu">dir.exists</span>(FolderTarget3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="fragment">
+<p><img data-src="images/14.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/14.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -2302,16 +2407,17 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(FolderTarget3)){</span>
-<span id="cb81-2"><a></a>    <span class="fu">dir.create</span>(FolderTarget3)</span>
-<span id="cb81-3"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(FolderTarget3)){</span>
+<span id="cb78-2"><a></a>    <span class="fu">dir.create</span>(FolderTarget3)</span>
+<span id="cb78-3"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/15.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/15.png" class="r-stretch"></section>
 <section id="copying-files" class="slide level2">
 <h2>Copying Files</h2>
 <div class="fragment">
@@ -2331,16 +2437,17 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a></a><span class="co"># Variable Infants containing 4 .fcs file names</span></span>
-<span id="cb82-2"><a></a></span>
-<span id="cb82-3"><a></a><span class="fu">file.copy</span>(<span class="at">from=</span>Infants, <span class="at">to=</span>FolderTarget3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a></a><span class="co"># Variable Infants containing 4 .fcs file names</span></span>
+<span id="cb79-2"><a></a></span>
+<span id="cb79-3"><a></a><span class="fu">file.copy</span>(<span class="at">from=</span>Infants, <span class="at">to=</span>FolderTarget3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/16.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/16.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -2360,14 +2467,15 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a></a><span class="fu">getwd</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a><span class="fu">getwd</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/17.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/17.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -2387,15 +2495,16 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a>files_present <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span>
-<span id="cb84-2"><a></a>files_present</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a></a>files_present <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>, <span class="at">recursive=</span><span class="cn">FALSE</span>)</span>
+<span id="cb81-2"><a></a>files_present</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/18.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/18.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -2415,8 +2524,10 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a></a>Infants <span class="ot">&lt;-</span> files_present[<span class="fu">str_detect</span>(files_present, <span class="st">"INF"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a></a>Infants <span class="ot">&lt;-</span> files_present[<span class="fu">str_detect</span>(files_present, <span class="st">"INF"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 </section>
 <section class="slide level2">
@@ -2438,16 +2549,17 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a><span class="co"># Variable Infants containing 4 .fcs file names</span></span>
-<span id="cb86-2"><a></a></span>
-<span id="cb86-3"><a></a><span class="fu">file.copy</span>(<span class="at">from=</span>Infants, <span class="at">to=</span>FolderTarget3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a></a><span class="co"># Variable Infants containing 4 .fcs file names</span></span>
+<span id="cb83-2"><a></a></span>
+<span id="cb83-3"><a></a><span class="fu">file.copy</span>(<span class="at">from=</span>Infants, <span class="at">to=</span>FolderTarget3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/19.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/19.png" class="r-stretch"></section>
 <section id="removing-files." class="slide level2">
 <h2>Removing files.</h2>
 <div class="fragment">
@@ -2467,8 +2579,10 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a></a>?<span class="fu">unlink</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a>?<span class="fu">unlink</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 </section>
 <section id="basename" class="slide level2">
@@ -2490,14 +2604,15 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a></a>Infants</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a></a>Infants</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/20.png"></p>
 </div>
 </section>
-<section class="slide level2">
-
-
-<img data-src="images/20.png" class="r-stretch"></section>
 <section class="slide level2">
 
 <div class="fragment">
@@ -2517,14 +2632,65 @@ David Rach
 </div>
 </div>
 </div>
+<div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a></a><span class="fu">basename</span>(Infants)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a><span class="fu">basename</span>(Infants)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/22.png"></p>
+</div>
+</section>
+<section id="recursive" class="slide level2">
+<h2>Recursive</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And finally that we have created additional nested folders and populated them with fcs files, let’s see what setting <code>list.files()</code> recursive argument to TRUE</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a></a>all_files_present <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">full.names=</span><span class="cn">TRUE</span>, <span class="at">recursive=</span><span class="cn">TRUE</span>)</span>
+<span id="cb87-2"><a></a>all_files_present </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 </section>
 <section class="slide level2">
 
 
-<img data-src="images/22.png" class="r-stretch"></section>
+<img data-src="images/RecursiveTrue.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In this case, all files in all folders within the working directory are shown. This can be useful when exploring folder contents, but if there are a lot of files present within the folder, it will take a while to return the list.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
 <section id="saving-changes-to-version-control" class="slide level2">
 <h2>Saving changes to Version Control</h2>
 <div class="fragment">
@@ -2657,7 +2823,7 @@ David Rach
 <p><strong>Problem 2</strong></p>
 </div>
 <div class="callout-content">
-<p>In this session, we used list.files with the full.names argument, as well as the <code>basename()</code> function to identify specific files. But what if you wanted a particular directory. Run list.files with recursive set to TRUE, and then search online to find an R function that would retrieve the “” directory.</p>
+<p>In this session, we used <code>list.files()</code> with the “full.names argument” set to TRUE, as well as the <code>basename()</code> function to identify specific files. But what if you wanted a particular directory. Run <code>list.files()</code> with “full.names argument” and “recursive” argument set to TRUE, and then search online to find an R function that would retrieve the “” individual directory folders.</p>
 </div>
 </div>
 </div>
@@ -2675,8 +2841,11 @@ David Rach
 <p><strong>Problem 3</strong></p>
 </div>
 <div class="callout-content">
-<p>R packages often come with internal datasets, that are typically used for use in the help documentation examples. These can be accessed through the use of the <code>system.file()</code> function. See an example below.</p>
-<p>Using what we have learned about file.path navigation, search your way down the file.directory of the <code>flowSOM</code> and <code>flowWorkspace</code> packages, and identify any .fcs files that are present for use in the documentation.</p>
+<p>R packages often come with internal datasets, that are typically used for use in the help documentation examples. These can be accessed through the use of the <code>system.file()</code> function. See an example code below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a></a><span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="at">package =</span> <span class="st">"FlowSOM"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Using what we have learned about file.path navigation, search your way down the file.directory of the <code>FlowSOM</code> and <code>flowWorkspace</code> packages, and identify any .fcs files that are present for use in the documentation.</p>
 </div>
 </div>
 </div>
