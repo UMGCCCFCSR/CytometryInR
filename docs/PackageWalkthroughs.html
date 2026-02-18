@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Package Walkthroughs – Cytometry in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-8eaec6b9941db0f18eecf13b95a46332.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/hex.svg" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Cytometry in R</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./course/index.html"> 
+<span class="menu-text">Course</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/UMGCCCFCSR/CytometryInR/discussions"> 
+<span class="menu-text">Discussions</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@CytometryInR"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/UMGCCCFCSR/CytometryInR"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <div id="quarto-announcement" data-announcement-id="517fd7fd2923fd64fe81c4cc75c6fa55" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
+</div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a></li>
+  <li><a href="#bioconductor" id="toc-bioconductor" class="nav-link" data-scroll-target="#bioconductor">Bioconductor</a>
+  <ul class="collapse">
+  <li><a href="#flowcore" id="toc-flowcore" class="nav-link" data-scroll-target="#flowcore">flowCore</a></li>
+  <li><a href="#cytolib" id="toc-cytolib" class="nav-link" data-scroll-target="#cytolib">cytolib</a></li>
+  <li><a href="#flowworkspace" id="toc-flowworkspace" class="nav-link" data-scroll-target="#flowworkspace">flowWorkspace</a></li>
+  <li><a href="#ncdfflow" id="toc-ncdfflow" class="nav-link" data-scroll-target="#ncdfflow">ncdfFlow</a></li>
+  <li><a href="#flowviz" id="toc-flowviz" class="nav-link" data-scroll-target="#flowviz">flowViz</a></li>
+  <li><a href="#flowsom" id="toc-flowsom" class="nav-link" data-scroll-target="#flowsom">FlowSOM</a></li>
+  <li><a href="#ggcyto" id="toc-ggcyto" class="nav-link" data-scroll-target="#ggcyto">ggcyto</a></li>
+  <li><a href="#opencyto" id="toc-opencyto" class="nav-link" data-scroll-target="#opencyto">openCyto</a></li>
+  <li><a href="#quantiseqr" id="toc-quantiseqr" class="nav-link" data-scroll-target="#quantiseqr">quantiseqr</a></li>
+  <li><a href="#flowstats" id="toc-flowstats" class="nav-link" data-scroll-target="#flowstats">flowStats</a></li>
+  <li><a href="#cytoml" id="toc-cytoml" class="nav-link" data-scroll-target="#cytoml">CytoML</a></li>
+  <li><a href="#catalyst" id="toc-catalyst" class="nav-link" data-scroll-target="#catalyst">CATALYST</a></li>
+  <li><a href="#flowai" id="toc-flowai" class="nav-link" data-scroll-target="#flowai">flowAI</a></li>
+  <li><a href="#diffcyt" id="toc-diffcyt" class="nav-link" data-scroll-target="#diffcyt">diffcyt</a></li>
+  <li><a href="#flowdensity" id="toc-flowdensity" class="nav-link" data-scroll-target="#flowdensity">flowDensity</a></li>
+  <li><a href="#flowmeans" id="toc-flowmeans" class="nav-link" data-scroll-target="#flowmeans">flowMeans</a></li>
+  <li><a href="#peacoqc" id="toc-peacoqc" class="nav-link" data-scroll-target="#peacoqc">PeacoQC</a></li>
+  <li><a href="#flowfp" id="toc-flowfp" class="nav-link" data-scroll-target="#flowfp">flowFP</a></li>
+  <li><a href="#flowclean" id="toc-flowclean" class="nav-link" data-scroll-target="#flowclean">flowClean</a></li>
+  <li><a href="#flowpeaks" id="toc-flowpeaks" class="nav-link" data-scroll-target="#flowpeaks">flowPeaks</a></li>
+  <li><a href="#compass" id="toc-compass" class="nav-link" data-scroll-target="#compass">COMPASS</a></li>
+  <li><a href="#samspectral" id="toc-samspectral" class="nav-link" data-scroll-target="#samspectral">SamSPECTRAL</a></li>
+  <li><a href="#flowvs" id="toc-flowvs" class="nav-link" data-scroll-target="#flowvs">flowVS</a></li>
+  <li><a href="#cydar" id="toc-cydar" class="nav-link" data-scroll-target="#cydar">cydar</a></li>
+  <li><a href="#flowmerge" id="toc-flowmerge" class="nav-link" data-scroll-target="#flowmerge">flowMerge</a></li>
+  <li><a href="#flowtrans" id="toc-flowtrans" class="nav-link" data-scroll-target="#flowtrans">flowTrans</a></li>
+  <li><a href="#distinct" id="toc-distinct" class="nav-link" data-scroll-target="#distinct">distinct</a></li>
+  <li><a href="#flowcut" id="toc-flowcut" class="nav-link" data-scroll-target="#flowcut">flowCut</a></li>
+  <li><a href="#flowmatch" id="toc-flowmatch" class="nav-link" data-scroll-target="#flowmatch">flowMatch</a></li>
+  <li><a href="#flowbeads" id="toc-flowbeads" class="nav-link" data-scroll-target="#flowbeads">flowBeads</a></li>
+  <li><a href="#flowtime" id="toc-flowtime" class="nav-link" data-scroll-target="#flowtime">flowTime</a></li>
+  <li><a href="#sccomp" id="toc-sccomp" class="nav-link" data-scroll-target="#sccomp">sccomp</a></li>
+  <li><a href="#flowchic" id="toc-flowchic" class="nav-link" data-scroll-target="#flowchic">flowCHIC</a></li>
+  <li><a href="#flowspecs" id="toc-flowspecs" class="nav-link" data-scroll-target="#flowspecs">flowSpecs</a></li>
+  <li><a href="#depecher" id="toc-depecher" class="nav-link" data-scroll-target="#depecher">DepecheR</a></li>
+  <li><a href="#treekor" id="toc-treekor" class="nav-link" data-scroll-target="#treekor">treekoR</a></li>
+  <li><a href="#flowbin" id="toc-flowbin" class="nav-link" data-scroll-target="#flowbin">flowBin</a></li>
+  <li><a href="#metacyto" id="toc-metacyto" class="nav-link" data-scroll-target="#metacyto">MetaCyto</a></li>
+  <li><a href="#immunoclust" id="toc-immunoclust" class="nav-link" data-scroll-target="#immunoclust">immunoClust</a></li>
+  <li><a href="#scdataviz" id="toc-scdataviz" class="nav-link" data-scroll-target="#scdataviz">scDataviz</a></li>
+  <li><a href="#cytomem" id="toc-cytomem" class="nav-link" data-scroll-target="#cytomem">cytoMEM</a></li>
+  <li><a href="#flowploidy" id="toc-flowploidy" class="nav-link" data-scroll-target="#flowploidy">flowPloidy</a></li>
+  <li><a href="#plotgrouper" id="toc-plotgrouper" class="nav-link" data-scroll-target="#plotgrouper">plotGrouper</a></li>
+  <li><a href="#cytodx" id="toc-cytodx" class="nav-link" data-scroll-target="#cytodx">CytoDx</a></li>
+  <li><a href="#sconify" id="toc-sconify" class="nav-link" data-scroll-target="#sconify">Sconify</a></li>
+  <li><a href="#flowplots" id="toc-flowplots" class="nav-link" data-scroll-target="#flowplots">flowPlots</a></li>
+  <li><a href="#gatefinder" id="toc-gatefinder" class="nav-link" data-scroll-target="#gatefinder">GateFinder</a></li>
+  <li><a href="#flowgate" id="toc-flowgate" class="nav-link" data-scroll-target="#flowgate">flowGate</a></li>
+  <li><a href="#flowgraph" id="toc-flowgraph" class="nav-link" data-scroll-target="#flowgraph">flowGraph</a></li>
+  <li><a href="#infinityflow" id="toc-infinityflow" class="nav-link" data-scroll-target="#infinityflow">infinityFlow</a></li>
+  <li><a href="#cyanofilter" id="toc-cyanofilter" class="nav-link" data-scroll-target="#cyanofilter">cyanoFilter</a></li>
+  <li><a href="#optimalflow" id="toc-optimalflow" class="nav-link" data-scroll-target="#optimalflow">optimalFlow</a></li>
+  <li><a href="#cytoglmm" id="toc-cytoglmm" class="nav-link" data-scroll-target="#cytoglmm">CytoGLMM</a></li>
+  <li><a href="#scifer" id="toc-scifer" class="nav-link" data-scroll-target="#scifer">scifer</a></li>
+  <li><a href="#cytokernel" id="toc-cytokernel" class="nav-link" data-scroll-target="#cytokernel">cytoKernel</a></li>
+  <li><a href="#cytopipeline" id="toc-cytopipeline" class="nav-link" data-scroll-target="#cytopipeline">CytoPipeline</a></li>
+  <li><a href="#censcyt" id="toc-censcyt" class="nav-link" data-scroll-target="#censcyt">censcyt</a></li>
+  <li><a href="#flowcybar" id="toc-flowcybar" class="nav-link" data-scroll-target="#flowcybar">flowCyBar</a></li>
+  <li><a href="#reconsi" id="toc-reconsi" class="nav-link" data-scroll-target="#reconsi">reconsi</a></li>
+  <li><a href="#macsquantifyr" id="toc-macsquantifyr" class="nav-link" data-scroll-target="#macsquantifyr">MACSQuantifyR</a></li>
+  <li><a href="#cytomds" id="toc-cytomds" class="nav-link" data-scroll-target="#cytomds">CytoMDS</a></li>
+  <li><a href="#cytopipelinegui" id="toc-cytopipelinegui" class="nav-link" data-scroll-target="#cytopipelinegui">CytoPipelineGUI</a></li>
+  <li><a href="#mapfx" id="toc-mapfx" class="nav-link" data-scroll-target="#mapfx">MAPFX</a></li>
+  <li><a href="#spillr" id="toc-spillr" class="nav-link" data-scroll-target="#spillr">spillR</a></li>
+  <li><a href="#tidyflowcore" id="toc-tidyflowcore" class="nav-link" data-scroll-target="#tidyflowcore">tidyFlowCore</a></li>
+  <li><a href="#cytofpower" id="toc-cytofpower" class="nav-link" data-scroll-target="#cytofpower">CyTOFpower</a></li>
+  <li><a href="#tidytof" id="toc-tidytof" class="nav-link" data-scroll-target="#tidytof">tidytof</a></li>
+  <li><a href="#supercellcyto" id="toc-supercellcyto" class="nav-link" data-scroll-target="#supercellcyto">SuperCellCyto</a></li>
+  </ul></li>
+  <li><a href="#github" id="toc-github" class="nav-link" data-scroll-target="#github">GitHub</a>
+  <ul class="collapse">
+  <li><a href="#autospill" id="toc-autospill" class="nav-link" data-scroll-target="#autospill">autospill</a></li>
+  <li><a href="#autospectral" id="toc-autospectral" class="nav-link" data-scroll-target="#autospectral">autospectral</a></li>
+  <li><a href="#flowmagic" id="toc-flowmagic" class="nav-link" data-scroll-target="#flowmagic">flowMagic</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Package Walkthroughs</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><img src="images/WebsiteBanner.png" class="img-fluid"></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://img.shields.io/badge/license-AGPLv3-blue.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
+</div>
+<section id="background" class="level1">
+<h1>Background</h1>
+<p>The purpose of this page is to host the Vignette writing challenge entries. There are a substantial number of R packages on both Bioconductor and GitHub that we will not be able to get to during the course. My goal for the off-weeks is to have the class assist in navigating through the existing vignettes/articles for each package, and write up a basic .qmd file to help anyone trying to use these packages have a simpler learning curve in doing so than they would have otherwise.</p>
+</section>
+<section id="bioconductor" class="level1">
+<h1>Bioconductor</h1>
+<section id="flowcore" class="level2">
+<h2 class="anchored" data-anchor-id="flowcore">flowCore</h2>
+</section>
+<section id="cytolib" class="level2">
+<h2 class="anchored" data-anchor-id="cytolib">cytolib</h2>
+</section>
+<section id="flowworkspace" class="level2">
+<h2 class="anchored" data-anchor-id="flowworkspace">flowWorkspace</h2>
+</section>
+<section id="ncdfflow" class="level2">
+<h2 class="anchored" data-anchor-id="ncdfflow">ncdfFlow</h2>
+</section>
+<section id="flowviz" class="level2">
+<h2 class="anchored" data-anchor-id="flowviz">flowViz</h2>
+</section>
+<section id="flowsom" class="level2">
+<h2 class="anchored" data-anchor-id="flowsom">FlowSOM</h2>
+</section>
+<section id="ggcyto" class="level2">
+<h2 class="anchored" data-anchor-id="ggcyto">ggcyto</h2>
+</section>
+<section id="opencyto" class="level2">
+<h2 class="anchored" data-anchor-id="opencyto">openCyto</h2>
+</section>
+<section id="quantiseqr" class="level2">
+<h2 class="anchored" data-anchor-id="quantiseqr">quantiseqr</h2>
+</section>
+<section id="flowstats" class="level2">
+<h2 class="anchored" data-anchor-id="flowstats">flowStats</h2>
+</section>
+<section id="cytoml" class="level2">
+<h2 class="anchored" data-anchor-id="cytoml">CytoML</h2>
+</section>
+<section id="catalyst" class="level2">
+<h2 class="anchored" data-anchor-id="catalyst">CATALYST</h2>
+</section>
+<section id="flowai" class="level2">
+<h2 class="anchored" data-anchor-id="flowai">flowAI</h2>
+</section>
+<section id="diffcyt" class="level2">
+<h2 class="anchored" data-anchor-id="diffcyt">diffcyt</h2>
+</section>
+<section id="flowdensity" class="level2">
+<h2 class="anchored" data-anchor-id="flowdensity">flowDensity</h2>
+</section>
+<section id="flowmeans" class="level2">
+<h2 class="anchored" data-anchor-id="flowmeans">flowMeans</h2>
+</section>
+<section id="peacoqc" class="level2">
+<h2 class="anchored" data-anchor-id="peacoqc">PeacoQC</h2>
+</section>
+<section id="flowfp" class="level2">
+<h2 class="anchored" data-anchor-id="flowfp">flowFP</h2>
+</section>
+<section id="flowclean" class="level2">
+<h2 class="anchored" data-anchor-id="flowclean">flowClean</h2>
+</section>
+<section id="flowpeaks" class="level2">
+<h2 class="anchored" data-anchor-id="flowpeaks">flowPeaks</h2>
+</section>
+<section id="compass" class="level2">
+<h2 class="anchored" data-anchor-id="compass">COMPASS</h2>
+</section>
+<section id="samspectral" class="level2">
+<h2 class="anchored" data-anchor-id="samspectral">SamSPECTRAL</h2>
+</section>
+<section id="flowvs" class="level2">
+<h2 class="anchored" data-anchor-id="flowvs">flowVS</h2>
+</section>
+<section id="cydar" class="level2">
+<h2 class="anchored" data-anchor-id="cydar">cydar</h2>
+</section>
+<section id="flowmerge" class="level2">
+<h2 class="anchored" data-anchor-id="flowmerge">flowMerge</h2>
+</section>
+<section id="flowtrans" class="level2">
+<h2 class="anchored" data-anchor-id="flowtrans">flowTrans</h2>
+</section>
+<section id="distinct" class="level2">
+<h2 class="anchored" data-anchor-id="distinct">distinct</h2>
+</section>
+<section id="flowcut" class="level2">
+<h2 class="anchored" data-anchor-id="flowcut">flowCut</h2>
+</section>
+<section id="flowmatch" class="level2">
+<h2 class="anchored" data-anchor-id="flowmatch">flowMatch</h2>
+</section>
+<section id="flowbeads" class="level2">
+<h2 class="anchored" data-anchor-id="flowbeads">flowBeads</h2>
+</section>
+<section id="flowtime" class="level2">
+<h2 class="anchored" data-anchor-id="flowtime">flowTime</h2>
+</section>
+<section id="sccomp" class="level2">
+<h2 class="anchored" data-anchor-id="sccomp">sccomp</h2>
+</section>
+<section id="flowchic" class="level2">
+<h2 class="anchored" data-anchor-id="flowchic">flowCHIC</h2>
+</section>
+<section id="flowspecs" class="level2">
+<h2 class="anchored" data-anchor-id="flowspecs">flowSpecs</h2>
+</section>
+<section id="depecher" class="level2">
+<h2 class="anchored" data-anchor-id="depecher">DepecheR</h2>
+</section>
+<section id="treekor" class="level2">
+<h2 class="anchored" data-anchor-id="treekor">treekoR</h2>
+</section>
+<section id="flowbin" class="level2">
+<h2 class="anchored" data-anchor-id="flowbin">flowBin</h2>
+</section>
+<section id="metacyto" class="level2">
+<h2 class="anchored" data-anchor-id="metacyto">MetaCyto</h2>
+</section>
+<section id="immunoclust" class="level2">
+<h2 class="anchored" data-anchor-id="immunoclust">immunoClust</h2>
+</section>
+<section id="scdataviz" class="level2">
+<h2 class="anchored" data-anchor-id="scdataviz">scDataviz</h2>
+</section>
+<section id="cytomem" class="level2">
+<h2 class="anchored" data-anchor-id="cytomem">cytoMEM</h2>
+</section>
+<section id="flowploidy" class="level2">
+<h2 class="anchored" data-anchor-id="flowploidy">flowPloidy</h2>
+</section>
+<section id="plotgrouper" class="level2">
+<h2 class="anchored" data-anchor-id="plotgrouper">plotGrouper</h2>
+</section>
+<section id="cytodx" class="level2">
+<h2 class="anchored" data-anchor-id="cytodx">CytoDx</h2>
+</section>
+<section id="sconify" class="level2">
+<h2 class="anchored" data-anchor-id="sconify">Sconify</h2>
+</section>
+<section id="flowplots" class="level2">
+<h2 class="anchored" data-anchor-id="flowplots">flowPlots</h2>
+</section>
+<section id="gatefinder" class="level2">
+<h2 class="anchored" data-anchor-id="gatefinder">GateFinder</h2>
+</section>
+<section id="flowgate" class="level2">
+<h2 class="anchored" data-anchor-id="flowgate">flowGate</h2>
+</section>
+<section id="flowgraph" class="level2">
+<h2 class="anchored" data-anchor-id="flowgraph">flowGraph</h2>
+</section>
+<section id="infinityflow" class="level2">
+<h2 class="anchored" data-anchor-id="infinityflow">infinityFlow</h2>
+</section>
+<section id="cyanofilter" class="level2">
+<h2 class="anchored" data-anchor-id="cyanofilter">cyanoFilter</h2>
+</section>
+<section id="optimalflow" class="level2">
+<h2 class="anchored" data-anchor-id="optimalflow">optimalFlow</h2>
+</section>
+<section id="cytoglmm" class="level2">
+<h2 class="anchored" data-anchor-id="cytoglmm">CytoGLMM</h2>
+</section>
+<section id="scifer" class="level2">
+<h2 class="anchored" data-anchor-id="scifer">scifer</h2>
+</section>
+<section id="cytokernel" class="level2">
+<h2 class="anchored" data-anchor-id="cytokernel">cytoKernel</h2>
+</section>
+<section id="cytopipeline" class="level2">
+<h2 class="anchored" data-anchor-id="cytopipeline">CytoPipeline</h2>
+</section>
+<section id="censcyt" class="level2">
+<h2 class="anchored" data-anchor-id="censcyt">censcyt</h2>
+</section>
+<section id="flowcybar" class="level2">
+<h2 class="anchored" data-anchor-id="flowcybar">flowCyBar</h2>
+</section>
+<section id="reconsi" class="level2">
+<h2 class="anchored" data-anchor-id="reconsi">reconsi</h2>
+</section>
+<section id="macsquantifyr" class="level2">
+<h2 class="anchored" data-anchor-id="macsquantifyr">MACSQuantifyR</h2>
+</section>
+<section id="cytomds" class="level2">
+<h2 class="anchored" data-anchor-id="cytomds">CytoMDS</h2>
+</section>
+<section id="cytopipelinegui" class="level2">
+<h2 class="anchored" data-anchor-id="cytopipelinegui">CytoPipelineGUI</h2>
+</section>
+<section id="mapfx" class="level2">
+<h2 class="anchored" data-anchor-id="mapfx">MAPFX</h2>
+</section>
+<section id="spillr" class="level2">
+<h2 class="anchored" data-anchor-id="spillr">spillR</h2>
+</section>
+<section id="tidyflowcore" class="level2">
+<h2 class="anchored" data-anchor-id="tidyflowcore">tidyFlowCore</h2>
+</section>
+<section id="cytofpower" class="level2">
+<h2 class="anchored" data-anchor-id="cytofpower">CyTOFpower</h2>
+</section>
+<section id="tidytof" class="level2">
+<h2 class="anchored" data-anchor-id="tidytof">tidytof</h2>
+</section>
+<section id="supercellcyto" class="level2">
+<h2 class="anchored" data-anchor-id="supercellcyto">SuperCellCyto</h2>
+</section>
+</section>
+<section id="github" class="level1">
+<h1>GitHub</h1>
+<section id="autospill" class="level2">
+<h2 class="anchored" data-anchor-id="autospill">autospill</h2>
+</section>
+<section id="autospectral" class="level2">
+<h2 class="anchored" data-anchor-id="autospectral">autospectral</h2>
+</section>
+<section id="flowmagic" class="level2">
+<h2 class="anchored" data-anchor-id="flowmagic">flowMagic</h2>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://www.gnu.org/graphics/agplv3-with-text-162x68.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Made with <a href="https://quarto.org/">Quarto</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p><img src="./images/AGPL3.png" class="img-fluid" alt="AGPL-3.0"> <img src="./images/CCBYSA.png" class="img-fluid" alt="CC-BY-SA"></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

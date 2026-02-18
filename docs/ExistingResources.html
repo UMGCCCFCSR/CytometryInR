@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Existing Resources – Cytometry in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-8eaec6b9941db0f18eecf13b95a46332.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/hex.svg" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Cytometry in R</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./course/index.html"> 
+<span class="menu-text">Course</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/UMGCCCFCSR/CytometryInR/discussions"> 
+<span class="menu-text">Discussions</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@CytometryInR"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/UMGCCCFCSR/CytometryInR"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <div id="quarto-announcement" data-announcement-id="517fd7fd2923fd64fe81c4cc75c6fa55" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
+</div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#christopher-hall---flow-cytometry-data-analysis-in-r" id="toc-christopher-hall---flow-cytometry-data-analysis-in-r" class="nav-link active" data-scroll-target="#christopher-hall---flow-cytometry-data-analysis-in-r">Christopher Hall - Flow Cytometry Data Analysis in R</a>
+  <ul class="collapse">
+  <li><a href="#installation-and-loading-data" id="toc-installation-and-loading-data" class="nav-link" data-scroll-target="#installation-and-loading-data">Installation and Loading Data</a></li>
+  <li><a href="#compensation-cleaning-transformation-visualization" id="toc-compensation-cleaning-transformation-visualization" class="nav-link" data-scroll-target="#compensation-cleaning-transformation-visualization">Compensation, Cleaning, Transformation, Visualization</a></li>
+  <li><a href="#gating-with-flowworkspace" id="toc-gating-with-flowworkspace" class="nav-link" data-scroll-target="#gating-with-flowworkspace">Gating with flowWorkspace</a></li>
+  <li><a href="#visualization" id="toc-visualization" class="nav-link" data-scroll-target="#visualization">Visualization</a></li>
+  </ul></li>
+  <li><a href="#ozette-technologies---bioc-2023-workshop" id="toc-ozette-technologies---bioc-2023-workshop" class="nav-link" data-scroll-target="#ozette-technologies---bioc-2023-workshop">Ozette Technologies - BioC 2023 Workshop</a></li>
+  <li><a href="#pritam-kumar-panda---flow-cytometry-data-analysis-visualization-in-r-using-cytoexplorer" id="toc-pritam-kumar-panda---flow-cytometry-data-analysis-visualization-in-r-using-cytoexplorer" class="nav-link" data-scroll-target="#pritam-kumar-panda---flow-cytometry-data-analysis-visualization-in-r-using-cytoexplorer">Pritam Kumar Panda - Flow Cytometry Data Analysis &amp; Visualization in R using CytoExploreR</a>
+  <ul class="collapse">
+  <li><a href="#complete-guide" id="toc-complete-guide" class="nav-link" data-scroll-target="#complete-guide">Complete Guide</a></li>
+  </ul></li>
+  <li><a href="#bioinformatics-dotca---introduction-to-flow-cytometry-in-r" id="toc-bioinformatics-dotca---introduction-to-flow-cytometry-in-r" class="nav-link" data-scroll-target="#bioinformatics-dotca---introduction-to-flow-cytometry-in-r">Bioinformatics DotCa - Introduction to Flow Cytometry in R</a>
+  <ul class="collapse">
+  <li><a href="#introduction-to-flow-cytometry-in-r" id="toc-introduction-to-flow-cytometry-in-r" class="nav-link" data-scroll-target="#introduction-to-flow-cytometry-in-r">Introduction to Flow Cytometry in R</a></li>
+  <li><a href="#exploring-fcm-data-in-r" id="toc-exploring-fcm-data-in-r" class="nav-link" data-scroll-target="#exploring-fcm-data-in-r">Exploring FCM Data in R</a></li>
+  <li><a href="#processing-and-quality-assurance-of-fcm-data" id="toc-processing-and-quality-assurance-of-fcm-data" class="nav-link" data-scroll-target="#processing-and-quality-assurance-of-fcm-data">Processing and Quality Assurance of FCM Data</a></li>
+  <li><a href="#d-dynamic-gating" id="toc-d-dynamic-gating" class="nav-link" data-scroll-target="#d-dynamic-gating">1D Dynamic Gating</a></li>
+  <li><a href="#clustering-and-additional-fcm-tools" id="toc-clustering-and-additional-fcm-tools" class="nav-link" data-scroll-target="#clustering-and-additional-fcm-tools">Clustering and Additional FCM Tools</a></li>
+  </ul></li>
+  <li><a href="#tulika-rai---learn-innovatively-with-me" id="toc-tulika-rai---learn-innovatively-with-me" class="nav-link" data-scroll-target="#tulika-rai---learn-innovatively-with-me">Tulika Rai - Learn Innovatively With Me</a>
+  <ul class="collapse">
+  <li><a href="#flowai-flow-cytometry-data-cleaning-using-r" id="toc-flowai-flow-cytometry-data-cleaning-using-r" class="nav-link" data-scroll-target="#flowai-flow-cytometry-data-cleaning-using-r">flowAI Flow Cytometry Data Cleaning using R</a></li>
+  <li><a href="#tsne-umap-trimap-colorization-or-transformation-using-r-script" id="toc-tsne-umap-trimap-colorization-or-transformation-using-r-script" class="nav-link" data-scroll-target="#tsne-umap-trimap-colorization-or-transformation-using-r-script">tSNE UMAP TRIMAP colorization or Transformation using R script</a></li>
+  <li><a href="#givanna-putri---introduction-to-cytometry-data-analysis-in-r-workshop" id="toc-givanna-putri---introduction-to-cytometry-data-analysis-in-r-workshop" class="nav-link" data-scroll-target="#givanna-putri---introduction-to-cytometry-data-analysis-in-r-workshop">Givanna Putri - Introduction to Cytometry Data Analysis in R workshop</a></li>
+  </ul></li>
+  <li><a href="#timothy-keyes--" id="toc-timothy-keyes--" class="nav-link" data-scroll-target="#timothy-keyes--">Timothy Keyes -</a></li>
+  <li><a href="#ryan-duggan---cytometry-on-air" id="toc-ryan-duggan---cytometry-on-air" class="nav-link" data-scroll-target="#ryan-duggan---cytometry-on-air">Ryan Duggan - Cytometry on Air</a></li>
+  <li><a href="#guillaume-beyrend---learn-cytometry" id="toc-guillaume-beyrend---learn-cytometry" class="nav-link" data-scroll-target="#guillaume-beyrend---learn-cytometry">Guillaume Beyrend - Learn Cytometry</a></li>
+  <li><a href="#hong-qin---flow-analysis-in-r" id="toc-hong-qin---flow-analysis-in-r" class="nav-link" data-scroll-target="#hong-qin---flow-analysis-in-r">Hong Qin - flow analysis in R</a>
+  <ul class="collapse">
+  <li><a href="#flow-analysis-in-r" id="toc-flow-analysis-in-r" class="nav-link" data-scroll-target="#flow-analysis-in-r">Flow Analysis in R</a></li>
+  <li><a href="#flow-cytometer-data-analysis" id="toc-flow-cytometer-data-analysis" class="nav-link" data-scroll-target="#flow-cytometer-data-analysis">Flow Cytometer Data Analysis</a></li>
+  </ul></li>
+  <li><a href="#swayam-prabha---flow-cytometry-data-analysis-in-rbioconductor" id="toc-swayam-prabha---flow-cytometry-data-analysis-in-rbioconductor" class="nav-link" data-scroll-target="#swayam-prabha---flow-cytometry-data-analysis-in-rbioconductor">Swayam Prabha - Flow cytometry data analysis in R/Bioconductor</a></li>
+  <li><a href="#tiara-lacey---flow-cytometer-data-analysis-in-rstudio" id="toc-tiara-lacey---flow-cytometer-data-analysis-in-rstudio" class="nav-link" data-scroll-target="#tiara-lacey---flow-cytometer-data-analysis-in-rstudio">Tiara Lacey - flow cytometer data analysis in RStudio</a></li>
+  <li><a href="#kayla-davis--" id="toc-kayla-davis--" class="nav-link" data-scroll-target="#kayla-davis--">Kayla Davis -</a></li>
+  <li><a href="#jordan-branch--" id="toc-jordan-branch--" class="nav-link" data-scroll-target="#jordan-branch--">Jordan Branch -</a></li>
+  <li><a href="#imani-canton---flow-cytometry-bonus" id="toc-imani-canton---flow-cytometry-bonus" class="nav-link" data-scroll-target="#imani-canton---flow-cytometry-bonus">Imani Canton - Flow Cytometry Bonus</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Existing Resources</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><img src="images/WebsiteBanner.png" class="img-fluid"></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://img.shields.io/badge/license-AGPLv3-blue.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
+</div>
+<p>We are not the first “Cytometry in R” course, nor will we be the last. This page is linking to the already existant online Cytometry in R resources that we have encountered and benefited from during our own learning journey. May they prove useful to you as you progress your way through yours!</p>
+<p><br></p>
+<hr>
+<section id="christopher-hall---flow-cytometry-data-analysis-in-r" class="level1">
+<h1>Christopher Hall - Flow Cytometry Data Analysis in R</h1>
+<p><a href="https://github.com/hally166/Cytometry-R-scripts">Cytometry-R-Scripts: R scripts to help with your flow cytometry analysis</a></p>
+<p><a href="https://github.com/hally166/R_flowcytometry_course">R_flowcytometry_course: The files and presentation from the Cytometry Core Facility flow cytometry data analysis course in R</a></p>
+<section id="installation-and-loading-data" class="level2">
+<h2 class="anchored" data-anchor-id="installation-and-loading-data">Installation and Loading Data</h2>
+<p><a href="https://youtu.be/2INqQNMNaV0?si=h_3Xa3bIBr0E9199">(1) Flow Cytometry Data Analysis in R - Installation and Loading Data</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/2INqQNMNaV0?si=h_3Xa3bIBr0E9199" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+</section>
+<section id="compensation-cleaning-transformation-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="compensation-cleaning-transformation-visualization">Compensation, Cleaning, Transformation, Visualization</h2>
+<p><a href="https://www.youtube.com/watch?v=WWa7dwwiLvI&amp;list=PLonl5DIJ0E5_nLR2iF9bILHB1W7a5LGqO&amp;index=3">(2) Flow Cytometry Data Analysis in R: compensation, cleaning, transformation, visualization</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/WWa7dwwiLvI?si=69AmgoLOPx9AQ9J9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+</section>
+<section id="gating-with-flowworkspace" class="level2">
+<h2 class="anchored" data-anchor-id="gating-with-flowworkspace">Gating with flowWorkspace</h2>
+<p><a href="https://youtu.be/ijHOGHP82EY?si=87OB8t8wynJNnTf3">(3) Flow Cytometry Data Analysis in R: gating with flowWorkspace</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ijHOGHP82EY?si=-kAM2ExNW4Og0y3U" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+</section>
+<section id="visualization" class="level2">
+<h2 class="anchored" data-anchor-id="visualization">Visualization</h2>
+<p><a href="https://youtu.be/Y7_ux9Py3Vg?si=2wG5WmI8n3IBCyHD">(4) Flow Cytometry Data Analysis in R: Visualisation</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Y7_ux9Py3Vg?si=ccA_FHYByh_2k9nk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<p><br></p>
+<hr>
+</section>
+</section>
+<section id="ozette-technologies---bioc-2023-workshop" class="level1">
+<h1>Ozette Technologies - BioC 2023 Workshop</h1>
+<p>Workshop given at the Bioc2023 conference, authored by Arpan Neupane and Andrew McDavid.</p>
+<p><a href="https://youtu.be/_8x-prIxJgw?si=Tm-QoBQ3qc568xXD">Workshop: Reproducible and programmatic analysis of flow cytometry experiments with the cytoverse</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_8x-prIxJgw?si=Tm-QoBQ3qc568xXD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<p><br></p>
+<hr>
+</section>
+<section id="pritam-kumar-panda---flow-cytometry-data-analysis-visualization-in-r-using-cytoexplorer" class="level1">
+<h1>Pritam Kumar Panda - Flow Cytometry Data Analysis &amp; Visualization in R using CytoExploreR</h1>
+<p><a href="https://github.com/pritampanda15/Proteomics/tree/main/Flow-Cytometry-analysis-in-R-main">Flow-Cytometry-analysis-in-R</a></p>
+<p><a href="https://github.com/pritampanda15/Proteomics/tree/main/CytoExploreR-Interactive-visualization-main">CytoExploreR-Interactive-visualization</a></p>
+<section id="complete-guide" class="level2">
+<h2 class="anchored" data-anchor-id="complete-guide">Complete Guide</h2>
+<p><a href="https://youtu.be/AvIvRorrh8c?si=MVViua5fSBrahtzv">Flow Cytometry Data Analysis &amp; Visualization in R using CytoExploreR: Complete Guide</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/AvIvRorrh8c?si=QektorbguSVJ_lP-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<p><br></p>
+<hr>
+</section>
+</section>
+<section id="bioinformatics-dotca---introduction-to-flow-cytometry-in-r" class="level1">
+<h1>Bioinformatics DotCa - Introduction to Flow Cytometry in R</h1>
+<section id="introduction-to-flow-cytometry-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="introduction-to-flow-cytometry-in-r">Introduction to Flow Cytometry in R</h2>
+<p><a href="https://youtu.be/0_dN8VKhOJ0?si=Mn7UB0Gps5twqAqK">Introduction to Flow Cytometry in R</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/0_dN8VKhOJ0?si=Mn7UB0Gps5twqAqK" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+</section>
+<section id="exploring-fcm-data-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-fcm-data-in-r">Exploring FCM Data in R</h2>
+<p><a href="https://youtu.be/IE8X32HVA9I?si=0xTVBGWanRele4WT">Exploring FCM Data in R</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/IE8X32HVA9I?si=0xTVBGWanRele4WT" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+</section>
+<section id="processing-and-quality-assurance-of-fcm-data" class="level2">
+<h2 class="anchored" data-anchor-id="processing-and-quality-assurance-of-fcm-data">Processing and Quality Assurance of FCM Data</h2>
+<p><a href="https://youtu.be/OnAcZzBSc54?si=Z-RijMLvhvxqXvV2">Processing and Quality Assurance of FCM Data</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/OnAcZzBSc54?si=CWgamCbSBm4z8Jrx" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+</section>
+<section id="d-dynamic-gating" class="level2">
+<h2 class="anchored" data-anchor-id="d-dynamic-gating">1D Dynamic Gating</h2>
+<p><a href="https://youtu.be/Yd_IPMDFm4Y?si=9OikOeFnkEMCRURl">1D Dynamic Gating</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/Yd_IPMDFm4Y?si=9OikOeFnkEMCRURl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+</section>
+<section id="clustering-and-additional-fcm-tools" class="level2">
+<h2 class="anchored" data-anchor-id="clustering-and-additional-fcm-tools">Clustering and Additional FCM Tools</h2>
+<p><a href="https://youtu.be/xnvNCsu56Vo?si=botz0swIm31W5340">Clustering and Additional FCM Tools</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xnvNCsu56Vo?si=botz0swIm31W5340" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+</section>
+</section>
+<section id="tulika-rai---learn-innovatively-with-me" class="level1">
+<h1>Tulika Rai - Learn Innovatively With Me</h1>
+<section id="flowai-flow-cytometry-data-cleaning-using-r" class="level2">
+<h2 class="anchored" data-anchor-id="flowai-flow-cytometry-data-cleaning-using-r">flowAI Flow Cytometry Data Cleaning using R</h2>
+<p><a href="https://youtu.be/PvB37SEe7lI?si=X3iYcGT7A3G603oP">flowAI Flow Cytometry Data Cleaning using R: A Step-by-step Tutorial</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/PvB37SEe7lI?si=fhbmhs1vXdw0Fkzo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+</section>
+<section id="tsne-umap-trimap-colorization-or-transformation-using-r-script" class="level2">
+<h2 class="anchored" data-anchor-id="tsne-umap-trimap-colorization-or-transformation-using-r-script">tSNE UMAP TRIMAP colorization or Transformation using R script</h2>
+<p><a href="https://youtu.be/l9dg4QUYSOM?si=gW218zzDqQEtjtpY">tSNE UMAP TRIMAP colorization or Transformation using R script</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/l9dg4QUYSOM?si=gW218zzDqQEtjtpY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<p><br></p>
+<hr>
+</section>
+<section id="givanna-putri---introduction-to-cytometry-data-analysis-in-r-workshop" class="level2">
+<h2 class="anchored" data-anchor-id="givanna-putri---introduction-to-cytometry-data-analysis-in-r-workshop">Givanna Putri - Introduction to Cytometry Data Analysis in R workshop</h2>
+<p><a href="https://youtu.be/-0QrXgk_NRw?si=GqcjU-_MQ3UvYwvI">ACS 2021 Workshops - Introduction to Cytometry Data Analysis in R workshop</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/-0QrXgk_NRw?si=GqcjU-_MQ3UvYwvI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<p><br></p>
+<hr>
+</section>
+</section>
+<section id="timothy-keyes--" class="level1">
+<h1>Timothy Keyes -</h1>
+<p><a href="https://youtu.be/5NhpC836aSc?si=QqoeW31cQcHFzu5W">{tidytof}: Predicting Patient Outcomes from Single-cell Data using Tidy Data Principles</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/5NhpC836aSc?si=QqoeW31cQcHFzu5W" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<p><br></p>
+<hr>
+</section>
+<section id="ryan-duggan---cytometry-on-air" class="level1">
+<h1>Ryan Duggan - Cytometry on Air</h1>
+<p><a href="https://www.youtube.com/live/_B7mo6dB3BU?si=eW20X4YWgaCoYnfw">Cytometry on Air: Analyzing Flow Cytometry Data in R</a> Presentation by TJ Chen and Greg Finak,</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_B7mo6dB3BU?si=eW20X4YWgaCoYnfw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<p><br></p>
+<hr>
+</section>
+<section id="guillaume-beyrend---learn-cytometry" class="level1">
+<h1>Guillaume Beyrend - Learn Cytometry</h1>
+<p><a href="https://learncytometry.com/videos/">Learn Cytometry</a> Originally appeared to have been paywalled, doesn’t currently appear to be the case.</p>
+<p><br></p>
+<hr>
+</section>
+<section id="hong-qin---flow-analysis-in-r" class="level1">
+<h1>Hong Qin - flow analysis in R</h1>
+<section id="flow-analysis-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="flow-analysis-in-r">Flow Analysis in R</h2>
+<p><a href="https://youtu.be/r7Mf6joCNzM?si=5j9Fy8fn6d7o0Z-u">flow analysis in R, bio125, Spring 2015</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/r7Mf6joCNzM?si=5j9Fy8fn6d7o0Z-u" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+</section>
+<section id="flow-cytometer-data-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="flow-cytometer-data-analysis">Flow Cytometer Data Analysis</h2>
+<p><a href="https://youtu.be/BN5Ldu1AFgk?si=FV2K7jJGe9H6na08">BIO233 demo, flow cytometer data analysis, simple example</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/BN5Ldu1AFgk?si=FV2K7jJGe9H6na08" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<p><br></p>
+<hr>
+</section>
+</section>
+<section id="swayam-prabha---flow-cytometry-data-analysis-in-rbioconductor" class="level1">
+<h1>Swayam Prabha - Flow cytometry data analysis in R/Bioconductor</h1>
+<p><a href="https://youtu.be/g-VUT3riwOM?si=SlX88J3HpsjYaqFI">Lecture 15 : Flow cytometry data analysis in R/Bioconductor</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/g-VUT3riwOM?si=SlX88J3HpsjYaqFI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<p><br></p>
+<hr>
+</section>
+<section id="tiara-lacey---flow-cytometer-data-analysis-in-rstudio" class="level1">
+<h1>Tiara Lacey - flow cytometer data analysis in RStudio</h1>
+<p><a href="https://www.youtube.com/live/rhtNFU7mHok?si=6Ww1BGpjd4yX7Ttx">flow cytometer data analysis in RStudio</a> No Audio</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/rhtNFU7mHok?si=iHAtbAROGcTxoNW9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<p><br></p>
+<hr>
+</section>
+<section id="kayla-davis--" class="level1">
+<h1>Kayla Davis -</h1>
+<p><a href="https://www.youtube.com/live/QJ6UazMoqIE?si=1ZYhIJoVuMC5Vnh-">flow cytometer data analysis in RStudio</a> Chaotic Audio</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/QJ6UazMoqIE?si=1ZYhIJoVuMC5Vnh-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<p><br></p>
+<hr>
+</section>
+<section id="jordan-branch--" class="level1">
+<h1>Jordan Branch -</h1>
+<p><a href="https://www.youtube.com/live/vyBnX8SxGOM?si=dmkXKaV6IP3AGJSN">flow cytommetry r</a> No Audio</p>
+<p><br></p>
+<hr>
+</section>
+<section id="imani-canton---flow-cytometry-bonus" class="level1">
+<h1>Imani Canton - Flow Cytometry Bonus</h1>
+<p><a href="https://www.youtube.com/live/zFTuKw9gDAM?si=CZScPfKetVtThQqD">Flow Cytometry Bonus</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/zFTuKw9gDAM?si=CZScPfKetVtThQqD" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<p><br></p>
+<hr>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://www.gnu.org/graphics/agplv3-with-text-162x68.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Made with <a href="https://quarto.org/">Quarto</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p><img src="./images/AGPL3.png" class="img-fluid" alt="AGPL-3.0"> <img src="./images/CCBYSA.png" class="img-fluid" alt="CC-BY-SA"></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
