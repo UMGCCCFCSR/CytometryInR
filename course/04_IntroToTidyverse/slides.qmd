@@ -1,0 +1,1199 @@
+---
+title: "04 - Introduction to Tidyverse"
+author: "David Rach"
+date: 02-24-2026
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    incremental: true
+page-layout: full
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+
+----
+
+# Background
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Within our daily workflows as cytometrist, after acquiring data on our respective instruments, we begin analyzing the resulting datasets. After implementing various workflows, we then export data for downstream statistical analysis. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When I first started my Ph.D program, a substantial amount of my day was spent renaming column names of the exported data so that they would fit nicely in a Microsoft Excel sheet column; setting up formulas to combine proportion of positive cells across positive quadrants, etc. Once this was done, additional hours would go by as I copied and pasted contents of those columns over to a GraphPad Prism worksheet for statistical analysis. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+This of course was in an ideal scenario. Often times, the data was less organized, and instead of time spent copying and pasting over columns, it would first be spent rearranging values from individual cells in the worksheet that were separated by spaces, all the while trying to remember what various color codes and bold font stood for. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Today, we will explore what makes data ["tidy"](https://vita.had.co.nz/papers/tidy-data.pdf), and how to use the toolsets implemented in the various [tidyverse](https://cran.r-project.org/web/packages/tidyverse/vignettes/paper.html) R packages. At it's simplest, if we think of and organize all our data in terms of rows and columns, we need fewer tools (ie. functions) to reshape and extract useful information that we are interested in. Additionally, this approach aligns more closely with how computers work, allowing us to carry out tasks that would otherwise have taken hours in mere seconds. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The dataset we will be using today is a manually-gated spectral flow cytometry dataset (similar to ones we would see exported by commercial software), and has been intentionally left slightly messy. You could however just as easily use a "matrix" or "data.frame" object exported from inside an [fcs file](/course/03_InsideFCSFile/), or swap in your own dataset. You would just need to make sure to switch out the input data by providing an alternate [file path](/course/02_FilePaths/), etc.
+:::
+:::
+
+---
+
+# Walk Through
+
+:::{.callout-important title="Housekeeping"}
+As we do [every week](/course/02_FilePaths/index.qmd), on GitHub, sync your forked version of the CytometryInR course to bring in the most recent updates. Then within Positron, pull in those changes to your local computer. 
+
+After creating a "Week04" project folder, copy over the contents of "course/04_IntroToTidyverse" to that folder. This will hopefully prevent any merge issues when you attempt to bring in new data to your local Cytometry in R folder next week. Please remember once you have set up your project folder to stage, commit and pus your changes to "Week04" to GitHub so that they are backed up remotely.
+
+If you are having issues syncing due to the Take-Home Problem merge conflict, see this [walkthrough](https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/)
+:::
+
+---
+
+## read.csv
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We will start by first loading in our copied over dataset (Dataset.csv) from it's location in the project folder. If you are following the organization scheme we have been using throughout the course, your file path will look something like this: 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+#| include: FALSE
+
+# For use only when building the website, otherwise keep eval to FALSE
+thefilepath <- file.path(getwd(), "course", "04_IntroToTidyverse", "data", "Dataset.csv")
+
+thefilepath
+```
+
+:::
+
+::: {.fragment}
+```{r}
+#| eval: TRUE
+thefilepath <- file.path("data", "Dataset.csv")
+
+thefilepath
+```
+
+:::
+
+---
+
+::: {.fragment}
+:::{.callout-tip title="Reminder"}
+We encourage using the `file.path` function to build our file paths, as this keeps our code reproducible and replicable when a project folder is copied to other people's computers that differ on whether the operating system uses forward or backward slash separation between folders. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Above, we directly specified the name (Dataset) and filetype (.csv) of the file we wanted in the last argument of the file.path ("Dataset.csv"). This allows us to skip the `list.files()` step we used last week as we have provided the full file path. While this approach can be faster, if we accidentally mistype the file name, we could end up with an error at the next step due to no files being found with the mistyped name. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Since our dataset is stored as a .csv file, we will be using the `read.csv()` function from the `utils` package (included in our base R software installation) to read it into R. We will also use the `colnames()` function from last week to get a read-out of the column names. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data <- read.csv(file=thefilepath, check.names=FALSE)
+colnames(Data)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we look at the line of code, we now have enough context to decipher that the "file" argument is where we provide a file path to an individual file, but what does the "check.names" argument do?
+
+Let's see what happens to the column names when we set "check.names" argument to TRUE:
+:::
+:::
+
+
+::: {.fragment}
+```{r}
+Data_Alternative <- read.csv(thefilepath, check.names=TRUE)
+colnames(Data_Alternative)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we can see, any column name that contained a special character or a space was automatically converted over to [R-approved syntax](https://ssojet.com/escaping/regex-escaping-in-r#understanding-the-need-for-escaping-special-characters). However, this resulted in the loss of both +" and "-", leaving us unable to determine whether we are looking at cells within or outside a particular gate. 
+:::
+:::
+
+::: {.fragment}
+![](images/00_CheckNamesTRUE.png)
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Because of this, it is often better to rename columns individually after import, which we will learn how to do later today. 
+
+Following up with what we practiced last week, lets use the `head()` function to visualize the first few rows of data. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+head(Data, 3)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When working in Positron, we could have alternatively clicked on the little grid icon next to our created variable "Data" in the right secondary sidebar, which would have opened the data in our Editor window. From this same window, we can see it is stored as a "data.frame" object type.
+:::
+:::
+
+---
+
+![](images/01_DataView.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We could also achieve the same window to open using the `View()` function:
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+View(Data)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Wrapping up our brief recap of [last week](/course/03_InsideFCSFile/index.qmd) functions, we can check an objects type using both the `class()` and `str()` functions.
+:::
+:::
+
+::: {.fragment}
+```{r}
+class(Data)
+```
+
+:::
+
+::: {.fragment}
+```{r}
+str(Data)
+```
+
+:::
+
+---
+
+## data.frame
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Or alternatively using the new-to-us `glimpse()` function
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| error: TRUE
+glimpse(Data)
+```
+
+:::
+
+---
+
+:::{.callout-tip title="Checkpoint 1"}
+This however returns an error. Any idea why this might be occuring?
+:::
+
+::: {.fragment}
+```{r}
+#| code-fold: TRUE
+
+# We haven't attached/loaded the package in which the function glimpse is within
+```
+
+:::
+
+---
+
+:::{.callout-tip title="Checkpoint 2"}
+How would we locate a package a not-yet-loaded function is within?
+:::
+
+::: {.fragment}
+```{r}
+#| code-fold: TRUE
+#| eval: FALSE
+
+# We can use double ? to search all installed packages for a function, regardless
+# if the package is attached to the environment or not
+
+??glimpse
+```
+
+:::
+
+---
+
+![](images/02_Glimpse.png)
+
+::: {.fragment}
+::: {.callout-tip title="."}
+From the list of search matches (in the right secondary sidebar), it looks likely that the `glimpse()` function in the `dplyr` package was the one we were looking for. This is one the main tidyverse packages we will be using throughout the course. Let's attach it to our environment via the `library()` call first and try running `glimpse()` again. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| message: FALSE
+#| warning: FALSE
+library(dplyr)
+glimpse(Data)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We notice that while similar to the `str()` output, `glimpse()` handles spacing a little differently, and includes the dimensions at the top. However, we can also retrieve the dimensions directly using the `dim()` function (which maintains the row followed by column position convention of base R (ex. [196,31]))
+:::
+:::
+
+::: {.fragment}
+```{r}
+dim(Data)
+```
+
+:::
+
+---
+
+## Column value type
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we saw last week, functions often need values that match a certain type (the paintbrush needing paint analogy). As we inspect the columns of Data, we can notice some of the columns contain values within that are character (ie. "char") values. Others appear to contain numeric values (which are [subtyped](https://www.r-bloggers.com/2023/09/understanding-data-types-in-r/) as either double ("ie. dbl") or integer (ie. "int")). At first glance, we do not appear to have any logical (ie. TRUE or FALSE) columns in this dataset. 
+:::
+:::
+
+---
+
+![](images/03_ColumnClass.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we were trying to verify type of values contained within a data.frame column, we could employ several similarly-named functions (`is.character()`, `is.numeric()` or `is.logical()`) to check
+:::
+:::
+
+::: {.fragment}
+```{r}
+# colnames(Data)  # To recheck the column names
+
+is.character(Data$bid)
+```
+
+:::
+
+::: {.fragment}
+```{r}
+is.numeric(Data$bid)
+```
+
+:::
+
+::: {.fragment}
+```{r}
+# colnames(Data)  # To recheck the column names
+
+is.character(Data$Tcells_count)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For numeric columns using the `is.numeric()` function, we can also be [subtype](https://www.r-bloggers.com/2023/09/understanding-data-types-in-r/) specific using  either `is.integer()` or `is.double()`. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+# colnames(Data)  # To recheck the column names
+
+is.numeric(Data$Tcells_count)
+is.integer(Data$Tcells_count)
+is.double(Data$Tcells_count)
+```
+
+:::
+
+---
+
+:::{.callout-tip title="Reminder"}
+As we observed last week with keywords, column names that contain [special characters](https://ssojet.com/escaping/regex-escaping-in-r#understanding-the-need-for-escaping-special-characters) like $ or spaces will need to be surrounded with tick marks in order for the function to be able to run. 
+:::
+
+::: {.fragment}
+```{r}
+#| error: TRUE
+
+# colnames(Data)  # To recheck the column names
+is.numeric(Data$CD8-)
+```
+
+:::
+
+::: {.fragment}
+```{r}
+# colnames(Data)  # To recheck the column names
+is.numeric(Data$`CD8-`)
+```
+
+:::
+
+---
+
+## select (Columns)
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Now that we have read in our data, and have a general picture of the structure and contents, lets start learning the main `dplyr` functions we will be using throughout the course. To do this, lets go ahead and attach `dplyr` to our local environment via the `library()` call. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+library(dplyr)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We will start with the `select()` function. It is used to "select" a column from a data.frame type object. In the simplest usage, we provide the name of our data.frame variable/object as the first argument after the opening parenthesis. This is then followed by the name of the column we want to select as the second argument (let's place around the "" around the column name for now)
+:::
+:::
+
+::: {.fragment}
+```{r}
+DateColumn <- select(Data, "Date")
+DateColumn
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+This results in the column being selected, resulting in the new object containing only that subsetted out column from the original Data object. 
+:::
+:::
+
+---
+
+### Pipe Operators
+
+::: {.fragment}
+::: {.callout-tip title="."}
+While the above line of code works to select a column, when you encounter `select()` out in the wild, it will more often be in a line of code that looks like this:
+:::
+:::
+
+::: {.fragment}
+```{r}
+DateColumn <- Data |> select("Date")
+DateColumn
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+... **"What in the world is that thing |> ?"** ...
+:::
+:::
+
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Glad you asked! An useful feature of the tidyverse packages is their use of [pipes](https://r4ds.had.co.nz/pipes.html) (either the original `magrittr` package's "%>%"  or `base R version >4.1.0's` "|>""), usually appearing like this:
+:::
+:::
+
+::: {.fragment}
+```{r}
+# magrittr %>% pipe
+
+DateColumn <- Data %>% select("Date")
+
+# base R |> pipe
+DateColumn <- Data |> select("Date")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+... **"How do we interpret/read that line of code?"** ...
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's break it down, starting off just to the right of the assignment arrow (<-) with our data.frame "Data".
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: false
+
+Data
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We then proceed to read to the right, adding in our pipe operator. The pipe essentially serves as an intermediate passing the contents of data onward to the subsequent function.
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+Data |> 
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In our case, this subsequent function is the `select()` function, which will select a particular column from the available data. When using the pipe, the first argument slot we saw for "select(Data, "Date")" is occupied by the contents Data that are being passed by the pipe. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+Data |> select()
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+To complete the transfer, we provide the desired column name to `select()` to act on ("Date" in this case)
+:::
+:::
+
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+Data |> select("Date")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In summary, contents of Data are passed to the pipe, and select runs on those contents to select the Date column
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data |> select("Date")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+One of the main advantages for using pipes, is they can be linked together, passing resulting objects of one operation on to the next pipe and subsequent function. We can see this in operation in the example below where we hand off the isolated "Date" column to the `nrow()` function to determine number of rows. We will use pipes throughout the course, so you will gradually gain familiarity as you encounter them. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data |> select("Date") |> nrow()
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For those with prior R experience, you will be more familiar with the older magrittr %>% pipe. The base R |> pipe operator was introduced starting with R version 4.1.0. While mostly interchangeable, they have a [few nuances](https://tidyverse.org/blog/2023/04/base-vs-magrittr-pipe/) that come into play for more advance use cases. You are welcome to use whichever you prefer (my current preference is |> as it's one less key to press). 
+:::
+:::
+
+---
+
+### R Quirks
+
+:::{.callout-note title="Odd R Behavior # 1"}
+While we used "" around the column name in our previous example, unlike what we encountered with `install.packages()` when we forget to include quotation marks, `select()` still retrieves the correct column despite Date not being an environment variable:
+:::
+
+::: {.fragment}
+```{r}
+Data |> select(Date) |> head(5)
+```
+
+:::
+
+---
+
+:::{.callout-note title="."}
+The reasons for this Odd R behaviour are nuanced and for [another day](https://adv-r.hadley.nz/evaluation.html). For now, think of it as `dplyr` R package is picking up the slack, and using context to infer it's a column name and not an environmental variable/object. 
+:::
+
+---
+
+### Selecting multiple columns
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Since we are able to select one column, can we select multiple (similar to a [Data[,2:5]] approach in base R)? We can, and they can be positioned anywhere within the data.frame: 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Subset <- Data |> select(bid, timepoint, Condition, Tcells, `CD8+`, `CD4+`)
+
+head(Subset, 5)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+You will notice that the order in which we selected the columns will dictate their position in the subsetted data.frame object:
+:::
+:::
+
+::: {.fragment}
+```{r}
+Subset <- Data |> select(bid, Tcells, `CD8+`, `CD4+`, timepoint, Condition, )
+
+head(Subset, 5)
+```
+
+:::
+
+---
+
+## relocate
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Alternatively, we occasionally want to move one column. While we could respecify the location using `select()`, specifying the names of all the other columns out in a line of code to just to rearrange one does not sound like a good use of time. For this reason, the second `dplyr` function we will be learning is the  `relocate()` function. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Looking at our Data object, let's say we wanted to move the Tcells column from its current location to the second column position (right after the bid column). The line of code to do so would look like:
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data |> relocate(Tcells, .after=bid) |> head(5)
+
+# |> head(5) is used only to make the website output visualization manageable :D
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Similar to what we saw with `select()`, this approach can also be used for more than 1 column: 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data |> relocate(Tcells, Monocytes, .after=bid) |> head(5)
+
+# |> head(5) is used only to make the website output visualization manageable :D
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can also modify the argument so that columns are placed before a certain column
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data |> relocate(Tcells, .before=Date) |> head(5)
+
+# |> head(5) is used only to make the website output visualization manageable :D
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And as we might suspect, we could specify a column index location rather than using a column name.
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data |> relocate(Date, .before=1) |> head(5)
+
+# |> head(5) is used only to make the website output visualization manageable :D
+```
+
+:::
+
+---
+
+## rename
+
+::: {.fragment}
+::: {.callout-tip title="."}
+At this point, we are able to both move and select particular columns, allowing us to rearrange and subset a larger data.frame object however we want it to appear. However, as we encountered, some of the names contain special characters and spaces, requiring use of tick marks (``) to avoid issues. How can we change a column name?
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In base R, we could change individual column names by assigning a new value with the assignment arrow to the corresponding column name index. For example, looking at our Subset object, wen could rename CD8+ as follows:
+:::
+:::
+
+
+::: {.fragment}
+```{r}
+colnames(Subset)
+colnames(Subset)[3]
+```
+
+:::
+
+
+::: {.fragment}
+```{r}
+colnames(Subset)[3] <- "CD8Positive"
+colnames(Subset)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With the tidyverse, we can use the `rename()` function which removes the need to look up the column index number. The way we write the argument is placing within the parenthesis the old name to the right of the equals sign, with the new name to the left
+:::
+:::
+
+::: {.fragment}
+```{r}
+Renamed <- Subset |> rename(CD4_Positive = `CD4+`)
+colnames(Renamed)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we wanted to rename multiple column names at once, we would just need to include a comma between the individual rename arguments within the parenthesis. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Renamed_Multiple <- Subset |> rename(specimen = bid, timepoint_months = timepoint, stimulation = Condition, CD4Positive=`CD4+`)
+colnames(Renamed_Multiple)
+```
+
+:::
+
+---
+
+## pull
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Sometimes, we may want to retrieve individual values present in a column, to use within either a vector or a list. We can do this using the `pull()` function, which will retrieve the column contents and strip the column formatting
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data |> pull(Date) |> head(10)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+This can be useful when we are doing data exploration, and trying to determine how many unique variants might be present. For example, if we wanted to see what days individual samples were acquired, we could `pull()` the data and pass it to the `unique()` function:
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data |> pull(Date) |> unique()
+```
+
+:::
+
+---
+
+
+## filter (Rows)
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So far, we have been working with `dplyr` functions primarily used when working with and subsetting columns (including `select()`, `pull()`, `rename()` and `relocate()`). What if we wanted to work with rows of a data.frame? This is where the `filter()` function is used. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The Condition column in this Dataset appears to be indicating whether the samples were stimulated. Let's see how many unique values are contained within that column
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data |> pull(Condition) |> unique() 
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In the case of this dataset, looks like the .fcs files where treated with either left alone, treated with [PPD (Purified Protein Derrivative)](https://en.wikipedia.org/wiki/Tuberculin) or [SEB](https://en.wikipedia.org/wiki/Enterotoxin_type_B). What if we wanted to subset only those treated with PPD? 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Within `filter()`, we would specify the column name as the first argument, and ask that only values equal to (==) "PPD" be returned. Notice in this case, "" are needed, as we are asking for a matching character value. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+PPDOnly <- Data |> filter(Condition == "PPD")
+head(PPDOnly, 5)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+While this works, using "==" to match can glitch, especially with character values. Using the %in% operator is a better way of identifying and extracting only the rows whose Condition column contains "PPD"
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data |> filter(Condition %in% "PPD") |> head(10)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Similar to what we saw for `select()`, we can grab rows that contain various values at once. We would just need to modify the second part of the argument. If we wanted to grab rows whose Condition column contained either PPD or SEB, we would need to provide that argument as a vector, placing both within `c()`/
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data |> filter(Condition %in% c("PPD", "SEB")) |> head(10)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Alternatively, we could have set up the vector externally, and then provided it to `filter()`
+:::
+:::
+
+::: {.fragment}
+```{r}
+TheseConditions <- c("PPD", "SEB")
+Data |> filter(Condition %in% TheseConditions) |> head(10)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+While this works when we have a limited number of variant condition values, what if had many more but only wanted to exclude one value? 
+As we saw when learning about [Conditionals](/course/02_FilePaths/index.qmd), when we add a ! in front of a logical value, we get the opposite logical value returned
+:::
+:::
+
+::: {.fragment}
+```{r}
+IsThisASpectralInstrument <- TRUE
+
+!IsThisASpectralInstrument
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In the context of the `dplyr` package, we can use ! within the `filter()` to remove rows that contain a certain value
+:::
+:::
+
+::: {.fragment}
+```{r}
+Subset <- Data |> filter(!Condition %in% "SEB")
+Subset |> pull(Condition) |> unique()
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Likewise, we can also use it with the `select()` to exclude columns we don't want to include
+:::
+:::
+
+::: {.fragment}
+```{r}
+Subset <- Data |> select(!timepoint)
+Subset[1:3,]
+```
+
+:::
+
+---
+
+
+## mutate
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we can see, with just these handful of functions, we have the building blocks to rearrange and subset a larger data.frame into a format that we prefer. But what if we wanted to alter the content of a column, or add new columns to an existing data.frame? This is where the `mutate()` function can be used. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's start by slimming down our current Data to a smaller workable example,  highlighting the functions and pipes we learned about today
+:::
+:::
+
+::: {.fragment}
+```{r}
+TidyData <- Data |> filter(Condition %in% "Ctrl") |> filter(timepoint %in% "0") |>
+     select(bid, timepoint, Condition, Date, Tcells_count, CD45_count) |>
+      rename(specimen=bid, condition=Condition) |> relocate(Date, .after=specimen)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+TidyData
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The `mutate()` function can be used to modify existing columns, as well as to create new ones. For example, let's derrive the proportion of T cells from the overall CD45 gate. To do so, within the parenthesis, we would specify a new column name, and then divide the original columns:
+:::
+:::
+
+::: {.fragment}
+```{r}
+TidyData <- TidyData |> mutate(Tcells_ProportionCD45 = Tcells_count / CD45_count)
+TidyData
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can see that we have many significant digits being returned. Let's round this new column to 2 significant digits by applying the `round()` function
+:::
+:::
+
+::: {.fragment}
+```{r}
+TidyData <- TidyData |> mutate(TcellsRounded = round(Tcells_ProportionCD45, 2))
+TidyData 
+```
+
+:::
+
+---
+
+
+## arrange
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And while we are here, let's rearrange the rows so that they are descending based on the Tcell proportion. We can use this by using the `desc()` and `arrange()` functions from `dplyr`:
+:::
+:::
+
+::: {.fragment}
+```{r}
+TidyData <- TidyData |> arrange(desc(TcellsRounded))
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And let's go ahead and `filter()` and identify the specimens that had more than 30% T cells as part of the overall CD45 gate (context, these samples were Cord Blood):
+:::
+:::
+
+::: {.fragment}
+```{r}
+TidyData |> filter(TcellsRounded > 0.3)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Which is we had wanted to just retrieve the specimen IDs, we could add `pull()` after a new pipe argument. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+TidyData |> filter(TcellsRounded > 0.3) |> pull(specimen)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And finally, since I may want to send the data to a supervisor, let's go ahead and export this "tidyed" version of our data.frame out to it's own .fcs file. Working within our project folder, this would look like this:
+:::
+:::
+
+::: {.fragment}
+```{r}
+NewName <- paste0("MyNewDataset", ".csv")
+StorageLocation <- file.path("data", NewName)
+StorageLocation
+```
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+write.csv(TidyData, StorageLocation, row.names=FALSE)
+```
+:::
+
+---
+
+# Take Away
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this session, we explored the main functions within the `dplyr` package used in context of "tidying" data, including selecting columns, filtering for rows, as well as additional functions used to create or modify existing values. We will continue to build on these throughout the course, introducing a few additional tidyverse functions we don't have time to cover today as appropiate. As we saw, knowing how to use these functions can allow us to extensively and quickly modify our existing exported data files. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+On important goal as we move through the course (in terms of both reproducibility and replicability) is to attempt to only modify files within R, not go back to the original csv or excel file and hand-modify individual values. This approach is not reproducible or replicable. Once set up, an R script can quickly re-carry out these same cleanup steps, and leave a documented process of how the data has changed (even more so if you are maintaining version control). If you do want to save the changes you have made, it is best to save it out as a new .csv file with which you work later.
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next week, we will be using these skills when setting up metadata for our .fcs files. We will additionally take a look at the main format source of controversy within Bioconductor Flow Cytometry packages, ie. whether to use a flowframe or a cytoframe. Exciting stuff, but important information to know as the functions needed to import them are slightly different. We will also look at how to import existing manually gated .wsp from FlowJo/Diva/Floreada in via the `CytoML` package. 
+:::
+:::
+
+---
+
+![](images/TakeAway.jpg)
+
+---
+
+# Additional Resources
+
+[Data Organization in Spreadsheets for Ecologists](https://datacarpentry.github.io/spreadsheet-ecology-lesson/) This Carpentry self-study course was one of my "Aha" moments early on when learning R, and reinforced the need to try to keep my own Excel/CSV files in a tidy manner. It is worth the time going through in its entirety (even for non-Ecologist). 
+
+[Data Analysis and Visualization in R for Ecologists](https://datacarpentry.github.io/R-ecology-lesson/) Continuation of the above, and a good way to continue building on the tidyverse functions we learned today.
+
+---
+
+[Simplistics: Introduction to Tidyverse in R](https://youtu.be/Bg4qxVNaDck?si=QPQq8TzOZ1w6XSy4) The YouTube channel is mainly focused on statistics for Psych classes, but at the end of the day, we are all working with similar objects with rows and columns, just the values contained within differ. 
+
+[Riffomonas Project Playlist: Data Manipulation with R's Tidyverse](https://youtube.com/playlist?list=PLmNrK_nkqBpKf7j_ewpUm-w33R6PJYtD9&si=BVmDZPIXjRuHjERP) Riffomonas has a playlist that delves into both the tidyverse functions we used today, as well as other ones we will encounter later on in the course. 
+
+---
+
+# Take-home Problems
+
+:::{.callout-tip title="Problem 1"}
+Taking a dataset (either todays or one of your own), work through the column-operating functions (`select()`, `rename()`, and `relocate()`). Once this is done, `filter()` by conditions from two separate columns,  arrange in an order that makes sense, and export this "tidy" data as a .csv file. 
+:::
+
+---
+
+:::{.callout-tip title="Problem 2"}
+We used the `mutate()` function to create new columns, but it can also be used to modify existing ones. Various numeric columns are showing way to many significant digits. As was shown, use `round()` to round all these proportion columns, but use mutate to overwrite the existing column. Export this as it's own .csv file. 
+:::
+
+---
+
+:::{.callout-tip title="Problem 3"}
+We can also use `mutate()` to combine columns. For our dataset, "bid", "timepoint", "Condition" are separate columns that originally were all part of the filename for the individual .fcs file. Try to figure out a way to combine them back together using `paste0()`, and save the new column as "filename". Once this is done, `pull()` the contents of this column, and using try to determine whether there were any duplicates (think innovative ways of using !, `length()` and `unique()`) 
+:::
+
+---
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::

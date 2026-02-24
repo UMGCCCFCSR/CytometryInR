@@ -1,0 +1,3902 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
+
+  <meta name="author" content="David Rach">
+  <meta name="dcterms.date" content="2026-02-24">
+  <title>Cytometry in R – 04 - Introduction to Tidyverse</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
+
+  <script type="text/javascript">
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
+  </script>
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">04 - Introduction to Tidyverse</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+David Rach 
+</div>
+</div>
+</div>
+
+  <p class="date">2026-02-24</p>
+</section>
+<section class="slide level2">
+
+<p><img data-src="../../images/WebsiteBanner.png"></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img data-src="https://img.shields.io/badge/license-AGPLv3-blue.png" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img data-src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" alt="CC BY-SA 4.0"></a></p>
+</div>
+</section>
+<section class="slide level2">
+
+</section>
+<section>
+<section id="background" class="title-slide slide level1 center">
+<h1>Background</h1>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Within our daily workflows as cytometrist, after acquiring data on our respective instruments, we begin analyzing the resulting datasets. After implementing various workflows, we then export data for downstream statistical analysis.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>When I first started my Ph.D program, a substantial amount of my day was spent renaming column names of the exported data so that they would fit nicely in a Microsoft Excel sheet column; setting up formulas to combine proportion of positive cells across positive quadrants, etc. Once this was done, additional hours would go by as I copied and pasted contents of those columns over to a GraphPad Prism worksheet for statistical analysis.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>This of course was in an ideal scenario. Often times, the data was less organized, and instead of time spent copying and pasting over columns, it would first be spent rearranging values from individual cells in the worksheet that were separated by spaces, all the while trying to remember what various color codes and bold font stood for.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Today, we will explore what makes data <a href="https://vita.had.co.nz/papers/tidy-data.pdf">“tidy”</a>, and how to use the toolsets implemented in the various <a href="https://cran.r-project.org/web/packages/tidyverse/vignettes/paper.html">tidyverse</a> R packages. At it’s simplest, if we think of and organize all our data in terms of rows and columns, we need fewer tools (ie. functions) to reshape and extract useful information that we are interested in. Additionally, this approach aligns more closely with how computers work, allowing us to carry out tasks that would otherwise have taken hours in mere seconds.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The dataset we will be using today is a manually-gated spectral flow cytometry dataset (similar to ones we would see exported by commercial software), and has been intentionally left slightly messy. You could however just as easily use a “matrix” or “data.frame” object exported from inside an <a href="../../course/03_InsideFCSFile/">fcs file</a>, or swap in your own dataset. You would just need to make sure to switch out the input data by providing an alternate <a href="../../course/02_FilePaths/">file path</a>, etc.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="walk-through" class="title-slide slide level1 center">
+<h1>Walk Through</h1>
+<div title="Housekeeping">
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Housekeeping</strong></p>
+</div>
+<div class="callout-content">
+<p>As we do <a href="../../course/02_FilePaths/index.html">every week</a>, on GitHub, sync your forked version of the CytometryInR course to bring in the most recent updates. Then within Positron, pull in those changes to your local computer.</p>
+<p>After creating a “Week04” project folder, copy over the contents of “course/04_IntroToTidyverse” to that folder. This will hopefully prevent any merge issues when you attempt to bring in new data to your local Cytometry in R folder next week. Please remember once you have set up your project folder to stage, commit and pus your changes to “Week04” to GitHub so that they are backed up remotely.</p>
+<p>If you are having issues syncing due to the Take-Home Problem merge conflict, see this <a href="https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/">walkthrough</a></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="read.csv" class="slide level2">
+<h2>read.csv</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We will start by first loading in our copied over dataset (Dataset.csv) from it’s location in the project folder. If you are following the organization scheme we have been using throughout the course, your file path will look something like this:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>thefilepath <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"Dataset.csv"</span>)</span>
+<span id="cb1-2"><a></a></span>
+<span id="cb1-3"><a></a>thefilepath</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data/Dataset.csv"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title="Reminder">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Reminder</strong></p>
+</div>
+<div class="callout-content">
+<p>We encourage using the <code>file.path</code> function to build our file paths, as this keeps our code reproducible and replicable when a project folder is copied to other people’s computers that differ on whether the operating system uses forward or backward slash separation between folders.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Above, we directly specified the name (Dataset) and filetype (.csv) of the file we wanted in the last argument of the file.path (“Dataset.csv”). This allows us to skip the <code>list.files()</code> step we used last week as we have provided the full file path. While this approach can be faster, if we accidentally mistype the file name, we could end up with an error at the next step due to no files being found with the mistyped name.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Since our dataset is stored as a .csv file, we will be using the <code>read.csv()</code> function from the <code>utils</code> package (included in our base R software installation) to read it into R. We will also use the <code>colnames()</code> function from last week to get a read-out of the column names.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>Data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file=</span>thefilepath, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
+<span id="cb3-2"><a></a><span class="fu">colnames</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "bid"               "timepoint"         "Condition"        
+ [4] "Date"              "infant_sex"        "ptype"            
+ [7] "root"              "singletsFSC"       "singletsSSC"      
+[10] "singletsSSCB"      "CD45"              "NotMonocytes"     
+[13] "nonDebris"         "lymphocytes"       "live"             
+[16] "Dump+"             "Dump-"             "Tcells"           
+[19] "Vd2+"              "Vd2-"              "Va7.2+"           
+[22] "Va7.2-"            "CD4+"              "CD4-"             
+[25] "CD8+"              "CD8-"              "Tcells_count"     
+[28] "lymphocytes_count" "Monocytes"         "Debris"           
+[31] "CD45_count"       </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As we look at the line of code, we now have enough context to decipher that the “file” argument is where we provide a file path to an individual file, but what does the “check.names” argument do?</p>
+<p>Let’s see what happens to the column names when we set “check.names” argument to TRUE:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>Data_Alternative <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(thefilepath, <span class="at">check.names=</span><span class="cn">TRUE</span>)</span>
+<span id="cb5-2"><a></a><span class="fu">colnames</span>(Data_Alternative)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "bid"               "timepoint"         "Condition"        
+ [4] "Date"              "infant_sex"        "ptype"            
+ [7] "root"              "singletsFSC"       "singletsSSC"      
+[10] "singletsSSCB"      "CD45"              "NotMonocytes"     
+[13] "nonDebris"         "lymphocytes"       "live"             
+[16] "Dump."             "Dump..1"           "Tcells"           
+[19] "Vd2."              "Vd2..1"            "Va7.2."           
+[22] "Va7.2..1"          "CD4."              "CD4..1"           
+[25] "CD8."              "CD8..1"            "Tcells_count"     
+[28] "lymphocytes_count" "Monocytes"         "Debris"           
+[31] "CD45_count"       </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As we can see, any column name that contained a special character or a space was automatically converted over to <a href="https://ssojet.com/escaping/regex-escaping-in-r#understanding-the-need-for-escaping-special-characters">R-approved syntax</a>. However, this resulted in the loss of both +” and “-”, leaving us unable to determine whether we are looking at cells within or outside a particular gate.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/00_CheckNamesTRUE.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Because of this, it is often better to rename columns individually after import, which we will learn how to do later today.</p>
+<p>Following up with what we practiced last week, lets use the <code>head()</code> function to visualize the first few rows of data.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">head</span>(Data, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      bid timepoint Condition       Date infant_sex  ptype    root singletsFSC
+1 INF0052         0      Ctrl 2025-07-26       Male HEU-hi 2098368     1894070
+2 INF0100         0      Ctrl 2025-07-26       Male HEU-lo 2020184     1791890
+3 INF0100         4      Ctrl 2025-07-26       Male HEU-lo 1155040     1033320
+  singletsSSC singletsSSCB      CD45 NotMonocytes nonDebris lymphocytes
+1     1666179      1537396 0.5952943    0.8820349 0.8627649   0.6420138
+2     1697083      1579098 0.9106762    0.9052256 0.8602660   0.2145848
+3      875465       845446 0.9705765    0.9845400 0.9578793   0.7403110
+       live      Dump+     Dump-    Tcells        Vd2+      Vd2-     Va7.2+
+1 0.9020581 0.21090996 0.6911482 0.2804264 0.008120361 0.9918796 0.01448070
+2 0.8908981 0.06252775 0.8283703 0.6748298 0.007265620 0.9927344 0.01577499
+3 0.8757665 0.20023803 0.6755285 0.6119129 0.004651313 0.9953487 0.01579402
+     Va7.2-      CD4+      CD4-      CD8+       CD8- Tcells_count
+1 0.9773989 0.6341164 0.3432825 0.2734826 0.06979990       164771
+2 0.9769594 0.6119112 0.3650482 0.3357696 0.02927858       208241
+3 0.9795547 0.6639621 0.3155925 0.2862104 0.02938209       371723
+  lymphocytes_count  Monocytes     Debris CD45_count
+1            587573 0.11796509 0.13723513     915203
+2            308583 0.09477437 0.13973396    1438047
+3            607477 0.01545999 0.04212072     820570</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>When working in Positron, we could have alternatively clicked on the little grid icon next to our created variable “Data” in the right secondary sidebar, which would have opened the data in our Editor window. From this same window, we can see it is stored as a “data.frame” object type.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/01_DataView.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We could also achieve the same window to open using the <code>View()</code> function:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">View</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Wrapping up our brief recap of <a href="../../course/03_InsideFCSFile/index.html">last week</a> functions, we can check an objects type using both the <code>class()</code> and <code>str()</code> functions.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">class</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data.frame"</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">str</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   196 obs. of  31 variables:
+ $ bid              : chr  "INF0052" "INF0100" "INF0100" "INF0100" ...
+ $ timepoint        : int  0 0 4 9 0 4 9 4 9 0 ...
+ $ Condition        : chr  "Ctrl" "Ctrl" "Ctrl" "Ctrl" ...
+ $ Date             : chr  "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26" ...
+ $ infant_sex       : chr  "Male" "Male" "Male" "Male" ...
+ $ ptype            : chr  "HEU-hi" "HEU-lo" "HEU-lo" "HEU-lo" ...
+ $ root             : int  2098368 2020184 1155040 358624 1362216 1044808 1434840 972056 1521928 2363512 ...
+ $ singletsFSC      : int  1894070 1791890 1033320 328624 1206309 917398 1265022 875707 1359574 2136616 ...
+ $ singletsSSC      : int  1666179 1697083 875465 289327 1032946 735579 988445 767323 1175755 1875394 ...
+ $ singletsSSCB     : int  1537396 1579098 845446 276289 982736 685592 940454 718000 1097478 1732620 ...
+ $ CD45             : num  0.595 0.911 0.971 0.982 0.957 ...
+ $ NotMonocytes     : num  0.882 0.905 0.985 0.986 0.956 ...
+ $ nonDebris        : num  0.863 0.86 0.958 0.941 0.841 ...
+ $ lymphocytes      : num  0.642 0.215 0.74 0.651 0.705 ...
+ $ live             : num  0.902 0.891 0.876 0.915 0.895 ...
+ $ Dump+            : num  0.2109 0.0625 0.2002 0.2147 0.3383 ...
+ $ Dump-            : num  0.691 0.828 0.676 0.701 0.557 ...
+ $ Tcells           : num  0.28 0.675 0.612 0.631 0.44 ...
+ $ Vd2+             : num  0.00812 0.00727 0.00465 0.01135 0.00475 ...
+ $ Vd2-             : num  0.992 0.993 0.995 0.989 0.995 ...
+ $ Va7.2+           : num  0.0145 0.0158 0.0158 0.017 0.0133 ...
+ $ Va7.2-           : num  0.977 0.977 0.98 0.972 0.982 ...
+ $ CD4+             : num  0.634 0.612 0.664 0.438 0.739 ...
+ $ CD4-             : num  0.343 0.365 0.316 0.534 0.243 ...
+ $ CD8+             : num  0.273 0.336 0.286 0.486 0.195 ...
+ $ CD8-             : num  0.0698 0.0293 0.0294 0.0476 0.0476 ...
+ $ Tcells_count     : int  164771 208241 371723 111552 291777 271870 487937 220634 415867 184930 ...
+ $ lymphocytes_count: int  587573 308583 607477 176662 663667 510730 726238 451047 710964 652155 ...
+ $ Monocytes        : num  0.118 0.0948 0.0155 0.0145 0.0444 ...
+ $ Debris           : num  0.1372 0.1397 0.0421 0.0587 0.1592 ...
+ $ CD45_count       : int  915203 1438047 820570 271304 940733 675857 921660 701657 1066884 1017713 ...</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="data.frame" class="slide level2">
+<h2>data.frame</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Or alternatively using the new-to-us <code>glimpse()</code> function</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">glimpse</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `glimpse()`:
+! could not find function "glimpse"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div title="Checkpoint 1">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Checkpoint 1</strong></p>
+</div>
+<div class="callout-content">
+<p>This however returns an error. Any idea why this might be occuring?</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="co"># We haven't attached/loaded the package in which the function glimpse is within</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div title="Checkpoint 2">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Checkpoint 2</strong></p>
+</div>
+<div class="callout-content">
+<p>How would we locate a package a not-yet-loaded function is within?</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="co"># We can use double ? to search all installed packages for a function, regardless</span></span>
+<span id="cb17-2"><a></a><span class="co"># if the package is attached to the environment or not</span></span>
+<span id="cb17-3"><a></a></span>
+<span id="cb17-4"><a></a>??glimpse</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/02_Glimpse.png" class="r-stretch"><div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>From the list of search matches (in the right secondary sidebar), it looks likely that the <code>glimpse()</code> function in the <code>dplyr</code> package was the one we were looking for. This is one the main tidyverse packages we will be using throughout the course. Let’s attach it to our environment via the <code>library()</code> call first and try running <code>glimpse()</code> again.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb18-2"><a></a><span class="fu">glimpse</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 196
+Columns: 31
+$ bid               &lt;chr&gt; "INF0052", "INF0100", "INF0100", "INF0100", "INF0179…
+$ timepoint         &lt;int&gt; 0, 0, 4, 9, 0, 4, 9, 4, 9, 0, 0, 4, 9, 0, 4, 9, 4, 9…
+$ Condition         &lt;chr&gt; "Ctrl", "Ctrl", "Ctrl", "Ctrl", "Ctrl", "Ctrl", "Ctr…
+$ Date              &lt;chr&gt; "2025-07-26", "2025-07-26", "2025-07-26", "2025-07-2…
+$ infant_sex        &lt;chr&gt; "Male", "Male", "Male", "Male", "Male", "Male", "Mal…
+$ ptype             &lt;chr&gt; "HEU-hi", "HEU-lo", "HEU-lo", "HEU-lo", "HU", "HU", …
+$ root              &lt;int&gt; 2098368, 2020184, 1155040, 358624, 1362216, 1044808,…
+$ singletsFSC       &lt;int&gt; 1894070, 1791890, 1033320, 328624, 1206309, 917398, …
+$ singletsSSC       &lt;int&gt; 1666179, 1697083, 875465, 289327, 1032946, 735579, 9…
+$ singletsSSCB      &lt;int&gt; 1537396, 1579098, 845446, 276289, 982736, 685592, 94…
+$ CD45              &lt;dbl&gt; 0.5952943, 0.9106762, 0.9705765, 0.9819573, 0.957259…
+$ NotMonocytes      &lt;dbl&gt; 0.8820349, 0.9052256, 0.9845400, 0.9855070, 0.955627…
+$ nonDebris         &lt;dbl&gt; 0.8627649, 0.8602660, 0.9578793, 0.9412615, 0.840783…
+$ lymphocytes       &lt;dbl&gt; 0.6420138, 0.2145848, 0.7403110, 0.6511588, 0.705478…
+$ live              &lt;dbl&gt; 0.9020581, 0.8908981, 0.8757665, 0.9153242, 0.895214…
+$ `Dump+`           &lt;dbl&gt; 0.21090996, 0.06252775, 0.20023803, 0.21469246, 0.33…
+$ `Dump-`           &lt;dbl&gt; 0.6911482, 0.8283703, 0.6755285, 0.7006317, 0.556895…
+$ Tcells            &lt;dbl&gt; 0.2804264, 0.6748298, 0.6119129, 0.6314431, 0.439643…
+$ `Vd2+`            &lt;dbl&gt; 0.008120361, 0.007265620, 0.004651313, 0.011348967, …
+$ `Vd2-`            &lt;dbl&gt; 0.9918796, 0.9927344, 0.9953487, 0.9886510, 0.995246…
+$ `Va7.2+`          &lt;dbl&gt; 0.014480704, 0.015774991, 0.015794019, 0.017023451, …
+$ `Va7.2-`          &lt;dbl&gt; 0.9773989, 0.9769594, 0.9795547, 0.9716276, 0.981924…
+$ `CD4+`            &lt;dbl&gt; 0.6341164, 0.6119112, 0.6639621, 0.4378944, 0.739256…
+$ `CD4-`            &lt;dbl&gt; 0.3432825, 0.3650482, 0.3155925, 0.5337331, 0.242668…
+$ `CD8+`            &lt;dbl&gt; 0.2734826, 0.3357696, 0.2862104, 0.4861231, 0.195063…
+$ `CD8-`            &lt;dbl&gt; 0.06979990, 0.02927858, 0.02938209, 0.04761008, 0.04…
+$ Tcells_count      &lt;int&gt; 164771, 208241, 371723, 111552, 291777, 271870, 4879…
+$ lymphocytes_count &lt;int&gt; 587573, 308583, 607477, 176662, 663667, 510730, 7262…
+$ Monocytes         &lt;dbl&gt; 0.11796509, 0.09477437, 0.01545999, 0.01449297, 0.04…
+$ Debris            &lt;dbl&gt; 0.13723513, 0.13973396, 0.04212072, 0.05873854, 0.15…
+$ CD45_count        &lt;int&gt; 915203, 1438047, 820570, 271304, 940733, 675857, 921…</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We notice that while similar to the <code>str()</code> output, <code>glimpse()</code> handles spacing a little differently, and includes the dimensions at the top. However, we can also retrieve the dimensions directly using the <code>dim()</code> function (which maintains the row followed by column position convention of base R (ex. [196,31]))</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">dim</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 196  31</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="column-value-type" class="slide level2">
+<h2>Column value type</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As we saw last week, functions often need values that match a certain type (the paintbrush needing paint analogy). As we inspect the columns of Data, we can notice some of the columns contain values within that are character (ie. “char”) values. Others appear to contain numeric values (which are <a href="https://www.r-bloggers.com/2023/09/understanding-data-types-in-r/">subtyped</a> as either double (“ie. dbl”) or integer (ie. “int”)). At first glance, we do not appear to have any logical (ie. TRUE or FALSE) columns in this dataset.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/03_ColumnClass.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>If we were trying to verify type of values contained within a data.frame column, we could employ several similarly-named functions (<code>is.character()</code>, <code>is.numeric()</code> or <code>is.logical()</code>) to check</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="co"># colnames(Data)  # To recheck the column names</span></span>
+<span id="cb22-2"><a></a></span>
+<span id="cb22-3"><a></a><span class="fu">is.character</span>(Data<span class="sc">$</span>bid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">is.numeric</span>(Data<span class="sc">$</span>bid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="co"># colnames(Data)  # To recheck the column names</span></span>
+<span id="cb26-2"><a></a></span>
+<span id="cb26-3"><a></a><span class="fu">is.character</span>(Data<span class="sc">$</span>Tcells_count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>For numeric columns using the <code>is.numeric()</code> function, we can also be <a href="https://www.r-bloggers.com/2023/09/understanding-data-types-in-r/">subtype</a> specific using either <code>is.integer()</code> or <code>is.double()</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="co"># colnames(Data)  # To recheck the column names</span></span>
+<span id="cb28-2"><a></a></span>
+<span id="cb28-3"><a></a><span class="fu">is.numeric</span>(Data<span class="sc">$</span>Tcells_count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">is.integer</span>(Data<span class="sc">$</span>Tcells_count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">is.double</span>(Data<span class="sc">$</span>Tcells_count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div title="Reminder">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Reminder</strong></p>
+</div>
+<div class="callout-content">
+<p>As we observed last week with keywords, column names that contain <a href="https://ssojet.com/escaping/regex-escaping-in-r#understanding-the-need-for-escaping-special-characters">special characters</a> like $ or spaces will need to be surrounded with tick marks in order for the function to be able to run.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="co"># colnames(Data)  # To recheck the column names</span></span>
+<span id="cb34-2"><a></a><span class="fu">is.numeric</span>(Data<span class="sc">$</span>CD8<span class="sc">-</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in parse(text = input): &lt;text&gt;:2:21: unexpected ')'
+1: # colnames(Data)  # To recheck the column names
+2: is.numeric(Data$CD8-)
+                       ^</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="co"># colnames(Data)  # To recheck the column names</span></span>
+<span id="cb36-2"><a></a><span class="fu">is.numeric</span>(Data<span class="sc">$</span><span class="st">`</span><span class="at">CD8-</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="select-columns" class="slide level2">
+<h2>select (Columns)</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Now that we have read in our data, and have a general picture of the structure and contents, lets start learning the main <code>dplyr</code> functions we will be using throughout the course. To do this, lets go ahead and attach <code>dplyr</code> to our local environment via the <code>library()</code> call.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We will start with the <code>select()</code> function. It is used to “select” a column from a data.frame type object. In the simplest usage, we provide the name of our data.frame variable/object as the first argument after the opening parenthesis. This is then followed by the name of the column we want to select as the second argument (let’s place around the “” around the column name for now)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a>DateColumn <span class="ot">&lt;-</span> <span class="fu">select</span>(Data, <span class="st">"Date"</span>)</span>
+<span id="cb39-2"><a></a>DateColumn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Date
+1   2025-07-26
+2   2025-07-26
+3   2025-07-26
+4   2025-07-26
+5   2025-07-26
+6   2025-07-26
+7   2025-07-26
+8   2025-07-26
+9   2025-07-26
+10  2025-07-26
+11  2025-07-26
+12  2025-07-26
+13  2025-07-26
+14  2025-07-26
+15  2025-07-26
+16  2025-07-26
+17  2025-07-26
+18  2025-07-26
+19  2025-07-26
+20  2025-07-26
+21  2025-07-26
+22  2025-07-26
+23  2025-07-26
+24  2025-07-26
+25  2025-07-26
+26  2025-07-26
+27  2025-07-29
+28  2025-07-29
+29  2025-07-29
+30  2025-07-29
+31  2025-07-29
+32  2025-07-29
+33  2025-07-29
+34  2025-07-29
+35  2025-07-29
+36  2025-07-29
+37  2025-07-29
+38  2025-07-29
+39  2025-07-29
+40  2025-07-29
+41  2025-07-29
+42  2025-07-29
+43  2025-07-29
+44  2025-07-29
+45  2025-07-29
+46  2025-07-29
+47  2025-07-29
+48  2025-07-29
+49  2025-07-31
+50  2025-07-31
+51  2025-07-31
+52  2025-07-31
+53  2025-07-31
+54  2025-07-31
+55  2025-07-31
+56  2025-07-31
+57  2025-07-31
+58  2025-07-31
+59  2025-07-31
+60  2025-07-31
+61  2025-07-31
+62  2025-07-31
+63  2025-07-31
+64  2025-07-31
+65  2025-07-31
+66  2025-07-31
+67  2025-07-31
+68  2025-07-31
+69  2025-07-31
+70  2025-07-31
+71  2025-07-31
+72  2025-07-31
+73  2025-07-31
+74  2025-07-31
+75  2025-07-31
+76  2025-08-05
+77  2025-08-05
+78  2025-08-05
+79  2025-08-05
+80  2025-08-05
+81  2025-08-05
+82  2025-08-05
+83  2025-08-05
+84  2025-08-05
+85  2025-08-05
+86  2025-08-05
+87  2025-08-05
+88  2025-08-05
+89  2025-08-05
+90  2025-08-05
+91  2025-08-05
+92  2025-08-05
+93  2025-08-05
+94  2025-08-05
+95  2025-08-05
+96  2025-08-05
+97  2025-08-05
+98  2025-08-05
+99  2025-08-07
+100 2025-08-07
+101 2025-08-07
+102 2025-08-07
+103 2025-08-07
+104 2025-08-07
+105 2025-08-07
+106 2025-08-07
+107 2025-08-07
+108 2025-08-07
+109 2025-08-07
+110 2025-08-07
+111 2025-08-07
+112 2025-08-07
+113 2025-08-07
+114 2025-08-07
+115 2025-08-07
+116 2025-08-07
+117 2025-08-07
+118 2025-08-07
+119 2025-08-07
+120 2025-08-07
+121 2025-08-07
+122 2025-08-07
+123 2025-08-07
+124 2025-08-07
+125 2025-08-22
+126 2025-08-22
+127 2025-08-22
+128 2025-08-22
+129 2025-08-22
+130 2025-08-22
+131 2025-08-22
+132 2025-08-22
+133 2025-08-22
+134 2025-08-22
+135 2025-08-22
+136 2025-08-22
+137 2025-08-22
+138 2025-08-22
+139 2025-08-22
+140 2025-08-22
+141 2025-08-22
+142 2025-08-22
+143 2025-08-22
+144 2025-08-22
+145 2025-08-22
+146 2025-08-22
+147 2025-08-22
+148 2025-08-22
+149 2025-08-22
+150 2025-08-22
+151 2025-08-22
+152 2025-08-28
+153 2025-08-28
+154 2025-08-28
+155 2025-08-28
+156 2025-08-28
+157 2025-08-28
+158 2025-08-28
+159 2025-08-28
+160 2025-08-28
+161 2025-08-28
+162 2025-08-28
+163 2025-08-28
+164 2025-08-28
+165 2025-08-28
+166 2025-08-28
+167 2025-08-28
+168 2025-08-28
+169 2025-08-28
+170 2025-08-28
+171 2025-08-28
+172 2025-08-28
+173 2025-08-28
+174 2025-08-28
+175 2025-08-28
+176 2025-08-28
+177 2025-08-28
+178 2025-08-28
+179 2025-08-30
+180 2025-08-30
+181 2025-08-30
+182 2025-08-30
+183 2025-08-30
+184 2025-08-30
+185 2025-08-30
+186 2025-08-30
+187 2025-08-30
+188 2025-08-30
+189 2025-08-30
+190 2025-08-30
+191 2025-08-30
+192 2025-08-30
+193 2025-08-30
+194 2025-08-30
+195 2025-08-30
+196 2025-08-30</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>This results in the column being selected, resulting in the new object containing only that subsetted out column from the original Data object.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="pipe-operators">Pipe Operators</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>While the above line of code works to select a column, when you encounter <code>select()</code> out in the wild, it will more often be in a line of code that looks like this:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>DateColumn <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Date"</span>)</span>
+<span id="cb41-2"><a></a>DateColumn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Date
+1   2025-07-26
+2   2025-07-26
+3   2025-07-26
+4   2025-07-26
+5   2025-07-26
+6   2025-07-26
+7   2025-07-26
+8   2025-07-26
+9   2025-07-26
+10  2025-07-26
+11  2025-07-26
+12  2025-07-26
+13  2025-07-26
+14  2025-07-26
+15  2025-07-26
+16  2025-07-26
+17  2025-07-26
+18  2025-07-26
+19  2025-07-26
+20  2025-07-26
+21  2025-07-26
+22  2025-07-26
+23  2025-07-26
+24  2025-07-26
+25  2025-07-26
+26  2025-07-26
+27  2025-07-29
+28  2025-07-29
+29  2025-07-29
+30  2025-07-29
+31  2025-07-29
+32  2025-07-29
+33  2025-07-29
+34  2025-07-29
+35  2025-07-29
+36  2025-07-29
+37  2025-07-29
+38  2025-07-29
+39  2025-07-29
+40  2025-07-29
+41  2025-07-29
+42  2025-07-29
+43  2025-07-29
+44  2025-07-29
+45  2025-07-29
+46  2025-07-29
+47  2025-07-29
+48  2025-07-29
+49  2025-07-31
+50  2025-07-31
+51  2025-07-31
+52  2025-07-31
+53  2025-07-31
+54  2025-07-31
+55  2025-07-31
+56  2025-07-31
+57  2025-07-31
+58  2025-07-31
+59  2025-07-31
+60  2025-07-31
+61  2025-07-31
+62  2025-07-31
+63  2025-07-31
+64  2025-07-31
+65  2025-07-31
+66  2025-07-31
+67  2025-07-31
+68  2025-07-31
+69  2025-07-31
+70  2025-07-31
+71  2025-07-31
+72  2025-07-31
+73  2025-07-31
+74  2025-07-31
+75  2025-07-31
+76  2025-08-05
+77  2025-08-05
+78  2025-08-05
+79  2025-08-05
+80  2025-08-05
+81  2025-08-05
+82  2025-08-05
+83  2025-08-05
+84  2025-08-05
+85  2025-08-05
+86  2025-08-05
+87  2025-08-05
+88  2025-08-05
+89  2025-08-05
+90  2025-08-05
+91  2025-08-05
+92  2025-08-05
+93  2025-08-05
+94  2025-08-05
+95  2025-08-05
+96  2025-08-05
+97  2025-08-05
+98  2025-08-05
+99  2025-08-07
+100 2025-08-07
+101 2025-08-07
+102 2025-08-07
+103 2025-08-07
+104 2025-08-07
+105 2025-08-07
+106 2025-08-07
+107 2025-08-07
+108 2025-08-07
+109 2025-08-07
+110 2025-08-07
+111 2025-08-07
+112 2025-08-07
+113 2025-08-07
+114 2025-08-07
+115 2025-08-07
+116 2025-08-07
+117 2025-08-07
+118 2025-08-07
+119 2025-08-07
+120 2025-08-07
+121 2025-08-07
+122 2025-08-07
+123 2025-08-07
+124 2025-08-07
+125 2025-08-22
+126 2025-08-22
+127 2025-08-22
+128 2025-08-22
+129 2025-08-22
+130 2025-08-22
+131 2025-08-22
+132 2025-08-22
+133 2025-08-22
+134 2025-08-22
+135 2025-08-22
+136 2025-08-22
+137 2025-08-22
+138 2025-08-22
+139 2025-08-22
+140 2025-08-22
+141 2025-08-22
+142 2025-08-22
+143 2025-08-22
+144 2025-08-22
+145 2025-08-22
+146 2025-08-22
+147 2025-08-22
+148 2025-08-22
+149 2025-08-22
+150 2025-08-22
+151 2025-08-22
+152 2025-08-28
+153 2025-08-28
+154 2025-08-28
+155 2025-08-28
+156 2025-08-28
+157 2025-08-28
+158 2025-08-28
+159 2025-08-28
+160 2025-08-28
+161 2025-08-28
+162 2025-08-28
+163 2025-08-28
+164 2025-08-28
+165 2025-08-28
+166 2025-08-28
+167 2025-08-28
+168 2025-08-28
+169 2025-08-28
+170 2025-08-28
+171 2025-08-28
+172 2025-08-28
+173 2025-08-28
+174 2025-08-28
+175 2025-08-28
+176 2025-08-28
+177 2025-08-28
+178 2025-08-28
+179 2025-08-30
+180 2025-08-30
+181 2025-08-30
+182 2025-08-30
+183 2025-08-30
+184 2025-08-30
+185 2025-08-30
+186 2025-08-30
+187 2025-08-30
+188 2025-08-30
+189 2025-08-30
+190 2025-08-30
+191 2025-08-30
+192 2025-08-30
+193 2025-08-30
+194 2025-08-30
+195 2025-08-30
+196 2025-08-30</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>… <strong>“What in the world is that thing |&gt; ?”</strong> …</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Glad you asked! An useful feature of the tidyverse packages is their use of <a href="https://r4ds.had.co.nz/pipes.html">pipes</a> (either the original <code>magrittr</code> package’s “%&gt;%” or <code>base R version &gt;4.1.0's</code> “|&gt;”“), usually appearing like this:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="co"># magrittr %&gt;% pipe</span></span>
+<span id="cb43-2"><a></a></span>
+<span id="cb43-3"><a></a>DateColumn <span class="ot">&lt;-</span> Data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="st">"Date"</span>)</span>
+<span id="cb43-4"><a></a></span>
+<span id="cb43-5"><a></a><span class="co"># base R |&gt; pipe</span></span>
+<span id="cb43-6"><a></a>DateColumn <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Date"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>… <strong>“How do we interpret/read that line of code?”</strong> …</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Let’s break it down, starting off just to the right of the assignment arrow (&lt;-) with our data.frame “Data”.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a>Data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We then proceed to read to the right, adding in our pipe operator. The pipe essentially serves as an intermediate passing the contents of data onward to the subsequent function.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>Data <span class="sc">|&gt;</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In our case, this subsequent function is the <code>select()</code> function, which will select a particular column from the available data. When using the pipe, the first argument slot we saw for “select(Data,”Date”)” is occupied by the contents Data that are being passed by the pipe.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>To complete the transfer, we provide the desired column name to <code>select()</code> to act on (“Date” in this case)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Date"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In summary, contents of Data are passed to the pipe, and select runs on those contents to select the Date column</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Date"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Date
+1   2025-07-26
+2   2025-07-26
+3   2025-07-26
+4   2025-07-26
+5   2025-07-26
+6   2025-07-26
+7   2025-07-26
+8   2025-07-26
+9   2025-07-26
+10  2025-07-26
+11  2025-07-26
+12  2025-07-26
+13  2025-07-26
+14  2025-07-26
+15  2025-07-26
+16  2025-07-26
+17  2025-07-26
+18  2025-07-26
+19  2025-07-26
+20  2025-07-26
+21  2025-07-26
+22  2025-07-26
+23  2025-07-26
+24  2025-07-26
+25  2025-07-26
+26  2025-07-26
+27  2025-07-29
+28  2025-07-29
+29  2025-07-29
+30  2025-07-29
+31  2025-07-29
+32  2025-07-29
+33  2025-07-29
+34  2025-07-29
+35  2025-07-29
+36  2025-07-29
+37  2025-07-29
+38  2025-07-29
+39  2025-07-29
+40  2025-07-29
+41  2025-07-29
+42  2025-07-29
+43  2025-07-29
+44  2025-07-29
+45  2025-07-29
+46  2025-07-29
+47  2025-07-29
+48  2025-07-29
+49  2025-07-31
+50  2025-07-31
+51  2025-07-31
+52  2025-07-31
+53  2025-07-31
+54  2025-07-31
+55  2025-07-31
+56  2025-07-31
+57  2025-07-31
+58  2025-07-31
+59  2025-07-31
+60  2025-07-31
+61  2025-07-31
+62  2025-07-31
+63  2025-07-31
+64  2025-07-31
+65  2025-07-31
+66  2025-07-31
+67  2025-07-31
+68  2025-07-31
+69  2025-07-31
+70  2025-07-31
+71  2025-07-31
+72  2025-07-31
+73  2025-07-31
+74  2025-07-31
+75  2025-07-31
+76  2025-08-05
+77  2025-08-05
+78  2025-08-05
+79  2025-08-05
+80  2025-08-05
+81  2025-08-05
+82  2025-08-05
+83  2025-08-05
+84  2025-08-05
+85  2025-08-05
+86  2025-08-05
+87  2025-08-05
+88  2025-08-05
+89  2025-08-05
+90  2025-08-05
+91  2025-08-05
+92  2025-08-05
+93  2025-08-05
+94  2025-08-05
+95  2025-08-05
+96  2025-08-05
+97  2025-08-05
+98  2025-08-05
+99  2025-08-07
+100 2025-08-07
+101 2025-08-07
+102 2025-08-07
+103 2025-08-07
+104 2025-08-07
+105 2025-08-07
+106 2025-08-07
+107 2025-08-07
+108 2025-08-07
+109 2025-08-07
+110 2025-08-07
+111 2025-08-07
+112 2025-08-07
+113 2025-08-07
+114 2025-08-07
+115 2025-08-07
+116 2025-08-07
+117 2025-08-07
+118 2025-08-07
+119 2025-08-07
+120 2025-08-07
+121 2025-08-07
+122 2025-08-07
+123 2025-08-07
+124 2025-08-07
+125 2025-08-22
+126 2025-08-22
+127 2025-08-22
+128 2025-08-22
+129 2025-08-22
+130 2025-08-22
+131 2025-08-22
+132 2025-08-22
+133 2025-08-22
+134 2025-08-22
+135 2025-08-22
+136 2025-08-22
+137 2025-08-22
+138 2025-08-22
+139 2025-08-22
+140 2025-08-22
+141 2025-08-22
+142 2025-08-22
+143 2025-08-22
+144 2025-08-22
+145 2025-08-22
+146 2025-08-22
+147 2025-08-22
+148 2025-08-22
+149 2025-08-22
+150 2025-08-22
+151 2025-08-22
+152 2025-08-28
+153 2025-08-28
+154 2025-08-28
+155 2025-08-28
+156 2025-08-28
+157 2025-08-28
+158 2025-08-28
+159 2025-08-28
+160 2025-08-28
+161 2025-08-28
+162 2025-08-28
+163 2025-08-28
+164 2025-08-28
+165 2025-08-28
+166 2025-08-28
+167 2025-08-28
+168 2025-08-28
+169 2025-08-28
+170 2025-08-28
+171 2025-08-28
+172 2025-08-28
+173 2025-08-28
+174 2025-08-28
+175 2025-08-28
+176 2025-08-28
+177 2025-08-28
+178 2025-08-28
+179 2025-08-30
+180 2025-08-30
+181 2025-08-30
+182 2025-08-30
+183 2025-08-30
+184 2025-08-30
+185 2025-08-30
+186 2025-08-30
+187 2025-08-30
+188 2025-08-30
+189 2025-08-30
+190 2025-08-30
+191 2025-08-30
+192 2025-08-30
+193 2025-08-30
+194 2025-08-30
+195 2025-08-30
+196 2025-08-30</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>One of the main advantages for using pipes, is they can be linked together, passing resulting objects of one operation on to the next pipe and subsequent function. We can see this in operation in the example below where we hand off the isolated “Date” column to the <code>nrow()</code> function to determine number of rows. We will use pipes throughout the course, so you will gradually gain familiarity as you encounter them.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Date"</span>) <span class="sc">|&gt;</span> <span class="fu">nrow</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 196</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>For those with prior R experience, you will be more familiar with the older magrittr %&gt;% pipe. The base R |&gt; pipe operator was introduced starting with R version 4.1.0. While mostly interchangeable, they have a <a href="https://tidyverse.org/blog/2023/04/base-vs-magrittr-pipe/">few nuances</a> that come into play for more advance use cases. You are welcome to use whichever you prefer (my current preference is |&gt; as it’s one less key to press).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="r-quirks">R Quirks</h3>
+<div title="Odd R Behavior # 1">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Odd R Behavior # 1</strong></p>
+</div>
+<div class="callout-content">
+<p>While we used “” around the column name in our previous example, unlike what we encountered with <code>install.packages()</code> when we forget to include quotation marks, <code>select()</code> still retrieves the correct column despite Date not being an environment variable:</p>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(Date) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Date
+1 2025-07-26
+2 2025-07-26
+3 2025-07-26
+4 2025-07-26
+5 2025-07-26</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div title=".">
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The reasons for this Odd R behaviour are nuanced and for <a href="https://adv-r.hadley.nz/evaluation.html">another day</a>. For now, think of it as <code>dplyr</code> R package is picking up the slack, and using context to infer it’s a column name and not an environmental variable/object.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="selecting-multiple-columns">Selecting multiple columns</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Since we are able to select one column, can we select multiple (similar to a [Data[,2:5]] approach in base R)? We can, and they can be positioned anywhere within the data.frame:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a>Subset <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(bid, timepoint, Condition, Tcells, <span class="st">`</span><span class="at">CD8+</span><span class="st">`</span>, <span class="st">`</span><span class="at">CD4+</span><span class="st">`</span>)</span>
+<span id="cb54-2"><a></a></span>
+<span id="cb54-3"><a></a><span class="fu">head</span>(Subset, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      bid timepoint Condition    Tcells      CD8+      CD4+
+1 INF0052         0      Ctrl 0.2804264 0.2734826 0.6341164
+2 INF0100         0      Ctrl 0.6748298 0.3357696 0.6119112
+3 INF0100         4      Ctrl 0.6119129 0.2862104 0.6639621
+4 INF0100         9      Ctrl 0.6314431 0.4861231 0.4378944
+5 INF0179         0      Ctrl 0.4396437 0.1950634 0.7392563</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>You will notice that the order in which we selected the columns will dictate their position in the subsetted data.frame object:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a>Subset <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(bid, Tcells, <span class="st">`</span><span class="at">CD8+</span><span class="st">`</span>, <span class="st">`</span><span class="at">CD4+</span><span class="st">`</span>, timepoint, Condition, )</span>
+<span id="cb56-2"><a></a></span>
+<span id="cb56-3"><a></a><span class="fu">head</span>(Subset, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      bid    Tcells      CD8+      CD4+ timepoint Condition
+1 INF0052 0.2804264 0.2734826 0.6341164         0      Ctrl
+2 INF0100 0.6748298 0.3357696 0.6119112         0      Ctrl
+3 INF0100 0.6119129 0.2862104 0.6639621         4      Ctrl
+4 INF0100 0.6314431 0.4861231 0.4378944         9      Ctrl
+5 INF0179 0.4396437 0.1950634 0.7392563         0      Ctrl</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="relocate" class="slide level2">
+<h2>relocate</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Alternatively, we occasionally want to move one column. While we could respecify the location using <code>select()</code>, specifying the names of all the other columns out in a line of code to just to rearrange one does not sound like a good use of time. For this reason, the second <code>dplyr</code> function we will be learning is the <code>relocate()</code> function.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Looking at our Data object, let’s say we wanted to move the Tcells column from its current location to the second column position (right after the bid column). The line of code to do so would look like:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Tcells, <span class="at">.after=</span>bid) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      bid    Tcells timepoint Condition       Date infant_sex  ptype    root
+1 INF0052 0.2804264         0      Ctrl 2025-07-26       Male HEU-hi 2098368
+2 INF0100 0.6748298         0      Ctrl 2025-07-26       Male HEU-lo 2020184
+3 INF0100 0.6119129         4      Ctrl 2025-07-26       Male HEU-lo 1155040
+4 INF0100 0.6314431         9      Ctrl 2025-07-26       Male HEU-lo  358624
+5 INF0179 0.4396437         0      Ctrl 2025-07-26       Male     HU 1362216
+  singletsFSC singletsSSC singletsSSCB      CD45 NotMonocytes nonDebris
+1     1894070     1666179      1537396 0.5952943    0.8820349 0.8627649
+2     1791890     1697083      1579098 0.9106762    0.9052256 0.8602660
+3     1033320      875465       845446 0.9705765    0.9845400 0.9578793
+4      328624      289327       276289 0.9819573    0.9855070 0.9412615
+5     1206309     1032946       982736 0.9572591    0.9556272 0.8407837
+  lymphocytes      live      Dump+     Dump-        Vd2+      Vd2-     Va7.2+
+1   0.6420138 0.9020581 0.21090996 0.6911482 0.008120361 0.9918796 0.01448070
+2   0.2145848 0.8908981 0.06252775 0.8283703 0.007265620 0.9927344 0.01577499
+3   0.7403110 0.8757665 0.20023803 0.6755285 0.004651313 0.9953487 0.01579402
+4   0.6511588 0.9153242 0.21469246 0.7006317 0.011348967 0.9886510 0.01702345
+5   0.7054786 0.8952140 0.33831877 0.5568953 0.004753630 0.9952464 0.01332182
+     Va7.2-      CD4+      CD4-      CD8+       CD8- Tcells_count
+1 0.9773989 0.6341164 0.3432825 0.2734826 0.06979990       164771
+2 0.9769594 0.6119112 0.3650482 0.3357696 0.02927858       208241
+3 0.9795547 0.6639621 0.3155925 0.2862104 0.02938209       371723
+4 0.9716276 0.4378944 0.5337331 0.4861231 0.04761008       111552
+5 0.9819246 0.7392563 0.2426682 0.1950634 0.04760485       291777
+  lymphocytes_count  Monocytes     Debris CD45_count
+1            587573 0.11796509 0.13723513     915203
+2            308583 0.09477437 0.13973396    1438047
+3            607477 0.01545999 0.04212072     820570
+4            176662 0.01449297 0.05873854     271304
+5            663667 0.04437285 0.15921627     940733</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a></a><span class="co"># |&gt; head(5) is used only to make the website output visualization manageable :D</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Similar to what we saw with <code>select()</code>, this approach can also be used for more than 1 column:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Tcells, Monocytes, <span class="at">.after=</span>bid) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      bid    Tcells  Monocytes timepoint Condition       Date infant_sex  ptype
+1 INF0052 0.2804264 0.11796509         0      Ctrl 2025-07-26       Male HEU-hi
+2 INF0100 0.6748298 0.09477437         0      Ctrl 2025-07-26       Male HEU-lo
+3 INF0100 0.6119129 0.01545999         4      Ctrl 2025-07-26       Male HEU-lo
+4 INF0100 0.6314431 0.01449297         9      Ctrl 2025-07-26       Male HEU-lo
+5 INF0179 0.4396437 0.04437285         0      Ctrl 2025-07-26       Male     HU
+     root singletsFSC singletsSSC singletsSSCB      CD45 NotMonocytes nonDebris
+1 2098368     1894070     1666179      1537396 0.5952943    0.8820349 0.8627649
+2 2020184     1791890     1697083      1579098 0.9106762    0.9052256 0.8602660
+3 1155040     1033320      875465       845446 0.9705765    0.9845400 0.9578793
+4  358624      328624      289327       276289 0.9819573    0.9855070 0.9412615
+5 1362216     1206309     1032946       982736 0.9572591    0.9556272 0.8407837
+  lymphocytes      live      Dump+     Dump-        Vd2+      Vd2-     Va7.2+
+1   0.6420138 0.9020581 0.21090996 0.6911482 0.008120361 0.9918796 0.01448070
+2   0.2145848 0.8908981 0.06252775 0.8283703 0.007265620 0.9927344 0.01577499
+3   0.7403110 0.8757665 0.20023803 0.6755285 0.004651313 0.9953487 0.01579402
+4   0.6511588 0.9153242 0.21469246 0.7006317 0.011348967 0.9886510 0.01702345
+5   0.7054786 0.8952140 0.33831877 0.5568953 0.004753630 0.9952464 0.01332182
+     Va7.2-      CD4+      CD4-      CD8+       CD8- Tcells_count
+1 0.9773989 0.6341164 0.3432825 0.2734826 0.06979990       164771
+2 0.9769594 0.6119112 0.3650482 0.3357696 0.02927858       208241
+3 0.9795547 0.6639621 0.3155925 0.2862104 0.02938209       371723
+4 0.9716276 0.4378944 0.5337331 0.4861231 0.04761008       111552
+5 0.9819246 0.7392563 0.2426682 0.1950634 0.04760485       291777
+  lymphocytes_count     Debris CD45_count
+1            587573 0.13723513     915203
+2            308583 0.13973396    1438047
+3            607477 0.04212072     820570
+4            176662 0.05873854     271304
+5            663667 0.15921627     940733</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a><span class="co"># |&gt; head(5) is used only to make the website output visualization manageable :D</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We can also modify the argument so that columns are placed before a certain column</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Tcells, <span class="at">.before=</span>Date) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      bid timepoint Condition    Tcells       Date infant_sex  ptype    root
+1 INF0052         0      Ctrl 0.2804264 2025-07-26       Male HEU-hi 2098368
+2 INF0100         0      Ctrl 0.6748298 2025-07-26       Male HEU-lo 2020184
+3 INF0100         4      Ctrl 0.6119129 2025-07-26       Male HEU-lo 1155040
+4 INF0100         9      Ctrl 0.6314431 2025-07-26       Male HEU-lo  358624
+5 INF0179         0      Ctrl 0.4396437 2025-07-26       Male     HU 1362216
+  singletsFSC singletsSSC singletsSSCB      CD45 NotMonocytes nonDebris
+1     1894070     1666179      1537396 0.5952943    0.8820349 0.8627649
+2     1791890     1697083      1579098 0.9106762    0.9052256 0.8602660
+3     1033320      875465       845446 0.9705765    0.9845400 0.9578793
+4      328624      289327       276289 0.9819573    0.9855070 0.9412615
+5     1206309     1032946       982736 0.9572591    0.9556272 0.8407837
+  lymphocytes      live      Dump+     Dump-        Vd2+      Vd2-     Va7.2+
+1   0.6420138 0.9020581 0.21090996 0.6911482 0.008120361 0.9918796 0.01448070
+2   0.2145848 0.8908981 0.06252775 0.8283703 0.007265620 0.9927344 0.01577499
+3   0.7403110 0.8757665 0.20023803 0.6755285 0.004651313 0.9953487 0.01579402
+4   0.6511588 0.9153242 0.21469246 0.7006317 0.011348967 0.9886510 0.01702345
+5   0.7054786 0.8952140 0.33831877 0.5568953 0.004753630 0.9952464 0.01332182
+     Va7.2-      CD4+      CD4-      CD8+       CD8- Tcells_count
+1 0.9773989 0.6341164 0.3432825 0.2734826 0.06979990       164771
+2 0.9769594 0.6119112 0.3650482 0.3357696 0.02927858       208241
+3 0.9795547 0.6639621 0.3155925 0.2862104 0.02938209       371723
+4 0.9716276 0.4378944 0.5337331 0.4861231 0.04761008       111552
+5 0.9819246 0.7392563 0.2426682 0.1950634 0.04760485       291777
+  lymphocytes_count  Monocytes     Debris CD45_count
+1            587573 0.11796509 0.13723513     915203
+2            308583 0.09477437 0.13973396    1438047
+3            607477 0.01545999 0.04212072     820570
+4            176662 0.01449297 0.05873854     271304
+5            663667 0.04437285 0.15921627     940733</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a></a><span class="co"># |&gt; head(5) is used only to make the website output visualization manageable :D</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And as we might suspect, we could specify a column index location rather than using a column name.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Date, <span class="at">.before=</span><span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Date     bid timepoint Condition infant_sex  ptype    root singletsFSC
+1 2025-07-26 INF0052         0      Ctrl       Male HEU-hi 2098368     1894070
+2 2025-07-26 INF0100         0      Ctrl       Male HEU-lo 2020184     1791890
+3 2025-07-26 INF0100         4      Ctrl       Male HEU-lo 1155040     1033320
+4 2025-07-26 INF0100         9      Ctrl       Male HEU-lo  358624      328624
+5 2025-07-26 INF0179         0      Ctrl       Male     HU 1362216     1206309
+  singletsSSC singletsSSCB      CD45 NotMonocytes nonDebris lymphocytes
+1     1666179      1537396 0.5952943    0.8820349 0.8627649   0.6420138
+2     1697083      1579098 0.9106762    0.9052256 0.8602660   0.2145848
+3      875465       845446 0.9705765    0.9845400 0.9578793   0.7403110
+4      289327       276289 0.9819573    0.9855070 0.9412615   0.6511588
+5     1032946       982736 0.9572591    0.9556272 0.8407837   0.7054786
+       live      Dump+     Dump-    Tcells        Vd2+      Vd2-     Va7.2+
+1 0.9020581 0.21090996 0.6911482 0.2804264 0.008120361 0.9918796 0.01448070
+2 0.8908981 0.06252775 0.8283703 0.6748298 0.007265620 0.9927344 0.01577499
+3 0.8757665 0.20023803 0.6755285 0.6119129 0.004651313 0.9953487 0.01579402
+4 0.9153242 0.21469246 0.7006317 0.6314431 0.011348967 0.9886510 0.01702345
+5 0.8952140 0.33831877 0.5568953 0.4396437 0.004753630 0.9952464 0.01332182
+     Va7.2-      CD4+      CD4-      CD8+       CD8- Tcells_count
+1 0.9773989 0.6341164 0.3432825 0.2734826 0.06979990       164771
+2 0.9769594 0.6119112 0.3650482 0.3357696 0.02927858       208241
+3 0.9795547 0.6639621 0.3155925 0.2862104 0.02938209       371723
+4 0.9716276 0.4378944 0.5337331 0.4861231 0.04761008       111552
+5 0.9819246 0.7392563 0.2426682 0.1950634 0.04760485       291777
+  lymphocytes_count  Monocytes     Debris CD45_count
+1            587573 0.11796509 0.13723513     915203
+2            308583 0.09477437 0.13973396    1438047
+3            607477 0.01545999 0.04212072     820570
+4            176662 0.01449297 0.05873854     271304
+5            663667 0.04437285 0.15921627     940733</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a><span class="co"># |&gt; head(5) is used only to make the website output visualization manageable :D</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="rename" class="slide level2">
+<h2>rename</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>At this point, we are able to both move and select particular columns, allowing us to rearrange and subset a larger data.frame object however we want it to appear. However, as we encountered, some of the names contain special characters and spaces, requiring use of tick marks (``) to avoid issues. How can we change a column name?</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In base R, we could change individual column names by assigning a new value with the assignment arrow to the corresponding column name index. For example, looking at our Subset object, wen could rename CD8+ as follows:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a></a><span class="fu">colnames</span>(Subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "bid"       "Tcells"    "CD8+"      "CD4+"      "timepoint" "Condition"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a></a><span class="fu">colnames</span>(Subset)[<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "CD8+"</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a></a><span class="fu">colnames</span>(Subset)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">"CD8Positive"</span></span>
+<span id="cb74-2"><a></a><span class="fu">colnames</span>(Subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "bid"         "Tcells"      "CD8Positive" "CD4+"        "timepoint"  
+[6] "Condition"  </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>With the tidyverse, we can use the <code>rename()</code> function which removes the need to look up the column index number. The way we write the argument is placing within the parenthesis the old name to the right of the equals sign, with the new name to the left</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a></a>Renamed <span class="ot">&lt;-</span> Subset <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">CD4_Positive =</span> <span class="st">`</span><span class="at">CD4+</span><span class="st">`</span>)</span>
+<span id="cb76-2"><a></a><span class="fu">colnames</span>(Renamed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "bid"          "Tcells"       "CD8Positive"  "CD4_Positive" "timepoint"   
+[6] "Condition"   </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>If we wanted to rename multiple column names at once, we would just need to include a comma between the individual rename arguments within the parenthesis.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a>Renamed_Multiple <span class="ot">&lt;-</span> Subset <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">specimen =</span> bid, <span class="at">timepoint_months =</span> timepoint, <span class="at">stimulation =</span> Condition, <span class="at">CD4Positive=</span><span class="st">`</span><span class="at">CD4+</span><span class="st">`</span>)</span>
+<span id="cb78-2"><a></a><span class="fu">colnames</span>(Renamed_Multiple)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "specimen"         "Tcells"           "CD8Positive"      "CD4Positive"     
+[5] "timepoint_months" "stimulation"     </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="pull" class="slide level2">
+<h2>pull</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Sometimes, we may want to retrieve individual values present in a column, to use within either a vector or a list. We can do this using the <code>pull()</code> function, which will retrieve the column contents and strip the column formatting</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(Date) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26"
+ [6] "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>This can be useful when we are doing data exploration, and trying to determine how many unique variants might be present. For example, if we wanted to see what days individual samples were acquired, we could <code>pull()</code> the data and pass it to the <code>unique()</code> function:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(Date) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "2025-07-26" "2025-07-29" "2025-07-31" "2025-08-05" "2025-08-07"
+[6] "2025-08-22" "2025-08-28" "2025-08-30"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="filter-rows" class="slide level2">
+<h2>filter (Rows)</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>So far, we have been working with <code>dplyr</code> functions primarily used when working with and subsetting columns (including <code>select()</code>, <code>pull()</code>, <code>rename()</code> and <code>relocate()</code>). What if we wanted to work with rows of a data.frame? This is where the <code>filter()</code> function is used.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The Condition column in this Dataset appears to be indicating whether the samples were stimulated. Let’s see how many unique values are contained within that column</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(Condition) <span class="sc">|&gt;</span> <span class="fu">unique</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Ctrl" "PPD"  "SEB" </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In the case of this dataset, looks like the .fcs files where treated with either left alone, treated with <a href="https://en.wikipedia.org/wiki/Tuberculin">PPD (Purified Protein Derrivative)</a> or <a href="https://en.wikipedia.org/wiki/Enterotoxin_type_B">SEB</a>. What if we wanted to subset only those treated with PPD?</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Within <code>filter()</code>, we would specify the column name as the first argument, and ask that only values equal to (==) “PPD” be returned. Notice in this case, “” are needed, as we are asking for a matching character value.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a>PPDOnly <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(Condition <span class="sc">==</span> <span class="st">"PPD"</span>)</span>
+<span id="cb86-2"><a></a><span class="fu">head</span>(PPDOnly, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      bid timepoint Condition       Date infant_sex  ptype    root singletsFSC
+1 INF0052         0       PPD 2025-07-26       Male HEU-hi 2363512     2136616
+2 INF0100         0       PPD 2025-07-26       Male HEU-lo 2049112     1821676
+3 INF0100         4       PPD 2025-07-26       Male HEU-lo 1063496      946587
+4 INF0100         9       PPD 2025-07-26       Male HEU-lo  788368      714198
+5 INF0179         0       PPD 2025-07-26       Male     HU 1380336     1242311
+  singletsSSC singletsSSCB      CD45 NotMonocytes nonDebris lymphocytes
+1     1875394      1732620 0.5873838    0.8619837 0.8429685   0.6408044
+2     1717636      1597085 0.9063081    0.9251961 0.8771889   0.2174284
+3      796056       767297 0.9709891    0.9848719 0.9556049   0.7313503
+4      626387       600011 0.9822803    0.9842139 0.8123041   0.6223228
+5     1047081      1000877 0.9470275    0.9575685 0.9134438   0.6996502
+       live      Dump+     Dump-    Tcells        Vd2+      Vd2-     Va7.2+
+1 0.9009254 0.20743228 0.6934931 0.2835676 0.007408209 0.9925918 0.01507057
+2 0.8929673 0.06181426 0.8311531 0.6735798 0.007137230 0.9928628 0.01671801
+3 0.8782307 0.20727202 0.6709587 0.5989873 0.005254643 0.9947454 0.01609790
+4 0.9566639 0.23164587 0.7250180 0.6489405 0.011935922 0.9880641 0.01855298
+5 0.8856898 0.33186111 0.5538287 0.4441538 0.004382972 0.9956170 0.01297237
+     Va7.2-      CD4+      CD4-      CD8+       CD8- Tcells_count
+1 0.9775212 0.6340345 0.3434867 0.2744119 0.06907479       184930
+2 0.9761448 0.6145707 0.3615741 0.3312279 0.03034620       211987
+3 0.9786475 0.6559480 0.3226994 0.2912084 0.03149109       326378
+4 0.9695111 0.4306889 0.5388222 0.4908558 0.04796636       238021
+5 0.9826447 0.7499194 0.2327253 0.1850897 0.04763554       294549
+  lymphocytes_count  Monocytes     Debris CD45_count
+1            652155 0.13801632 0.15703150    1017713
+2            314717 0.07480391 0.12281107    1447451
+3            544883 0.01512811 0.04439511     745037
+4            366784 0.01578611 0.18769586     589379
+5            663169 0.04243146 0.08655621     947858</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>While this works, using “==” to match can glitch, especially with character values. Using the %in% operator is a better way of identifying and extracting only the rows whose Condition column contains “PPD”</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(Condition <span class="sc">%in%</span> <span class="st">"PPD"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       bid timepoint Condition       Date infant_sex  ptype    root singletsFSC
+1  INF0052         0       PPD 2025-07-26       Male HEU-hi 2363512     2136616
+2  INF0100         0       PPD 2025-07-26       Male HEU-lo 2049112     1821676
+3  INF0100         4       PPD 2025-07-26       Male HEU-lo 1063496      946587
+4  INF0100         9       PPD 2025-07-26       Male HEU-lo  788368      714198
+5  INF0179         0       PPD 2025-07-26       Male     HU 1380336     1242311
+6  INF0179         4       PPD 2025-07-26       Male     HU 1240984     1089933
+7  INF0179         9       PPD 2025-07-26       Male     HU 1705960     1492142
+8  INF0186         4       PPD 2025-07-26     Female HEU-hi  848584      759606
+9  INF0186         9       PPD 2025-07-26     Female HEU-hi 1425416     1259825
+10 INF0134         0       PPD 2025-07-29     Female HEU-lo 1245024     1126248
+   singletsSSC singletsSSCB      CD45 NotMonocytes nonDebris lymphocytes
+1      1875394      1732620 0.5873838    0.8619837 0.8429685   0.6408044
+2      1717636      1597085 0.9063081    0.9251961 0.8771889   0.2174284
+3       796056       767297 0.9709891    0.9848719 0.9556049   0.7313503
+4       626387       600011 0.9822803    0.9842139 0.8123041   0.6223228
+5      1047081      1000877 0.9470275    0.9575685 0.9134438   0.6996502
+6       868877       814909 0.9855947    0.9541417 0.9400824   0.7303074
+7      1163543      1107878 0.9820919    0.9816909 0.9681656   0.7933252
+8       648405       607514 0.9824778    0.9539480 0.9250170   0.6720872
+9      1089955      1014266 0.9771490    0.9552573 0.9137615   0.6332438
+10      993895       896183 0.7915660    0.8042298 0.7899781   0.5924868
+        live      Dump+     Dump-    Tcells        Vd2+      Vd2-     Va7.2+
+1  0.9009254 0.20743228 0.6934931 0.2835676 0.007408209 0.9925918 0.01507057
+2  0.8929673 0.06181426 0.8311531 0.6735798 0.007137230 0.9928628 0.01671801
+3  0.8782307 0.20727202 0.6709587 0.5989873 0.005254643 0.9947454 0.01609790
+4  0.9566639 0.23164587 0.7250180 0.6489405 0.011935922 0.9880641 0.01855298
+5  0.8856898 0.33186111 0.5538287 0.4441538 0.004382972 0.9956170 0.01297237
+6  0.9602599 0.34357211 0.6166878 0.5654655 0.004320429 0.9956796 0.01266884
+7  0.9344566 0.24759143 0.6868651 0.6687319 0.002733755 0.9972662 0.01330324
+8  0.8622229 0.32641070 0.5358122 0.4757720 0.009483639 0.9905164 0.04352519
+9  0.8793039 0.23863251 0.6406714 0.5818617 0.018224039 0.9817760 0.03738187
+10 0.9003481 0.15485733 0.7454908 0.3314561 0.009453601 0.9905464 0.02587717
+      Va7.2-      CD4+      CD4-      CD8+       CD8- Tcells_count
+1  0.9775212 0.6340345 0.3434867 0.2744119 0.06907479       184930
+2  0.9761448 0.6145707 0.3615741 0.3312279 0.03034620       211987
+3  0.9786475 0.6559480 0.3226994 0.2912084 0.03149109       326378
+4  0.9695111 0.4306889 0.5388222 0.4908558 0.04796636       238021
+5  0.9826447 0.7499194 0.2327253 0.1850897 0.04763554       294549
+6  0.9830107 0.6318771 0.3511336 0.3177460 0.03338760       331680
+7  0.9839630 0.7016361 0.2823269 0.2559335 0.02639338       577228
+8  0.9469912 0.5309109 0.4160803 0.3912185 0.02486181       190855
+9  0.9443941 0.5033806 0.4410135 0.4213381 0.01967539       365177
+10 0.9646692 0.6964224 0.2682468 0.2260394 0.04220742       139312
+   lymphocytes_count  Monocytes     Debris CD45_count
+1             652155 0.13801632 0.15703150    1017713
+2             314717 0.07480391 0.12281107    1447451
+3             544883 0.01512811 0.04439511     745037
+4             366784 0.01578611 0.18769586     589379
+5             663169 0.04243146 0.08655621     947858
+6             586561 0.04585829 0.05991758     803170
+7             863168 0.01830910 0.03183437    1088038
+8             401148 0.04605198 0.07498295     596869
+9             627601 0.04474270 0.08623847     991089
+10            420303 0.19577016 0.21002188     709388</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Similar to what we saw for <code>select()</code>, we can grab rows that contain various values at once. We would just need to modify the second part of the argument. If we wanted to grab rows whose Condition column contained either PPD or SEB, we would need to provide that argument as a vector, placing both within <code>c()</code>/</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(Condition <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"PPD"</span>, <span class="st">"SEB"</span>)) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       bid timepoint Condition       Date infant_sex  ptype    root singletsFSC
+1  INF0052         0       PPD 2025-07-26       Male HEU-hi 2363512     2136616
+2  INF0100         0       PPD 2025-07-26       Male HEU-lo 2049112     1821676
+3  INF0100         4       PPD 2025-07-26       Male HEU-lo 1063496      946587
+4  INF0100         9       PPD 2025-07-26       Male HEU-lo  788368      714198
+5  INF0179         0       PPD 2025-07-26       Male     HU 1380336     1242311
+6  INF0179         4       PPD 2025-07-26       Male     HU 1240984     1089933
+7  INF0179         9       PPD 2025-07-26       Male     HU 1705960     1492142
+8  INF0186         4       PPD 2025-07-26     Female HEU-hi  848584      759606
+9  INF0186         9       PPD 2025-07-26     Female HEU-hi 1425416     1259825
+10 INF0052         0       SEB 2025-07-26       Male HEU-hi 2523776     2282292
+   singletsSSC singletsSSCB      CD45 NotMonocytes nonDebris lymphocytes
+1      1875394      1732620 0.5873838    0.8619837 0.8429685   0.6408044
+2      1717636      1597085 0.9063081    0.9251961 0.8771889   0.2174284
+3       796056       767297 0.9709891    0.9848719 0.9556049   0.7313503
+4       626387       600011 0.9822803    0.9842139 0.8123041   0.6223228
+5      1047081      1000877 0.9470275    0.9575685 0.9134438   0.6996502
+6       868877       814909 0.9855947    0.9541417 0.9400824   0.7303074
+7      1163543      1107878 0.9820919    0.9816909 0.9681656   0.7933252
+8       648405       607514 0.9824778    0.9539480 0.9250170   0.6720872
+9      1089955      1014266 0.9771490    0.9552573 0.9137615   0.6332438
+10     2041563      1889418 0.5783591    0.8878072 0.8670150   0.6718563
+        live      Dump+     Dump-    Tcells        Vd2+      Vd2-      Va7.2+
+1  0.9009254 0.20743228 0.6934931 0.2835676 0.007408209 0.9925918 0.015070567
+2  0.8929673 0.06181426 0.8311531 0.6735798 0.007137230 0.9928628 0.016718006
+3  0.8782307 0.20727202 0.6709587 0.5989873 0.005254643 0.9947454 0.016097899
+4  0.9566639 0.23164587 0.7250180 0.6489405 0.011935922 0.9880641 0.018552985
+5  0.8856898 0.33186111 0.5538287 0.4441538 0.004382972 0.9956170 0.012972375
+6  0.9602599 0.34357211 0.6166878 0.5654655 0.004320429 0.9956796 0.012668837
+7  0.9344566 0.24759143 0.6868651 0.6687319 0.002733755 0.9972662 0.013303235
+8  0.8622229 0.32641070 0.5358122 0.4757720 0.009483639 0.9905164 0.043525189
+9  0.8793039 0.23863251 0.6406714 0.5818617 0.018224039 0.9817760 0.037381872
+10 0.9115652 0.23344716 0.6781180 0.2741661 0.009225633 0.9907744 0.008420812
+      Va7.2-      CD4+      CD4-      CD8+       CD8- Tcells_count
+1  0.9775212 0.6340345 0.3434867 0.2744119 0.06907479       184930
+2  0.9761448 0.6145707 0.3615741 0.3312279 0.03034620       211987
+3  0.9786475 0.6559480 0.3226994 0.2912084 0.03149109       326378
+4  0.9695111 0.4306889 0.5388222 0.4908558 0.04796636       238021
+5  0.9826447 0.7499194 0.2327253 0.1850897 0.04763554       294549
+6  0.9830107 0.6318771 0.3511336 0.3177460 0.03338760       331680
+7  0.9839630 0.7016361 0.2823269 0.2559335 0.02639338       577228
+8  0.9469912 0.5309109 0.4160803 0.3912185 0.02486181       190855
+9  0.9443941 0.5033806 0.4410135 0.4213381 0.01967539       365177
+10 0.9823536 0.6083254 0.3740281 0.2811756 0.09285249       201287
+   lymphocytes_count  Monocytes     Debris CD45_count
+1             652155 0.13801632 0.15703150    1017713
+2             314717 0.07480391 0.12281107    1447451
+3             544883 0.01512811 0.04439511     745037
+4             366784 0.01578611 0.18769586     589379
+5             663169 0.04243146 0.08655621     947858
+6             586561 0.04585829 0.05991758     803170
+7             863168 0.01830910 0.03183437    1088038
+8             401148 0.04605198 0.07498295     596869
+9             627601 0.04474270 0.08623847     991089
+10            734179 0.11219277 0.13298504    1092762</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Alternatively, we could have set up the vector externally, and then provided it to <code>filter()</code></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a></a>TheseConditions <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PPD"</span>, <span class="st">"SEB"</span>)</span>
+<span id="cb92-2"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(Condition <span class="sc">%in%</span> TheseConditions) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       bid timepoint Condition       Date infant_sex  ptype    root singletsFSC
+1  INF0052         0       PPD 2025-07-26       Male HEU-hi 2363512     2136616
+2  INF0100         0       PPD 2025-07-26       Male HEU-lo 2049112     1821676
+3  INF0100         4       PPD 2025-07-26       Male HEU-lo 1063496      946587
+4  INF0100         9       PPD 2025-07-26       Male HEU-lo  788368      714198
+5  INF0179         0       PPD 2025-07-26       Male     HU 1380336     1242311
+6  INF0179         4       PPD 2025-07-26       Male     HU 1240984     1089933
+7  INF0179         9       PPD 2025-07-26       Male     HU 1705960     1492142
+8  INF0186         4       PPD 2025-07-26     Female HEU-hi  848584      759606
+9  INF0186         9       PPD 2025-07-26     Female HEU-hi 1425416     1259825
+10 INF0052         0       SEB 2025-07-26       Male HEU-hi 2523776     2282292
+   singletsSSC singletsSSCB      CD45 NotMonocytes nonDebris lymphocytes
+1      1875394      1732620 0.5873838    0.8619837 0.8429685   0.6408044
+2      1717636      1597085 0.9063081    0.9251961 0.8771889   0.2174284
+3       796056       767297 0.9709891    0.9848719 0.9556049   0.7313503
+4       626387       600011 0.9822803    0.9842139 0.8123041   0.6223228
+5      1047081      1000877 0.9470275    0.9575685 0.9134438   0.6996502
+6       868877       814909 0.9855947    0.9541417 0.9400824   0.7303074
+7      1163543      1107878 0.9820919    0.9816909 0.9681656   0.7933252
+8       648405       607514 0.9824778    0.9539480 0.9250170   0.6720872
+9      1089955      1014266 0.9771490    0.9552573 0.9137615   0.6332438
+10     2041563      1889418 0.5783591    0.8878072 0.8670150   0.6718563
+        live      Dump+     Dump-    Tcells        Vd2+      Vd2-      Va7.2+
+1  0.9009254 0.20743228 0.6934931 0.2835676 0.007408209 0.9925918 0.015070567
+2  0.8929673 0.06181426 0.8311531 0.6735798 0.007137230 0.9928628 0.016718006
+3  0.8782307 0.20727202 0.6709587 0.5989873 0.005254643 0.9947454 0.016097899
+4  0.9566639 0.23164587 0.7250180 0.6489405 0.011935922 0.9880641 0.018552985
+5  0.8856898 0.33186111 0.5538287 0.4441538 0.004382972 0.9956170 0.012972375
+6  0.9602599 0.34357211 0.6166878 0.5654655 0.004320429 0.9956796 0.012668837
+7  0.9344566 0.24759143 0.6868651 0.6687319 0.002733755 0.9972662 0.013303235
+8  0.8622229 0.32641070 0.5358122 0.4757720 0.009483639 0.9905164 0.043525189
+9  0.8793039 0.23863251 0.6406714 0.5818617 0.018224039 0.9817760 0.037381872
+10 0.9115652 0.23344716 0.6781180 0.2741661 0.009225633 0.9907744 0.008420812
+      Va7.2-      CD4+      CD4-      CD8+       CD8- Tcells_count
+1  0.9775212 0.6340345 0.3434867 0.2744119 0.06907479       184930
+2  0.9761448 0.6145707 0.3615741 0.3312279 0.03034620       211987
+3  0.9786475 0.6559480 0.3226994 0.2912084 0.03149109       326378
+4  0.9695111 0.4306889 0.5388222 0.4908558 0.04796636       238021
+5  0.9826447 0.7499194 0.2327253 0.1850897 0.04763554       294549
+6  0.9830107 0.6318771 0.3511336 0.3177460 0.03338760       331680
+7  0.9839630 0.7016361 0.2823269 0.2559335 0.02639338       577228
+8  0.9469912 0.5309109 0.4160803 0.3912185 0.02486181       190855
+9  0.9443941 0.5033806 0.4410135 0.4213381 0.01967539       365177
+10 0.9823536 0.6083254 0.3740281 0.2811756 0.09285249       201287
+   lymphocytes_count  Monocytes     Debris CD45_count
+1             652155 0.13801632 0.15703150    1017713
+2             314717 0.07480391 0.12281107    1447451
+3             544883 0.01512811 0.04439511     745037
+4             366784 0.01578611 0.18769586     589379
+5             663169 0.04243146 0.08655621     947858
+6             586561 0.04585829 0.05991758     803170
+7             863168 0.01830910 0.03183437    1088038
+8             401148 0.04605198 0.07498295     596869
+9             627601 0.04474270 0.08623847     991089
+10            734179 0.11219277 0.13298504    1092762</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>While this works when we have a limited number of variant condition values, what if had many more but only wanted to exclude one value? As we saw when learning about <a href="../../course/02_FilePaths/index.html">Conditionals</a>, when we add a ! in front of a logical value, we get the opposite logical value returned</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a></a>IsThisASpectralInstrument <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<span id="cb94-2"><a></a></span>
+<span id="cb94-3"><a></a><span class="sc">!</span>IsThisASpectralInstrument</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In the context of the <code>dplyr</code> package, we can use ! within the <code>filter()</code> to remove rows that contain a certain value</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a></a>Subset <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span>Condition <span class="sc">%in%</span> <span class="st">"SEB"</span>)</span>
+<span id="cb96-2"><a></a>Subset <span class="sc">|&gt;</span> <span class="fu">pull</span>(Condition) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Ctrl" "PPD" </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Likewise, we can also use it with the <code>select()</code> to exclude columns we don’t want to include</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a></a>Subset <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">!</span>timepoint)</span>
+<span id="cb98-2"><a></a>Subset[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      bid Condition       Date infant_sex  ptype    root singletsFSC
+1 INF0052      Ctrl 2025-07-26       Male HEU-hi 2098368     1894070
+2 INF0100      Ctrl 2025-07-26       Male HEU-lo 2020184     1791890
+3 INF0100      Ctrl 2025-07-26       Male HEU-lo 1155040     1033320
+  singletsSSC singletsSSCB      CD45 NotMonocytes nonDebris lymphocytes
+1     1666179      1537396 0.5952943    0.8820349 0.8627649   0.6420138
+2     1697083      1579098 0.9106762    0.9052256 0.8602660   0.2145848
+3      875465       845446 0.9705765    0.9845400 0.9578793   0.7403110
+       live      Dump+     Dump-    Tcells        Vd2+      Vd2-     Va7.2+
+1 0.9020581 0.21090996 0.6911482 0.2804264 0.008120361 0.9918796 0.01448070
+2 0.8908981 0.06252775 0.8283703 0.6748298 0.007265620 0.9927344 0.01577499
+3 0.8757665 0.20023803 0.6755285 0.6119129 0.004651313 0.9953487 0.01579402
+     Va7.2-      CD4+      CD4-      CD8+       CD8- Tcells_count
+1 0.9773989 0.6341164 0.3432825 0.2734826 0.06979990       164771
+2 0.9769594 0.6119112 0.3650482 0.3357696 0.02927858       208241
+3 0.9795547 0.6639621 0.3155925 0.2862104 0.02938209       371723
+  lymphocytes_count  Monocytes     Debris CD45_count
+1            587573 0.11796509 0.13723513     915203
+2            308583 0.09477437 0.13973396    1438047
+3            607477 0.01545999 0.04212072     820570</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="mutate" class="slide level2">
+<h2>mutate</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As we can see, with just these handful of functions, we have the building blocks to rearrange and subset a larger data.frame into a format that we prefer. But what if we wanted to alter the content of a column, or add new columns to an existing data.frame? This is where the <code>mutate()</code> function can be used.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Let’s start by slimming down our current Data to a smaller workable example, highlighting the functions and pipes we learned about today</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a></a>TidyData <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(Condition <span class="sc">%in%</span> <span class="st">"Ctrl"</span>) <span class="sc">|&gt;</span> <span class="fu">filter</span>(timepoint <span class="sc">%in%</span> <span class="st">"0"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb100-2"><a></a>     <span class="fu">select</span>(bid, timepoint, Condition, Date, Tcells_count, CD45_count) <span class="sc">|&gt;</span></span>
+<span id="cb100-3"><a></a>      <span class="fu">rename</span>(<span class="at">specimen=</span>bid, <span class="at">condition=</span>Condition) <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Date, <span class="at">.after=</span>specimen)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a></a>TidyData</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   specimen       Date timepoint condition Tcells_count CD45_count
+1   INF0052 2025-07-26         0      Ctrl       164771     915203
+2   INF0100 2025-07-26         0      Ctrl       208241    1438047
+3   INF0179 2025-07-26         0      Ctrl       291777     940733
+4   INF0134 2025-07-29         0      Ctrl       127866     689676
+5   INF0148 2025-07-29         0      Ctrl       234335    1013985
+6   INF0191 2025-07-29         0      Ctrl        55780     715443
+7   INF0124 2025-07-31         0      Ctrl        70297     687720
+8   INF0149 2025-07-31         0      Ctrl       107900     857845
+9   INF0169 2025-07-31         0      Ctrl        75540     854594
+10  INF0019 2025-08-05         0      Ctrl       208055     873622
+11  INF0032 2025-08-05         0      Ctrl       361034     753064
+12  INF0180 2025-08-05         0      Ctrl       284958    1049663
+13  INF0155 2025-08-07         0      Ctrl       281626    1065048
+14  INF0158 2025-08-07         0      Ctrl       280913    1249338
+15  INF0159 2025-08-07         0      Ctrl       452551    1190219
+16  INF0013 2025-08-22         0      Ctrl       182751     836573
+17  INF0023 2025-08-22         0      Ctrl       218435     968035
+18  INF0030 2025-08-22         0      Ctrl        85521     732321
+19  INF0166 2025-08-28         0      Ctrl       225650     739495
+20  INF0199 2025-08-28         0      Ctrl       169736    1112176
+21  INF0207 2025-08-28         0      Ctrl        39055     905365
+22  INF0614 2025-08-30         0      Ctrl       224396    1569007
+23  INF0622 2025-08-30         0      Ctrl       161924     939307</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The <code>mutate()</code> function can be used to modify existing columns, as well as to create new ones. For example, let’s derrive the proportion of T cells from the overall CD45 gate. To do so, within the parenthesis, we would specify a new column name, and then divide the original columns:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a></a>TidyData <span class="ot">&lt;-</span> TidyData <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Tcells_ProportionCD45 =</span> Tcells_count <span class="sc">/</span> CD45_count)</span>
+<span id="cb103-2"><a></a>TidyData</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   specimen       Date timepoint condition Tcells_count CD45_count
+1   INF0052 2025-07-26         0      Ctrl       164771     915203
+2   INF0100 2025-07-26         0      Ctrl       208241    1438047
+3   INF0179 2025-07-26         0      Ctrl       291777     940733
+4   INF0134 2025-07-29         0      Ctrl       127866     689676
+5   INF0148 2025-07-29         0      Ctrl       234335    1013985
+6   INF0191 2025-07-29         0      Ctrl        55780     715443
+7   INF0124 2025-07-31         0      Ctrl        70297     687720
+8   INF0149 2025-07-31         0      Ctrl       107900     857845
+9   INF0169 2025-07-31         0      Ctrl        75540     854594
+10  INF0019 2025-08-05         0      Ctrl       208055     873622
+11  INF0032 2025-08-05         0      Ctrl       361034     753064
+12  INF0180 2025-08-05         0      Ctrl       284958    1049663
+13  INF0155 2025-08-07         0      Ctrl       281626    1065048
+14  INF0158 2025-08-07         0      Ctrl       280913    1249338
+15  INF0159 2025-08-07         0      Ctrl       452551    1190219
+16  INF0013 2025-08-22         0      Ctrl       182751     836573
+17  INF0023 2025-08-22         0      Ctrl       218435     968035
+18  INF0030 2025-08-22         0      Ctrl        85521     732321
+19  INF0166 2025-08-28         0      Ctrl       225650     739495
+20  INF0199 2025-08-28         0      Ctrl       169736    1112176
+21  INF0207 2025-08-28         0      Ctrl        39055     905365
+22  INF0614 2025-08-30         0      Ctrl       224396    1569007
+23  INF0622 2025-08-30         0      Ctrl       161924     939307
+   Tcells_ProportionCD45
+1             0.18003765
+2             0.14480820
+3             0.31015921
+4             0.18540010
+5             0.23110302
+6             0.07796568
+7             0.10221747
+8             0.12578030
+9             0.08839285
+10            0.23815220
+11            0.47942008
+12            0.27147570
+13            0.26442564
+14            0.22484948
+15            0.38022498
+16            0.21845195
+17            0.22564783
+18            0.11678076
+19            0.30514067
+20            0.15261613
+21            0.04313730
+22            0.14301785
+23            0.17238666</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We can see that we have many significant digits being returned. Let’s round this new column to 2 significant digits by applying the <code>round()</code> function</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a></a>TidyData <span class="ot">&lt;-</span> TidyData <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">TcellsRounded =</span> <span class="fu">round</span>(Tcells_ProportionCD45, <span class="dv">2</span>))</span>
+<span id="cb105-2"><a></a>TidyData </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   specimen       Date timepoint condition Tcells_count CD45_count
+1   INF0052 2025-07-26         0      Ctrl       164771     915203
+2   INF0100 2025-07-26         0      Ctrl       208241    1438047
+3   INF0179 2025-07-26         0      Ctrl       291777     940733
+4   INF0134 2025-07-29         0      Ctrl       127866     689676
+5   INF0148 2025-07-29         0      Ctrl       234335    1013985
+6   INF0191 2025-07-29         0      Ctrl        55780     715443
+7   INF0124 2025-07-31         0      Ctrl        70297     687720
+8   INF0149 2025-07-31         0      Ctrl       107900     857845
+9   INF0169 2025-07-31         0      Ctrl        75540     854594
+10  INF0019 2025-08-05         0      Ctrl       208055     873622
+11  INF0032 2025-08-05         0      Ctrl       361034     753064
+12  INF0180 2025-08-05         0      Ctrl       284958    1049663
+13  INF0155 2025-08-07         0      Ctrl       281626    1065048
+14  INF0158 2025-08-07         0      Ctrl       280913    1249338
+15  INF0159 2025-08-07         0      Ctrl       452551    1190219
+16  INF0013 2025-08-22         0      Ctrl       182751     836573
+17  INF0023 2025-08-22         0      Ctrl       218435     968035
+18  INF0030 2025-08-22         0      Ctrl        85521     732321
+19  INF0166 2025-08-28         0      Ctrl       225650     739495
+20  INF0199 2025-08-28         0      Ctrl       169736    1112176
+21  INF0207 2025-08-28         0      Ctrl        39055     905365
+22  INF0614 2025-08-30         0      Ctrl       224396    1569007
+23  INF0622 2025-08-30         0      Ctrl       161924     939307
+   Tcells_ProportionCD45 TcellsRounded
+1             0.18003765          0.18
+2             0.14480820          0.14
+3             0.31015921          0.31
+4             0.18540010          0.19
+5             0.23110302          0.23
+6             0.07796568          0.08
+7             0.10221747          0.10
+8             0.12578030          0.13
+9             0.08839285          0.09
+10            0.23815220          0.24
+11            0.47942008          0.48
+12            0.27147570          0.27
+13            0.26442564          0.26
+14            0.22484948          0.22
+15            0.38022498          0.38
+16            0.21845195          0.22
+17            0.22564783          0.23
+18            0.11678076          0.12
+19            0.30514067          0.31
+20            0.15261613          0.15
+21            0.04313730          0.04
+22            0.14301785          0.14
+23            0.17238666          0.17</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="arrange" class="slide level2">
+<h2>arrange</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And while we are here, let’s rearrange the rows so that they are descending based on the Tcell proportion. We can use this by using the <code>desc()</code> and <code>arrange()</code> functions from <code>dplyr</code>:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a></a>TidyData <span class="ot">&lt;-</span> TidyData <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(TcellsRounded))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And let’s go ahead and <code>filter()</code> and identify the specimens that had more than 30% T cells as part of the overall CD45 gate (context, these samples were Cord Blood):</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a></a>TidyData <span class="sc">|&gt;</span> <span class="fu">filter</span>(TcellsRounded <span class="sc">&gt;</span> <span class="fl">0.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  specimen       Date timepoint condition Tcells_count CD45_count
+1  INF0032 2025-08-05         0      Ctrl       361034     753064
+2  INF0159 2025-08-07         0      Ctrl       452551    1190219
+3  INF0179 2025-07-26         0      Ctrl       291777     940733
+4  INF0166 2025-08-28         0      Ctrl       225650     739495
+  Tcells_ProportionCD45 TcellsRounded
+1             0.4794201          0.48
+2             0.3802250          0.38
+3             0.3101592          0.31
+4             0.3051407          0.31</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Which is we had wanted to just retrieve the specimen IDs, we could add <code>pull()</code> after a new pipe argument.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a></a>TidyData <span class="sc">|&gt;</span> <span class="fu">filter</span>(TcellsRounded <span class="sc">&gt;</span> <span class="fl">0.3</span>) <span class="sc">|&gt;</span> <span class="fu">pull</span>(specimen)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "INF0032" "INF0159" "INF0179" "INF0166"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And finally, since I may want to send the data to a supervisor, let’s go ahead and export this “tidyed” version of our data.frame out to it’s own .fcs file. Working within our project folder, this would look like this:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a></a>NewName <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"MyNewDataset"</span>, <span class="st">".csv"</span>)</span>
+<span id="cb112-2"><a></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, NewName)</span>
+<span id="cb112-3"><a></a>StorageLocation</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data/MyNewDataset.csv"</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a></a><span class="fu">write.csv</span>(TidyData, StorageLocation, <span class="at">row.names=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="take-away" class="title-slide slide level1 center">
+<h1>Take Away</h1>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In this session, we explored the main functions within the <code>dplyr</code> package used in context of “tidying” data, including selecting columns, filtering for rows, as well as additional functions used to create or modify existing values. We will continue to build on these throughout the course, introducing a few additional tidyverse functions we don’t have time to cover today as appropiate. As we saw, knowing how to use these functions can allow us to extensively and quickly modify our existing exported data files.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>On important goal as we move through the course (in terms of both reproducibility and replicability) is to attempt to only modify files within R, not go back to the original csv or excel file and hand-modify individual values. This approach is not reproducible or replicable. Once set up, an R script can quickly re-carry out these same cleanup steps, and leave a documented process of how the data has changed (even more so if you are maintaining version control). If you do want to save the changes you have made, it is best to save it out as a new .csv file with which you work later.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Next week, we will be using these skills when setting up metadata for our .fcs files. We will additionally take a look at the main format source of controversy within Bioconductor Flow Cytometry packages, ie. whether to use a flowframe or a cytoframe. Exciting stuff, but important information to know as the functions needed to import them are slightly different. We will also look at how to import existing manually gated .wsp from FlowJo/Diva/Floreada in via the <code>CytoML</code> package.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/TakeAway.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="additional-resources" class="title-slide slide level1 center">
+<h1>Additional Resources</h1>
+<p><a href="https://datacarpentry.github.io/spreadsheet-ecology-lesson/">Data Organization in Spreadsheets for Ecologists</a> This Carpentry self-study course was one of my “Aha” moments early on when learning R, and reinforced the need to try to keep my own Excel/CSV files in a tidy manner. It is worth the time going through in its entirety (even for non-Ecologist).</p>
+<p><a href="https://datacarpentry.github.io/R-ecology-lesson/">Data Analysis and Visualization in R for Ecologists</a> Continuation of the above, and a good way to continue building on the tidyverse functions we learned today.</p>
+</section>
+<section class="slide level2">
+
+<p><a href="https://youtu.be/Bg4qxVNaDck?si=QPQq8TzOZ1w6XSy4">Simplistics: Introduction to Tidyverse in R</a> The YouTube channel is mainly focused on statistics for Psych classes, but at the end of the day, we are all working with similar objects with rows and columns, just the values contained within differ.</p>
+<p><a href="https://youtube.com/playlist?list=PLmNrK_nkqBpKf7j_ewpUm-w33R6PJYtD9&amp;si=BVmDZPIXjRuHjERP">Riffomonas Project Playlist: Data Manipulation with R’s Tidyverse</a> Riffomonas has a playlist that delves into both the tidyverse functions we used today, as well as other ones we will encounter later on in the course.</p>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="take-home-problems" class="title-slide slide level1 center">
+<h1>Take-home Problems</h1>
+<div title="Problem 1">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Problem 1</strong></p>
+</div>
+<div class="callout-content">
+<p>Taking a dataset (either todays or one of your own), work through the column-operating functions (<code>select()</code>, <code>rename()</code>, and <code>relocate()</code>). Once this is done, <code>filter()</code> by conditions from two separate columns, arrange in an order that makes sense, and export this “tidy” data as a .csv file.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div title="Problem 2">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Problem 2</strong></p>
+</div>
+<div class="callout-content">
+<p>We used the <code>mutate()</code> function to create new columns, but it can also be used to modify existing ones. Various numeric columns are showing way to many significant digits. As was shown, use <code>round()</code> to round all these proportion columns, but use mutate to overwrite the existing column. Export this as it’s own .csv file.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div title="Problem 3">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Problem 3</strong></p>
+</div>
+<div class="callout-content">
+<p>We can also use <code>mutate()</code> to combine columns. For our dataset, “bid”, “timepoint”, “Condition” are separate columns that originally were all part of the filename for the individual .fcs file. Try to figure out a way to combine them back together using <code>paste0()</code>, and save the new column as “filename”. Once this is done, <code>pull()</code> the contents of this column, and using try to determine whether there were any duplicates (think innovative ways of using !, <code>length()</code> and <code>unique()</code>)</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img data-src="https://www.gnu.org/graphics/agplv3-with-text-162x68.png" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img data-src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" alt="CC BY-SA 4.0"></a></p>
+</div>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
