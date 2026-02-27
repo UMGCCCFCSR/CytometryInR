@@ -10,18 +10,12 @@ Click here to go to our [Course Website](https://umgcccfcsr.github.io/CytometryI
 
 # Participating
 
-The course will start the first week of February, with Week #1 resources being released  on Sunday, February 1st at 2200 EST (Monday 0300 GMT+0). See below for additional details.
-
-## Resources
-
-The pre-course learning materials are now [available](https://umgcccfcsr.github.io/CytometryInR/course/00_GitHub/) , providing walkthroughs of how to set up your workstations with the required software, and exercises to help you become more familiar with the various teaching and coding resources we will be using throughout the course. 
-
-Narrated versions of the walk through materials will be available starting next week via [YouTube](https://www.youtube.com/@CytometryInR)
+The course started yp the first week of February. Course materials can be found [here](/course/00_GitHub/index.qmd) or via the Course tab in the navigation bar. The livestream recordings are available via [YouTube](https://www.youtube.com/@CytometryInR). See below for additional details.
 
 
 ## In-Person (Baltimore)
 
-For those joining us in person, the class is being offered on Monday, Tuesday and Thursday from **4-5 pm EST** in Bressler Research Building Room 7-035. We invite you to make whichever session best fits your schedule. Monitors to plug your laptops in will be available on a first come, first served basis. These in-person sessions will not be recorded, but with the smaller class size you will have our undivided attention should you have any questions. 
+For those joining us in person, the class is being offered on Thursday from **4-5 pm EST** in Bressler Research Building Room 7-035. Monitors to plug your laptops in will be available on a first come, first served basis. These in-person sessions will not be recorded, but with the smaller class size you will have our undivided attention should you have any questions. 
 
 ## Virtual (Worldwide)
 
