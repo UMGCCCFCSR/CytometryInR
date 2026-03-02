@@ -1,0 +1,675 @@
+---
+title: "05 - Gating Sets"
+author: "David Rach"
+date: 03-01-2026
+format: html
+toc: true
+toc-depth: 5
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
+
+For screen-shot slides, click [here]()
+
+<br>
+
+---
+
+# Background
+
+Welcome to the fifth week of the Cytometry in R course!!! At this point, we are through a significant portion of the "Intro to R" material, and will start encountering more "Cytometry-focused" material moving forward. 
+
+If we think of a typical flow cytometry experiment, there is more to the analysis than simply acquiring the .fcs file. While there is [substantial information](/course/03_InsideFCSFile/) present within an .fcs file, in the context of analyzing them with commercial software, we rely on additional infrastructural elements to organize the various files, transform (scale),  compensate (for conventional flow), visualize, derrive statistics, etc. 
+
+This infrastructural requirement within the R context is primarily handled by the `flowCore` and `flowWorkspace` R packages from [Bioconductor](https://www.bioconductor.org/). Today, we will build on what we learned during [Week 03](/course/03_InsideFCSFile/index.qmd) but in the context of working and interacting with multiple .fcs files. This will provide a solid foundation to explore in greater depth how individual components of our typical workflow are represented within the R context. 
+
+
+# Walk Through
+
+:::{.callout-important title="Housekeeping"}
+As we do [every week](/course/02_FilePaths/index.qmd), on GitHub, [sync](/course/00_Homeworks/index.qmd#sync-your-fork) your forked version of the CytometryInR course to bring in the most recent updates. Then within Positron, [pull](/course/00_Homeworks/index.qmd#pull-to-local) in those changes to your local computer. 
+
+After [setting up](/course/00_Git/index.qmd#new-folder-from-template) a "Week05" project folder, copy over the contents of "course/05_GatingSets/data" to that folder. This will hopefully prevent merge issues next week when attempting to pull in new course material. Once you have your new project folder organized, remember to [commit](/course/00_Git/index.qmd#push) and push your changes to GitHub to maintain remote version control. 
+
+If you encounter issues syncing due to the Take-Home Problem merge conflict, see this [walkthrough](https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/). The updated homework submission protocol can be found [here](https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/UpdatedPullRequest)
+:::
+
+<br>
+
+---
+
+## flowFrame
+
+Let's start off by recalling the approach we first saw during [Week 03](/course/03_InsideFCSFile/index.qmd), where using the `flowCore` package we loaded the contents of our .fcs file into R as a "flowFrame" object. 
+
+To do this, we first identified the .fcs files we were interested using `file.path()` to specify the folder, and `list.files()` to find contents containing ".fcs". 
+
+```{r}
+# Folder <- file.path("course", "05_GatingSets", "data") # For Testing
+
+ Folder <- file.path("data") # For Quarto Rendering
+
+fcs_files <- list.files(Folder, pattern=".fcs", full.names=TRUE)
+
+fcs_files
+```
+
+We then identified an individual .fcs file of interest using the [] method of indexing. 
+
+```{r}
+fcs_files[1]
+```
+
+Then, after making sure flowCore was attached to our local environment (via the `library()` function), we could use `read.FCS()` to read in our .fcs files contents to R. 
+
+
+```{r}
+# BiocManager::install("flowCore") #Bioconductor
+library(flowCore)
+```
+
+```{r}
+flowFrame <- read.FCS(filename=fcs_files[1], truncate_max_range = FALSE, transformation = FALSE)
+flowFrame
+```
+
+As we start to think about the wider infrastructural handling of our .fcs files, what would have occurred if we had provided multiple .fcs file paths to `read.FCS()`? Let's go ahead and check by not providing an index number. 
+
+```{r}
+#| error: TRUE
+read.FCS(filename=fcs_files, truncate_max_range = FALSE, transformation = FALSE)
+```
+
+As you can tell, this error message is not particularly interpretable.  It however arises from type of object we are passing to the function, whereby an individual file.path (fcs_files[1]) appears as class "character" with a **single value** (ie. a [scalar](https://nathanieldphillips-yarrr.share.connect.posit.cloud/scalars.html)), but the combined vector (fcs_files) contains **multiple** values.
+
+```{r}
+fcs_files[1]
+
+str(fcs_files[1])
+```
+
+
+```{r}
+fcs_files
+
+str(fcs_files)
+```
+
+
+## flowSet
+
+Consequently, we will need to use another function if we want to read in multiple .fcs files at once. For `flowCore`, this function is the `read.flowSet()` function. 
+
+```{r}
+flowSet <- read.flowSet(files=fcs_files, truncate_max_range = FALSE, transformation = FALSE)
+flowSet
+```
+
+Alternatively, we can designate specific files within "fcs_files" we want to read in using the [] and c() notation style we have encountered previously. 
+
+```{r}
+read.flowSet(files=fcs_files[c(1, 3:4)], truncate_max_range = FALSE, transformation = FALSE)
+```
+
+On follow-up, we can see that `read.flowSet()` has created a "flowSet" class object. 
+
+```{r}
+class(flowSet)
+```
+
+Which we can also confirm by glancing at the right secondary sidebar to see the created Variables within our environment. Applying our investigatory skills from [Week 3](/course/03_InsideFCSFile/index.qmd), we surmise that "flowSet" is another Bioconductor style S4-type object that within its frame slot contains individual "flowFrames".
+
+![](images/00_FlowSet.png)
+
+If instead of `class()` we had used `str()`, we would have seen a similar output ton what we see in the Variables panel. 
+
+```{r}
+str(flowSet)
+```
+
+<br>
+
+---
+
+:::{.callout-tip title="Reminder"}
+While not today's focus, remember we could access individual components inside the flowSet using the @ accessors covered during [Week 3](/course/03_InsideFCSFile/index.qmd)
+:::
+
+<br>
+
+---
+
+## Memory Usage
+
+Both "flowFrame" and "flowSet" objects were implemented in the `flowCore` package, which is the [oldest](/course/03_InsideFCSFile/#flowcore) extant flow cytometry R package on [Bioconductor](https://www.bioconductor.org/packages/release/bioc/html/flowCore.html). Consequently, a large proportion of the other flow cytometry R packages read in .fcs files as "flowFrame" and "flowSet" objects. 
+
+One consideration of this method is the contents of your .fcs files are read into your computer's random access memory [(RAM)](https://en.wikipedia.org/wiki/Random-access_memory). While for individual .fcs files or small experiments this present a problem for most modern computers, when working with large spectral flow cytometry files containing millions of events (or trying to analyze many .fcs files at once), you may encounter situations where you can quickly exceed your computers available RAM. 
+
+To build some contextual understanding of the problem, let's learn how to check how much memory is being used by our individual variables/objects within our R session. We will primarily use the `lobstr` R packages `obj_size()` function, as it better handles evaluating complicated objects than base R's `object.size()` function. 
+
+We can check and see the memory usage by our flowFrame object
+
+```{r}
+# Base R
+object.size(flowFrame)
+
+# install.packages("lobstr") # CRAN
+library(lobstr)
+obj_size(flowFrame)
+```
+
+And contrast to the greater ammount of space occupied by our flowSet object (which contains multiple flowFrames)
+
+```{r}
+obj_size(flowSet)
+```
+
+If we were curious how much memory total we are using within R at the current moment, we can check using the `mem_used()` function:
+
+```{r}
+mem_used()
+```
+
+Ultimately, how many .fcs files you are able to read in and interact with before running out of available RAM memory space will be dictated by your individual computers hardware configuration. You can check programmatically how much RAM you have available, although the specific function you will need to use will depend on your computer's operating system. 
+
+To simplify the process, here is an additional example of where a [conditional](/course/02_FilePaths/index.qmd#conditionals) can prove useful, allowing us to check in an operating system specific manner.  It takes the output of the `Sys.info()` function, namely the "sysname" argument and then retrieves the relavent function. 
+
+```{r}
+
+OperatingSystem <- Sys.info()[["sysname"]]
+
+if (OperatingSystem == "Windows") { # Windows
+    memory.limit()
+
+  } else if (OperatingSystem == "Darwin") { # MacOS
+    system("top -l 1 | grep PhysMem")
+
+  } else if (OperatingSystem == "Linux") { # Linux
+    system("free -h")
+
+  } else {message("A wild FreeBSD-User appears")}
+```
+
+When evaluating the returned outputs, primarily consider the total, used and free outputs. 
+
+
+## cytoframe
+
+In addition to the `flowCore` R package, additional flow cytometry infrastructure support is provided by the `flowWorkspace` package. Instead of the reading all the .fcs files contents into active RAM, `flowWorkspace` reduces the memory overhead by using ["pointers"](https://www.geeksforgeeks.org/c/c-pointers/) to interact with the object in it's current storage location (either on your harddrive, SSD, etc.), only reading in components to RAM as needed. 
+
+```{r}
+# BiocManager::install("flowWorkspace") #Bioconductor
+library(flowWorkspace)
+```
+
+Because of these differences in how data is interracted with, we end up with parallel equivalents to the traditional flowFrame and flowSet type objects. These include "cytoframe" for single .fcs files
+
+
+```{r}
+cytoframe <- load_cytoframe_from_fcs(fcs_files[1], truncate_max_range = FALSE, transformation = FALSE)
+
+cytoframe
+```
+
+```{r}
+class(cytoframe)
+```
+
+Which also still errors out when not given a scalar object
+
+```{r}
+#| error: TRUE
+
+load_cytoframe_from_fcs(fcs_files, truncate_max_range = FALSE, transformation = FALSE)
+```
+
+## cytoset
+
+As well as "cytoset" to handle multiple .fcs files. 
+
+```{r}
+cytoset <- load_cytoset_from_fcs(fcs_files, truncate_max_range = FALSE, transformation = FALSE)
+
+cytoset
+```
+
+```{r}
+class(cytoset)
+```
+
+Unlike "flowFrame" and "flowSet", when we run `str()`, for "cytoframe" and "cytoset" objects we don't get back quite as much information.
+
+```{r}
+str(cytoframe)
+```
+
+```{r}
+str(cytoset)
+```
+
+This is similarly the case when glancing at the right secondary side bar, as the respective objects under variables appear to have empty matrices where normally we would have seen the MFI values. 
+
+![](images/01_LookMaNoData.png)
+
+Due to `flowWorkspace` use of pointers, the missing data remains stored on the drive, only being retrieved right before it is required. This reduces the overall RAM utilization. Let's double check the differences in memory utilization for flowFrame/cytoframe: 
+
+```{r}
+obj_size(flowFrame)
+```
+
+```{r}
+obj_size(cytoframe)
+```
+
+And similarly the case for flowSet and cytoset:
+
+```{r}
+obj_size(flowSet)
+```
+
+```{r}
+obj_size(cytoset)
+```
+
+Additionally, with computer hardware increasingly switching from spinning disk hard-drives to faster [solid state](https://unihost.com/help/nvme-vs-ssd-vs-hdd-overview-and-comparison/) drives, the performance penalty previously experienced when not running from RAM is not as large of a concern as in previous years.
+
+## Interconverting
+
+Despite both R packages having been around for a while, many [Bioconductor](https://www.bioconductor.org/packages/release/BiocViews.html#___FlowCytometry) and [GitHub](https://github.com/stars/DavidRach/lists/cytometry-r-packages) often only implement methods to handle either flowFrames or cytoframes (although newer R packages are now allowing for both). Consequently, as we move forward in the course, it helps to be aware of which ones we are working with, and have the ability to interconvert between them as needed. 
+
+To go from a flowFrame to a cytoframe, we can use the `flowFrame_to_cytoframe()` function
+
+```{r}
+ConvertedToCytoframe <- flowFrame_to_cytoframe(flowFrame)
+ConvertedToCytoframe
+```
+
+```{r}
+obj_size(ConvertedToCytoframe)
+```
+
+To go from a cytoframe to a flowFrame, we can use the `cytoframe_to_flowFrame()` function
+
+```{r}
+ConvertedToFlowframe <- flowWorkspace::cytoframe_to_flowFrame(cytoframe)
+ConvertedToFlowframe
+```
+
+```{r}
+obj_size(ConvertedToFlowframe)
+```
+
+To go from a flowSet to a cytoSet, we can use the `flowSet_to_cytoset()` funciton
+
+```{r}
+ConvertedToCytoset <- flowSet_to_cytoset(flowSet)
+ConvertedToCytoset
+```
+
+```{r}
+obj_size(ConvertedToCytoset)
+```
+
+To go from a cytoSet to a flowSet, we can use the `cytoset_to_flowSet()` function. 
+
+```{r}
+ConvertedToFlowset <- cytoset_to_flowSet(flowSet)
+ConvertedToFlowset
+```
+
+```{r}
+obj_size(ConvertedToFlowset)
+```
+
+## Gating Sets
+
+Fortunately, regardless of whether we are using flowFrame/flowSet (RAM) and cytoframe/cytoset (memory pointers), both routes end up converging at the next step, where the underlying .fcs files are passed off to the `GatingSet()` function. 
+
+```{r}
+GatingSet1 <- GatingSet(flowSet)
+GatingSet1 
+```
+
+```{r}
+class(GatingSet1)
+```
+
+```{r}
+GatingSet2 <- GatingSet(cytoset)
+GatingSet2
+```
+
+```{r}
+class(GatingSet1)
+```
+
+As we prefaced in the [background](/course/05_GatingSets/index.qmd#background), beyond the .fcs files themselves, we need infrastructural elements with which to interact with the underlying data, which allows us to organize the various files, transform (scale),  compensate (for conventional flow), visualize, derrive statistics, etc. A GatingSet serves as the infrastructural framework that allows us to do this in R. 
+
+If we investigate our current GatingSet objects, we won't see much
+
+![](images/03_GatingSetConvergence.png)
+
+This will change as we start layering on additional elements. However, rather than try to cram everything into a single week, we will explore in greater depth the individual components over the next [three weeks](/Schedule.qmd#applying-transformations-and-compensation). Instead, for the rest of today, we will work backward, by exploring a GatingSet objecct and what it is capable of doing once fully assembled. 
+
+## CytoML
+
+The `CytoML` R package (also maintained by [Mike Jiang](https://github.com/mikejiang)) is a sister package to the `flowWorkspace`. It's main purpose is to permit bringing in existing FlowJo, Diva and Cytobank Workspaces, with all their gates, transformations, etc. into R as fully assembled GatingSet objects. For those who already use one of these commercial softwares, it can be quite useful tool.
+
+Since our goal is to examine a fully assembled GatingSet object, we will be using it today to bring in a  [FlowJo](https://www.flowjo.com/flowjo10/overview) workspace to R. However, since this is a free Cytometry in R course, and not about to have everyone pay for a license for a one-off topic, in the [pre-course Floreada](/course/00_Floreada/index.qmd) walkthrough I documented how to convert a free [Floreada.io](https://floreada.io/) workspae into a FlowJo.wsp that can also be used (please note that as of early 2026, some scaling bugs may be present and require troubleshooting). 
+
+To get started, let's first attach `CytoML` to our local environment via the `library()` call.
+
+```{r}
+# BiocManager::install("CytoML") #Bioconductor
+library(CytoML)
+```
+
+The .wsp files within this week's data where created via [Floreada.io](/course/00_Floreada/index.qmd). The main difference between the two files is one is a copy of the original that was opened within FlowJo, and subsequently swtiched from [logicle](https://pubmed.ncbi.nlm.nih.gov/16604519/) to [bi-exponential](https://docs.flowjo.com/flowjo/graphs-and-gating/gw-transform-overview/gw-transform-benefits/) transformation. 
+
+ 
+We will need to provide the appropiate file path for our desired .wsp file. We can start by identifying which are present using `list.files()`
+
+```{r}
+Folder # Defined Above
+FlowJoWsp <- list.files(path = Folder, pattern = ".wsp", full = TRUE)
+FlowJoWsp
+```
+
+In our case, we will proceed by using `str_detect()` to select the .wsp that contains the pattern "Opened" 
+
+```{r}
+ThisWorkspace <- FlowJoWsp[stringr::str_detect(FlowJoWsp, "Opened")]
+ThisWorkspace
+```
+
+With our single .wsp filepath now identified, we can now proceed to set up the intermediate object using `open_flowjo_xml()` 
+
+```{r}
+ws <- open_flowjo_xml(ThisWorkspace)
+ws
+```
+
+```{r}
+class(ws)
+```
+
+Having set up the intermediate flowjo_workspace object, we can attempt to read in the actual data from the .wsp into a GatingSet using the `flowjo_to_gatingset()` function. 
+
+However, due to how I named the original .fcs files ("GROUPNAME" being individual specimens, "TUBENAME" being either Ctrl or SEB), and downsampled to the same number of cells, we will encounter the following error
+
+```{r}
+#| error: TRUE
+gs <- flowjo_to_gatingset(ws=ws, name=1, path = Folder)
+gs
+```
+
+As with any error, my first move is to check the help documentation. In this case, my initial response is to see if I can identify an argument that will help differentiate between the names for each specimen. 
+
+```{r}
+#| eval: FALSE
+?flowjo_to_gatingset
+```
+
+![](images/CytoMLArguments.png)
+
+In this case, I find that the "additional.keys" argument would likely work for this troubleshooting
+
+![](images/AdditionalKeys.png)
+
+```{r}
+gs <- flowjo_to_gatingset(ws=ws, name=1, path = Folder, additional.keys="GROUPNAME")
+gs
+```
+
+```{r}
+class(gs)
+```
+
+## System Time
+
+Especially when working with CytoML, it is often good to have an idea of how long it will take a particular function to run (to better plan how to use our time while waiting, whether to go grab coffee, etc.). There are a couple ways to do so. 
+
+One, using the `system.time()` function from base R, in which we surround whatever line of code we wish to evaluate in {}
+
+```{r}
+system.time({
+
+flowjo_to_gatingset(ws=ws, name=1, path = Folder, additional.keys="GROUPNAME")
+
+})
+```
+
+Alternatively, if we install the `bench` package, we can use the `mark` function to evaluate how long it takes on average across numerous iterations. 
+
+```{r}
+# install.packages("bench") # CRAN
+library(bench)
+```
+
+```{r}
+mark(
+  Test <- flowjo_to_gatingset(ws=ws, name=1, path = Folder, additional.keys="GROUPNAME"),
+  iterations= 5
+  )
+```
+
+## Gates
+
+Now that we have loaded the contents of the FlowJo/Floreada workspace, we can start exploring the various infrastructural capabilities of a GatingSet object. 
+
+Let's start by evaluating whether the manually-drawn gates I drew survived the journey. To do this, I can generate a visual gating treee using the `plot()` function. 
+
+```{r}
+plot(gs)
+```
+
+We can also retrieve the individual gates and their gaing paths using the `gs_get_pop_paths()` function. 
+
+```{r}
+gs_get_pop_paths(gs)
+```
+
+## Counts
+
+If we wanted to retrieve counts of cells found within the individual gates, we could do so with `gs_pop_get_count_fast()`
+
+```{r}
+Data <- gs_pop_get_count_fast(gs)
+head(Data, 5)
+```
+
+
+## Metadata
+
+Since GatingSets contain multiple .fcs files, we may want to be able to subset them based on metadata for a particular variable. We can check to see current metadata using the `pData()` function. 
+
+```{r}
+pData(gs)
+```
+
+It currently doesn't have much, but we will explore how to change this more over the next few weeks. For now, just know that we could add additional metadata via either a .csv file, or by retrieving additional description keywords from within the .fcs files themselves (as shown below)
+
+```{r}
+AlternateGS <- flowjo_to_gatingset(ws=ws, name=1, path = Folder,
+ additional.keys="GROUPNAME",
+ keywords=c("$DATE", "$CYT", "GROUPNAME"))
+pData(AlternateGS)
+```
+
+## ggcyto
+
+As you can surmise, a lot of the infrastructural style handling done by commercial softwares is being orchestrated/mediated through our GatingSet object. Since it's able to create and retain gating information, how would we go about visualizing the underlying data contained within each? 
+
+Within R, most plots are generated using the `ggplot2` package from the tidyverse (which we will explore [next week](/Schedule.qmd#visualizing-with-ggplot2)), which builds of the ["Grammar of Graphics"](https://vita.had.co.nz/papers/layered-grammar.html) concept, combining [layers](https://friendly.github.io/6135/lectures/ggplot-intro.pdf) together to create the final plots. The Bioconductor `ggcyto` R package extends this concept to enable flow cytometry data contained within a GatingSet to be plotted. 
+
+:::{.callout-important}
+
+As is the case with most free open-source software ([FOSS](https://en.wikipedia.org/wiki/Free_and_open-source_software)), R packages will change over time as their developers add new features, make improvements, or alter internal functions to speed things up. 
+
+:::
+
+
+:::{.callout-important}
+
+ggplot2 recently had a major [version](/course/01_InstallingRPackages/index.qmd#installing-specific-package-versions) change, with [significant](https://tidyverse.org/blog/2025/09/ggplot2-4-0-0/) internal changes occuring. As a consequence of these changes, `ggcyto` functions that relied on the old `ggplot2` functions [broke](https://github.com/RGLab/ggcyto/pull/103) and had to be [updated](https://github.com/RGLab/ggcyto/pull/110). 
+
+:::
+
+:::{.callout-important}
+
+Any updates to CRAN packages are reflected immediately. By contrast, Bioconductor is on a twice yearly [release cycle](https://www.bioconductor.org/developers/release-schedule/), so to take advantage of the `ggcyto` "fixes" that allow it to interact with the new version of `ggplot2`, we will need to make sure we have the "developmental" version installed. 
+
+:::
+
+### packageVersion
+
+Let's start off by checking what version of both the `ggplot2` and `ggcyto` packages you currently have installed on your computer. 
+
+```{r}
+packageVersion("ggplot2")
+```
+
+```{r}
+packageVersion("ggcyto")
+```
+
+If you were able to retrieve the following package versions (or greater") for `ggplot2` and `ggcyto`, you should be all set and can skip the subsequent reinstallation steps. 
+
+![](images/20_PackageVersion.png)
+
+If you however found you have the older package versions (ex. ggplot2 3.5.2 or ggcyto 1.37.1) currently installed, you will likely encounter errors when trying to run the functions to plot your data below (since the changes are not fully [backward-compatible](https://en.wikipedia.org/wiki/Backward_compatibility) with older versions).
+
+
+### remove.packages
+
+Since `ggcyto` has a hard-coded dependency on ggplot2, if you have the older versions, I would recommend uninstaling both first, using the `remove.packages()` function. 
+
+```{r}
+#| eval: FALSE
+remove.packages("ggplot2")
+remove.packages("ggcyto")
+```
+
+Once this is done, I recommend exiting and then reopening Positron. This will ensure all currently-loaded R packages are unattached from the environment. However, you will loose all your environmental variables, so will need to reload them to get back to this point. If you are working with code chunks inside a Quarto Markdown File (.qmd), you can quickly accomplish this by scrolling down to the point of the document where you left off, and selecting the "Run Above" option showin on the code chunk. 
+
+![](images/RunAbove.png)
+
+### Installing correct versions
+
+To reinstall `ggplot2`, you just need to install again from CRAN (as with it's [rolling-release](https://cran.r-project.org/web/packages/policies.html) model any changes the developers make become immediately available to everyone)
+
+```{r}
+#| eval: FALSE
+install.packages("ggplot2")
+```
+
+If you need to reinstall `ggcyto`, because of Bioconductor's twice yearly [release cycle](https://www.bioconductor.org/developers/release-schedule/), you will need to install the "developmental" version to take advantage of the fixes. Since this is for a one-off package, the easiest installation approach if to go via the [GitHub](/course/01_InstallingRPackages/index.qmd#install-from-github) using the `remotes` package's `install_github()`
+
+```{r}
+#| eval: FALSE
+remotes::install_github("RGLab/ggcyto")
+```
+
+## Plotting
+
+Once you have the current versions of both `ggplot2` and `ggcyto`, we can proceed to attach them to your local environment via the `library()` function. 
+
+```{r}
+library(ggplot2)
+library(ggcyto)
+```
+
+As was mentioned, `ggcyto` follows the `ggplot2` grammar of graphics syntax, which we will learn more extensively [next week](/Schedule.qmd#visualizing-with-ggplot2). For now, lets look at a simple example
+
+```{r}
+#| eval: FALSE
+ggcyto(gs[1], subset="root", aes(x="FSC-A", y="SSC-A")) + geom_hex(bins=100) 
+```
+
+The function responsible for plotting is the `ggcyto()` function. The first argument ("gs[1]") is designating which .fcs file in our GatingSet we are trying to visualize. 
+
+The second argument ("subset") corresponds to which gating node we want to visualize. In this case, when set to "root", we are seeing all cells present in the .fcs file. If we however wanted to visualize the cells within the CD4+ gate, we would swap the value provided to this argument. 
+
+```{r}
+#| eval: FALSE
+ggcyto(gs[1], subset="CD4+", aes(x="FSC-A", y="SSC-A")) + geom_hex(bins=100) 
+```
+
+The next argument "aes" stands for aesthetics (more on this [next week](/Schedule.qmd#visualizing-with-ggplot2)). You will notice it has its own set of parenthesis, in which we designate the markers/fluorophores we want to visualize on the x and y axis.
+
+The final argument ("+ geom_hex(bins=100)") specifies we want to generate a flow cytometry style plot, with it's bin arguments value setting the resolution. 
+
+Now that we have walked through the arguments, let's visualize the data
+
+```{r}
+#| eval: TRUE
+ggcyto(gs[1], subset="CD4+", aes(x="FSC-A", y="SSC-A")) + geom_hex(bins=100) 
+```
+
+Alternatively, if we switched things around
+
+```{r}
+ggcyto(gs[1], subset="CD8+", aes(x="IFNg", y="TNFa")) + geom_hex(bins=100) 
+```
+
+Briefly, if we didn't remember the marker, we could specify the fluorophore
+
+```{r}
+ggcyto(gs[1], subset="CD8+", aes(x="BV750-A", y="PE-Dazzle594-A")) + geom_hex(bins=100) 
+```
+
+```{r}
+ggcyto(gs[6], subset="Tcells", aes(x="CD4", y="CD8")) + geom_hex(bins=100)
+```
+
+This is all we will cover for `ggcyto` for now, we will circle back over the [next couple weeks](/Schedule.qmd#applying-transformations-and-compensation) as we gain more familiarity with how to build our own GatingSet objects. If you want to jump ahead, please see the additional resources section and happy exploring!
+
+# Take Away
+
+Today, we looked at the two main representations of flow cytometry data in R, the older `flowCore` implemented flowFrame/flowSet objects that are stored in RAM, and the `flowWorkspace` cytoFrame/cytoSet objects that operate through memory pointers. We started our learning journey to understand GatingSet objects, and how to use them to mediate/orchestrate in R many of the infrastructural steps that would normally be performed by commercial software. And finally, we briefly covered how to use the `ggcyto` to visualize data contained within our GatingSets. 
+
+Similar to our utilization of [tidyverse](/course/04_IntroToTidyverse/) functions last week, we will be using GatingSets continously throughout the rest of the course. Over the next few weeks we will instead of retrieving already assembled GatingSets via `CytoML` assemble them from scratch within R. 
+
+Next week, we will dive further into the `ggplot2` package from the tidyverse and how it implements the ["Grammar of Graphics"](https://vita.had.co.nz/papers/layered-grammar.html) concept. In the process, we will see how by combining [layers](https://friendly.github.io/6135/lectures/ggplot-intro.pdf) and changing various elements being added on to the base layers of the plot, we can end up with many different plots we normally encounter as cytometrist. 
+
+![](images/SunsetSatzi.jpg)
+
+# Additional Resources
+
+[flowWorkspace Bioconductor Vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/flowWorkspace/inst/doc/flowWorkspace-Introduction.html) The Bioconductor vignettes are always a good place to start with any of the Cytoverse packages, the vignette for `flowWorkspace` is no exception. If you want to understand more about how to subset cytosets, or the various functions and arguments in a GatingSet, this should be your first stop. 
+
+[CytoML Bioconductor Vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/CytoML/inst/doc/flowjo_to_gatingset.html) If you use FlowJo, Diva, or CytoBank routinely, and want to understand more about how to bring in your own experiments to R, the `CytoML` vignettes should be your next stop. 
+
+[ggcyto Bioconductor Vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/ggcyto/inst/doc/Top_features_of_ggcyto.html). There are several vignettes that can be found on the `ggcyto` Bioconductor [website](https://www.bioconductor.org/packages/release/bioc/html/ggcyto.html) on how to plot your flow cytometry data, this one surmize many of the points we will be covering over the next few weeks.
+
+[Bioc2023 Workshop: Reproducible and programmatic analysis of flow cytometry experiments with the cytoverse](https://youtu.be/_8x-prIxJgw?si=MhVVUJJdYEDI4JzV) Ozette hosted a workshop covering many of the cytoverse R packages at the Bioconductor conference (BioC) back in 2023. Some of the contents we will cover in greater depth over the next few weeks. 
+
+# Take-home Problems
+
+:::{.callout-tip title="Problem 1"}
+
+Using what you learned last week in [Introduction to Tidyverse](/course/04_IntroToTidyverse/), for the imported GatingSet, retrieve the data.frame from cell counts per gate and attempt  to mutate a new column showing percent of the parent gate. Remember, this is intentionally tricky at this point, we will go over how to efficiently do this in a [few weeks](/Schedule.qmd#retrieving-data-for-statistics)
+
+:::
+
+:::{.callout-tip title="Problem 2"}
+
+As we saw, `CytoML` can be finicky when names are repeated, or .fcs files are not present. Try removing a couple of the .fcs files from the data folder, and re-run the code. Document what kind of errors result. 
+
+:::
+
+:::{.callout-tip title="Problem 3"}
+
+For `ggcyto`, attempt to generate plots to visualize TNFa and IFNg for the various cell populations, across both Ctrl and SEB samples. In the process, change the bins argument until you end up with a resolution that you would be happy with for your own plots, and write it down. 
+
+:::
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::

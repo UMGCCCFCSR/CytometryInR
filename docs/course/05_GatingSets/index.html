@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="David Rach">
+<meta name="dcterms.date" content="2026-03-01">
+
+<title>05 - Gating Sets – Cytometry in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../Schedule.html" rel="next">
+<link href="../../course/04_IntroToTidyverse/index.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-8eaec6b9941db0f18eecf13b95a46332.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../images/hex.svg" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Cytometry in R</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../Schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../course/index.html"> 
+<span class="menu-text">Course</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/UMGCCCFCSR/CytometryInR/discussions"> 
+<span class="menu-text">Discussions</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@CytometryInR"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/UMGCCCFCSR/CytometryInR"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../course/01_InstallingRPackages/index.html">Intro to R</a></li><li class="breadcrumb-item"><a href="../../course/05_GatingSets/index.html">05 - Gating Sets</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+  <div id="quarto-announcement" data-announcement-id="517fd7fd2923fd64fe81c4cc75c6fa55" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
+</div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Getting Started</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/00_GitHub/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - GitHub</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/00_WorkstationSetup/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Workstation Setup</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/00_Positron/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Positron</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/00_Git/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/00_Quarto/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Quarto</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/00_Homeworks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Getting Help</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/00_Floreada/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Floreada</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="../../course/01_InstallingRPackages/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Intro to R</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/01_InstallingRPackages/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">01 - Installing R Packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/02_FilePaths/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">02 - File Paths</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/03_InsideFCSFile/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">03 - Inside a .FCS file</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/04_IntroToTidyverse/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">04 - Intro to Tidyverse</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/05_GatingSets/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">05 - Gating Sets</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Cytometry Core</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Beyond the Sandbox</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">The World is your Oyster</span></span>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a></li>
+  <li><a href="#walk-through" id="toc-walk-through" class="nav-link" data-scroll-target="#walk-through">Walk Through</a>
+  <ul>
+  <li><a href="#flowframe" id="toc-flowframe" class="nav-link" data-scroll-target="#flowframe">flowFrame</a></li>
+  <li><a href="#flowset" id="toc-flowset" class="nav-link" data-scroll-target="#flowset">flowSet</a></li>
+  <li><a href="#memory-usage" id="toc-memory-usage" class="nav-link" data-scroll-target="#memory-usage">Memory Usage</a></li>
+  <li><a href="#cytoframe" id="toc-cytoframe" class="nav-link" data-scroll-target="#cytoframe">cytoframe</a></li>
+  <li><a href="#cytoset" id="toc-cytoset" class="nav-link" data-scroll-target="#cytoset">cytoset</a></li>
+  <li><a href="#interconverting" id="toc-interconverting" class="nav-link" data-scroll-target="#interconverting">Interconverting</a></li>
+  <li><a href="#gating-sets" id="toc-gating-sets" class="nav-link" data-scroll-target="#gating-sets">Gating Sets</a></li>
+  <li><a href="#cytoml" id="toc-cytoml" class="nav-link" data-scroll-target="#cytoml">CytoML</a></li>
+  <li><a href="#system-time" id="toc-system-time" class="nav-link" data-scroll-target="#system-time">System Time</a></li>
+  <li><a href="#gates" id="toc-gates" class="nav-link" data-scroll-target="#gates">Gates</a></li>
+  <li><a href="#counts" id="toc-counts" class="nav-link" data-scroll-target="#counts">Counts</a></li>
+  <li><a href="#metadata" id="toc-metadata" class="nav-link" data-scroll-target="#metadata">Metadata</a></li>
+  <li><a href="#ggcyto" id="toc-ggcyto" class="nav-link" data-scroll-target="#ggcyto">ggcyto</a>
+  <ul>
+  <li><a href="#packageversion" id="toc-packageversion" class="nav-link" data-scroll-target="#packageversion">packageVersion</a></li>
+  <li><a href="#remove.packages" id="toc-remove.packages" class="nav-link" data-scroll-target="#remove.packages">remove.packages</a></li>
+  <li><a href="#installing-correct-versions" id="toc-installing-correct-versions" class="nav-link" data-scroll-target="#installing-correct-versions">Installing correct versions</a></li>
+  </ul></li>
+  <li><a href="#plotting" id="toc-plotting" class="nav-link" data-scroll-target="#plotting">Plotting</a></li>
+  </ul></li>
+  <li><a href="#take-away" id="toc-take-away" class="nav-link" data-scroll-target="#take-away">Take Away</a></li>
+  <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources">Additional Resources</a></li>
+  <li><a href="#take-home-problems" id="toc-take-home-problems" class="nav-link" data-scroll-target="#take-home-problems">Take-home Problems</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../course/01_InstallingRPackages/index.html">Intro to R</a></li><li class="breadcrumb-item"><a href="../../course/05_GatingSets/index.html">05 - Gating Sets</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">05 - Gating Sets</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>David Rach </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 1, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><img src="../../images/WebsiteBanner.png" class="img-fluid"></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://img.shields.io/badge/license-AGPLv3-blue.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
+</div>
+<p>For the YouTube livestream schedule, see <a href="https://www.youtube.com/@cytometryinr">here</a></p>
+<p>For screen-shot slides, click <a href="">here</a></p>
+<p><br></p>
+<hr>
+<section id="background" class="level1">
+<h1>Background</h1>
+<p>Welcome to the fifth week of the Cytometry in R course!!! At this point, we are through a significant portion of the “Intro to R” material, and will start encountering more “Cytometry-focused” material moving forward.</p>
+<p>If we think of a typical flow cytometry experiment, there is more to the analysis than simply acquiring the .fcs file. While there is <a href="../../course/03_InsideFCSFile/">substantial information</a> present within an .fcs file, in the context of analyzing them with commercial software, we rely on additional infrastructural elements to organize the various files, transform (scale), compensate (for conventional flow), visualize, derrive statistics, etc.</p>
+<p>This infrastructural requirement within the R context is primarily handled by the <code>flowCore</code> and <code>flowWorkspace</code> R packages from <a href="https://www.bioconductor.org/">Bioconductor</a>. Today, we will build on what we learned during <a href="../../course/03_InsideFCSFile/index.html">Week 03</a> but in the context of working and interacting with multiple .fcs files. This will provide a solid foundation to explore in greater depth how individual components of our typical workflow are represented within the R context.</p>
+</section>
+<section id="walk-through" class="level1">
+<h1>Walk Through</h1>
+<div class="callout callout-style-default callout-important callout-titled" title="Housekeeping">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Housekeeping
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>As we do <a href="../../course/02_FilePaths/index.html">every week</a>, on GitHub, <a href="../../course/00_Homeworks/index.html#sync-your-fork">sync</a> your forked version of the CytometryInR course to bring in the most recent updates. Then within Positron, <a href="../../course/00_Homeworks/index.html#pull-to-local">pull</a> in those changes to your local computer.</p>
+<p>After <a href="../../course/00_Git/index.html#new-folder-from-template">setting up</a> a “Week05” project folder, copy over the contents of “course/05_GatingSets/data” to that folder. This will hopefully prevent merge issues next week when attempting to pull in new course material. Once you have your new project folder organized, remember to <a href="../../course/00_Git/index.html#push">commit</a> and push your changes to GitHub to maintain remote version control.</p>
+<p>If you encounter issues syncing due to the Take-Home Problem merge conflict, see this <a href="https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/">walkthrough</a>. The updated homework submission protocol can be found <a href="https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/UpdatedPullRequest">here</a></p>
+</div>
+</div>
+<p><br></p>
+<hr>
+<section id="flowframe" class="level2">
+<h2 class="anchored" data-anchor-id="flowframe">flowFrame</h2>
+<p>Let’s start off by recalling the approach we first saw during <a href="../../course/03_InsideFCSFile/index.html">Week 03</a>, where using the <code>flowCore</code> package we loaded the contents of our .fcs file into R as a “flowFrame” object.</p>
+<p>To do this, we first identified the .fcs files we were interested using <code>file.path()</code> to specify the folder, and <code>list.files()</code> to find contents containing “.fcs”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Folder &lt;- file.path("course", "05_GatingSets", "data") # For Testing</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a> Folder <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co"># For Quarto Rendering</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(Folder, <span class="at">pattern=</span><span class="st">".fcs"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>fcs_files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data/2025_07_26_AB_02_INF052_00_Ctrl.fcs"
+[2] "data/2025_07_26_AB_02_INF052_00_SEB.fcs" 
+[3] "data/2025_07_26_AB_02_INF100_00_Ctrl.fcs"
+[4] "data/2025_07_26_AB_02_INF100_00_SEB.fcs" 
+[5] "data/2025_07_26_AB_02_INF179_00_Ctrl.fcs"
+[6] "data/2025_07_26_AB_02_INF179_00_SEB.fcs" </code></pre>
+</div>
+</div>
+<p>We then identified an individual .fcs file of interest using the [] method of indexing.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fcs_files[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data/2025_07_26_AB_02_INF052_00_Ctrl.fcs"</code></pre>
+</div>
+</div>
+<p>Then, after making sure flowCore was attached to our local environment (via the <code>library()</code> function), we could use <code>read.FCS()</code> to read in our .fcs files contents to R.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BiocManager::install("flowCore") #Bioconductor</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowCore)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>flowFrame <span class="ot">&lt;-</span> <span class="fu">read.FCS</span>(<span class="at">filename=</span>fcs_files[<span class="dv">1</span>], <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>flowFrame</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>flowFrame object '2025_07_26_AB_02_INF052_00_Ctrl.fcs'
+with 10000 cells and 43 observables:
+               name      desc     range  minRange    maxRange
+$P1            Time        NA    896745         0     878.809
+$P2           SSC-W        NA   4194304         0 4194303.000
+$P3           SSC-H        NA   4194304         0 4194303.000
+$P4           SSC-A        NA   4194304         0 4194303.000
+$P5           FSC-W        NA   4194304         0 4194303.000
+...             ...       ...       ...       ...         ...
+$P39     APC-R700-A    CD107a   4194304      -111     4192506
+$P40   Zombie NIR-A Viability   4194304      -111     4192506
+$P41 APC-Fire 750-A      CD27   4194304      -111     4192506
+$P42 APC-Fire 810-A      CCR7   4194304      -111     4192506
+$P43           AF-A        NA   4194304      -111     4194303
+472 keywords are stored in the 'description' slot</code></pre>
+</div>
+</div>
+<p>As we start to think about the wider infrastructural handling of our .fcs files, what would have occurred if we had provided multiple .fcs file paths to <code>read.FCS()</code>? Let’s go ahead and check by not providing an index number.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read.FCS</span>(<span class="at">filename=</span>fcs_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `read.FCS()`:
+! 'filename' must be character scalar</code></pre>
+</div>
+</div>
+<p>As you can tell, this error message is not particularly interpretable. It however arises from type of object we are passing to the function, whereby an individual file.path (fcs_files[1]) appears as class “character” with a <strong>single value</strong> (ie. a <a href="https://nathanieldphillips-yarrr.share.connect.posit.cloud/scalars.html">scalar</a>), but the combined vector (fcs_files) contains <strong>multiple</strong> values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fcs_files[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data/2025_07_26_AB_02_INF052_00_Ctrl.fcs"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(fcs_files[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> chr "data/2025_07_26_AB_02_INF052_00_Ctrl.fcs"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>fcs_files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data/2025_07_26_AB_02_INF052_00_Ctrl.fcs"
+[2] "data/2025_07_26_AB_02_INF052_00_SEB.fcs" 
+[3] "data/2025_07_26_AB_02_INF100_00_Ctrl.fcs"
+[4] "data/2025_07_26_AB_02_INF100_00_SEB.fcs" 
+[5] "data/2025_07_26_AB_02_INF179_00_Ctrl.fcs"
+[6] "data/2025_07_26_AB_02_INF179_00_SEB.fcs" </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(fcs_files)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> chr [1:6] "data/2025_07_26_AB_02_INF052_00_Ctrl.fcs" ...</code></pre>
+</div>
+</div>
+</section>
+<section id="flowset" class="level2">
+<h2 class="anchored" data-anchor-id="flowset">flowSet</h2>
+<p>Consequently, we will need to use another function if we want to read in multiple .fcs files at once. For <code>flowCore</code>, this function is the <code>read.flowSet()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>flowSet <span class="ot">&lt;-</span> <span class="fu">read.flowSet</span>(<span class="at">files=</span>fcs_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>flowSet</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A flowSet with 6 experiments.
+
+column names(43): Time SSC-W ... APC-Fire 810-A AF-A</code></pre>
+</div>
+</div>
+<p>Alternatively, we can designate specific files within “fcs_files” we want to read in using the [] and c() notation style we have encountered previously.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">read.flowSet</span>(<span class="at">files=</span>fcs_files[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>)], <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A flowSet with 3 experiments.
+
+column names(43): Time SSC-W ... APC-Fire 810-A AF-A</code></pre>
+</div>
+</div>
+<p>On follow-up, we can see that <code>read.flowSet()</code> has created a “flowSet” class object.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(flowSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "flowSet"
+attr(,"package")
+[1] "flowCore"</code></pre>
+</div>
+</div>
+<p>Which we can also confirm by glancing at the right secondary sidebar to see the created Variables within our environment. Applying our investigatory skills from <a href="../../course/03_InsideFCSFile/index.html">Week 3</a>, we surmise that “flowSet” is another Bioconductor style S4-type object that within its frame slot contains individual “flowFrames”.</p>
+<p><img src="images/00_FlowSet.png" class="img-fluid"></p>
+<p>If instead of <code>class()</code> we had used <code>str()</code>, we would have seen a similar output ton what we see in the Variables panel.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(flowSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Formal class 'flowSet' [package "flowCore"] with 2 slots
+  ..@ frames   :&lt;environment: 0x55d40ab8dbe8&gt; 
+  ..@ phenoData:Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
+  .. .. ..@ varMetadata      :'data.frame': 1 obs. of  1 variable:
+  .. .. .. ..$ labelDescription: chr "Name"
+  .. .. ..@ data             :'data.frame': 6 obs. of  1 variable:
+  .. .. .. ..$ name: 'AsIs' chr [1:6] "2025_07_26_AB_02_INF052_00_Ctrl.fcs" "2025_07_26_AB_02_INF052_00_SEB.fcs" "2025_07_26_AB_02_INF100_00_Ctrl.fcs" "2025_07_26_AB_02_INF100_00_SEB.fcs" ...
+  .. .. ..@ dimLabels        : chr [1:2] "rowNames" "columnNames"
+  .. .. ..@ .__classVersion__:Formal class 'Versions' [package "Biobase"] with 1 slot
+  .. .. .. .. ..@ .Data:List of 1
+  .. .. .. .. .. ..$ : int [1:3] 1 1 0
+  .. .. .. .. ..$ names: chr "AnnotatedDataFrame"</code></pre>
+</div>
+</div>
+<p><br></p>
+<hr>
+<div class="callout callout-style-default callout-tip callout-titled" title="Reminder">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Reminder
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>While not today’s focus, remember we could access individual components inside the flowSet using the @ accessors covered during <a href="../../course/03_InsideFCSFile/index.html">Week 3</a></p>
+</div>
+</div>
+<p><br></p>
+<hr>
+</section>
+<section id="memory-usage" class="level2">
+<h2 class="anchored" data-anchor-id="memory-usage">Memory Usage</h2>
+<p>Both “flowFrame” and “flowSet” objects were implemented in the <code>flowCore</code> package, which is the <a href="../../course/03_InsideFCSFile/#flowcore">oldest</a> extant flow cytometry R package on <a href="https://www.bioconductor.org/packages/release/bioc/html/flowCore.html">Bioconductor</a>. Consequently, a large proportion of the other flow cytometry R packages read in .fcs files as “flowFrame” and “flowSet” objects.</p>
+<p>One consideration of this method is the contents of your .fcs files are read into your computer’s random access memory <a href="https://en.wikipedia.org/wiki/Random-access_memory">(RAM)</a>. While for individual .fcs files or small experiments this present a problem for most modern computers, when working with large spectral flow cytometry files containing millions of events (or trying to analyze many .fcs files at once), you may encounter situations where you can quickly exceed your computers available RAM.</p>
+<p>To build some contextual understanding of the problem, let’s learn how to check how much memory is being used by our individual variables/objects within our R session. We will primarily use the <code>lobstr</code> R packages <code>obj_size()</code> function, as it better handles evaluating complicated objects than base R’s <code>object.size()</code> function.</p>
+<p>We can check and see the memory usage by our flowFrame object</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Base R</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">object.size</span>(flowFrame)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3570896 bytes</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("lobstr") # CRAN</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lobstr)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">obj_size</span>(flowFrame)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3.53 MB</code></pre>
+</div>
+</div>
+<p>And contrast to the greater ammount of space occupied by our flowSet object (which contains multiple flowFrames)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">obj_size</span>(flowSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>20.99 MB</code></pre>
+</div>
+</div>
+<p>If we were curious how much memory total we are using within R at the current moment, we can check using the <code>mem_used()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mem_used</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>146.98 MB</code></pre>
+</div>
+</div>
+<p>Ultimately, how many .fcs files you are able to read in and interact with before running out of available RAM memory space will be dictated by your individual computers hardware configuration. You can check programmatically how much RAM you have available, although the specific function you will need to use will depend on your computer’s operating system.</p>
+<p>To simplify the process, here is an additional example of where a <a href="../../course/02_FilePaths/index.html#conditionals">conditional</a> can prove useful, allowing us to check in an operating system specific manner. It takes the output of the <code>Sys.info()</code> function, namely the “sysname” argument and then retrieves the relavent function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>OperatingSystem <span class="ot">&lt;-</span> <span class="fu">Sys.info</span>()[[<span class="st">"sysname"</span>]]</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (OperatingSystem <span class="sc">==</span> <span class="st">"Windows"</span>) { <span class="co"># Windows</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">memory.limit</span>()</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (OperatingSystem <span class="sc">==</span> <span class="st">"Darwin"</span>) { <span class="co"># MacOS</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">system</span>(<span class="st">"top -l 1 | grep PhysMem"</span>)</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (OperatingSystem <span class="sc">==</span> <span class="st">"Linux"</span>) { <span class="co"># Linux</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">system</span>(<span class="st">"free -h"</span>)</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {<span class="fu">message</span>(<span class="st">"A wild FreeBSD-User appears"</span>)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>When evaluating the returned outputs, primarily consider the total, used and free outputs.</p>
+</section>
+<section id="cytoframe" class="level2">
+<h2 class="anchored" data-anchor-id="cytoframe">cytoframe</h2>
+<p>In addition to the <code>flowCore</code> R package, additional flow cytometry infrastructure support is provided by the <code>flowWorkspace</code> package. Instead of the reading all the .fcs files contents into active RAM, <code>flowWorkspace</code> reduces the memory overhead by using <a href="https://www.geeksforgeeks.org/c/c-pointers/">“pointers”</a> to interact with the object in it’s current storage location (either on your harddrive, SSD, etc.), only reading in components to RAM as needed.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BiocManager::install("flowWorkspace") #Bioconductor</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowWorkspace)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>As part of improvements to flowWorkspace, some behavior of
+GatingSet objects has changed. For details, please read the section
+titled "The cytoframe and cytoset classes" in the package vignette:
+
+  vignette("flowWorkspace-Introduction", "flowWorkspace")</code></pre>
+</div>
+</div>
+<p>Because of these differences in how data is interracted with, we end up with parallel equivalents to the traditional flowFrame and flowSet type objects. These include “cytoframe” for single .fcs files</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>cytoframe <span class="ot">&lt;-</span> <span class="fu">load_cytoframe_from_fcs</span>(fcs_files[<span class="dv">1</span>], <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>cytoframe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>cytoframe object '2025_07_26_AB_02_INF052_00_Ctrl.fcs'
+with 10000 cells and 43 observables:
+               name      desc       range  minRange    maxRange
+$P1            Time        NA     878.809         0     878.809
+$P2           SSC-W        NA 4194303.000         0 4194303.000
+$P3           SSC-H        NA 4194303.000         0 4194303.000
+$P4           SSC-A        NA 4194303.000         0 4194303.000
+$P5           FSC-W        NA 4194303.000         0 4194303.000
+...             ...       ...         ...       ...         ...
+$P39     APC-R700-A    CD107a     4192506      -111     4192506
+$P40   Zombie NIR-A Viability     4192506      -111     4192506
+$P41 APC-Fire 750-A      CD27     4192506      -111     4192506
+$P42 APC-Fire 810-A      CCR7     4192506      -111     4192506
+$P43           AF-A        NA     4194303      -111     4194303
+472 keywords are stored in the 'description' slot
+row names(0):</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(cytoframe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "cytoframe"
+attr(,"package")
+[1] "flowWorkspace"</code></pre>
+</div>
+</div>
+<p>Which also still errors out when not given a scalar object</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load_cytoframe_from_fcs</span>(fcs_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error:
+! Expected string vector of length 1</code></pre>
+</div>
+</div>
+</section>
+<section id="cytoset" class="level2">
+<h2 class="anchored" data-anchor-id="cytoset">cytoset</h2>
+<p>As well as “cytoset” to handle multiple .fcs files.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>cytoset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A cytoset with 6 samples.
+
+  column names:
+    Time, SSC-W, SSC-H, SSC-A, FSC-W, FSC-H, FSC-A, SSC-B-W, SSC-B-H, SSC-B-A, BUV395-A, BUV563-A, BUV615-A, BUV661-A, BUV737-A, BUV805-A, Pacific Blue-A, BV480-A, BV570-A, BV605-A, BV650-A, BV711-A, BV750-A, BV786-A, Alexa Fluor 488-A, Spark Blue 550-A, Spark Blue 574-A, RB613-A, RB705-A, RB780-A, PE-A, PE-Dazzle594-A, PE-Cy5-A, PE-Fire 700-A, PE-Fire 744-A, PE-Vio770-A, APC-A, Alexa Fluor 647-A, APC-R700-A, Zombie NIR-A, APC-Fire 750-A, APC-Fire 810-A, AF-A</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(cytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "cytoset"
+attr(,"package")
+[1] "flowWorkspace"</code></pre>
+</div>
+</div>
+<p>Unlike “flowFrame” and “flowSet”, when we run <code>str()</code>, for “cytoframe” and “cytoset” objects we don’t get back quite as much information.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(cytoframe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Formal class 'cytoframe' [package "flowWorkspace"] with 5 slots
+  ..@ pointer    :&lt;externalptr&gt; 
+  ..@ use.exprs  : logi TRUE
+  ..@ exprs      : num[0 , 0 ] 
+  ..@ parameters :Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
+  .. .. ..@ varMetadata      :'data.frame': 5 obs. of  1 variable:
+  .. .. .. ..$ labelDescription: chr [1:5] "Name of Parameter" "Description of Parameter" "Range of Parameter" "Minimum Parameter Value after Transformation" ...
+  .. .. ..@ data             :'data.frame': 0 obs. of  5 variables:
+  .. .. .. ..$ name       : chr(0) 
+  .. .. .. ..$ description: chr(0) 
+  .. .. .. ..$ range      : num(0) 
+  .. .. .. ..$ minRange   : num(0) 
+  .. .. .. ..$ maxRange   : num(0) 
+  .. .. ..@ dimLabels        : chr [1:2] "rowNames" "columnNames"
+  .. .. ..@ .__classVersion__:Formal class 'Versions' [package "Biobase"] with 1 slot
+  .. .. .. .. ..@ .Data:List of 1
+  .. .. .. .. .. ..$ : int [1:3] 1 1 0
+  .. .. .. .. ..$ names: chr "AnnotatedDataFrame"
+  ..@ description:List of 1
+  .. ..$ note: chr "empty"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(cytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Formal class 'cytoset' [package "flowWorkspace"] with 3 slots
+  ..@ pointer  :&lt;externalptr&gt; 
+  ..@ frames   :&lt;environment: 0x55d414e7fdf0&gt; 
+  ..@ phenoData:Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
+  .. .. ..@ varMetadata      :'data.frame': 0 obs. of  1 variable:
+  .. .. .. ..$ labelDescription: chr(0) 
+  .. .. ..@ data             :'data.frame': 0 obs. of  0 variables
+  .. .. ..@ dimLabels        : chr [1:2] "rowNames" "columnNames"
+  .. .. ..@ .__classVersion__:Formal class 'Versions' [package "Biobase"] with 1 slot
+  .. .. .. .. ..@ .Data:List of 1
+  .. .. .. .. .. ..$ : int [1:3] 1 1 0
+  .. .. .. .. ..$ names: chr "AnnotatedDataFrame"</code></pre>
+</div>
+</div>
+<p>This is similarly the case when glancing at the right secondary side bar, as the respective objects under variables appear to have empty matrices where normally we would have seen the MFI values.</p>
+<p><img src="images/01_LookMaNoData.png" class="img-fluid"></p>
+<p>Due to <code>flowWorkspace</code> use of pointers, the missing data remains stored on the drive, only being retrieved right before it is required. This reduces the overall RAM utilization. Let’s double check the differences in memory utilization for flowFrame/cytoframe:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">obj_size</span>(flowFrame)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3.53 MB</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">obj_size</span>(cytoframe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>5.40 kB</code></pre>
+</div>
+</div>
+<p>And similarly the case for flowSet and cytoset:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">obj_size</span>(flowSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>20.99 MB</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">obj_size</span>(cytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3.88 kB</code></pre>
+</div>
+</div>
+<p>Additionally, with computer hardware increasingly switching from spinning disk hard-drives to faster <a href="https://unihost.com/help/nvme-vs-ssd-vs-hdd-overview-and-comparison/">solid state</a> drives, the performance penalty previously experienced when not running from RAM is not as large of a concern as in previous years.</p>
+</section>
+<section id="interconverting" class="level2">
+<h2 class="anchored" data-anchor-id="interconverting">Interconverting</h2>
+<p>Despite both R packages having been around for a while, many <a href="https://www.bioconductor.org/packages/release/BiocViews.html#___FlowCytometry">Bioconductor</a> and <a href="https://github.com/stars/DavidRach/lists/cytometry-r-packages">GitHub</a> often only implement methods to handle either flowFrames or cytoframes (although newer R packages are now allowing for both). Consequently, as we move forward in the course, it helps to be aware of which ones we are working with, and have the ability to interconvert between them as needed.</p>
+<p>To go from a flowFrame to a cytoframe, we can use the <code>flowFrame_to_cytoframe()</code> function</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>ConvertedToCytoframe <span class="ot">&lt;-</span> <span class="fu">flowFrame_to_cytoframe</span>(flowFrame)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>ConvertedToCytoframe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>cytoframe object 'file806b23cd6a2e'
+with 10000 cells and 43 observables:
+               name      desc       range  minRange    maxRange
+$P1            Time        NA     878.809         0     878.809
+$P2           SSC-W        NA 4194303.000         0 4194303.000
+$P3           SSC-H        NA 4194303.000         0 4194303.000
+$P4           SSC-A        NA 4194303.000         0 4194303.000
+$P5           FSC-W        NA 4194303.000         0 4194303.000
+...             ...       ...         ...       ...         ...
+$P39     APC-R700-A    CD107a     4192506      -111     4192506
+$P40   Zombie NIR-A Viability     4192506      -111     4192506
+$P41 APC-Fire 750-A      CD27     4192506      -111     4192506
+$P42 APC-Fire 810-A      CCR7     4192506      -111     4192506
+$P43           AF-A        NA     4194303      -111     4194303
+472 keywords are stored in the 'description' slot
+row names(0):</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">obj_size</span>(ConvertedToCytoframe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>5.40 kB</code></pre>
+</div>
+</div>
+<p>To go from a cytoframe to a flowFrame, we can use the <code>cytoframe_to_flowFrame()</code> function</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>ConvertedToFlowframe <span class="ot">&lt;-</span> flowWorkspace<span class="sc">::</span><span class="fu">cytoframe_to_flowFrame</span>(cytoframe)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>ConvertedToFlowframe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>flowFrame object '2025_07_26_AB_02_INF052_00_Ctrl.fcs'
+with 10000 cells and 43 observables:
+               name      desc       range  minRange    maxRange
+$P1            Time        NA     878.809         0     878.809
+$P2           SSC-W        NA 4194303.000         0 4194303.000
+$P3           SSC-H        NA 4194303.000         0 4194303.000
+$P4           SSC-A        NA 4194303.000         0 4194303.000
+$P5           FSC-W        NA 4194303.000         0 4194303.000
+...             ...       ...         ...       ...         ...
+$P39     APC-R700-A    CD107a     4192506      -111     4192506
+$P40   Zombie NIR-A Viability     4192506      -111     4192506
+$P41 APC-Fire 750-A      CD27     4192506      -111     4192506
+$P42 APC-Fire 810-A      CCR7     4192506      -111     4192506
+$P43           AF-A        NA     4194303      -111     4194303
+472 keywords are stored in the 'description' slot</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">obj_size</span>(ConvertedToFlowframe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3.53 MB</code></pre>
+</div>
+</div>
+<p>To go from a flowSet to a cytoSet, we can use the <code>flowSet_to_cytoset()</code> funciton</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>ConvertedToCytoset <span class="ot">&lt;-</span> <span class="fu">flowSet_to_cytoset</span>(flowSet)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>ConvertedToCytoset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A cytoset with 6 samples.
+
+  column names:
+    Time, SSC-W, SSC-H, SSC-A, FSC-W, FSC-H, FSC-A, SSC-B-W, SSC-B-H, SSC-B-A, BUV395-A, BUV563-A, BUV615-A, BUV661-A, BUV737-A, BUV805-A, Pacific Blue-A, BV480-A, BV570-A, BV605-A, BV650-A, BV711-A, BV750-A, BV786-A, Alexa Fluor 488-A, Spark Blue 550-A, Spark Blue 574-A, RB613-A, RB705-A, RB780-A, PE-A, PE-Dazzle594-A, PE-Cy5-A, PE-Fire 700-A, PE-Fire 744-A, PE-Vio770-A, APC-A, Alexa Fluor 647-A, APC-R700-A, Zombie NIR-A, APC-Fire 750-A, APC-Fire 810-A, AF-A</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">obj_size</span>(ConvertedToCytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>3.88 kB</code></pre>
+</div>
+</div>
+<p>To go from a cytoSet to a flowSet, we can use the <code>cytoset_to_flowSet()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>ConvertedToFlowset <span class="ot">&lt;-</span> <span class="fu">cytoset_to_flowSet</span>(flowSet)</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>ConvertedToFlowset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A flowSet with 6 experiments.
+
+column names(43): Time SSC-W ... APC-Fire 810-A AF-A</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">obj_size</span>(ConvertedToFlowset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>20.99 MB</code></pre>
+</div>
+</div>
+</section>
+<section id="gating-sets" class="level2">
+<h2 class="anchored" data-anchor-id="gating-sets">Gating Sets</h2>
+<p>Fortunately, regardless of whether we are using flowFrame/flowSet (RAM) and cytoframe/cytoset (memory pointers), both routes end up converging at the next step, where the underlying .fcs files are passed off to the <code>GatingSet()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>GatingSet1 <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(flowSet)</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>GatingSet1 </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(GatingSet1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "GatingSet"
+attr(,"package")
+[1] "flowWorkspace"</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>GatingSet2 <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(cytoset)</span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>GatingSet2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(GatingSet1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "GatingSet"
+attr(,"package")
+[1] "flowWorkspace"</code></pre>
+</div>
+</div>
+<p>As we prefaced in the <a href="../../course/05_GatingSets/index.html#background">background</a>, beyond the .fcs files themselves, we need infrastructural elements with which to interact with the underlying data, which allows us to organize the various files, transform (scale), compensate (for conventional flow), visualize, derrive statistics, etc. A GatingSet serves as the infrastructural framework that allows us to do this in R.</p>
+<p>If we investigate our current GatingSet objects, we won’t see much</p>
+<p><img src="images/03_GatingSetConvergence.png" class="img-fluid"></p>
+<p>This will change as we start layering on additional elements. However, rather than try to cram everything into a single week, we will explore in greater depth the individual components over the next <a href="../../Schedule.html#applying-transformations-and-compensation">three weeks</a>. Instead, for the rest of today, we will work backward, by exploring a GatingSet objecct and what it is capable of doing once fully assembled.</p>
+</section>
+<section id="cytoml" class="level2">
+<h2 class="anchored" data-anchor-id="cytoml">CytoML</h2>
+<p>The <code>CytoML</code> R package (also maintained by <a href="https://github.com/mikejiang">Mike Jiang</a>) is a sister package to the <code>flowWorkspace</code>. It’s main purpose is to permit bringing in existing FlowJo, Diva and Cytobank Workspaces, with all their gates, transformations, etc. into R as fully assembled GatingSet objects. For those who already use one of these commercial softwares, it can be quite useful tool.</p>
+<p>Since our goal is to examine a fully assembled GatingSet object, we will be using it today to bring in a <a href="https://www.flowjo.com/flowjo10/overview">FlowJo</a> workspace to R. However, since this is a free Cytometry in R course, and not about to have everyone pay for a license for a one-off topic, in the <a href="../../course/00_Floreada/index.html">pre-course Floreada</a> walkthrough I documented how to convert a free <a href="https://floreada.io/">Floreada.io</a> workspae into a FlowJo.wsp that can also be used (please note that as of early 2026, some scaling bugs may be present and require troubleshooting).</p>
+<p>To get started, let’s first attach <code>CytoML</code> to our local environment via the <code>library()</code> call.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BiocManager::install("CytoML") #Bioconductor</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(CytoML)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The .wsp files within this week’s data where created via <a href="../../course/00_Floreada/index.html">Floreada.io</a>. The main difference between the two files is one is a copy of the original that was opened within FlowJo, and subsequently swtiched from <a href="https://pubmed.ncbi.nlm.nih.gov/16604519/">logicle</a> to <a href="https://docs.flowjo.com/flowjo/graphs-and-gating/gw-transform-overview/gw-transform-benefits/">bi-exponential</a> transformation.</p>
+<p>We will need to provide the appropiate file path for our desired .wsp file. We can start by identifying which are present using <code>list.files()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>Folder <span class="co"># Defined Above</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>FlowJoWsp <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> Folder, <span class="at">pattern =</span> <span class="st">".wsp"</span>, <span class="at">full =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>FlowJoWsp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data/FlowJoWSP_OpenedCopy.wsp" "data/FlowJoWSP_Unopened.wsp"  </code></pre>
+</div>
+</div>
+<p>In our case, we will proceed by using <code>str_detect()</code> to select the .wsp that contains the pattern “Opened”</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>ThisWorkspace <span class="ot">&lt;-</span> FlowJoWsp[stringr<span class="sc">::</span><span class="fu">str_detect</span>(FlowJoWsp, <span class="st">"Opened"</span>)]</span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>ThisWorkspace</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data/FlowJoWSP_OpenedCopy.wsp"</code></pre>
+</div>
+</div>
+<p>With our single .wsp filepath now identified, we can now proceed to set up the intermediate object using <code>open_flowjo_xml()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>ws <span class="ot">&lt;-</span> <span class="fu">open_flowjo_xml</span>(ThisWorkspace)</span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>ws</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>File location:  data/FlowJoWSP_OpenedCopy.wsp 
+
+Groups in Workspace
+         Name Num.Samples
+1 All Samples           6</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(ws)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "flowjo_workspace"
+attr(,"package")
+[1] "CytoML"</code></pre>
+</div>
+</div>
+<p>Having set up the intermediate flowjo_workspace object, we can attempt to read in the actual data from the .wsp into a GatingSet using the <code>flowjo_to_gatingset()</code> function.</p>
+<p>However, due to how I named the original .fcs files (“GROUPNAME” being individual specimens, “TUBENAME” being either Ctrl or SEB), and downsampled to the same number of cells, we will encounter the following error</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>gs <span class="ot">&lt;-</span> <span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> Folder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error:
+! Multiple FCS files match sample 00_Ctrl.fcs by filename, event count, and keywords.
+Candidates are: 
+/home/david/Documents/CytometryInR/course/05_GatingSets/data/2025_07_26_AB_02_INF052_00_Ctrl.fcs
+/home/david/Documents/CytometryInR/course/05_GatingSets/data/2025_07_26_AB_02_INF100_00_Ctrl.fcs
+/home/david/Documents/CytometryInR/course/05_GatingSets/data/2025_07_26_AB_02_INF179_00_Ctrl.fcs
+Please move incorrect files out of this directory or its subdirectories.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>gs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error:
+! object 'gs' not found</code></pre>
+</div>
+</div>
+<p>As with any error, my first move is to check the help documentation. In this case, my initial response is to see if I can identify an argument that will help differentiate between the names for each specimen.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>?flowjo_to_gatingset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="images/CytoMLArguments.png" class="img-fluid"></p>
+<p>In this case, I find that the “additional.keys” argument would likely work for this troubleshooting</p>
+<p><img src="images/AdditionalKeys.png" class="img-fluid"></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>gs <span class="ot">&lt;-</span> <span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> Folder, <span class="at">additional.keys=</span><span class="st">"GROUPNAME"</span>)</span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>gs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(gs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "GatingSet"
+attr(,"package")
+[1] "flowWorkspace"</code></pre>
+</div>
+</div>
+</section>
+<section id="system-time" class="level2">
+<h2 class="anchored" data-anchor-id="system-time">System Time</h2>
+<p>Especially when working with CytoML, it is often good to have an idea of how long it will take a particular function to run (to better plan how to use our time while waiting, whether to go grab coffee, etc.). There are a couple ways to do so.</p>
+<p>One, using the <code>system.time()</code> function from base R, in which we surround whatever line of code we wish to evaluate in {}</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>({</span>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a><span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> Folder, <span class="at">additional.keys=</span><span class="st">"GROUPNAME"</span>)</span>
+<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+  0.501   0.008   0.509 </code></pre>
+</div>
+</div>
+<p>Alternatively, if we install the <code>bench</code> package, we can use the <code>mark</code> function to evaluate how long it takes on average across numerous iterations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("bench") # CRAN</span></span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(bench)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mark</span>(</span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a>  Test <span class="ot">&lt;-</span> <span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> Folder, <span class="at">additional.keys=</span><span class="st">"GROUPNAME"</span>),</span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">iterations=</span> <span class="dv">5</span></span>
+<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 6
+  expression                             min median `itr/sec` mem_alloc `gc/sec`
+  &lt;bch:expr&gt;                           &lt;bch&gt; &lt;bch:&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;
+1 Test &lt;- flowjo_to_gatingset(ws = ws… 505ms  527ms      1.92    13.3KB        0</code></pre>
+</div>
+</div>
+</section>
+<section id="gates" class="level2">
+<h2 class="anchored" data-anchor-id="gates">Gates</h2>
+<p>Now that we have loaded the contents of the FlowJo/Floreada workspace, we can start exploring the various infrastructural capabilities of a GatingSet object.</p>
+<p>Let’s start by evaluating whether the manually-drawn gates I drew survived the journey. To do this, I can generate a visual gating treee using the <code>plot()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(gs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can also retrieve the individual gates and their gaing paths using the <code>gs_get_pop_paths()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gs_get_pop_paths</span>(gs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "root"                                             
+ [2] "/Scatter"                                         
+ [3] "/Scatter/Singlets"                                
+ [4] "/Scatter/Singlets/Live"                           
+ [5] "/Scatter/Singlets/Live/Tcells"                    
+ [6] "/Scatter/Singlets/Live/Tcells/CD4+"               
+ [7] "/Scatter/Singlets/Live/Tcells/CD4+/TNFa+IFNg+"    
+ [8] "/Scatter/Singlets/Live/Tcells/CD4+/TNFa+IFNg-"    
+ [9] "/Scatter/Singlets/Live/Tcells/CD4+/TNFa-IFNg+"    
+[10] "/Scatter/Singlets/Live/Tcells/CD4+/TNFa-IFNg-"    
+[11] "/Scatter/Singlets/Live/Tcells/CD4-CD8-"           
+[12] "/Scatter/Singlets/Live/Tcells/CD4-CD8-/TNFa+IFNg+"
+[13] "/Scatter/Singlets/Live/Tcells/CD4-CD8-/TNFa+IFNg-"
+[14] "/Scatter/Singlets/Live/Tcells/CD4-CD8-/TNFa-IFNg+"
+[15] "/Scatter/Singlets/Live/Tcells/CD4-CD8-/TNFa-IFNg-"
+[16] "/Scatter/Singlets/Live/Tcells/CD8+"               
+[17] "/Scatter/Singlets/Live/Tcells/CD8+/TNFa+IFNg+"    
+[18] "/Scatter/Singlets/Live/Tcells/CD8+/TNFa+IFNg-"    
+[19] "/Scatter/Singlets/Live/Tcells/CD8+/TNFa-IFNg+"    
+[20] "/Scatter/Singlets/Live/Tcells/CD8+/TNFa-IFNg-"    </code></pre>
+</div>
+</div>
+</section>
+<section id="counts" class="level2">
+<h2 class="anchored" data-anchor-id="counts">Counts</h2>
+<p>If we wanted to retrieve counts of cells found within the individual gates, we could do so with <code>gs_pop_get_count_fast()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>Data <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_count_fast</span>(gs)</span>
+<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Data, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 name                         Population
+               &lt;char&gt;                             &lt;char&gt;
+1: 00_Ctrl.fcs_INF052                           /Scatter
+2: 00_Ctrl.fcs_INF052                  /Scatter/Singlets
+3: 00_Ctrl.fcs_INF052             /Scatter/Singlets/Live
+4: 00_Ctrl.fcs_INF052      /Scatter/Singlets/Live/Tcells
+5: 00_Ctrl.fcs_INF052 /Scatter/Singlets/Live/Tcells/CD4+
+                          Parent Count ParentCount
+                          &lt;char&gt; &lt;int&gt;       &lt;int&gt;
+1:                          root 10000       10000
+2:                      /Scatter  9986       10000
+3:             /Scatter/Singlets  9708        9986
+4:        /Scatter/Singlets/Live  9708        9708
+5: /Scatter/Singlets/Live/Tcells  6151        9708</code></pre>
+</div>
+</div>
+</section>
+<section id="metadata" class="level2">
+<h2 class="anchored" data-anchor-id="metadata">Metadata</h2>
+<p>Since GatingSets contain multiple .fcs files, we may want to be able to subset them based on metadata for a particular variable. We can check to see current metadata using the <code>pData()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pData</span>(gs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                          name
+00_Ctrl.fcs_INF052 00_Ctrl.fcs
+00_Ctrl.fcs_INF100 00_Ctrl.fcs
+00_Ctrl.fcs_INF179 00_Ctrl.fcs
+00_SEB.fcs_INF052   00_SEB.fcs
+00_SEB.fcs_INF100   00_SEB.fcs
+00_SEB.fcs_INF179   00_SEB.fcs</code></pre>
+</div>
+</div>
+<p>It currently doesn’t have much, but we will explore how to change this more over the next few weeks. For now, just know that we could add additional metadata via either a .csv file, or by retrieving additional description keywords from within the .fcs files themselves (as shown below)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a>AlternateGS <span class="ot">&lt;-</span> <span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> Folder,</span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a> <span class="at">additional.keys=</span><span class="st">"GROUPNAME"</span>,</span>
+<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a> <span class="at">keywords=</span><span class="fu">c</span>(<span class="st">"$DATE"</span>, <span class="st">"$CYT"</span>, <span class="st">"GROUPNAME"</span>))</span>
+<span id="cb115-4"><a href="#cb115-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pData</span>(AlternateGS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   GROUPNAME   $CYT       $DATE        name
+00_Ctrl.fcs_INF052    INF052 Aurora 26-Jul-2025 00_Ctrl.fcs
+00_Ctrl.fcs_INF100    INF100 Aurora 26-Jul-2025 00_Ctrl.fcs
+00_Ctrl.fcs_INF179    INF179 Aurora 26-Jul-2025 00_Ctrl.fcs
+00_SEB.fcs_INF052     INF052 Aurora 26-Jul-2025  00_SEB.fcs
+00_SEB.fcs_INF100     INF100 Aurora 26-Jul-2025  00_SEB.fcs
+00_SEB.fcs_INF179     INF179 Aurora 26-Jul-2025  00_SEB.fcs</code></pre>
+</div>
+</div>
+</section>
+<section id="ggcyto" class="level2">
+<h2 class="anchored" data-anchor-id="ggcyto">ggcyto</h2>
+<p>As you can surmise, a lot of the infrastructural style handling done by commercial softwares is being orchestrated/mediated through our GatingSet object. Since it’s able to create and retain gating information, how would we go about visualizing the underlying data contained within each?</p>
+<p>Within R, most plots are generated using the <code>ggplot2</code> package from the tidyverse (which we will explore <a href="../../Schedule.html#visualizing-with-ggplot2">next week</a>), which builds of the <a href="https://vita.had.co.nz/papers/layered-grammar.html">“Grammar of Graphics”</a> concept, combining <a href="https://friendly.github.io/6135/lectures/ggplot-intro.pdf">layers</a> together to create the final plots. The Bioconductor <code>ggcyto</code> R package extends this concept to enable flow cytometry data contained within a GatingSet to be plotted.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>As is the case with most free open-source software (<a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">FOSS</a>), R packages will change over time as their developers add new features, make improvements, or alter internal functions to speed things up.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>ggplot2 recently had a major <a href="../../course/01_InstallingRPackages/index.html#installing-specific-package-versions">version</a> change, with <a href="https://tidyverse.org/blog/2025/09/ggplot2-4-0-0/">significant</a> internal changes occuring. As a consequence of these changes, <code>ggcyto</code> functions that relied on the old <code>ggplot2</code> functions <a href="https://github.com/RGLab/ggcyto/pull/103">broke</a> and had to be <a href="https://github.com/RGLab/ggcyto/pull/110">updated</a>.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Any updates to CRAN packages are reflected immediately. By contrast, Bioconductor is on a twice yearly <a href="https://www.bioconductor.org/developers/release-schedule/">release cycle</a>, so to take advantage of the <code>ggcyto</code> “fixes” that allow it to interact with the new version of <code>ggplot2</code>, we will need to make sure we have the “developmental” version installed.</p>
+</div>
+</div>
+<section id="packageversion" class="level3">
+<h3 class="anchored" data-anchor-id="packageversion">packageVersion</h3>
+<p>Let’s start off by checking what version of both the <code>ggplot2</code> and <code>ggcyto</code> packages you currently have installed on your computer.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"ggplot2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] '4.0.2'</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"ggcyto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] '1.39.1'</code></pre>
+</div>
+</div>
+<p>If you were able to retrieve the following package versions (or greater”) for <code>ggplot2</code> and <code>ggcyto</code>, you should be all set and can skip the subsequent reinstallation steps.</p>
+<p><img src="images/20_PackageVersion.png" class="img-fluid"></p>
+<p>If you however found you have the older package versions (ex. ggplot2 3.5.2 or ggcyto 1.37.1) currently installed, you will likely encounter errors when trying to run the functions to plot your data below (since the changes are not fully <a href="https://en.wikipedia.org/wiki/Backward_compatibility">backward-compatible</a> with older versions).</p>
+</section>
+<section id="remove.packages" class="level3">
+<h3 class="anchored" data-anchor-id="remove.packages">remove.packages</h3>
+<p>Since <code>ggcyto</code> has a hard-coded dependency on ggplot2, if you have the older versions, I would recommend uninstaling both first, using the <code>remove.packages()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">remove.packages</span>(<span class="st">"ggplot2"</span>)</span>
+<span id="cb121-2"><a href="#cb121-2" aria-hidden="true" tabindex="-1"></a><span class="fu">remove.packages</span>(<span class="st">"ggcyto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Once this is done, I recommend exiting and then reopening Positron. This will ensure all currently-loaded R packages are unattached from the environment. However, you will loose all your environmental variables, so will need to reload them to get back to this point. If you are working with code chunks inside a Quarto Markdown File (.qmd), you can quickly accomplish this by scrolling down to the point of the document where you left off, and selecting the “Run Above” option showin on the code chunk.</p>
+<p><img src="images/RunAbove.png" class="img-fluid"></p>
+</section>
+<section id="installing-correct-versions" class="level3">
+<h3 class="anchored" data-anchor-id="installing-correct-versions">Installing correct versions</h3>
+<p>To reinstall <code>ggplot2</code>, you just need to install again from CRAN (as with it’s <a href="https://cran.r-project.org/web/packages/policies.html">rolling-release</a> model any changes the developers make become immediately available to everyone)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"ggplot2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If you need to reinstall <code>ggcyto</code>, because of Bioconductor’s twice yearly <a href="https://www.bioconductor.org/developers/release-schedule/">release cycle</a>, you will need to install the “developmental” version to take advantage of the fixes. Since this is for a one-off package, the easiest installation approach if to go via the <a href="../../course/01_InstallingRPackages/index.html#install-from-github">GitHub</a> using the <code>remotes</code> package’s <code>install_github()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"RGLab/ggcyto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="plotting" class="level2">
+<h2 class="anchored" data-anchor-id="plotting">Plotting</h2>
+<p>Once you have the current versions of both <code>ggplot2</code> and <code>ggcyto</code>, we can proceed to attach them to your local environment via the <code>library()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggcyto)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: ncdfFlow</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: BH</code></pre>
+</div>
+</div>
+<p>As was mentioned, <code>ggcyto</code> follows the <code>ggplot2</code> grammar of graphics syntax, which we will learn more extensively <a href="../../Schedule.html#visualizing-with-ggplot2">next week</a>. For now, lets look at a simple example</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb127"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a href="#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcyto</span>(gs[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The function responsible for plotting is the <code>ggcyto()</code> function. The first argument (“gs[1]”) is designating which .fcs file in our GatingSet we are trying to visualize.</p>
+<p>The second argument (“subset”) corresponds to which gating node we want to visualize. In this case, when set to “root”, we are seeing all cells present in the .fcs file. If we however wanted to visualize the cells within the CD4+ gate, we would swap the value provided to this argument.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcyto</span>(gs[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD4+"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The next argument “aes” stands for aesthetics (more on this <a href="../../Schedule.html#visualizing-with-ggplot2">next week</a>). You will notice it has its own set of parenthesis, in which we designate the markers/fluorophores we want to visualize on the x and y axis.</p>
+<p>The final argument (“+ geom_hex(bins=100)”) specifies we want to generate a flow cytometry style plot, with it’s bin arguments value setting the resolution.</p>
+<p>Now that we have walked through the arguments, let’s visualize the data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a href="#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcyto</span>(gs[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD4+"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-65-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Alternatively, if we switched things around</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcyto</span>(gs[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"IFNg"</span>, <span class="at">y=</span><span class="st">"TNFa"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-66-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Briefly, if we didn’t remember the marker, we could specify the fluorophore</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcyto</span>(gs[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BV750-A"</span>, <span class="at">y=</span><span class="st">"PE-Dazzle594-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-67-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcyto</span>(gs[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"CD4"</span>, <span class="at">y=</span><span class="st">"CD8"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-68-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This is all we will cover for <code>ggcyto</code> for now, we will circle back over the <a href="../../Schedule.html#applying-transformations-and-compensation">next couple weeks</a> as we gain more familiarity with how to build our own GatingSet objects. If you want to jump ahead, please see the additional resources section and happy exploring!</p>
+</section>
+</section>
+<section id="take-away" class="level1">
+<h1>Take Away</h1>
+<p>Today, we looked at the two main representations of flow cytometry data in R, the older <code>flowCore</code> implemented flowFrame/flowSet objects that are stored in RAM, and the <code>flowWorkspace</code> cytoFrame/cytoSet objects that operate through memory pointers. We started our learning journey to understand GatingSet objects, and how to use them to mediate/orchestrate in R many of the infrastructural steps that would normally be performed by commercial software. And finally, we briefly covered how to use the <code>ggcyto</code> to visualize data contained within our GatingSets.</p>
+<p>Similar to our utilization of <a href="../../course/04_IntroToTidyverse/">tidyverse</a> functions last week, we will be using GatingSets continously throughout the rest of the course. Over the next few weeks we will instead of retrieving already assembled GatingSets via <code>CytoML</code> assemble them from scratch within R.</p>
+<p>Next week, we will dive further into the <code>ggplot2</code> package from the tidyverse and how it implements the <a href="https://vita.had.co.nz/papers/layered-grammar.html">“Grammar of Graphics”</a> concept. In the process, we will see how by combining <a href="https://friendly.github.io/6135/lectures/ggplot-intro.pdf">layers</a> and changing various elements being added on to the base layers of the plot, we can end up with many different plots we normally encounter as cytometrist.</p>
+<p><img src="images/SunsetSatzi.jpg" class="img-fluid"></p>
+</section>
+<section id="additional-resources" class="level1">
+<h1>Additional Resources</h1>
+<p><a href="https://www.bioconductor.org/packages/release/bioc/vignettes/flowWorkspace/inst/doc/flowWorkspace-Introduction.html">flowWorkspace Bioconductor Vignette</a> The Bioconductor vignettes are always a good place to start with any of the Cytoverse packages, the vignette for <code>flowWorkspace</code> is no exception. If you want to understand more about how to subset cytosets, or the various functions and arguments in a GatingSet, this should be your first stop.</p>
+<p><a href="https://www.bioconductor.org/packages/release/bioc/vignettes/CytoML/inst/doc/flowjo_to_gatingset.html">CytoML Bioconductor Vignette</a> If you use FlowJo, Diva, or CytoBank routinely, and want to understand more about how to bring in your own experiments to R, the <code>CytoML</code> vignettes should be your next stop.</p>
+<p><a href="https://www.bioconductor.org/packages/release/bioc/vignettes/ggcyto/inst/doc/Top_features_of_ggcyto.html">ggcyto Bioconductor Vignette</a>. There are several vignettes that can be found on the <code>ggcyto</code> Bioconductor <a href="https://www.bioconductor.org/packages/release/bioc/html/ggcyto.html">website</a> on how to plot your flow cytometry data, this one surmize many of the points we will be covering over the next few weeks.</p>
+<p><a href="https://youtu.be/_8x-prIxJgw?si=MhVVUJJdYEDI4JzV">Bioc2023 Workshop: Reproducible and programmatic analysis of flow cytometry experiments with the cytoverse</a> Ozette hosted a workshop covering many of the cytoverse R packages at the Bioconductor conference (BioC) back in 2023. Some of the contents we will cover in greater depth over the next few weeks.</p>
+</section>
+<section id="take-home-problems" class="level1">
+<h1>Take-home Problems</h1>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Problem 1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Using what you learned last week in <a href="../../course/04_IntroToTidyverse/">Introduction to Tidyverse</a>, for the imported GatingSet, retrieve the data.frame from cell counts per gate and attempt to mutate a new column showing percent of the parent gate. Remember, this is intentionally tricky at this point, we will go over how to efficiently do this in a <a href="../../Schedule.html#retrieving-data-for-statistics">few weeks</a></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Problem 2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>As we saw, <code>CytoML</code> can be finicky when names are repeated, or .fcs files are not present. Try removing a couple of the .fcs files from the data folder, and re-run the code. Document what kind of errors result.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 3">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Problem 3
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For <code>ggcyto</code>, attempt to generate plots to visualize TNFa and IFNg for the various cell populations, across both Ctrl and SEB samples. In the process, change the bins argument until you end up with a resolution that you would be happy with for your own plots, and write it down.</p>
+</div>
+</div>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://www.gnu.org/graphics/agplv3-with-text-162x68.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../course/04_IntroToTidyverse/index.html" class="pagination-link" aria-label="04 - Intro to Tidyverse">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">04 - Intro to Tidyverse</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../Schedule.html" class="pagination-link" aria-label="Cytometry Core">
+        <span class="nav-page-text">Cytometry Core</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Made with <a href="https://quarto.org/">Quarto</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p><img src="../../images/AGPL3.png" class="img-fluid" alt="AGPL-3.0"> <img src="../../images/CCBYSA.png" class="img-fluid" alt="CC-BY-SA"></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

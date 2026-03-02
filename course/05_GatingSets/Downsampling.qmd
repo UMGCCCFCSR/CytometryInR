@@ -1,0 +1,65 @@
+---
+title: "Downsampling"
+author: "David Rach"
+
+format: html
+---
+
+# Background
+
+Due to trying to keep the overall file size down, I am downsampling to 100 events. For anyone interested in how I did this, this Quarto Markdown Document contains the code needed to repeat the process. 
+
+# Getting Started
+
+Attach the required packages via the `library()` function
+
+```{r}
+#| eval: FALSE
+library(purrr) # CRAN
+library(flowWorkspace) # Bioconductor
+library(Luciernaga) #DavidRach/Luciernaga
+```
+
+## Specify file.path and identify files
+
+Due to the counts being conducter on two separate instruments, the number of columns differs, so they will need to be loaded into separate GatingSet objects. 
+
+```{r}
+#| eval: FALSE
+StorageLocation <- file.path("/media", "david", "DavidSSD",  "AlphaBeta", "Tcells")
+Existing <- list.files(StorageLocation, pattern=".fcs", full.names=TRUE)
+List1 <- Existing[c(1,3:4,6,12, 14)]
+```
+
+## Load .fcs files into a GatingSet
+
+Load in files to their respective GatingSet objects
+
+```{r}
+#| eval: FALSE
+cs1 <- load_cytoset_from_fcs(List1, truncate_max_range = FALSE, transformation = FALSE)
+gs1 <- GatingSet(cs1)
+```
+
+# Downsample each sample and pass back to the folder
+
+From here, each file in the Gating set is passed to `Utility_Downsample()`, subsampling for 100 events. In this case, subsets argument is set to "root", so all events. If we had implemented gates, we could have selected a particular population from which to downsample. 
+
+```{r}
+#| eval: FALSE
+NewStorageLocation <- file.path("course", "05_GatingSets", "data")
+
+walk(.x=gs1, .f=Luciernaga::Utility_Downsample,
+ sample.name=c("$PROJ", "GROUPNAME", "TUBENAME"),
+ export=TRUE, outpath=NewStorageLocation,
+  subsample=10000, subsets="root", inverse.transform=FALSE)
+```
+
+# Conclusion
+
+We will look more at how the Utility_Downsample is constructed during [Week #10](/Schedule.qmd#downsampling-and-concatenation)
+
+```{r}
+#| eval: FALSE
+sessionInfo()
+```

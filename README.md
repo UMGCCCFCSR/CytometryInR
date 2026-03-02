@@ -10,7 +10,7 @@ Click here to go to our [Course Website](https://umgcccfcsr.github.io/CytometryI
 
 # Participating
 
-The course started yp the first week of February. Course materials can be found [here](/course/00_GitHub/index.qmd) or via the Course tab in the navigation bar. The livestream recordings are available via [YouTube](https://www.youtube.com/@CytometryInR). See below for additional details.
+The course started up the first week of February. Course materials can be found [here](/course/00_GitHub/index.qmd) or via the Course tab in the navigation bar. The livestream recordings are available via [YouTube](https://www.youtube.com/@CytometryInR). See below for additional details.
 
 
 ## In-Person (Baltimore)
