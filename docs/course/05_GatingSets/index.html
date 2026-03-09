@@ -249,7 +249,7 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a href="../../course/01_InstallingRPackages/index.html" class="sidebar-item-text sidebar-link">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
  <span class="menu-text">Intro to R</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
@@ -377,7 +377,9 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 <div style="text-align: right;">
 <p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://img.shields.io/badge/license-AGPLv3-blue.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
 </div>
-<p>For the YouTube livestream schedule, see <a href="https://www.youtube.com/@cytometryinr">here</a></p>
+<p>For the YouTube livestream recording, see <a href="https://youtu.be/x0SbK6PZF6Y?t=262">here</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/x0SbK6PZF6Y?si=hxuqb6W6kQDXkPy7&amp;start=262" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
 <p>For screen-shot slides, click <a href="../../course/05_GatingSets/slides.html">here</a></p>
 <p><br></p>
 <hr>
@@ -535,7 +537,7 @@ attr(,"package")
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(flowSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Formal class 'flowSet' [package "flowCore"] with 2 slots
-  ..@ frames   :&lt;environment: 0x563aececb920&gt; 
+  ..@ frames   :&lt;environment: 0x560d90048618&gt; 
   ..@ phenoData:Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
   .. .. ..@ varMetadata      :'data.frame': 1 obs. of  1 variable:
   .. .. .. ..$ labelDescription: chr "Name"
@@ -569,7 +571,7 @@ Reminder
 <section id="memory-usage" class="level2">
 <h2 class="anchored" data-anchor-id="memory-usage">Memory Usage</h2>
 <p>Both “flowFrame” and “flowSet” objects were implemented in the <code>flowCore</code> package, which is the <a href="../../course/03_InsideFCSFile/#flowcore">oldest</a> extant flow cytometry R package on <a href="https://www.bioconductor.org/packages/release/bioc/html/flowCore.html">Bioconductor</a>. Consequently, a large proportion of the other flow cytometry R packages read in .fcs files as “flowFrame” and “flowSet” objects.</p>
-<p>One consideration of this method is the contents of your .fcs files are read into your computer’s random access memory <a href="https://en.wikipedia.org/wiki/Random-access_memory">(RAM)</a>. While for individual .fcs files or small experiments this present a problem for most modern computers, when working with large spectral flow cytometry files containing millions of events (or trying to analyze many .fcs files at once), you may encounter situations where you can quickly exceed your computers available RAM.</p>
+<p>One consideration of this method is the contents of your .fcs files are read into your computer’s random access memory <a href="https://en.wikipedia.org/wiki/Random-access_memory">(RAM)</a>. While for individual .fcs files or small experiments this will not present a problem for most modern computers, when working with large spectral flow cytometry files containing millions of events (or trying to analyze many .fcs files at once), you may encounter situations where you can quickly exceed your computers available RAM.</p>
 <p>To build some contextual understanding of the problem, let’s learn how to check how much memory is being used by our individual variables/objects within our R session. We will primarily use the <code>lobstr</code> R packages <code>obj_size()</code> function, as it better handles evaluating complicated objects than base R’s <code>object.size()</code> function.</p>
 <p>We can check and see the memory usage by our flowFrame object</p>
 <div class="cell">
@@ -627,7 +629,7 @@ Reminder
 </div>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">"Free GB "</span>, <span class="fu">round</span>(Memory<span class="sc">$</span>free <span class="sc">/</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">3</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Free GB 54.36</code></pre>
+<pre><code>Free GB 53.49</code></pre>
 </div>
 </div>
 </section>
@@ -739,7 +741,7 @@ attr(,"package")
 <div class="cell-output cell-output-stdout">
 <pre><code>Formal class 'cytoset' [package "flowWorkspace"] with 3 slots
   ..@ pointer  :&lt;externalptr&gt; 
-  ..@ frames   :&lt;environment: 0x563af7c4ddd8&gt; 
+  ..@ frames   :&lt;environment: 0x560d9ade0fc8&gt; 
   ..@ phenoData:Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
   .. .. ..@ varMetadata      :'data.frame': 0 obs. of  1 variable:
   .. .. .. ..$ labelDescription: chr(0) 
@@ -789,7 +791,7 @@ attr(,"package")
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>ConvertedToCytoframe <span class="ot">&lt;-</span> <span class="fu">flowFrame_to_cytoframe</span>(flowFrame)</span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>ConvertedToCytoframe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>cytoframe object 'file20997f38fefd'
+<pre><code>cytoframe object 'file382b177c06ea'
 with 10000 cells and 43 observables:
                name      desc       range  minRange    maxRange
 $P1            Time        NA     878.809         0     878.809
@@ -1017,7 +1019,7 @@ attr(,"package")
 <span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  0.466   0.004   0.471 </code></pre>
+  0.554   0.004   0.559 </code></pre>
 </div>
 </div>
 <p>Alternatively, if we install the <code>bench</code> package, we can use the <code>mark</code> function to evaluate how long it takes on average across numerous iterations.</p>
@@ -1034,7 +1036,7 @@ attr(,"package")
 <pre><code># A tibble: 1 × 6
   expression                             min median `itr/sec` mem_alloc `gc/sec`
   &lt;bch:expr&gt;                           &lt;bch&gt; &lt;bch:&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;
-1 Test &lt;- flowjo_to_gatingset(ws = ws… 461ms  466ms      2.13    13.3KB        0</code></pre>
+1 Test &lt;- flowjo_to_gatingset(ws = ws… 539ms  550ms      1.78    13.3KB        0</code></pre>
 </div>
 </div>
 </section>

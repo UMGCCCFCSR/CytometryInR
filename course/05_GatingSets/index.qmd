@@ -13,7 +13,9 @@ toc-depth: 5
 [![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 :::
 
-For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
+For the YouTube livestream recording, see [here](https://youtu.be/x0SbK6PZF6Y?t=262)
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/x0SbK6PZF6Y?si=hxuqb6W6kQDXkPy7&amp;start=262" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 For screen-shot slides, click [here](/course/05_GatingSets/slides.qmd)
 
@@ -152,7 +154,7 @@ While not today's focus, remember we could access individual components inside t
 
 Both "flowFrame" and "flowSet" objects were implemented in the `flowCore` package, which is the [oldest](/course/03_InsideFCSFile/#flowcore) extant flow cytometry R package on [Bioconductor](https://www.bioconductor.org/packages/release/bioc/html/flowCore.html). Consequently, a large proportion of the other flow cytometry R packages read in .fcs files as "flowFrame" and "flowSet" objects. 
 
-One consideration of this method is the contents of your .fcs files are read into your computer's random access memory [(RAM)](https://en.wikipedia.org/wiki/Random-access_memory). While for individual .fcs files or small experiments this present a problem for most modern computers, when working with large spectral flow cytometry files containing millions of events (or trying to analyze many .fcs files at once), you may encounter situations where you can quickly exceed your computers available RAM. 
+One consideration of this method is the contents of your .fcs files are read into your computer's random access memory [(RAM)](https://en.wikipedia.org/wiki/Random-access_memory). While for individual .fcs files or small experiments this will not present a problem for most modern computers, when working with large spectral flow cytometry files containing millions of events (or trying to analyze many .fcs files at once), you may encounter situations where you can quickly exceed your computers available RAM. 
 
 To build some contextual understanding of the problem, let's learn how to check how much memory is being used by our individual variables/objects within our R session. We will primarily use the `lobstr` R packages `obj_size()` function, as it better handles evaluating complicated objects than base R's `object.size()` function. 
 
