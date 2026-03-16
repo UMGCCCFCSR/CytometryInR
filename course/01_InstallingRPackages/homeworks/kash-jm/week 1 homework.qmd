@@ -6,7 +6,7 @@ format: html
 toc: true
 ---
 
-# PeacoQC
+# [PeacoQC]{.underline}
 
 PeacoQC is a package that performs quality control on FCS files - it can remove anomalies caused by clogging or variable flow rate that occurs when acquiring events from a flow cytometer. Its workflow requires assigning variables and working through step by step to result in cleaned flow data. FlowCore is a dependency package needed for it to function; it does xyz.
 
@@ -17,7 +17,7 @@ fileName <- system.file("extdata", "111.fcs", package="PeacoQC")
 ff <- flowCore::read.FCS(fileName)
 ```
 
-The next step is then defining the channels where margin/axes events are removed and which channels the QC should be performed. This step shoudl be performed before compensating and transforming any data:
+The next step is then defining the channels where margin/axes events are removed and which channels the QC should be performed. **This step should be performed before compensating and transforming any data:**
 
 ```{r}
 #| eval: false
@@ -39,4 +39,31 @@ The final step is then performing the QC and saving the results:
 PeacoQC_res <- PeacoQC(ff, channels, determine_good_cells = "all", save_fcs = TRUE)
 ```
 
-# Bioconductor Packages
+# [Bioconductor Packages]{.underline}
+There are currently 69 bioconductor packages for flow cytometry. Mike Jiang has the most packages maintained/developed. Of all the packages, the ones of most interest and relevance to my professional work include:
+
+flowCore, flowViz, FlowSOM, ggcyto, CATALYST, PeacoQC, flowDensity, flowClean, flowCut, flowCHIC,flowGate, flowPlots. These packages seem to be the ones most useful for data visualisation, gating, and cleanup relevant for our flow cytometry analysis and outputs in projects within our company.
+
+# [pak Package]{.underline}
+pak greatly simplifies installation of packages from CRAN, Bioconductor, and github, by removing the need for typing different functions depending on the repository you are downloading from:
+
+```{r}
+#| eval: false
+# For example, for CRAN or Bioconductor repositories rather than running
+install("xyz") install.packages("xyz")
+# You can run
+pak("xyz")
+# and for github rather than 
+install_github(abc/xyz)
+# You can run
+pak("abc/xyz")
+```
+
+So when downloading the package broom, it appears as the following in the console:
+
+```{r}
+#| eval: false
+pak("broom")
+```
+
+![](images/broom_pak.png){width=100%}
