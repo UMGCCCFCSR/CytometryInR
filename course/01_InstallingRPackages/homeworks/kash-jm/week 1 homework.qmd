@@ -2,13 +2,41 @@
 title: Week 1 homework
 author: Aakash Modak
 date: 16/03/2026
+format: html
 toc: true
 ---
 
 # PeacoQC
+
+PeacoQC is a package that performs quality control on FCS files - it can remove anomalies caused by clogging or variable flow rate that occurs when acquiring events from a flow cytometer. Its workflow requires assigning variables and working through step by step to result in cleaned flow data. FlowCore is a dependency package needed for it to function; it does xyz.
+
+The basic workflow of the package begins with an initial step of assigning the path for your FCS file, and then reading the FCS file you assigned:
 ```{r}
 #| eval: false
-?PeacoQC
+fileName <- system.file("extdata", "111.fcs", package="PeacoQC")
+ff <- flowCore::read.FCS(fileName)
 ```
 
-1. PeacoQC is a package that performs quality control on FCS files - it can remove anomalies caused by clogging or variable flow rate that occurs when acquiring events from a flow cytometer. 
+The next step is then defining the channels where margin/axes events are removed and which channels the QC should be performed. This step shoudl be performed before compensating and transforming any data:
+
+```{r}
+#| eval: false
+channels <- c(1, 3, 5:14, 18, 21)
+ff <- RemoveMargins (ff=ff, channels=channels,output="frame")
+```
+
+The next step is compensation and transformation of your data:
+
+```{r}
+#| eval: false
+ff <- flowCore::compensate(ff, flowCore::keyword(ff)$SPILL)
+```
+
+The final step is then performing the QC and saving the results:
+
+```{r}
+#| eval: false
+PeacoQC_res <- PeacoQC(ff, channels, determine_good_cells = "all", save_fcs = TRUE)
+```
+
+# Bioconductor Packages
