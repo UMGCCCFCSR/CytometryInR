@@ -9,7 +9,7 @@ toc-expand: true
 
 # [PeacoQC]{.underline}
 
-PeacoQC is a package that performs quality control on FCS files - it can remove anomalies caused by clogging or variable flow rate that occurs when acquiring events from a flow cytometer. Its workflow requires assigning variables and working through step by step to result in cleaned flow data. FlowCore is a dependency package needed for it to function; it does xyz.
+PeacoQC is a package that performs quality control on FCS files - it can remove anomalies caused by clogging or variable flow rate that occurs when acquiring events from a flow cytometer. Its workflow requires assigning variables and working through step by step to result in cleaned flow data. FlowCore is a dependency package needed for it to function; briefly it allows for basic manipulation of flow data.
 
 The basic workflow of the package begins with an initial step of assigning the path for your FCS file, and then reading the FCS file you assigned with FlowCore:
 ```{r}
@@ -31,7 +31,7 @@ The next step is compensation and transformation of your data:
 ```{r}
 #| eval: false
 ff <- flowCore::compensate(ff, flowCore::keyword(ff)$SPILL)
-ff <- flowCore:: transform(ff, flowcore::estimateLogicle(ff, colnames(flowcore::keyword(ff)$SPILL)))
+ff <- flowCore::transform(ff, flowCore::estimateLogicle(ff, colnames(flowCore::keyword(ff)$SPILL)))
 ```
 
 The final step is then performing the QC, saving the cleaned flow file, and plotting results of this step:
@@ -87,12 +87,23 @@ Generally:
 ```
 
 However, when initially attempting install CytoExploreR this way, the following message appeared:
+
+```{r}
+#| eval: false
+pak("DillonHammill/CytoExploreR")
+```
 ![](images/cytoexplorer_superheat_failure.png){width=100%}
 
 So I attempted to install superheat independently initially using the pak function:
+
+```{r}
+#| eval: false
+pak("superheat")
+```
+
 ![](images/superheat_0.1.0.png){width=100%}
 
-I then tried to install CytoExploreR again, however the same error message as previous kept appearing. I noticed the superheat version that was installed (0.1.0) did not match the version required as a dependecy for CytoExploreR (>= 1.0.0). I believe using the pak function to install superheat defaulted to installing the CRAN version, which was outdated. 
+I then tried to install CytoExploreR again, however the same error message as previous kept appearing. I noticed the superheat version that was installed (0.1.0) did not match the version required as a dependency for CytoExploreR (>= 1.0.0). I believe using the pak function to install superheat defaulted to installing the CRAN version, which was outdated. 
 
 To fix this, I searched for the appropriate version, which was available on github, and installed that specifically:
 
