@@ -1,16 +1,17 @@
 ---
-title: Week 1 homework
+title: Week 1 Homework
 author: Aakash Modak
-date: 16/03/2026
+date: 03/16/2026
 format: html
 toc: true
+toc-expand: true
 ---
 
 # [PeacoQC]{.underline}
 
 PeacoQC is a package that performs quality control on FCS files - it can remove anomalies caused by clogging or variable flow rate that occurs when acquiring events from a flow cytometer. Its workflow requires assigning variables and working through step by step to result in cleaned flow data. FlowCore is a dependency package needed for it to function; it does xyz.
 
-The basic workflow of the package begins with an initial step of assigning the path for your FCS file, and then reading the FCS file you assigned:
+The basic workflow of the package begins with an initial step of assigning the path for your FCS file, and then reading the FCS file you assigned with FlowCore:
 ```{r}
 #| eval: false
 fileName <- system.file("extdata", "111.fcs", package="PeacoQC")
@@ -30,36 +31,34 @@ The next step is compensation and transformation of your data:
 ```{r}
 #| eval: false
 ff <- flowCore::compensate(ff, flowCore::keyword(ff)$SPILL)
+ff <- flowCore:: transform(ff, flowcore::estimateLogicle(ff, colnames(flowcore::keyword(ff)$SPILL)))
 ```
 
-The final step is then performing the QC and saving the results:
+The final step is then performing the QC, saving the cleaned flow file, and plotting results of this step:
 
 ```{r}
 #| eval: false
-PeacoQC_res <- PeacoQC(ff, channels, determine_good_cells = "all", save_fcs = TRUE)
+PeacoQC_res <- PeacoQC(ff=ff, channels=channels, determine_good_cells = "all", save_fcs = TRUE, plot=TRUE, output_directory = "PeacoQC_Example1")
 ```
 
 # [Bioconductor Packages]{.underline}
 There are currently 69 bioconductor packages for flow cytometry. Mike Jiang has the most packages maintained/developed. Of all the packages, the ones of most interest and relevance to my professional work include:
 
-flowCore, flowViz, FlowSOM, ggcyto, CATALYST, PeacoQC, flowDensity, flowClean, flowCut, flowCHIC,flowGate, flowPlots. These packages seem to be the ones most useful for data visualisation, gating, and cleanup relevant for our flow cytometry analysis and outputs in projects within our company.
+flowCore, flowViz, FlowSOM, ggcyto, CATALYST, PeacoQC, flowDensity, flowClean, flowCut, flowCHIC, flowGate, flowPlots. These packages seem to be the ones most useful for data visualisation, gating, and cleanup relevant for our flow cytometry analysis and outputs in projects within our company.
 
 # [pak Package]{.underline}
+## CRAN & Bioconductor packages
 pak greatly simplifies installation of packages from CRAN, Bioconductor, and github, by removing the need for typing different functions depending on the repository you are downloading from:
 
 ```{r}
 #| eval: false
-# For example, for CRAN or Bioconductor repositories rather than running
-install("xyz") install.packages("xyz")
+# For CRAN or Bioconductor repositories rather than running
+# install("xyz") or install.packages("xyz")
 # You can run
-pak("xyz")
-# and for github rather than 
-install_github(abc/xyz)
-# You can run
-pak("abc/xyz")
+# pak("xyz")
 ```
 
-So when downloading the package broom, it appears as the following in the console:
+For example, when downloading the package broom, it appears as the following in the console:
 
 ```{r}
 #| eval: false
@@ -67,3 +66,44 @@ pak("broom")
 ```
 
 ![](images/broom_pak.png){width=100%}
+
+And similarly when downloading cytoMEM, it appears like this:
+
+```{r}
+#| eval: false
+pak("cytoMEM")
+```
+
+![](images/cytoMEM_pak.png){width=100%}
+
+## Github: downloading CytoExploreR
+Generally:
+```{r}
+#| eval: false
+# for github rather than 
+# install_github("abc/xyz")
+# You can run
+# pak("abc/xyz")
+```
+
+However, when initially attempting install CytoExploreR this way, the following message appeared:
+![](images/cytoexplorer_superheat_failure.png){width=100%}
+
+So I attempted to install superheat independently initially using the pak function:
+![](images/superheat_0.1.0.png){width=100%}
+
+I then tried to install CytoExploreR again, however the same error message as previous kept appearing. I noticed the superheat version that was installed (0.1.0) did not match the version required as a dependecy for CytoExploreR (>= 1.0.0). I believe using the pak function to install superheat defaulted to installing the CRAN version, which was outdated. 
+
+To fix this, I searched for the appropriate version, which was available on github, and installed that specifically:
+
+```{r}
+#| eval: false
+pak("rlbarter/superheat")
+```
+
+![](images/superheat_1.0.0.png){width=100%}
+
+Installing CytoExploreR was then able to complete successfully:
+![](images/cytoexplorer.png){width=100%}
+
+I believe the lesson from this is to check the version(s) of the dependency package(s) required when attempting installation of certain packages, and learning that pak may not always default to downloading the correct version you need.
