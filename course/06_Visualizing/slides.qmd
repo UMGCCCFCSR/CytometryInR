@@ -1,0 +1,1382 @@
+---
+title: "06 - Visualizing with ggplot2"
+author: "David Rach"
+date: 03-17-2026
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    incremental: true
+page-layout: full
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
+
+For screen-shot slides, click [here]()
+
+<br>
+
+---
+
+# Background
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Welcome back! This is the sixth week of Cytometry in R. At this point we are slowly but surely building out a solid foundation of general R knowledge, and learning how to apply it when it comes to working with cytometry data. This week, we will explore how to use the [ggplot2](https://ggplot2.tidyverse.org/) package to create plots.
+While these will include plots typical of cytometry, `ggplot2` (and other packages that extend its reach) allow us to create a wide range of visualizations, ranging from statistical plots, to maps, to informational graphics you might see in a magazine. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+One of `ggplot2`'s core strengths is its utilization of the [grammar of graphics](https://www.tandfonline.com/doi/abs/10.1198/jcgs.2009.07098). Rather than treat each type of plot separately, if treats individual elements of a plot on its own (i.e. a layer), with the combined output creating the desired plot. This abstraction is what in turn permits the construction of such a wide array of plots from the same dataset by simply swapping out functions and arguments provided. 
+:::
+:::
+
+---
+
+![](images/ggplot2.png)
+
+---
+
+# Walk Through
+
+:::{.callout-important title="Housekeeping"}
+As we do [every week](/course/02_FilePaths/index.qmd), on GitHub, [sync](/course/00_Homeworks/index.qmd#sync-your-fork) your forked version of the CytometryInR course to bring in the most recent updates. Then within Positron, [pull](/course/00_Homeworks/index.qmd#pull-to-local) in those changes to your local computer. 
+
+After [setting up](/course/00_Git/index.qmd#new-folder-from-template) a "Week06" project folder, copy over the contents of "course/06_Visualizing/data" to that folder. This will hopefully prevent merge issues next week when attempting to pull in new course material. Once you have your new project folder organized, remember to [commit](/course/00_Git/index.qmd#push) and push your changes to GitHub to maintain remote version control. 
+
+If you encounter issues syncing due to the Take-Home Problem merge conflict, see this [walkthrough](https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/). The updated homework submission protocol can be found [here](https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/UpdatedPullRequest)
+:::
+
+---
+
+## Preparation
+
+---
+
+### Masked Function Names
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Since we will be using `dplyr` extensively throughout this session, let's go ahead and attach it to our local environment via the `library()` function. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+library(dplyr)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If `dplyr` was not already attached to your local environment, you might have gotten the following message
+:::
+:::
+
+---
+
+![](images/00_DplyrMessage.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The reason behind this message is that both the `dplyr` and `stats` packages contain functions named "filter" and "lag". Since `stats` is a base R package that is loaded by default, when `dplyr` is loaded via the `library()` call, both packages functions become active in your environment. Consequently, if you ran a line of code containing "filter" or "lag", R would not know which packages function you intender to use in that line of code.
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+To avoid this, the base R `stats` and `base` package functions with identical names are masked (ie. hidden), so that the `dplyr` functions are instead prioritized when code is run. 
+:::
+:::
+
+---
+
+### Load Dataset
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets continue by loading in the dataset we were working with during [Week # 4](/course/04_IntroToTidyverse/). 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+#StorageLocation <- file.path("course", "06_Visualizing", "data") # When interactively writing the code 
+StorageLocation <- file.path("data") #When Quarto Rendering
+
+TheCSV <- list.files(StorageLocation, pattern=".csv", full.names=TRUE)
+Data <- read.csv(TheCSV, check.names=FALSE)
+
+head(Data, 3)
+```
+
+:::
+
+---
+
+### Identifying column value types
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And let's quickly evaluate the columns to determine what type of values each contains
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+str(Data)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The type of values that a column contains are particularly important to be aware of when working with `ggplot2` plots. For example, we can see that several columns contain character values:
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+Data |> select(bid, Condition, Date, infant_sex, ptype) |> head(6) |> str()
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+While spotting the character columns from the `str()` output, and isolating them using `select()` works, we could achieve something similar using the `is.character()` function in combination with the `where()` function, which the `dplyr` package actively borrows (ie. exports) from the `tidyselect` package. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data |> select(where(is.character)) |> head(6) |> str()
+```
+
+:::
+
+---
+
+We can switch out `is.character()` to identify columns containing other value types
+
+::: {.fragment}
+```{r}
+Data |> select(where(is.numeric)) |> head(6) |> str()
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Data |> select(where(is.logical)) |> head(6) |> str()
+```
+
+:::
+
+---
+
+### Reformatting Column Value Types
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Looking at the `str()` output, we can spot that the Date column is currently showing as a character value:
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+Data |> select(Date) |> str()
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Character values when plotting are generally treated as categorical factors. When plotted, these will arrange according to alphabetical order. In this particular case, this may not be an issue:
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data |> pull(Date) |> sort() |> unique() 
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+However, if year/month/day is formatted differently, as character values, the alphabetical reordering could result in your dates being scrambled
+:::
+:::
+
+::: {.fragment}
+```{r}
+AlternateFormat <- c("26-07-2025", "27-08-2019", "09-09-2025", "16-03-2026")
+AlternateFormat |> sort() |> unique()
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Because of this, I generally recommend reformatting these character type values over to Date type values. I will generally use the the tidyverse `lubridate` package, as it has various functions that can handle the date format variation. In this case, since the character values appear year-month-day, we can use the `ymd()` function to update the column type
+:::
+:::
+
+::: {.fragment}
+```{r}
+library(lubridate)
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+Data$Date <- ymd(Data$Date)
+str(Data[,1:5])
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+You can notice, `str()` now returns the column type as "Date". 
+:::
+:::
+
+---
+
+### Factors
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For columns with numeric type values, we previously discussed the difference between integer (ie. whole) and double (containing decimal point) values. When it comes to plotting using ggplot, numeric values will generally be treated as [continuous](https://www.r-bloggers.com/2022/01/handling-categorical-data-in-r-part-1/) values unless we specify they should be treated as [categorical](https://www.r-bloggers.com/2022/01/handling-categorical-data-in-r-part-1/) values for plotting. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For example, if we look at the Timepoint column, we can see its numeric values are [discrete](https://www.r-bloggers.com/2022/01/handling-categorical-data-in-r-part-1/), corresponding to the timepoint in months when the blood sample was collected (0, 4, 9)
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data |> pull(timepoint) |> unique()
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we want to avoid having `ggplot` treating these values as continuous, and instead see them as categorical, we will need to specify to R to treat these as such. We can do this by converting them into [factors](https://r4ds.had.co.nz/factors.html), using the `factor()` function. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data1 <- Data
+Data1$timepoint <- factor(Data1$timepoint)
+str(Data1[,1:3])
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We will see what occurs when we try to plot without having specified this numeric column as a categorical factor later today, but mentioning it early, as creating factor variables is something we will see continously throughout the class when it comes to both plotting and statistical analysis. 
+:::
+:::
+
+---
+
+## ggplot2
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Alright, with the data imported, havinf refreshed our memory of the types of values contained within, we are now ready to start learning how to ready top lot in R using the `ggplot2` package. For this first plot, as we learn more about the [grammar of graphics](https://ggplot2-book.org/mastery.html) concept, and how to layer the different arguments together, lets first decide what kind of plot we want to build. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Glancing at Data, let's try creating a boxplot, with the different timepoints on the x-axis, and the frequency of T cells in the CD45+ gate on the y-axis. We can envision we want something at the end that resembles the following:
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's go ahead and actually convert timepoint over to a categorical factor for this example, and mutate the frequency column. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+Data <- Data |> 
+    mutate(TcellProportion=Tcells_count/CD45_count) |>
+    mutate(TcellFrequency=TcellProportion *100) |>
+    mutate(TcellFrequency=round(TcellFrequency, 1))
+
+Data$timepoint <- factor(Data$timepoint)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets start by going ahead and calling `library()` for ggplot2
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+library(ggplot2)
+```
+
+:::
+
+---
+
+### Data
+
+::: {.fragment}
+
+```{r}
+Plot <- ggplot(Data)
+Plot
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As you can see, nothing is yet outputted at this stage. Let's however peak behind the curtain. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+str(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this first chunk, we see that the data slot of the ggplot object now contains the underlying data.frame object
+:::
+:::
+
+---
+
+![](images/01_DataSlot.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we scroll past, we can spot additional slots, which are currently empty, waiting to be filled. We will sporadically check back and see how this changes. 
+:::
+:::
+
+---
+
+![](images/01_DataSlot.png)
+
+---
+
+### Aesthetics
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having established the first layer of our plot (Data), we can now start by specifying the next layer, aesthetics. In our case, we were interested in placing timepoint on the x-axis, and placing the TcellFrequency on the y-axis. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- ggplot(Data) + aes(x=timepoint, y=TcellFrequency)
+Plot
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As you can see, additional elements were added to the plot, namely we are now seeing on the axis we specified. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we glanced behind the curtains, we now see the mapping slot has now been filled in
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+str(Plot)
+```
+
+:::
+
+---
+
+![](images/03_MappingSlot.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In our case, we are building this plot with each layer being connected by a "+"" argument. However, you will often see both the Data and Aesthetics layers combined together in actual practice. This would look like the following
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data, aes(x=timepoint, y=TcellFrequency))
+```
+
+:::
+
+---
+
+#### No Quotation Marks!
+
+::: {.fragment}
+::: {.callout-tip title="."}
+You may have noticed, we relied on tidyverse to figure out that timepoint and TcellFrequency were column names, and not objects in our environment (for reasons detailed during [Week 04]()). What would have happened if we had included "" around each?
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x="timepoint", y="TcellFrequency")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Yikes! Not what we were expecting. 
+:::
+:::
+
+---
+
+### Geometries
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having specified our Data and Aesthetics layers, we now reach the important point in our plotting step, deciding on what geometries we want to use. Geometry is the layer that determines how our data is displayed/plotted. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For example, we could use the `geom_point()` function to set the plot geometry as follows
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_point()
+```
+
+:::
+
+---
+
+We could swap `geom_point()` out for `geom_boxplot()`
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot()
+```
+
+:::
+
+---
+
+or `geom_violin()`
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_violin()
+```
+
+:::
+
+---
+
+We could also add two geometries
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_point()
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As you can see, many different `geom_` functions exist in both ggplot2, as well as other R packages that expand the plotting capacity further. One I like to use for my own plots is the `ggbeeswarm` package, specifically the `geom_beeswarm()` function in conjunction with the `geom_boxplots()`. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+library(ggbeeswarm)
+Plot <- ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm()
+Plot
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We will continue building offf this plot version as we go forward. 
+:::
+:::
+
+----
+
+#### If left as continuous
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In the case of the above dataset, we had converted timepoint to a factor. But what would our plot have looked like if we had left it in the original continuous format?
+:::
+:::
+
+---
+
+::: {.fragment}
+
+```{r}
+AlternateData <- read.csv(TheCSV, check.names=FALSE)
+AlternateData <- AlternateData |> 
+    mutate(TcellProportion=Tcells_count/CD45_count) |>
+    mutate(TcellFrequency=TcellProportion *100) |>
+    mutate(TcellFrequency=round(TcellFrequency, 1))
+ggplot(AlternateData) + aes(x=timepoint, y=TcellFrequency) + geom_beeswarm()
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As you can see, in this case, the x-axis instead of being spaced categorically, now appears as continuous, with the individual dots being plotted at 0, 4, 9 respectively. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Given that `geom_boxplot` is expecting a categorical factor, this fails to plot correctly when added on
+:::
+:::
+
+---
+
+::: {.fragment}
+
+```{r}
+ggplot(AlternateData) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm()
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Fortunately, the warning message provides some context we can use when troubleshooting. If we implement the suggestion, we are able to rescue `geom_boxplot()` plotting attempt even in abscence of specifying timepoint as categorical.
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(AlternateData) + aes(x=timepoint, y=TcellFrequency, group=timepoint) + geom_boxplot() + geom_beeswarm()
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+This example generally highlights the importance of being aware of what types of values you are trying to plot, warning messages, and some of the quiky odd-looking plots that can arise when the assumptions are not met. 
+:::
+:::
+
+---
+
+#### Mismatched Assumptions
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this case, the two "geom_" functions we are using are using x-axis value as categorical, and y-axis as a continuous variable. What happens if we used a "geom_" function that has different specifications?
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| error: TRUE
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_histogram() 
+```
+
+:::
+
+---
+
+In the case of the above, `geom_histogram()` was expecting only one column being present in the `aes()` argument. 
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=TcellFrequency) + geom_histogram() 
+```
+
+:::
+
+---
+
+This would similarly be the case for `geom_density()`
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=TcellFrequency) + geom_density() 
+```
+
+:::
+
+---
+
+##### Geometry Arguments
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets return to our current beeswarm boxplot, which is currently using only the default `geom_boxplot()` and `geom_beeswarm()` functions when building the geometry layer. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm()
+Plot
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we think back to what we have been learning about grammar of graphics, each layer is manipulated individually, with subsequent layers combining to make the final plots that we might be interested in. Consequently, if we are making any large changes to the geometry layer, it would be occuring as an argument provided to the geometry determining functions. Lets check to see what our argument options are for both of the above
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+?geom_boxplot
+```
+
+:::
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+?geom_beeswarm
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Currently, all the dots in the beeswarm are kind of small, and tightly wrapped together around the vertical axis for their respective groups. Let's attempt to change this. One of the easiest things to do when modifying arguments is to start with size (or the equivalent argument)
+:::
+:::
+
+---
+
+::: {.fragment}
+
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=5)
+```
+
+:::
+
+---
+
+Waaaaay toooo large. Let's tone it back. 
+
+::: {.fragment}
+
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Better, but now the individual dots being too tightly wrapped together is limiting our capacity to visualize individuals. Lets next attempt to get the dots to spread out more horizontally from each other. Taking a look at the documentation, it looks like "cex" is the argument that might work. 
+:::
+:::
+
+---
+
+::: {.fragment}
+
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=2.5, cex=5)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Upps! Too far! Let's adjust it again
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Good enough for now! 
+:::
+:::
+
+---
+
+### Scales
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The next ggplot2 layer we will work is scales. Working with our individual dots, we were able to change the size within the geometry layer. However, we can also modify their appearance at the scale level. Refering back to our original data, we can see there is a metadata column corresponding to whether the PBMCs were from male or female donors. 
+:::
+:::
+
+---
+
+::: {.fragment}
+
+```{r}
+Data |> pull(infant_sex) |> unique()
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's go ahead and attempt to alter the dots to reflect based on this additional metadata variable.  First, we can assign values based on the categorical values that are present for that column. 
+:::
+:::
+
+::: {.fragment}
+
+```{r}
+shape_sex <- c("Female" = 22, "Male" = 21)
+fill_sex <- c("Female" = "white", "Male" = "black")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The two scale layer functions we will use will be `scale_shape_manual()` and `scale_fill_manual()`. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| error: TRUE
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5) +
+    scale_shape_manual(shape=shape_sex) + scale_fill_manual(fill=fill_sex)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+This did not quite work as expected, with our additional arguments not being perceived by the plot. Part of this is due to needing to set up the underlying geometry layer with the necessary arguments as well. After some investigation, lets try
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+    scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex)
+```
+
+:::
+
+---
+
+### Facets
+
+::: {.fragment}
+::: {.callout-tip title="."}
+At this point, we have added the Data, Aesthetic, and two Geometry layers. We have a decent working version of our plot object which we can continue to edit as we go forward. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex)
+Plot
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The next layer, Facets, allows creation of separate plots based on an additional variable. For example, if we were interested in seeing the difference between male and female infrants, we could specify the column name within the `facet_wrap()` argument. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + facet_wrap(~ infant_sex)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We could similarly return individual plots for various treatment conditions (Ctrl, PPD, SEB)
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + facet_wrap(~ Condition)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We could also use the variant `facet_grid()` to facet on the basis of two separate variables. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + facet_grid(infant_sex ~ Condition)
+```
+
+:::
+
+---
+
+### Coordinates
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having built out much of the underlying plot, we currently have the following plot
+:::
+:::
+
+---
+
+::: {.fragment}
+
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+An additional ggplot layer we will occasionally work with is the coordinates layer. It doesn't change the underlying data, but does the position from which we view with. For example, we can use the `coord_cartesian()` function to zoom out from the plot shown above, and see the full y-axis values from 0 to 100. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + coord_cartesian(ylim=c(0, 100))
+```
+
+:::
+
+---
+
+### Themes
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The final layer in todays exploration of ggplot2 is the "theme" layer. This is where most of the customizations tend to occur when it comes to editing our plots, as most of these are often personal choices. There are a couple ways by which we can implement these, either using a broader "theme_" function, which will set to various defaults, or through the general `theme()` function, which as long as we look up the correct argument will let us edit pretty much anything. 
+:::
+:::
+
+---
+
+#### Broad Themes
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Here are a couple examples of what applying one of the various default "theme_"'s looks like. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + theme_classic()
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + theme_bw()
+```
+
+:::
+
+---
+
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + theme_minimal()
+```
+
+:::
+
+---
+
+#### Active Customization
+
+::: {.fragment}
+::: {.callout-tip title="."}
+By contrast, instead of (or in addition to) applying a broad theme, we can also modify individual elements of our plots. For example, within theme functions parenthesis, we can silence a particular plot element by setting its theme element equal to the `element_blank()`. If we were trying to remove the major grid lines, we would run a line of code like this. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) +
+theme(
+    panel.grid.major = element_blank())
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we decided to remove the minor grid lines, we would set it's equivalent argument equal to `element_blank()` within the theme (), although we must first add a comma to distinguish it from the previous argument. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) +
+theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank())
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In addition to removing things, we can also modify theme elements. One issue often encountered is the axis-text labels obscure one another. One solution is to rotate them (via the "angle" argument)and horizontally justify their starting position using "hjust" to line up with the original starting position. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) +
+theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text.x = element_text(angle=45, hjust=1, size = 16))
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can in a similar manner adjust the size of the axis text labels, using the "size" argument. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) +
+theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text.x = element_text(angle=45, hjust=1, size = 12),
+    axis.text.y = element_text(size=12))
+```
+
+:::
+
+---
+
+## ggcyto
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's return to the [initial](/course/05_GatingSets/index.qmd#plotting) flow cytometry style plots we generated last time using `ggcyto`, and see if we can customize them further using what we have learned today. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we mentioned during [Week 5](/course/05_GatingSets/index.qmd#ggcyto), `ggplot2` implemented some major changes going from version 3 to 4. As a result of this, ggcyto had to implement several [bug fixes](https://github.com/RGLab/ggcyto/pull/110) to get the developmental branch back to working order. Consequently, as of the time of this course, you need the following versions (or greater) or both packages to successfully create all the plots. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+packageVersion("ggplot2")
+packageVersion("ggcyto")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If you are still running older versions, and encounter issues, the updating your package version instructions are [here](/course/05_GatingSets/index.qmd#packageversion)
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's begin by loading in the additional R packages we will need
+:::
+:::
+
+::: {.fragment}
+```{r}
+library(CytoML)
+library(ggcyto)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And proceed to load in the FlowJo.wsp [example](/course/05_GatingSets/index.qmd#cytoml) from Week 05 into a GatingSet object.
+:::
+:::
+
+::: {.fragment}
+```{r}
+# StorageLocation # Defined Above
+FlowJoWsp <- list.files(path = StorageLocation, pattern = ".wsp", full = TRUE)
+ws <- open_flowjo_xml(FlowJoWsp)
+gs <- flowjo_to_gatingset(ws=ws, name=1, path = StorageLocation, additional.keys = "GROUPNAME")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And return to the plot we had left off on:
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- ggcyto(gs[6], subset="Tcells", aes(x="CD8", y="CD4")) + geom_hex(bins=100)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Are we able to use some of the same ggplot2 functions? 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot + theme_bw()
+```
+
+:::
+
+---
+
+# Take Away
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this session, we saw how using grammar of graphics concept, we can create ggplot2 plots by adding on individual layers, which can permit us to build different style of plots depending on what we want to visualize. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next time, we will take a closer look at how to modify `ggcyto` plots in other to visualize differences when different transformations (scaling) is applied, as well as compensation in the context of conventional flow cytometry files.
+:::
+:::
+
+---
+
+![](images/TakeAway.jpg)
+
+---
+
+# Additional Resources
+
+::: {.fragment}
+::: {.callout-tip title="."}
+[ggplot2: Elegant Graphics for Data Analysis](https://ggplot2-book.org/mastery.html) A book written by Hadley Wickham, Danielle Navarro, and Thomas Lin Pedersen, who are the main developers. It is an excellent resource for both beginners and advanced users alike. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+[Introduction to {ggplot2} in R by Tanya Shapiro | R-Ladies Paris]() There are [many](https://rladies.org/) R-Ladies groups worldwide hosting monthly meetups. Many of them post their monthly workshops on YouTube, which are an invaluable resource for those just getting started. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+[Level up your Plots with Cara Thompson](https://youtu.be/_indbXPXUw8?si=7BUdWGmPOfG5fDaZ) I really enjoy Cara Thompson's videos, if you want to dive deeply into how to make your ggplots go above and beyond, look up her resource videos on YouTube. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+[Tidy Tuesday](https://github.com/rfordatascience/tidytuesday) Make sure to star and follow the hashtag for weekly inspiration! 
+:::
+:::
+
+---
+
+# Take-home Problems
+
+:::{.callout-tip title="Problem 1"}
+In this session, we created beeswarm-style boxplot to display our T-cell frequencies on the y-axis, and timepoint on the x-axis. Using the concepts covered this week, swap out "timepoint" for the "Condition" variable. Adjust other layer arguments accordingly until you can return a similar plot at the end of the class. Finally, figure out how to switch around the order the Condition values are displayed on the x-axis. 
+:::
+
+---
+
+:::{.callout-tip title="Problem 2"}
+Circle back to the CytoML-ggcyto flowplot, and modify it until happy with the visual appearance. You may use any resource on the internet to assist, but you must document your steps so that we can also repeat them. 
+:::
+
+---
+
+:::{.callout-tip title="Problem 3"}
+In Mismatched Assumptions, we saw two examples of a histogram/density overlay showing the distribution of a variable on the x-axis. Similar to what we did during class to show values according to a different data column, try to modify the plot to show data on the basis of group (whether condition, ptype, infant_sex, etc.) similar to what you can see [here](https://umgcccfcsr.github.io/CytometryInR/Schedule.html#introduction-to-the-tidyverse)
+:::
+
+---
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
