@@ -67,7 +67,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../Schedule.html" rel="next">
+<link href="../../course/07_Transformations/index.html" rel="next">
 <link href="../../course/05_GatingSets/index.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -292,6 +292,12 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
  <span class="menu-text">06 - Visualizing With ggplot2</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/07_Transformations/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">07 - Applying Transformations</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -397,7 +403,9 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 <div style="text-align: right;">
 <p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://img.shields.io/badge/license-AGPLv3-blue.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
 </div>
-<p>For the YouTube livestream schedule, see <a href="https://www.youtube.com/@cytometryinr">here</a></p>
+<p>For the YouTube livestream recording, see <a href="https://youtu.be/zJ-doH6I-nU?list=PL7tGF31b_cVqEkSLFvAX3kbtzUVpMe-VB&amp;t=249">here</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/zJ-doH6I-nU?si=fg3JEku5sqxamZwS&amp;start=249" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
 <p>For screen-shot slides, click <a href="../../course/06_Visualizing/slides.html">here</a></p>
 <p><br></p>
 <hr>
@@ -653,7 +661,7 @@ Attaching package: 'lubridate'</code></pre>
 <pre><code>[1] 0 4 9</code></pre>
 </div>
 </div>
-<p>If we want to avoid having <code>ggplot</code> treating these values as continuous, and instead see them as categorical, we will need to specify to R to treat these as such. We can do this by converting them into <a href="https://r4ds.had.co.nz/factors.html">factos</a>, using the <code>factor()</code> function.</p>
+<p>If we want to avoid having <code>ggplot</code> treating these values as continuous, and instead see them as categorical, we will need to specify to R to treat these as such. We can do this by converting them into <a href="https://r4ds.had.co.nz/factors.html">factors</a>, using the <code>factor()</code> function.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Data1 <span class="ot">&lt;-</span> Data</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>Data1<span class="sc">$</span>timepoint <span class="ot">&lt;-</span> <span class="fu">factor</span>(Data1<span class="sc">$</span>timepoint)</span>
@@ -1302,7 +1310,7 @@ Problem 1
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Work in Progress</p>
+<p>In this session, we created beeswarm-style boxplot to display our T-cell frequencies on the y-axis, and timepoint on the x-axis. Using the concepts covered this week, swap out “timepoint” for the “Condition” variable. Adjust other layer arguments accordingly until you can return a similar plot at the end of the class. Finally, figure out how to switch around the order the Condition values are displayed on the x-axis.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Problem 2">
@@ -1315,7 +1323,7 @@ Problem 2
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Work in Progress</p>
+<p>Circle back to the CytoML-ggcyto flowplot, and modify it until happy with the visual appearance. You may use any resource on the internet to assist, but you must document your steps so that we can also repeat them.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Problem 3">
@@ -1328,7 +1336,7 @@ Problem 3
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Work in Progress</p>
+<p>In Mismatched Assumptions, we saw two examples of a histogram/density overlay showing the distribution of a variable on the x-axis. Similar to what we did during class to show values according to a different data column, try to modify the plot to show data on the basis of group (whether condition, ptype, infant_sex, etc.) similar to what you can see <a href="https://umgcccfcsr.github.io/CytometryInR/Schedule.html#introduction-to-the-tidyverse">here</a></p>
 </div>
 </div>
 <div style="text-align: right;">
@@ -1745,8 +1753,8 @@ Problem 3
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../Schedule.html" class="pagination-link" aria-label="Cytometry Core">
-        <span class="nav-page-text">Cytometry Core</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../course/07_Transformations/index.html" class="pagination-link" aria-label="07 - Applying Transformations">
+        <span class="nav-page-text">07 - Applying Transformations</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -13,7 +13,9 @@ toc-depth: 5
 [![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 :::
 
-For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
+For the YouTube livestream recording, see [here](https://youtu.be/zJ-doH6I-nU?list=PL7tGF31b_cVqEkSLFvAX3kbtzUVpMe-VB&t=249)
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/zJ-doH6I-nU?si=fg3JEku5sqxamZwS&amp;start=249" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 For screen-shot slides, click [here](/course/06_Visualizing/slides.qmd)
 
@@ -146,7 +148,7 @@ For example, if we look at the Timepoint column, we can see its numeric values a
 Data |> pull(timepoint) |> unique()
 ```
 
-If we want to avoid having `ggplot` treating these values as continuous, and instead see them as categorical, we will need to specify to R to treat these as such. We can do this by converting them into [factos](https://r4ds.had.co.nz/factors.html), using the `factor()` function. 
+If we want to avoid having `ggplot` treating these values as continuous, and instead see them as categorical, we will need to specify to R to treat these as such. We can do this by converting them into [factors](https://r4ds.had.co.nz/factors.html), using the `factor()` function. 
 
 ```{r}
 Data1 <- Data
@@ -597,15 +599,15 @@ Next time, we will take a closer look at how to modify `ggcyto` plots in other t
 # Take-home Problems
 
 :::{.callout-tip title="Problem 1"}
-Work in Progress
+In this session, we created beeswarm-style boxplot to display our T-cell frequencies on the y-axis, and timepoint on the x-axis. Using the concepts covered this week, swap out "timepoint" for the "Condition" variable. Adjust other layer arguments accordingly until you can return a similar plot at the end of the class. Finally, figure out how to switch around the order the Condition values are displayed on the x-axis. 
 :::
 
 :::{.callout-tip title="Problem 2"}
-Work in Progress
+Circle back to the CytoML-ggcyto flowplot, and modify it until happy with the visual appearance. You may use any resource on the internet to assist, but you must document your steps so that we can also repeat them. 
 :::
 
 :::{.callout-tip title="Problem 3"}
-Work in Progress
+In Mismatched Assumptions, we saw two examples of a histogram/density overlay showing the distribution of a variable on the x-axis. Similar to what we did during class to show values according to a different data column, try to modify the plot to show data on the basis of group (whether condition, ptype, infant_sex, etc.) similar to what you can see [here](https://umgcccfcsr.github.io/CytometryInR/Schedule.html#introduction-to-the-tidyverse)
 :::
 
 ::: {style="text-align: right;"}
