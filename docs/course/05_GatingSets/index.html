@@ -292,6 +292,12 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
  <span class="menu-text">06 - Visualizing With ggplot2</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/07_Transformations/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">07 - Applying Transformations</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -543,7 +549,7 @@ attr(,"package")
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(flowSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Formal class 'flowSet' [package "flowCore"] with 2 slots
-  ..@ frames   :&lt;environment: 0x56199e639be0&gt; 
+  ..@ frames   :&lt;environment: 0x558a9dc0e550&gt; 
   ..@ phenoData:Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
   .. .. ..@ varMetadata      :'data.frame': 1 obs. of  1 variable:
   .. .. .. ..$ labelDescription: chr "Name"
@@ -635,7 +641,7 @@ Reminder
 </div>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">"Free GB "</span>, <span class="fu">round</span>(Memory<span class="sc">$</span>free <span class="sc">/</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">3</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Free GB 55.45</code></pre>
+<pre><code>Free GB 54.54</code></pre>
 </div>
 </div>
 </section>
@@ -747,7 +753,7 @@ attr(,"package")
 <div class="cell-output cell-output-stdout">
 <pre><code>Formal class 'cytoset' [package "flowWorkspace"] with 3 slots
   ..@ pointer  :&lt;externalptr&gt; 
-  ..@ frames   :&lt;environment: 0x5619a93c5888&gt; 
+  ..@ frames   :&lt;environment: 0x558aa899f168&gt; 
   ..@ phenoData:Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
   .. .. ..@ varMetadata      :'data.frame': 0 obs. of  1 variable:
   .. .. .. ..$ labelDescription: chr(0) 
@@ -797,7 +803,7 @@ attr(,"package")
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>ConvertedToCytoframe <span class="ot">&lt;-</span> <span class="fu">flowFrame_to_cytoframe</span>(flowFrame)</span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>ConvertedToCytoframe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>cytoframe object 'file15f43dac3db0'
+<pre><code>cytoframe object 'file334829fb53fb'
 with 10000 cells and 43 observables:
                name      desc       range  minRange    maxRange
 $P1            Time        NA     878.809         0     878.809
@@ -1025,7 +1031,7 @@ attr(,"package")
 <span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  0.537   0.004   0.544 </code></pre>
+  0.481   0.008   0.489 </code></pre>
 </div>
 </div>
 <p>Alternatively, if we install the <code>bench</code> package, we can use the <code>mark</code> function to evaluate how long it takes on average across numerous iterations.</p>
@@ -1042,7 +1048,7 @@ attr(,"package")
 <pre><code># A tibble: 1 × 6
   expression                             min median `itr/sec` mem_alloc `gc/sec`
   &lt;bch:expr&gt;                           &lt;bch&gt; &lt;bch:&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;
-1 Test &lt;- flowjo_to_gatingset(ws = ws… 459ms  512ms      1.95    13.3KB        0</code></pre>
+1 Test &lt;- flowjo_to_gatingset(ws = ws… 477ms  487ms      2.05    13.3KB        0</code></pre>
 </div>
 </div>
 </section>
