@@ -67,7 +67,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../Schedule.html" rel="next">
+<link href="../../course/07_Transformations/index.html" rel="next">
 <link href="../../course/05_GatingSets/index.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -292,6 +292,12 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
  <span class="menu-text">06 - Visualizing With ggplot2</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/07_Transformations/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">07 - Applying Transformations</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -337,10 +343,13 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
   <li><a href="#geometries" id="toc-geometries" class="nav-link" data-scroll-target="#geometries">Geometries</a>
   <ul class="collapse">
   <li><a href="#if-left-as-continuous" id="toc-if-left-as-continuous" class="nav-link" data-scroll-target="#if-left-as-continuous">If left as continuous</a></li>
-  <li><a href="#mismatched-assumptions" id="toc-mismatched-assumptions" class="nav-link" data-scroll-target="#mismatched-assumptions">Mismatched Assumptions</a></li>
+  <li><a href="#mismatched-assumptions" id="toc-mismatched-assumptions" class="nav-link" data-scroll-target="#mismatched-assumptions">Mismatched Assumptions</a>
+  <ul class="collapse">
+  <li><a href="#geometry-arguments" id="toc-geometry-arguments" class="nav-link" data-scroll-target="#geometry-arguments">Geometry Arguments</a></li>
   </ul></li>
+  </ul></li>
+  <li><a href="#scales" id="toc-scales" class="nav-link" data-scroll-target="#scales">Scales</a></li>
   <li><a href="#facets" id="toc-facets" class="nav-link" data-scroll-target="#facets">Facets</a></li>
-  <li><a href="#statistics" id="toc-statistics" class="nav-link" data-scroll-target="#statistics">Statistics</a></li>
   <li><a href="#coordinates" id="toc-coordinates" class="nav-link" data-scroll-target="#coordinates">Coordinates</a></li>
   <li><a href="#themes" id="toc-themes" class="nav-link" data-scroll-target="#themes">Themes</a>
   <ul class="collapse">
@@ -394,13 +403,17 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 <div style="text-align: right;">
 <p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://img.shields.io/badge/license-AGPLv3-blue.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
 </div>
-<p>For the YouTube livestream schedule, see <a href="https://www.youtube.com/@cytometryinr">here</a></p>
-<p>For screen-shot slides, click <a href="">here</a></p>
+<p>For the YouTube livestream recording, see <a href="https://youtu.be/zJ-doH6I-nU?list=PL7tGF31b_cVqEkSLFvAX3kbtzUVpMe-VB&amp;t=249">here</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/zJ-doH6I-nU?si=fg3JEku5sqxamZwS&amp;start=249" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<p>For screen-shot slides, click <a href="../../course/06_Visualizing/slides.html">here</a></p>
 <p><br></p>
 <hr>
 <section id="background" class="level1">
 <h1>Background</h1>
-<p>Welcome back! This is the sixth week of Cytometry in R. At this point we are slowly but surely building a solid foundation of general R knowledge, and learning how to apply it when it comes to working with cytometry data. This week, we will explore how to use the <code>ggplot2</code> package to create plots. While these will include plots typical of cytometry, <code>ggplot2</code> and its extension packages can be used to create quite a few visualizations, from statistics, to maps, to graphics for news articles.</p>
+<p>Welcome back! This is the sixth week of Cytometry in R. At this point we are slowly but surely building out a solid foundation of general R knowledge, and learning how to apply it when it comes to working with cytometry data. This week, we will explore how to use the <a href="https://ggplot2.tidyverse.org/">ggplot2</a> package to create plots. While these will include plots typical of cytometry, <code>ggplot2</code> (and other packages that extend its reach) allow us to create a wide range of visualizations, ranging from statistical plots, to maps, to informational graphics you might see in a magazine.</p>
+<p>One of <code>ggplot2</code>’s core strengths is its utilization of the <a href="https://www.tandfonline.com/doi/abs/10.1198/jcgs.2009.07098">grammar of graphics</a>. Rather than treat each type of plot separately, if treats individual elements of a plot on its own (i.e.&nbsp;a layer), with the combined output creating the desired plot. This abstraction is what in turn permits the construction of such a wide array of plots from the same dataset by simply swapping out functions and arguments provided.</p>
+<p><img src="images/ggplot2.png" class="img-fluid"></p>
 </section>
 <section id="walk-through" class="level1">
 <h1>Walk Through</h1>
@@ -648,7 +661,7 @@ Attaching package: 'lubridate'</code></pre>
 <pre><code>[1] 0 4 9</code></pre>
 </div>
 </div>
-<p>If we want to avoid having <code>ggplot</code> treating these values as continuous, and instead see them as categorical, we will need to specify to R to treat these as such. We can do this by converting them into <a href="https://r4ds.had.co.nz/factors.html">factos</a>, using the <code>factor()</code> function.</p>
+<p>If we want to avoid having <code>ggplot</code> treating these values as continuous, and instead see them as categorical, we will need to specify to R to treat these as such. We can do this by converting them into <a href="https://r4ds.had.co.nz/factors.html">factors</a>, using the <code>factor()</code> function.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Data1 <span class="ot">&lt;-</span> Data</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>Data1<span class="sc">$</span>timepoint <span class="ot">&lt;-</span> <span class="fu">factor</span>(Data1<span class="sc">$</span>timepoint)</span>
@@ -751,7 +764,7 @@ Attaching package: 'lubridate'</code></pre>
 </section>
 <section id="geometries" class="level3">
 <h3 class="anchored" data-anchor-id="geometries">Geometries</h3>
-<p>Having specified our Data and Aesthetics layers, we now reach the important point in our plotting step, deciding on what geometries we want to use. It is this layer that determines how the data actually gets plotted.</p>
+<p>Having specified our Data and Aesthetics layers, we now reach the important point in our plotting step, deciding on what geometries we want to use. Geometry is the layer that determines how our data is displayed/plotted.</p>
 <p>For example, we could use the <code>geom_point()</code> function to set the plot geometry as follows</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -899,11 +912,9 @@ Caused by error in `setup_params()`:
 </div>
 </div>
 </div>
-</section>
-</section>
-<section id="facets" class="level3">
-<h3 class="anchored" data-anchor-id="facets">Facets</h3>
-<p>At this point, we have added the Data, Aesthetic, and two Geometry layers. We have a decent working version of our plot object which we can continue to edit as we go forward.</p>
+<section id="geometry-arguments" class="level5">
+<h5 class="anchored" data-anchor-id="geometry-arguments">Geometry Arguments</h5>
+<p>Lets return to our current beeswarm boxplot, which is currently using only the default <code>geom_boxplot()</code> and <code>geom_beeswarm()</code> functions when building the geometry layer.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>()</span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>Plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -915,31 +926,17 @@ Caused by error in `setup_params()`:
 </div>
 </div>
 </div>
-<p>The next layer, Facets, allows creation of separate plots based on an additional variable. For example, if we were interested in seeing the difference between male and female infrants, we could specify the column name within the <code>facet_wrap()</code> argument.</p>
+<p>If we think back to what we have been learning about grammar of graphics, each layer is manipulated individually, with subsequent layers combining to make the final plots that we might be interested in. Consequently, if we are making any large changes to the geometry layer, it would be occuring as an argument provided to the geometry determining functions. Lets check to see what our argument options are for both of the above</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>() <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span> infant_sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>?geom_boxplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-</div>
-<p>We could similarly return individual plots for various treatment conditions (Ctrl, PPD, SEB)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>() <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span> Condition)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>?geom_beeswarm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-</div>
-<p>We could also use the variant <code>facet_grid()</code> to facet on the basis of two separate variables.</p>
+<p>Currently, all the dots in the beeswarm are kind of small, and tightly wrapped together around the vertical axis for their respective groups. Let’s attempt to change this. One of the easiest things to do when modifying arguments is to start with size (or the equivalent argument)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>() <span class="sc">+</span> <span class="fu">facet_grid</span>(infant_sex <span class="sc">~</span> Condition)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -948,14 +945,10 @@ Caused by error in `setup_params()`:
 </div>
 </div>
 </div>
-</section>
-<section id="statistics" class="level3">
-<h3 class="anchored" data-anchor-id="statistics">Statistics</h3>
-</section>
-<section id="coordinates" class="level3">
-<h3 class="anchored" data-anchor-id="coordinates">Coordinates</h3>
+<p>Waaaaay toooo large. Let’s tone it back.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -964,8 +957,10 @@ Caused by error in `setup_params()`:
 </div>
 </div>
 </div>
+<p>Better, but now the individual dots being too tightly wrapped together is limiting our capacity to visualize individuals. Lets next attempt to get the dots to spread out more horizontally from each other. Taking a look at the documentation, it looks like “cex” is the argument that might work.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>() <span class="sc">+</span> <span class="fu">coord_cartesian</span>(<span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -974,13 +969,10 @@ Caused by error in `setup_params()`:
 </div>
 </div>
 </div>
-</section>
-<section id="themes" class="level3">
-<h3 class="anchored" data-anchor-id="themes">Themes</h3>
-<section id="broad-themes" class="level4">
-<h4 class="anchored" data-anchor-id="broad-themes">Broad Themes</h4>
+<p>Upps! Too far! Let’s adjust it again</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>() <span class="sc">+</span> <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -989,47 +981,39 @@ Caused by error in `setup_params()`:
 </div>
 </div>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>() <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>() <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
+<p>Good enough for now!</p>
 </section>
-<section id="active-customization" class="level4">
-<h4 class="anchored" data-anchor-id="active-customization">Active Customization</h4>
-<p>Instead of applying broad theme, you can also modify individual elements. For example, we can</p>
+</section>
+</section>
+<section id="scales" class="level3">
+<h3 class="anchored" data-anchor-id="scales">Scales</h3>
+<p>The next ggplot2 layer we will work is scales. Working with our individual dots, we were able to change the size within the geometry layer. However, we can also modify their appearance at the scale level. Refering back to our original data, we can see there is a metadata column corresponding to whether the PBMCs were from male or female donors.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>() <span class="sc">+</span></span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(</span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(infant_sex) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Male"   "Female"</code></pre>
 </div>
 </div>
-</div>
+<p>Let’s go ahead and attempt to alter the dots to reflect based on this additional metadata variable. First, we can assign values based on the categorical values that are present for that column.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>() <span class="sc">+</span></span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(</span>
-<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>shape_sex <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Female"</span> <span class="ot">=</span> <span class="dv">22</span>, <span class="st">"Male"</span> <span class="ot">=</span> <span class="dv">21</span>)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>fill_sex <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Female"</span> <span class="ot">=</span> <span class="st">"white"</span>, <span class="st">"Male"</span> <span class="ot">=</span> <span class="st">"black"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The two scale layer functions we will use will be <code>scale_shape_manual()</code> and <code>scale_fill_manual()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>) <span class="sc">+</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_shape_manual</span>(<span class="at">shape=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">fill=</span>fill_sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `discrete_scale()`:
+! unused argument (shape = c(22, 21))</code></pre>
+</div>
+</div>
+<p>This did not quite work as expected, with our additional arguments not being perceived by the plot. Part of this is due to needing to set up the underlying geometry layer with the necessary arguments as well. After some investigation, lets try</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1038,13 +1022,15 @@ Caused by error in `setup_params()`:
 </div>
 </div>
 </div>
-<p>Especially useful in cases with long axis text names, we can rotate them using the “angle” argument (and horizontally justify their starting position using “hjust”)</p>
+</section>
+<section id="facets" class="level3">
+<h3 class="anchored" data-anchor-id="facets">Facets</h3>
+<p>At this point, we have added the Data, Aesthetic, and two Geometry layers. We have a decent working version of our plot object which we can continue to edit as we go forward.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>() <span class="sc">+</span></span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(</span>
-<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>, <span class="at">size =</span> <span class="dv">16</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex)</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>Plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1053,17 +1039,182 @@ Caused by error in `setup_params()`:
 </div>
 </div>
 </div>
+<p>The next layer, Facets, allows creation of separate plots based on an additional variable. For example, if we were interested in seeing the difference between male and female infrants, we could specify the column name within the <code>facet_wrap()</code> argument.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>() <span class="sc">+</span></span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(</span>
-<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
-<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span> infant_sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="index_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We could similarly return individual plots for various treatment conditions (Ctrl, PPD, SEB)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span> Condition)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We could also use the variant <code>facet_grid()</code> to facet on the basis of two separate variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">facet_grid</span>(infant_sex <span class="sc">~</span> Condition)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="coordinates" class="level3">
+<h3 class="anchored" data-anchor-id="coordinates">Coordinates</h3>
+<p>Having built out much of the underlying plot, we currently have the following plot</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-49-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>An additional ggplot layer we will occasionally work with is the coordinates layer. It doesn’t change the underlying data, but does the position from which we view with. For example, we can use the <code>coord_cartesian()</code> function to zoom out from the plot shown above, and see the full y-axis values from 0 to 100.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">coord_cartesian</span>(<span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="themes" class="level3">
+<h3 class="anchored" data-anchor-id="themes">Themes</h3>
+<p>The final layer in todays exploration of ggplot2 is the “theme” layer. This is where most of the customizations tend to occur when it comes to editing our plots, as most of these are often personal choices. There are a couple ways by which we can implement these, either using a broader “theme_” function, which will set to various defaults, or through the general <code>theme()</code> function, which as long as we look up the correct argument will let us edit pretty much anything.</p>
+<section id="broad-themes" class="level4">
+<h4 class="anchored" data-anchor-id="broad-themes">Broad Themes</h4>
+<p>Here are a couple examples of what applying one of the various default “theme_”’s looks like.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-51-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-53-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="active-customization" class="level4">
+<h4 class="anchored" data-anchor-id="active-customization">Active Customization</h4>
+<p>By contrast, instead of (or in addition to) applying a broad theme, we can also modify individual elements of our plots. For example, within theme functions parenthesis, we can silence a particular plot element by setting its theme element equal to the <code>element_blank()</code>. If we were trying to remove the major grid lines, we would run a line of code like this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(</span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-54-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>If we decided to remove the minor grid lines, we would set it’s equivalent argument equal to <code>element_blank()</code> within the theme (), although we must first add a comma to distinguish it from the previous argument.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(</span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-55-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In addition to removing things, we can also modify theme elements. One issue often encountered is the axis-text labels obscure one another. One solution is to rotate them (via the “angle” argument)and horizontally justify their starting position using “hjust” to line up with the original starting position.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span></span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(</span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>, <span class="at">size =</span> <span class="dv">16</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-56-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can in a similar manner adjust the size of the axis text labels, using the “size” argument.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span></span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a><span class="fu">theme</span>(</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
+<span id="cb80-8"><a href="#cb80-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-57-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1076,11 +1227,11 @@ Caused by error in `setup_params()`:
 <p>Let’s return to the <a href="../../course/05_GatingSets/index.html#plotting">initial</a> flow cytometry style plots we generated last time using <code>ggcyto</code>, and see if we can customize them further using what we have learned today.</p>
 <p>As we mentioned during <a href="../../course/05_GatingSets/index.html#ggcyto">Week 5</a>, <code>ggplot2</code> implemented some major changes going from version 3 to 4. As a result of this, ggcyto had to implement several <a href="https://github.com/RGLab/ggcyto/pull/110">bug fixes</a> to get the developmental branch back to working order. Consequently, as of the time of this course, you need the following versions (or greater) or both packages to successfully create all the plots.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"ggplot2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"ggplot2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] '4.0.2'</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"ggcyto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"ggcyto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] '1.39.3'</code></pre>
 </div>
@@ -1088,8 +1239,8 @@ Caused by error in `setup_params()`:
 <p>If you are still running older versions, and encounter issues, the updating your package version instructions are <a href="../../course/05_GatingSets/index.html#packageversion">here</a></p>
 <p>Let’s begin by loading in the additional R packages we will need</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(CytoML)</span>
-<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggcyto)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(CytoML)</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggcyto)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: flowCore</code></pre>
 </div>
@@ -1112,22 +1263,22 @@ titled "The cytoframe and cytoset classes" in the package vignette:
 </div>
 <p>And proceed to load in the FlowJo.wsp <a href="../../course/05_GatingSets/index.html#cytoml">example</a> from Week 05 into a GatingSet object.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># StorageLocation # Defined Above</span></span>
-<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>FlowJoWsp <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> StorageLocation, <span class="at">pattern =</span> <span class="st">".wsp"</span>, <span class="at">full =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>ws <span class="ot">&lt;-</span> <span class="fu">open_flowjo_xml</span>(FlowJoWsp)</span>
-<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>gs <span class="ot">&lt;-</span> <span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> StorageLocation, <span class="at">additional.keys =</span> <span class="st">"GROUPNAME"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># StorageLocation # Defined Above</span></span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>FlowJoWsp <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> StorageLocation, <span class="at">pattern =</span> <span class="st">".wsp"</span>, <span class="at">full =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>ws <span class="ot">&lt;-</span> <span class="fu">open_flowjo_xml</span>(FlowJoWsp)</span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>gs <span class="ot">&lt;-</span> <span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> StorageLocation, <span class="at">additional.keys =</span> <span class="st">"GROUPNAME"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And return to the plot we had left off on:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggcyto</span>(gs[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"CD8"</span>, <span class="at">y=</span><span class="st">"CD4"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggcyto</span>(gs[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"CD8"</span>, <span class="at">y=</span><span class="st">"CD4"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>To start, let’s switch out the background theme.</p>
+<p>Are we able to use some of the same ggplot2 functions?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>Plot <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>Plot <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-51-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-62-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1159,7 +1310,7 @@ Problem 1
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Work in Progress</p>
+<p>In this session, we created beeswarm-style boxplot to display our T-cell frequencies on the y-axis, and timepoint on the x-axis. Using the concepts covered this week, swap out “timepoint” for the “Condition” variable. Adjust other layer arguments accordingly until you can return a similar plot at the end of the class. Finally, figure out how to switch around the order the Condition values are displayed on the x-axis.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Problem 2">
@@ -1172,7 +1323,7 @@ Problem 2
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Work in Progress</p>
+<p>Circle back to the CytoML-ggcyto flowplot, and modify it until happy with the visual appearance. You may use any resource on the internet to assist, but you must document your steps so that we can also repeat them.</p>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Problem 3">
@@ -1185,7 +1336,7 @@ Problem 3
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Work in Progress</p>
+<p>In Mismatched Assumptions, we saw two examples of a histogram/density overlay showing the distribution of a variable on the x-axis. Similar to what we did during class to show values according to a different data column, try to modify the plot to show data on the basis of group (whether condition, ptype, infant_sex, etc.) similar to what you can see <a href="https://umgcccfcsr.github.io/CytometryInR/Schedule.html#introduction-to-the-tidyverse">here</a></p>
 </div>
 </div>
 <div style="text-align: right;">
@@ -1602,8 +1753,8 @@ Problem 3
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../Schedule.html" class="pagination-link" aria-label="Cytometry Core">
-        <span class="nav-page-text">Cytometry Core</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../course/07_Transformations/index.html" class="pagination-link" aria-label="07 - Applying Transformations">
+        <span class="nav-page-text">07 - Applying Transformations</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

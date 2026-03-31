@@ -13,9 +13,11 @@ toc-depth: 5
 [![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 :::
 
-For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
+For the YouTube livestream recording, see [here](https://youtu.be/zJ-doH6I-nU?list=PL7tGF31b_cVqEkSLFvAX3kbtzUVpMe-VB&t=249)
 
-For screen-shot slides, click [here]()
+<iframe width="560" height="315" src="https://www.youtube.com/embed/zJ-doH6I-nU?si=fg3JEku5sqxamZwS&amp;start=249" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+For screen-shot slides, click [here](/course/06_Visualizing/slides.qmd)
 
 <br>
 
@@ -23,7 +25,12 @@ For screen-shot slides, click [here]()
 
 # Background
 
-Welcome back! This is the sixth week of Cytometry in R. At this point we are slowly but surely building a solid foundation of general R knowledge, and learning how to apply it when it comes to working with cytometry data. This week, we will explore how to use the `ggplot2` package to create plots. While these will include plots typical of cytometry, `ggplot2` and its extension packages can be used to create quite a few visualizations, from statistics, to maps, to graphics for news articles. 
+Welcome back! This is the sixth week of Cytometry in R. At this point we are slowly but surely building out a solid foundation of general R knowledge, and learning how to apply it when it comes to working with cytometry data. This week, we will explore how to use the [ggplot2](https://ggplot2.tidyverse.org/) package to create plots.
+While these will include plots typical of cytometry, `ggplot2` (and other packages that extend its reach) allow us to create a wide range of visualizations, ranging from statistical plots, to maps, to informational graphics you might see in a magazine. 
+
+One of `ggplot2`'s core strengths is its utilization of the [grammar of graphics](https://www.tandfonline.com/doi/abs/10.1198/jcgs.2009.07098). Rather than treat each type of plot separately, if treats individual elements of a plot on its own (i.e. a layer), with the combined output creating the desired plot. This abstraction is what in turn permits the construction of such a wide array of plots from the same dataset by simply swapping out functions and arguments provided. 
+
+![](images/ggplot2.png)
 
 # Walk Through
 
@@ -141,7 +148,7 @@ For example, if we look at the Timepoint column, we can see its numeric values a
 Data |> pull(timepoint) |> unique()
 ```
 
-If we want to avoid having `ggplot` treating these values as continuous, and instead see them as categorical, we will need to specify to R to treat these as such. We can do this by converting them into [factos](https://r4ds.had.co.nz/factors.html), using the `factor()` function. 
+If we want to avoid having `ggplot` treating these values as continuous, and instead see them as categorical, we will need to specify to R to treat these as such. We can do this by converting them into [factors](https://r4ds.had.co.nz/factors.html), using the `factor()` function. 
 
 ```{r}
 Data1 <- Data
@@ -235,7 +242,7 @@ Yikes! Not what we were expecting.
 
 ### Geometries
 
-Having specified our Data and Aesthetics layers, we now reach the important point in our plotting step, deciding on what geometries we want to use. It is this layer that determines how the data actually gets plotted. 
+Having specified our Data and Aesthetics layers, we now reach the important point in our plotting step, deciding on what geometries we want to use. Geometry is the layer that determines how our data is displayed/plotted. 
 
 For example, we could use the `geom_point()` function to set the plot geometry as follows
 
@@ -320,90 +327,209 @@ This would similarly be the case for `geom_density()`
 ggplot(Data) + aes(x=TcellFrequency) + geom_density() 
 ```
 
-### Facets
+##### Geometry Arguments
 
-At this point, we have added the Data, Aesthetic, and two Geometry layers. We have a decent working version of our plot object which we can continue to edit as we go forward. 
+Lets return to our current beeswarm boxplot, which is currently using only the default `geom_boxplot()` and `geom_beeswarm()` functions when building the geometry layer. 
 
 ```{r}
 Plot <- ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm()
 Plot
 ```
 
+If we think back to what we have been learning about grammar of graphics, each layer is manipulated individually, with subsequent layers combining to make the final plots that we might be interested in. Consequently, if we are making any large changes to the geometry layer, it would be occuring as an argument provided to the geometry determining functions. Lets check to see what our argument options are for both of the above
+
+```{r}
+#| eval: FALSE
+?geom_boxplot
+```
+
+```{r}
+#| eval: FALSE
+?geom_beeswarm
+```
+
+Currently, all the dots in the beeswarm are kind of small, and tightly wrapped together around the vertical axis for their respective groups. Let's attempt to change this. One of the easiest things to do when modifying arguments is to start with size (or the equivalent argument)
+
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=5)
+```
+
+Waaaaay toooo large. Let's tone it back. 
+
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5)
+```
+
+Better, but now the individual dots being too tightly wrapped together is limiting our capacity to visualize individuals. Lets next attempt to get the dots to spread out more horizontally from each other. Taking a look at the documentation, it looks like "cex" is the argument that might work. 
+
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=2.5, cex=5)
+```
+
+Upps! Too far! Let's adjust it again
+ 
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5)
+```
+
+Good enough for now! 
+
+
+### Scales
+
+The next ggplot2 layer we will work is scales. Working with our individual dots, we were able to change the size within the geometry layer. However, we can also modify their appearance at the scale level. Refering back to our original data, we can see there is a metadata column corresponding to whether the PBMCs were from male or female donors. 
+
+```{r}
+Data |> pull(infant_sex) |> unique()
+```
+
+Let's go ahead and attempt to alter the dots to reflect based on this additional metadata variable.  First, we can assign values based on the categorical values that are present for that column. 
+
+```{r}
+shape_sex <- c("Female" = 22, "Male" = 21)
+fill_sex <- c("Female" = "white", "Male" = "black")
+```
+
+The two scale layer functions we will use will be `scale_shape_manual()` and `scale_fill_manual()`. 
+
+```{r}
+#| error: TRUE
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5) +
+    scale_shape_manual(shape=shape_sex) + scale_fill_manual(fill=fill_sex)
+```
+
+This did not quite work as expected, with our additional arguments not being perceived by the plot. Part of this is due to needing to set up the underlying geometry layer with the necessary arguments as well. After some investigation, lets try
+
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+    scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex)
+```
+
+### Facets
+
+At this point, we have added the Data, Aesthetic, and two Geometry layers. We have a decent working version of our plot object which we can continue to edit as we go forward. 
+
+```{r}
+Plot <- ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex)
+Plot
+```
+
 The next layer, Facets, allows creation of separate plots based on an additional variable. For example, if we were interested in seeing the difference between male and female infrants, we could specify the column name within the `facet_wrap()` argument. 
 
 ```{r}
-ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm() + facet_wrap(~ infant_sex)
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + facet_wrap(~ infant_sex)
 ```
 
 We could similarly return individual plots for various treatment conditions (Ctrl, PPD, SEB)
 
 ```{r}
-ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm() + facet_wrap(~ Condition)
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + facet_wrap(~ Condition)
 ```
 
 We could also use the variant `facet_grid()` to facet on the basis of two separate variables. 
 
 ```{r}
-ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm() + facet_grid(infant_sex ~ Condition)
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + facet_grid(infant_sex ~ Condition)
 ```
-
-### Statistics
 
 ### Coordinates
 
-```{r}
-ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm()
-```
+Having built out much of the underlying plot, we currently have the following plot
 
 ```{r}
-ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm() + coord_cartesian(ylim=c(0, 100))
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex)
+```
+
+An additional ggplot layer we will occasionally work with is the coordinates layer. It doesn't change the underlying data, but does the position from which we view with. For example, we can use the `coord_cartesian()` function to zoom out from the plot shown above, and see the full y-axis values from 0 to 100. 
+
+```{r}
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + coord_cartesian(ylim=c(0, 100))
 ```
 
 ### Themes
 
+The final layer in todays exploration of ggplot2 is the "theme" layer. This is where most of the customizations tend to occur when it comes to editing our plots, as most of these are often personal choices. There are a couple ways by which we can implement these, either using a broader "theme_" function, which will set to various defaults, or through the general `theme()` function, which as long as we look up the correct argument will let us edit pretty much anything. 
+
 #### Broad Themes
 
+Here are a couple examples of what applying one of the various default "theme_"'s looks like. 
+
 ```{r}
-ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm() + theme_classic()
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + theme_classic()
 ```
 
 ```{r}
-ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm() + theme_bw()
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + theme_bw()
 ```
 
 ```{r}
-ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm() + theme_minimal()
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + theme_minimal()
 ```
 
 #### Active Customization
 
-Instead of applying broad theme, you can also modify individual elements. For example, we can 
+By contrast, instead of (or in addition to) applying a broad theme, we can also modify individual elements of our plots. For example, within theme functions parenthesis, we can silence a particular plot element by setting its theme element equal to the `element_blank()`. If we were trying to remove the major grid lines, we would run a line of code like this. 
 
 ```{r}
-ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm() +
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) +
 theme(
     panel.grid.major = element_blank())
 ```
 
+If we decided to remove the minor grid lines, we would set it's equivalent argument equal to `element_blank()` within the theme (), although we must first add a comma to distinguish it from the previous argument. 
 ```{r}
-ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm() +
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) +
 theme(
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank())
 ```
 
-Especially useful in cases with long axis text names, we can rotate them using the "angle" argument (and horizontally justify their starting position using "hjust")
+
+In addition to removing things, we can also modify theme elements. One issue often encountered is the axis-text labels obscure one another. One solution is to rotate them (via the "angle" argument)and horizontally justify their starting position using "hjust" to line up with the original starting position. 
 
 ```{r}
-ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm() +
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) +
 theme(
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     axis.text.x = element_text(angle=45, hjust=1, size = 16))
 ```
 
+We can in a similar manner adjust the size of the axis text labels, using the "size" argument. 
 ```{r}
-ggplot(Data) + aes(x=timepoint, y=TcellFrequency) + geom_boxplot() + geom_beeswarm() +
+ggplot(Data) + aes(x=timepoint, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) +
 theme(
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
@@ -446,7 +572,7 @@ And return to the plot we had left off on:
 Plot <- ggcyto(gs[6], subset="Tcells", aes(x="CD8", y="CD4")) + geom_hex(bins=100)
 ```
 
-To start, let's switch out the background theme. 
+Are we able to use some of the same ggplot2 functions? 
 
 ```{r}
 Plot + theme_bw()
@@ -473,15 +599,15 @@ Next time, we will take a closer look at how to modify `ggcyto` plots in other t
 # Take-home Problems
 
 :::{.callout-tip title="Problem 1"}
-Work in Progress
+In this session, we created beeswarm-style boxplot to display our T-cell frequencies on the y-axis, and timepoint on the x-axis. Using the concepts covered this week, swap out "timepoint" for the "Condition" variable. Adjust other layer arguments accordingly until you can return a similar plot at the end of the class. Finally, figure out how to switch around the order the Condition values are displayed on the x-axis. 
 :::
 
 :::{.callout-tip title="Problem 2"}
-Work in Progress
+Circle back to the CytoML-ggcyto flowplot, and modify it until happy with the visual appearance. You may use any resource on the internet to assist, but you must document your steps so that we can also repeat them. 
 :::
 
 :::{.callout-tip title="Problem 3"}
-Work in Progress
+In Mismatched Assumptions, we saw two examples of a histogram/density overlay showing the distribution of a variable on the x-axis. Similar to what we did during class to show values according to a different data column, try to modify the plot to show data on the basis of group (whether condition, ptype, infant_sex, etc.) similar to what you can see [here](https://umgcccfcsr.github.io/CytometryInR/Schedule.html#introduction-to-the-tidyverse)
 :::
 
 ::: {style="text-align: right;"}
