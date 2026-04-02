@@ -1,0 +1,508 @@
+
+```{r}
+library(flowWorkspace)
+library(ggcyto)
+
+```
+
+# Separating SFC and MC fcs files
+
+```{r}
+#StorageLocation <- file.path("course", "07_Transformations", "data") # When interactively writing the code 
+
+StorageLocation <- file.path("data") #When Quarto Rendering
+
+fcs_files <- list.files(StorageLocation, ".fcs", full.names=TRUE)
+SFC_files <- fcs_files[stringr::str_detect(fcs_files, "2025")]
+MC_files <- fcs_files[stringr::str_detect(fcs_files, "G1_2")]
+
+SFC_files
+
+SFC_cytoset <- load_cytoset_from_fcs(SFC_files, truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+
+SFC_GatingSet
+
+```
+
+# Metadata
+
+```{r}
+pData(SFC_GatingSet)
+Metadata <- pData(SFC_GatingSet)
+str(Metadata)
+
+library(dplyr)
+library(stringr)
+
+Testing <- Metadata |> mutate(Condition = name)
+```
+
+# RegEx
+
+```{r}
+Testing |> pull(Condition)
+sub(".*_", "", Testing$Condition)
+
+Intermediate <- sub(".*_", "", Testing$Condition)
+sub(".fcs", "", Intermediate)
+
+str_extract(Testing$Condition, "[^_]+(?=\\.fcs$)")
+
+Metadata |> mutate(Condition = name) |> mutate(Condition=str_extract(Condition, "[^_]+(?=\\.fcs$)"))
+
+TwoExtraColumns <- Metadata |> mutate(Condition = name) |>
+     mutate(Condition=str_extract(Condition, "[^_]+(?=\\.fcs$)")) |>
+     mutate(Specimen=str_extract(name, "INF\\d{3}")) |> select(Condition, Specimen)
+TwoExtraColumns
+
+```
+
+# Updating Metadata
+
+```{r}
+UpdatedMetadata <- cbind(Metadata, TwoExtraColumns)
+UpdatedMetadata
+
+pData(SFC_GatingSet) <- UpdatedMetadata
+pData(SFC_GatingSet)
+
+SEB_GatingSet <- subset(SFC_GatingSet, Condition %in% "SEB")
+pData(SEB_GatingSet)
+```
+
+# SFC colnames
+
+```{r}
+SFC_GatingSet
+
+colnames(SFC_GatingSet)
+```
+
+# markernames
+
+```{r}
+markernames(SFC_GatingSet)
+```
+
+# ggcyto
+
+```{r}
+ggcyto(SFC_GatingSet[1], subset="root",
+    aes(x="FSC-A", y="SSC-A")) + geom_hex(bins=100)
+
+str(SFC_GatingSet[1])
+
+ggcyto(SFC_GatingSet[6], subset="root",
+ aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+
+gh_get_transformations(SFC_GatingSet[[1]])
+```
+
+# Transformers
+
+```{r}
+Logicle <- logicle_trans()
+str(Logicle)
+
+Biexponential <- flowjo_biexp_trans()
+str(Biexponential)
+
+Asinh <- flowjo_fasinh_trans()
+str(Asinh)
+
+AsinhGML <- asinhtGml2_trans()
+str(AsinhGML)
+```
+
+# Column names to be transformed
+
+```{r}
+SFC_Parameters <- colnames(SFC_GatingSet)
+SFC_Parameters
+
+FluorophoresOnly <- SFC_Parameters[!stringr::str_detect(SFC_Parameters, "FSC|SSC|Time")]
+FluorophoresOnly
+```
+
+# transformerList
+
+```{r}
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+MyBiexTransform
+
+str(MyBiexTransform[1:3])
+str(MyBiexTransform$`APC-A`)
+
+transform(SFC_GatingSet, MyBiexTransform)
+
+ggcyto(SFC_GatingSet[6], subset="root",
+ aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+
+?flowjo_biexp_trans
+?flowJoTrans
+```
+
+# Transformation Arguments
+
+```{r}
+SFC_cytoset <- load_cytoset_from_fcs(SFC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=0, widthBasis=-10)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+ggcyto(SFC_GatingSet[6], subset="root",
+ aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+
+gh_get_transformations(SFC_GatingSet[[1]])$`BUV805-A`
+```
+
+# width
+
+```{r}
+# widthBasis -1000
+
+SFC_cytoset <- load_cytoset_from_fcs(SFC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=0, widthBasis=-1000)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+ggcyto(SFC_GatingSet[6], subset="root",
+ aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+
+gh_get_transformations(SFC_GatingSet[[1]])$`BUV805-A`
+
+# widthBasis -500
+
+SFC_cytoset <- load_cytoset_from_fcs(SFC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=0, widthBasis=-500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+ggcyto(SFC_GatingSet[6], subset="root",
+    aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+
+# widthBasis -100
+
+SFC_cytoset <- load_cytoset_from_fcs(SFC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=0, widthBasis=-100)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+ggcyto(SFC_GatingSet[6], subset="root",
+ aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+
+```
+
+# channelRange
+
+```{r}
+
+# channelRange 8192
+
+SFC_cytoset <- load_cytoset_from_fcs(SFC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(channelRange=8192, maxValue=262144,
+     pos=4.5, neg=0, widthBasis=-500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+gh_get_transformations(SFC_GatingSet[[1]])$`BUV805-A`
+
+# channelRange 2048
+
+SFC_cytoset <- load_cytoset_from_fcs(SFC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(channelRange=2048, maxValue=262144,
+     pos=4.5, neg=0, widthBasis=-500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+gh_get_transformations(SFC_GatingSet[[1]])$`BUV805-A`
+```
+
+# maxValue
+
+```{r}
+# maxValue 524288
+SFC_cytoset <- load_cytoset_from_fcs(SFC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=524288,
+     pos=4.5, neg=0, widthBasis=-500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+ggcyto(SFC_GatingSet[6], subset="root",
+ aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+
+# maxValue 131072
+SFC_cytoset <- load_cytoset_from_fcs(SFC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=131072,
+     pos=4.5, neg=0, widthBasis=-500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+ggcyto(SFC_GatingSet[6], subset="root",
+ aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+```
+
+# pos
+
+```{r}
+
+# pos 4.5
+
+SFC_cytoset <- load_cytoset_from_fcs(SFC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=0, widthBasis=-500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+ggcyto(SFC_GatingSet[6], subset="root",
+ aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+
+# pos 5
+SFC_cytoset <- load_cytoset_from_fcs(SFC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=5, neg=0, widthBasis=-500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+ggcyto(SFC_GatingSet[6], subset="root",
+ aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+
+SFC_cytoset <- load_cytoset_from_fcs(SFC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=524288,
+     pos=5, neg=0, widthBasis=-1000)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+ggcyto(SFC_GatingSet[6], subset="root",
+ aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+
+```
+
+# Neg
+
+```{r}
+SFC_cytoset <- load_cytoset_from_fcs(SFC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=0, widthBasis=-500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+ggcyto(SFC_GatingSet[6], subset="root",
+ aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+
+SFC_cytoset <- load_cytoset_from_fcs(SFC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=1, widthBasis=-500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+ggcyto(SFC_GatingSet[6], subset="root",
+ aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+```
+
+# MC/CyTOF files
+
+```{r}
+MC_files
+
+MC_cytoset <- load_cytoset_from_fcs(MC_files, truncate_max_range = FALSE, transformation = FALSE)
+MC_GatingSet <- GatingSet(MC_cytoset)
+
+MC_GatingSet
+
+colnames(MC_GatingSet)
+
+markernames(MC_GatingSet)
+
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+
+MC_Parameters <- markernames(MC_GatingSet)
+MC_MarkersInterest <- MC_Parameters[!str_detect("Barcode|Beads", MC_Parameters)]
+MC_MarkersInterest
+
+InterestingMetalsOnly <- names(MC_MarkersInterest)
+InterestingMetalsOnly
+
+Asinh <- flowjo_fasinh_trans()
+MyAsinhTransform <- transformerList(InterestingMetalsOnly, Asinh)
+str(MyAsinhTransform[1:3])
+
+transform(MC_GatingSet, MyAsinhTransform)
+
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+
+```
+
+# Asinh Arguments
+
+```{r}
+?flowjo_fasinh_trans
+
+?flowjo_fasinh
+
+MC_cytoset <- load_cytoset_from_fcs(MC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+MC_GatingSet <- GatingSet(MC_cytoset)
+Asinh <- flowjo_fasinh_trans(m = 4, t = 12000, a = 0.7, length = 256)
+MyAsinhTransform <- transformerList(InterestingMetalsOnly, Asinh)
+transform(MC_GatingSet, MyAsinhTransform)
+
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+
+gh_get_transformations(MC_GatingSet[[1]])$`Nd145Di`
+```
+
+# m
+
+```{r}
+MC_cytoset <- load_cytoset_from_fcs(MC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+MC_GatingSet <- GatingSet(MC_cytoset)
+Asinh <- flowjo_fasinh_trans(m = 4, t = 12000, a = 0.7, length = 256)
+MyAsinhTransform <- transformerList(InterestingMetalsOnly, Asinh)
+transform(MC_GatingSet, MyAsinhTransform)
+
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+
+MC_cytoset <- load_cytoset_from_fcs(MC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+MC_GatingSet <- GatingSet(MC_cytoset)
+Asinh <- flowjo_fasinh_trans(m = 5, t = 12000, a = 0.7, length = 256)
+MyAsinhTransform <- transformerList(InterestingMetalsOnly, Asinh)
+transform(MC_GatingSet, MyAsinhTransform)
+
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+
+MC_cytoset <- load_cytoset_from_fcs(MC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+MC_GatingSet <- GatingSet(MC_cytoset)
+Asinh <- flowjo_fasinh_trans(m = 3, t = 12000, a = 0.7, length = 256)
+MyAsinhTransform <- transformerList(InterestingMetalsOnly, Asinh)
+transform(MC_GatingSet, MyAsinhTransform)
+
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+```
+
+# t
+
+```{r}
+MC_cytoset <- load_cytoset_from_fcs(MC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+MC_GatingSet <- GatingSet(MC_cytoset)
+Asinh <- flowjo_fasinh_trans(m = 4, t = 24000, a = 0.7, length = 256)
+MyAsinhTransform <- transformerList(InterestingMetalsOnly, Asinh)
+transform(MC_GatingSet, MyAsinhTransform)
+
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+
+MC_cytoset <- load_cytoset_from_fcs(MC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+MC_GatingSet <- GatingSet(MC_cytoset)
+Asinh <- flowjo_fasinh_trans(m = 4, t = 6000, a = 0.7, length = 256)
+MyAsinhTransform <- transformerList(InterestingMetalsOnly, Asinh)
+transform(MC_GatingSet, MyAsinhTransform)
+
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+
+```
+
+# a
+
+```{r}
+MC_cytoset <- load_cytoset_from_fcs(MC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+MC_GatingSet <- GatingSet(MC_cytoset)
+Asinh <- flowjo_fasinh_trans(m = 4, t = 12000, a = 1, length = 256)
+MyAsinhTransform <- transformerList(InterestingMetalsOnly, Asinh)
+transform(MC_GatingSet, MyAsinhTransform)
+
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+
+MC_cytoset <- load_cytoset_from_fcs(MC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+MC_GatingSet <- GatingSet(MC_cytoset)
+Asinh <- flowjo_fasinh_trans(m = 4, t = 12000, a = 0, length = 256)
+MyAsinhTransform <- transformerList(InterestingMetalsOnly, Asinh)
+transform(MC_GatingSet, MyAsinhTransform)
+
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+
+```
+
+# length
+
+```{r}
+MC_cytoset <- load_cytoset_from_fcs(MC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+MC_GatingSet <- GatingSet(MC_cytoset)
+Asinh <- flowjo_fasinh_trans(m = 4, t = 12000, a = 1, length = 512)
+MyAsinhTransform <- transformerList(InterestingMetalsOnly, Asinh)
+transform(MC_GatingSet, MyAsinhTransform)
+
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+
+ MC_cytoset <- load_cytoset_from_fcs(MC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+MC_GatingSet <- GatingSet(MC_cytoset)
+Asinh <- flowjo_fasinh_trans(m = 4, t = 12000, a = 1, length = 128)
+MyAsinhTransform <- transformerList(InterestingMetalsOnly, Asinh)
+transform(MC_GatingSet, MyAsinhTransform)
+
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+```
+
+# Extracting Data
+
+```{r}
+MyCytoSet <- gs_pop_get_data(SFC_GatingSet[[1]], "root")
+MyCytoSet
+
+exprs(MyCytoSet[[1]])[1:3,]
+
+MyInversedCytoSet <- gs_pop_get_data(SFC_GatingSet[[1]], "root", inverse.transform=TRUE)
+exprs(MyInversedCytoSet[[1]])[1:3,]
+
+```
