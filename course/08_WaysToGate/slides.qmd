@@ -230,7 +230,15 @@ Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
      pos=4.5, neg=2, widthBasis=-500)
 MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
 transform(SFC_GatingSet, MyBiexTransform)
+```
 
+:::
+
+---
+
+::: {.fragment}
+
+```{r}
 ggcyto(SFC_GatingSet[1], subset="root",
  aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
 ```
@@ -308,7 +316,10 @@ When a Shiny R app launches, you will see the following appear in your console w
 :::
 :::
 
+::: {.fragment}
 ![](images/00_ShinyAppLaunch.png)
+
+:::
 
 ---
 
@@ -326,7 +337,13 @@ The Shiny app will generally initially launch in the Viewer portion of the secon
 :::
 :::
 
+---
+
+::: {.fragment}
 ![](images/01_SingletsVisualized.png)
+
+:::
+
 
 ---
 
@@ -338,7 +355,12 @@ To draw a singlet gate, first click on the Polygon option under Gate Type.
 :::
 :::
 
+---
+
+::: {.fragment}
 ![](images/02_Polygon.png)
+
+:::
 
 ---
 
@@ -348,7 +370,12 @@ Next click on the plot, to start drawing a gate. You won't see a line visualized
 :::
 :::
 
+---
+
+::: {.fragment}
 ![](images/02b_PolygonDraw.png)
+
+:::
 
 ---
 
@@ -358,7 +385,12 @@ Continue adding points until you have finished gating around your singlets.
 :::
 :::
 
+---
+
+::: {.fragment}
 ![](images/02c_PolygonDraw.png)
+
+:::
 
 ---
 
@@ -368,7 +400,12 @@ And finally, select the Done button to finish the gate creation (which will add 
 :::
 :::
 
+---
+
+::: {.fragment}
 ![](images/02d_PolygonDone.png)
+
+:::
 
 ---
 
@@ -378,7 +415,10 @@ At this point, the Shiny app will stop being active (notice the dissapearance of
 :::
 :::
 
+::: {.fragment}
 ![](images/03_PolygonGateWithVertices.png)
+
+:::
 
 ---
 
@@ -396,11 +436,11 @@ plot(SFC_GatingSet)
 ```
 
 :::
-:::
 
----
-
+::: {.fragment}
 ![](images/04_SingletGateCreated.png)
+
+:::
 
 ---
 
@@ -418,9 +458,11 @@ gs_pop_get_count_fast(SFC_GatingSet)
 
 :::
 
----
+::: {.fragment}
 
 ![](images/05_AllSpecimens.png)
+
+:::
 
 ---
 
@@ -471,7 +513,12 @@ To showcase the other gate shape options, lets go ahead and select the option to
 :::
 :::
 
+---
+
+::: {.fragment}
 ![](images/08_Rectangle.png)
+
+:::
 
 ---
 
@@ -481,7 +528,11 @@ In this case, click and drag to highlight the desired area. Once the rectangle i
 :::
 :::
 
+---
+
+::: {.fragment}
 ![](images/08b_RectangleDone.png)
+:::
 
 ---
 
@@ -491,7 +542,12 @@ Similar to what we saw when we drew a polygon, a coordinate readout gets printed
 :::
 :::
 
+---
+
+::: {.fragment}
 ![](images/08c_RectangleReadout.png)
+
+:::
 
 ---
 
@@ -509,9 +565,10 @@ plot(SFC_GatingSet)
 
 :::
 
----
-
+::: {.fragment}
 ![](images/09_LiveGateAdded.png)
+
+:::
 
 ---
 
@@ -530,9 +587,10 @@ gs_pop_get_count_fast(SFC_GatingSet) |>
 
 :::
 
----
-
+::: {.fragment}
 ![](images/10_LiveSingletsCounts.png)
+
+:::
 
 ---
 
@@ -565,7 +623,12 @@ We can then select the Span Gate Type option, and draw a rectangle spanning the 
 :::
 :::
 
+---
+
+::: {.fragment}
 ![](images/11b_SpanDone.png)
+
+:::
 
 ---
 
@@ -575,7 +638,10 @@ We can then finish the gate by clicking done, and check the console readout as a
 :::
 :::
 
+::: {.fragment}
 ![](images/11c_SpanDoneOutput.png)
+
+:::
 
 ---
 
@@ -593,9 +659,10 @@ plot(SFC_GatingSet)
 
 :::
 
----
-
+::: {.fragment}
 ![](images/11d_Plot.png)
+
+:::
 
 ---
 
@@ -608,7 +675,10 @@ gs_pop_get_count_fast(SFC_GatingSet) |>
 
 :::
 
+::: {.fragment}
 ![](images/11e_SpanCounts.png)
+
+:::
 
 ---
 
@@ -795,7 +865,12 @@ plot(SFC_GatingSet)
 
 :::
 
+
+::: {.fragment}
+
 ![](images/15c_QuadrantsPlots.png)
+
+:::
 
 ---
 
@@ -807,7 +882,10 @@ But what happens if we misdraw a gate and need to correct it? If you are in the 
 :::
 :::
 
+::: {.fragment}
 ![](images/16_Resetting.png)
+
+:::
 
 ---
 
@@ -904,6 +982,11 @@ Our GatingSet ends up being stored as its own folder with various h5 and pb obje
 :::
 :::
 
+::: {.fragment}
+![](images/17_StorageLocation.png)
+
+:::
+
 ---
 
 ::: {.fragment}
@@ -941,7 +1024,7 @@ gs_pop_get_count_fast(SFC_GatingSet) |>
 
 ---
 
-### Rapid Gate Deployment.
+### Rapid Gate Deployment
 
 ::: {.fragment}
 ::: {.callout-tip title="."}
@@ -1041,7 +1124,10 @@ plot(SFC_GatingSet)
 
 :::
 
+::: {.fragment}
 ![](images/14c_Plot.png)
+
+:::
 
 ---
 
@@ -1129,7 +1215,10 @@ However, remember, there is one main truth to computational cytometry:
 :::
 :::
 
+::: {.fragment}
 ![](https://images.squarespace-cdn.com/content/v1/60c132aaec9f3d01746650fa/81da7259-b9fd-4cf0-a781-a122e5c475d2/1579808366055.gif)
+
+:::
 
 ---
 
@@ -1184,7 +1273,10 @@ For the first example, we are gating for singlets. Later on after running the co
 :::
 :::
 
+::: {.fragment}
 ![](images/000_Singlets.png)
+
+:::
 
 ---
 
@@ -1213,6 +1305,8 @@ The other columns are not as easy to interpret at first glance. **pop** designat
 ```{r}
 Example[1,]
 ```
+
+:::
 
 ---
 
@@ -1269,7 +1363,10 @@ This row will later result in a gate that resembles the following
 :::
 :::
 
+::: {.fragment}
 ![](images/000_flowClust.png)
+
+:::
 
 ---
 
@@ -1342,7 +1439,10 @@ Which will generate a gate that resembles the following.
 :::
 :::
 
+::: {.fragment}
 ![](images/000_gate_mindensity.png)
+
+:::
 
 ---
 
