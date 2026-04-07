@@ -1,0 +1,1600 @@
+---
+title: "08 - Manual and Automated Gating"
+author: "David Rach"
+date: 04-07-2026
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    incremental: true
+page-layout: full
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+---
+
+# Background
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Welcome to Week 08 in the Cytometry in R course. The day that many of you have been patiently waiting for has arrived, today is the day we learn how to create gates in R!!! We will showcase two approaches, one a manual gating style, which is mediated through the `flowGate` R [package](https://bioconductor.posit.co/packages/3.21/bioc/vignettes/flowGate/inst/doc/flowGate.html), which launches an interactive [R Shiny App](https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/) as an interface by which you can draw the desired Gates. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Separately, we will learn how to use the `openCyto` R [package](https://bioconductor.org/packages/release/bioc/html/openCyto.html) to automated gate setup via a .csv template. We will also look at how to apply gate constraints, how to visualize our gates to ensure they were placed correctly, so that we can be confident with using either approach for our own projects.
+:::
+:::
+
+---
+
+# Walk Through
+
+:::{.callout-important title="Housekeeping"}
+As we do [every week](/course/02_FilePaths/index.qmd), on GitHub, [sync](/course/00_Homeworks/index.qmd#sync-your-fork) your forked version of the CytometryInR course to bring in the most recent updates. Then within Positron, [pull](/course/00_Homeworks/index.qmd#pull-to-local) in those changes to your local computer. 
+
+After [setting up](/course/00_Git/index.qmd#new-folder-from-template) a "Week08" project folder, copy over the contents of "course/00_WaysToGate/data" to that folder. This will hopefully prevent merge issues next week when attempting to pull in new course material. Once you have your new project folder organized, remember to [commit](/course/00_Git/index.qmd#push) and push your changes to GitHub to maintain remote version control. 
+
+If you encounter issues syncing due to the Take-Home Problem merge conflict, see this [walkthrough](https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/). The updated homework submission protocol can be found [here](https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/UpdatedPullRequest)
+:::
+
+---
+
+## Setup
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets first make sure whether we have the packages installed (as well as the correct [versions](/course/05_GatingSets/index.qmd#installing-correct-versions)). We can do this using the `packageVersion()` function, for the R packages that we are interested in. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+packageVersion("ggplot2")
+packageVersion("ggcyto")
+packageVersion("openCyto")
+packageVersion("flowGate")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Unfortunately, [flowGate](https://github.com/NKInstinct/flowGate) is one of the Bioconductor packages that got caught up by the `ggplot2` version 4 changes that broke `ggcyto` earlier in the [year](https://github.com/RGLab/ggcyto/issues?q=is%3Aissue%20state%3Aclosed). While the `ggcyto` side of the code has now been updated and is in working order, the `flowGate` side of the code still needs to be updated accordingly.
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+At the time of this class in April 2026, I have not heard back on my [bug report](https://github.com/NKInstinct/flowGate/issues/11). Functionally, this means if we try to use the package version installed via Bioconductor, it will install, but when we try to launch the Shiny app it will crash.
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Fortunately, since the software is [open-source](https://en.wikipedia.org/wiki/Free_and_open-source_software), we were able to look at the source code, find a solution to the bug, and implement the changes to our own [forked](https://en.wikipedia.org/wiki/Fork_(software_development)) version of the R package. So for this class, while we wait for the `flowGate` maintainers to [upstream](https://en.wikipedia.org/wiki/Upstream_(software_development)) the bug-fixes. 
+:::
+:::
+
+---
+
+### Installing forked flowGate
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If you already have installed flowGate, you will need to use the `remove.packages()` function to uninstall it. Once this is done, close and reopen Positron. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+# remove.packages("flowGate")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As our forked version of `flowGate` is on GitHub, we will need to use the `remotes` package to install it using the `install_github()` command. Alternatively, if you completed the [Week 01](/course/01_InstallingRPackages/index.qmd#take-home-problems) take-home problems and have the `pak` R package installed, you could alternatively use the `pkg_install` function.
+:::
+:::
+
+::: {.fragment}
+```{r}
+library(remotes) # CRAN # install.packages("remotes")
+# library(pak) # CRAN # install.packages("pak")
+```
+
+:::
+
+---
+
+::: {.fragment}
+
+```{r}
+#| eval: FALSE
+
+install_github("DavidRach/flowGate")
+
+# pkg_install("DavidRach/flowGate")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Once this forked version from GitHub is installed, you should see the following for the version number
+:::
+:::
+
+::: {.fragment}
+```{r}
+packageVersion("flowGate")
+```
+
+:::
+
+---
+
+### Attach required packages
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Now that we have the working R package versions installed, let's go ahead and attach them to our local environments, since we will be using them extensively throughout today
+:::
+:::
+
+::: {.fragment}
+```{r}
+library(flowWorkspace)
+library(ggplot2)
+library(ggcyto)
+library(flowGate)
+library(openCyto)
+```
+
+:::
+
+---
+
+### Identify .fcs files
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next up, lets identify the SFC .fcs files that are present within the data folder. For the course, we are reusing the dataset from [Week 05](/course/05_GatingSets/)
+:::
+:::
+
+::: {.fragment}
+```{r}
+# StorageLocation <- file.path("course", "08_WaysToGate", "data") # When working interactively
+ StorageLocation <- file.path("data") # Quarto Render
+
+fcs_files <- list.files(StorageLocation, pattern=".fcs", full.names=TRUE)
+fcs_files
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having identified our .fcs files, lets proceed and load them into a GatingSet
+:::
+:::
+
+::: {.fragment}
+```{r}
+SFC_cytoset <- load_cytoset_from_fcs(fcs_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And as we saw last time, let's go ahead and apply the transformation (and particular argument values), that we optimized during [Week 07](/course/07_Transformations/index.qmd). 
+:::
+:::
+
+::: {.fragment}
+```{r}
+SFC_Parameters <- colnames(SFC_GatingSet)
+FluorophoresOnly <- SFC_Parameters[!stringr::str_detect(SFC_Parameters, "FSC|SSC|Time")]
+
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=2, widthBasis=-500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Based on the plotting output, if you are content with the applied transformation, you are now ready to proceed to gating. If not, recreate the GatingSet, modify the transformation arguments, and plot again until you are. 
+:::
+:::
+
+---
+
+## Manual - flowGate
+
+::: {.fragment}
+::: {.callout-tip title="."}
+`flowGate` is a Bioconductor R package that launches an interactive R [Shiny](https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/) app. This allows us to draw and apply various manual gates, which get added to our existing GatingSet object. It is one of the newer [Bioconductor](/course/03_InsideFCSFile/index.qmd#flowcore) packages, adresses a major need for the R cytometry workflows, which makes it especially unfortunate that it got caught up in the ggplot2 version 4 buggyness. While we wait for the maintainers to [upstream](https://github.com/NKInstinct/flowGate/issues) the bug-fixes, we will use the [forked version](https://github.com/DavidRach/flowGate). 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's start by replicating from scratch what would be my usual gating scheme, working our way down to various T cell populations. I typically start with singlets. The function we will be using first is the `gs_gate_interactive()` function. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+# ?gs_gate_interactive
+flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="singlets", sample=1,
+dims=list("FSC-A", "FSC-H"), subset="root")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The main arguments we need to specify values for are: the name of our GatingSet (**gs**); provide a name for our new gate (**filterId**); designate which sample in the Gating Set to use for plotting (**sample**=1); provide the X and Y fluorophore within a list style argument (**dims**=list("FSC-A", "FSC-H")); and finally the **subset** to be used as the parent gate. Given we haven't drawn any gates at this point, we will specify the "root" gate. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With the arguments briefly explained, let's run the line of code, and wait for the RShiny App to launch!
+
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="singlets", sample=1,
+dims=list("FSC-A", "FSC-H"), subset="root")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When a Shiny R app launches, you will see the following appear in your console window
+:::
+:::
+
+![](images/00_ShinyAppLaunch.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When running a Shiny App, R stops taking inputs from the console, and focuses on listening for code commands coming through the App. As a result, the console will not accept typed commands until either the Shiny app is closed, or the red stop button is selected. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The Shiny app will generally initially launch in the Viewer portion of the secondary right side-bar, although you can modify Positron settings to have it open directly to your web browser. I recommend expanding the area by dragging the grey border until you can see everything without needing to use the scrollbars. 
+:::
+:::
+
+![](images/01_SingletsVisualized.png)
+
+---
+
+### Polygon
+
+::: {.fragment}
+::: {.callout-tip title="."}
+To draw a singlet gate, first click on the Polygon option under Gate Type. 
+:::
+:::
+
+![](images/02_Polygon.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next click on the plot, to start drawing a gate. You won't see a line visualized until you have clicked a second location. 
+:::
+:::
+
+![](images/02b_PolygonDraw.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Continue adding points until you have finished gating around your singlets. 
+:::
+:::
+
+![](images/02c_PolygonDraw.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And finally, select the Done button to finish the gate creation (which will add a line from your final point to the starting point)
+:::
+:::
+
+![](images/02d_PolygonDone.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+At this point, the Shiny app will stop being active (notice the dissapearance of the red stop sign), and we should get the following output returned to the console corresponding to the gating information
+:::
+:::
+
+![](images/03_PolygonGateWithVertices.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Now, if we were to check our gates within our GatingSet, we would see the following:
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+plot(SFC_GatingSet)
+```
+
+:::
+:::
+
+---
+
+![](images/04_SingletGateCreated.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The gate has been created and applied to our GatingSet. A question that may arise, was this gate applied to just one specimen, or to all specimens in the GatingSet? Let's go ahead and check!
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+gs_pop_get_count_fast(SFC_GatingSet)
+```
+
+:::
+
+---
+
+![](images/05_AllSpecimens.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The gate appears to have been applied across the board to all specimens, since we have counts for the respective gate for all the specimens. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's continue, and add another gate, this time for viability dye Zombie NIR, to determine what cells are alive. We will need to modify the arguments we provide, since this will be a new gate, based on new parameters, and placed under the singlets gate. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="live", sample=1,
+dims=list("FSC-A", "Zombie NIR-A"), subset="singlets")
+```
+
+:::
+
+---
+
+
+![](images/06_LiveAbbreviated.png)
+
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As you might notice, the included .fcs files look to have already been pre-processed, as there are few dead cells. Glancing at the y-axis, based on what we saw during [Week 06](/course/06_Visualizing/index.qmd) we can also deduce that behind-the-scenes the ggcyto/ggplot2 plot is not using `coords_cartesian()`, as it has zoomed in to the full extent of the data that is present. 
+:::
+:::
+
+---
+
+### Rectangle
+
+::: {.fragment}
+::: {.callout-tip title="."}
+To showcase the other gate shape options, lets go ahead and select the option to draw a rectangle. 
+:::
+:::
+
+![](images/08_Rectangle.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this case, click and drag to highlight the desired area. Once the rectangle is drawn, and we are happy with it, we can select done to close the Shiny session and send the gate coordinates to the gating set. 
+:::
+:::
+
+![](images/08b_RectangleDone.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Similar to what we saw when we drew a polygon, a coordinate readout gets printed to our console window. 
+:::
+:::
+
+![](images/08c_RectangleReadout.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can then circle back and check to make sure the gates were added within our GatingSet
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+plot(SFC_GatingSet)
+```
+
+:::
+
+---
+
+![](images/09_LiveGateAdded.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And validate by checking to see if the statistics output has changed
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+gs_pop_get_count_fast(SFC_GatingSet) |> 
+    dplyr::filter(Population %in% "/singlets/live")
+```
+
+:::
+
+---
+
+![](images/10_LiveSingletsCounts.png)
+
+---
+
+### Span
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next up, let's see how to use a span type gate. In this case, the .fcs files in question were pre-gated for live T cells (to keep the file size small for this course example), so lets test out the span gating option when gating T cells. Lets start the new gate creation by modifying the gating arguments accordingly
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="Tcells", sample=1,
+dims=list("Spark Blue 550-A", "Spark Blue 574-A"), subset="live")
+```
+
+:::
+
+---
+
+![](images/11_Span.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can then select the Span Gate Type option, and draw a rectangle spanning the direction we want out span gate created. 
+:::
+:::
+
+![](images/11b_SpanDone.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can then finish the gate by clicking done, and check the console readout as a sanity check that it didn't accidentally gate a Y-axis span on us. 
+:::
+:::
+
+![](images/11c_SpanDoneOutput.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And similar process as we saw above to validate the gate was created and applied to our specimens. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+plot(SFC_GatingSet)
+```
+
+:::
+
+---
+
+![](images/11d_Plot.png)
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+gs_pop_get_count_fast(SFC_GatingSet) |> 
+    dplyr::filter(Population %in% "/singlets/live/Tcells")
+```
+
+:::
+
+![](images/11e_SpanCounts.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having gated down to T cells, lets go ahead and add a few gates for the individual T cell populations. Let's start by drawing a polygon gate around CD4+ T cells. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="CD4+", sample=1,
+dims=list("BV650-A", "BUV805-A"), subset="Tcells")
+```
+
+:::
+
+---
+
+![](images/12_CD4.png)
+
+---
+
+![](images/12b_CD4Done.png)
+
+---
+
+![](images/12c_CD4Output.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Also, in case anyone was curious, `flowGate` retains `ggcyto` arguments, so if we wanted to, instead of fluorophore names, we could use alternatively use the marker names when specifying the axis for the flow cytometry plots. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="CD4+", sample=1,
+dims=list("CD8", "CD4"), subset="Tcells")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can also modify the setting to overlay already existing gates when we are drawing new gates for the other two T cell subsets. This is done by providing the gate name to the **overlayGates** argument. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="CD8+", sample=1,
+dims=list("CD8", "CD4"), subset="Tcells", overlayGates="CD4+")
+```
+
+:::
+
+---
+
+![](images/13_OverlayGates.png)
+
+---
+
+![](images/13c_BothCD4andCD8.png)
+
+---
+
+![](images/13b_OverlayOutputCD8.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And we can repeat this for CD4-CD8- (Double Negative (DN)) T cells.
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="DN", sample=1,
+dims=list("CD8", "CD4"), subset="Tcells", overlayGates=c("CD4+", "CD8+"))
+```
+
+:::
+
+---
+
+![](images/14_DNDone.png)
+
+---
+
+![](images/14b_DNOutput.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And a final-check to make sure the gates for the T cell subsets were added
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+plot(SFC_GatingSet)
+```
+
+:::
+
+---
+
+![](images/14c_Plot.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And a quick check for the statistics
+
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+gs_pop_get_count_fast(SFC_GatingSet) |> 
+    dplyr::filter(Population %in% "/singlets/live/Tcells/DN")
+```
+
+:::
+
+---
+
+![](images/14d_DNCounts.png)
+
+---
+
+### Quadrant
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The last type of manual gate that we can implement with `flowGate` is a quadrant gate, in this case, let's use it to create a quadrant for our two cytokines (TNFa and IFNg). We should ideally use one of the SEB-stimulated specimens for this if we want to visualize the cytokine-expressing cells, so I have switched over to the 6th sample in the GatingSet. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+#pData(SFC_GatingSet)
+flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="Cytokines", sample=6,
+dims=list("TNFa", "IFNg"), subset="CD4+")
+```
+
+:::
+
+---
+
+![](images/15_QuadrantDraw.png)
+
+---
+
+![](images/15b_QuadDone.png)
+
+---
+
+![](images/15d_QuadrantOutput.png)
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+plot(SFC_GatingSet)
+```
+
+:::
+
+![](images/15c_QuadrantsPlots.png)
+
+---
+
+### Redraw Gate
+
+::: {.fragment}
+::: {.callout-tip title="."}
+But what happens if we misdraw a gate and need to correct it? If you are in the process of actively drawing, you can hit the reset button and try again
+:::
+:::
+
+![](images/16_Resetting.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+But what if you had already created the gate?
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="CD161+", sample=1,
+dims=list("CD161"), subset="CD8+")
+```
+
+:::
+
+---
+
+
+![](images/16a_Reset.png)
+
+---
+
+![](images/16b_Reset.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+To completely redraw an existing gate, you would need to add the "regate" argument and set it to TRUE. This will delete the existing gate, and allow you to draw a new one in its place. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="CD161+", sample=1,
+dims=list("CD161"), subset="CD8+", regate=TRUE)
+```
+
+:::
+
+---
+
+![](images/16c_Reset.png)
+
+---
+
+### Saving Gates
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Alright, so we have put effort and drawn all our gates. But what happens if we close Positron? Well, we loose all our effort and have to redraw them again. Which doesn't sound like a particularly good use of our time. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+plot(SFC_GatingSet)
+```
+
+:::
+
+---
+
+![](images/FinalGates.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Fortunately, there is a way to save our existing GatingSet objet using `flowWorkspace` `save_gs()` function, allowing us to load back in the GatingSet object later on. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+StorageLocationAndName <- file.path(StorageLocation, "flowGateExampleGS.gs")
+save_gs(SFC_GatingSet, StorageLocationAndName)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Our GatingSet ends up being stored as its own folder with various h5 and pb objects inside. Please note, re-loading them in successfully can be file.path sensitive, so avoid messing with the folder as much as possible. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+To reload back into R, we would use the `load_gs()` function. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+StorageLocationAndName <- file.path(StorageLocation, "flowGateExampleGS.gs")
+SFC_GatingSet <- load_gs(StorageLocationAndName)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+plot(SFC_GatingSet)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+gs_pop_get_count_fast(SFC_GatingSet) |> 
+    dplyr::filter(Population %in% "/singlets/live/Tcells/DN")
+```
+
+:::
+
+---
+
+### Rapid Gate Deployment.
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In the examples above, we created separate gates by running individual chunks of code. There is an alternative method in `flowGate` to allow you to draw all your gates immediately after each other. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+GatingTable <- tibble::tribble(
+  ~filterId,    ~dims,                          ~subset,      
+  "singlets",   list("FSC-A", "FSC-H"),          "root",      
+  "live",       list("FSC-A", "Zombie NIR-A"),   "singlets",  
+  "Tcells",     list("CD3", "CD45"),              "live",     
+  "CD4+",       list("CD8", "CD4"),               "Tcells",   
+  "CD8+",       list("CD8", "CD4"),               "Tcells",   
+  "DN",         list("CD8", "CD4"),                "Tcells",  
+)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+GatingTable
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets recreate our GatingSet object:
+:::
+:::
+
+::: {.fragment}
+```{r}
+SFC_cytoset <- load_cytoset_from_fcs(fcs_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+
+SFC_Parameters <- colnames(SFC_GatingSet)
+FluorophoresOnly <- SFC_Parameters[!stringr::str_detect(SFC_Parameters, "FSC|SSC|Time")]
+
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=2, widthBasis=-500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And now, let's apply the GatingTable scheme. As we create and click done, the next gate will automatically pop up in the Shiny App. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+gs_apply_gating_strategy(SFC_GatingSet, gating_strategy = GatingTable)
+```
+
+:::
+
+---
+
+![](images/18_Rapid.png)
+
+---
+
+![](images/18b_Rapid.png)
+
+---
+
+![](images/18c_Rapid.png)
+
+---
+
+![](images/18d_Rapid.png)
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+plot(SFC_GatingSet)
+```
+
+:::
+
+![](images/14c_Plot.png)
+
+---
+
+### Visualizing Gates
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As you may have noticed, using `flowGate`, the gates are applied generally to all specimens, and we are limited in our ability to customize to individual specimens. Consequently, being able to visualize each specimen, and regate as necessary is important if we want to have confidence in our data. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For now, the simplest way to do so is using the `autoplot()` function from the `ggcyto()` package, repeating it for every specimen in the GatingSet. As we go further into the course, we will learn how to [iterate](/Schedule.qmd#its-raining-functions) through the specimens, and send the plot outputs to pdf files, reducing the need to write out individual lines of code for every specimen. We will also look at how to use [other](https://davidrach.github.io/Luciernaga/articles/DataVisualization.html) visualization tools to compare individual gates across multiple specimens. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+ggcyto::autoplot(SFC_GatingSet[[1]]) + theme_bw()
+ggcyto::autoplot(SFC_GatingSet[[2]]) + theme_bw()
+ggcyto::autoplot(SFC_GatingSet[[3]]) + theme_bw()
+# ggcyto::autoplot(SFC_GatingSet[[4]]) + theme_bw()
+# ggcyto::autoplot(SFC_GatingSet[[5]]) + theme_bw()
+# ggcyto::autoplot(SFC_GatingSet[[6]]) + theme_bw()
+```
+
+:::
+
+---
+
+![](images/flowGateAutoplot.png)
+
+---
+
+### Summary
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we have surmized, `flowGate` can be used to facilitate drawing gates in a general manner for your main cell populations of interest, as we saw in this initial introduction. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+A couple things to keep in mind, namely, these gates are applied generally to all specimens, and we are limited in our ability to customize to individual specimens. Consequently, being able to visualize each specimen, and regate as necessary is important if we want to have confidence in our data. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+All in all, `flowGate` is a very nice R package for implementing supervised manual-style gates. While there are areas that can still be improved on, the beauty of the open-source nature is that if you have a good idea, and the know-how and/or time, these ideas can be implemented to extend the package to be able to do additional cool things. 
+:::
+:::
+
+---
+
+## Automated - openCyto
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The other gating approach that we will be learning today is implemented by the `openCyto` [package](https://bioconductor.org/packages/release/bioc/html/openCyto.html) from Bioconductor, which is a sister package to both `flowWorkspace` and `CytoML`. It works through the use of gating template .csv files, which can be customized with various algorithmic gating functions and arguments, allowing for substantial flexibility in creating and implementing automated gating schemes. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+One of the advantages of this approach (in theory), is when properly constrained, it can "better" handle some of the inter-specimen variability differences that we may encounter due to batch effects, that might otherwise throw off a fixed-manual gate applied equally acrooss specimens. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+However, remember, there is one main truth to computational cytometry:
+:::
+:::
+
+![](https://images.squarespace-cdn.com/content/v1/60c132aaec9f3d01746650fa/81da7259-b9fd-4cf0-a781-a122e5c475d2/1579808366055.gif)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So always always always check the outputs visually, because I hate writing letters to the editor.
+:::
+:::
+
+---
+
+### GatingTemplate
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets go ahead and locate an already assembled GatingTemplate for our particular dataset. This is also in the data folder, so we can separate it from our .fcs files by switching out the pattern argument
+:::
+:::
+
+::: {.fragment}
+```{r}
+OurGateTemplate <- list.files(StorageLocation, pattern=".csv", full.names=TRUE)
+Example <- read.csv(OurGateTemplate, check.names=FALSE)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Example
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Each gate is represented by an individual row. 
+:::
+:::
+
+---
+
+#### singletGate
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For the first example, we are gating for singlets. Later on after running the code, this will generate a gate that resembles the following: 
+:::
+:::
+
+![](images/000_Singlets.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Looking at the row in the gatingTemplate, we can see the gate name (**alias**), the parent gate (**parent**), and the x and y dimensions (**dims**). The **gating_method** defines what kind of gate is being created, in this context, a singlet gating polygon.
+:::
+:::
+
+::: {.fragment}
+```{r}
+Example[1,]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The other columns are not as easy to interpret at first glance. **pop** designates whether you want to keep the cells within the gate (**+**) or those outside the gate (**-**). 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Example[1,]
+```
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+**gating_args** are specific to the **gating_method**, we will be using these later on when specifying gate constraints. The last four arguments are rather niche and won't be the main focus of today, and I will refer you to the [openCyto vignettes](https://bioconductor.org/packages/release/bioc/html/openCyto.html) for how to use them for more specialized projects. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Example[1,]
+```
+
+:::
+
+---
+
+####  flowClust
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Looking at the entire gatingTemplate .csv, we can see we will be implementing automated gating for 6 gates (singlets, lymphocytes, live, Tcells, CD4 and CD8). Similar to what we saw with the singlets gate, each of these gates also has corresponding parent gate and (axis) dimension information provided. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Example |> dplyr::select(alias, pop, parent, dims, gating_method)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+One thing we can notice is the second gate (lymphocytes), uses the **flowClust** gating_method. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Example[2,]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+This row will later result in a gate that resembles the following
+:::
+:::
+
+![](images/000_flowClust.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+One thing that is different compared to the singlets gate, is that the **gating_args** column has values. Behind the scenes, gating_method "flowClust" is reaching out to an [R package](https://bioconductor.org/packages//release/bioc/html/flowClust.html) of the same name to identify populations based on density. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Especially when working with FSC-SSC (where multiple populations may be present, including lymphocytes, monocytes, granulocytes, debris, etc). having the ability to specify arguments to denote the region we are interested in can be important. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this case, target specifies the x and y coordinate we expect our population center to be roughly at. Since we are gating for lymphocytes, x is around 2e6, while the y is between 5e5 and 1e6. If we wanted a different population (ex. monocytes), we would modify the values provided accordingly to match that population. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Example[2,] |> dplyr::pull(gating_args)
+```
+
+:::
+
+---
+
+### gate_mindensity
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The last several gates are all **gate_mindensity** gates
+:::
+:::
+
+::: {.fragment}
+```{r}
+Example |> dplyr::select(alias, pop, parent, dims, gating_method, gating_args)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+A good example of these is our CD4 gate
+:::
+:::
+
+::: {.fragment}
+```{r}
+Example[5,]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Which will generate a gate that resembles the following.
+:::
+:::
+
+![](images/000_gate_mindensity.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this case, since we are specifying pop = +, we will be keeping the positive cells (landing to the right of the gate line). 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+gate_mindensity is a fast calculation, finding the point with the fewest cells. It can however mistrigger, ending up with gates placed before any cell is present, or after every cell. When this occurs, we can constrain the search area by providing a gate_range to the **gating_args**, as we can see here for the viability gate
+:::
+:::
+
+::: {.fragment}
+```{r}
+Example[3,]
+```
+
+:::
+
+---
+
+### Creating a GatingTemplate
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With this broad overview of the gatingtemplate, we can now proceed with loading it in. To do so, `openCyto` recommends reading in the .csv file using the `data.table` package's `fread` function, to ensure the formatting is correctly retained
+:::
+:::
+
+::: {.fragment}
+```{r}
+# install.packages("data.table") # CRAN
+GatesToApply <- data.table::fread(OurGateTemplate)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Once this is done, we can pass it to the `gatingTemplate()` function, which will wrap it with the required information layer needed for `openCyto` to add the gates to the GatingSet. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+TheFullTemplate <- gatingTemplate(GatesToApply)
+TheFullTemplate
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+str(TheFullTemplate)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+class(TheFullTemplate)
+```
+
+:::
+
+---
+
+### Prepare your GatingSet
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With the gatingtemplate ready to go, we need to assemble our GatingSet object. We will repeat the code that we have already been working with today above. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+SFC_cytoset <- load_cytoset_from_fcs(fcs_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+
+SFC_Parameters <- colnames(SFC_GatingSet)
+FluorophoresOnly <- SFC_Parameters[!stringr::str_detect(SFC_Parameters, "FSC|SSC|Time")]
+
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=2, widthBasis=-500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+```
+
+:::
+
+---
+
+### Run gt_gating
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The final step is applying the template to our GatingSet. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+#| warnings: FALSE
+gt_gating(TheFullTemplate, SFC_GatingSet)
+```
+
+:::
+
+---
+
+![](images/19_RunOpenCyto.png)
+
+---
+
+### Visualizing Gates
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And finally, similar to the process we did for `flowGate`, let's go ahead and use `ggcyto` `autoplot()` function to see how we did. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+ggcyto::autoplot(SFC_GatingSet[[1]]) + theme_bw()
+ggcyto::autoplot(SFC_GatingSet[[2]]) + theme_bw()
+ggcyto::autoplot(SFC_GatingSet[[3]]) + theme_bw()
+# ggcyto::autoplot(SFC_GatingSet[[4]]) + theme_bw()
+# ggcyto::autoplot(SFC_GatingSet[[5]]) + theme_bw()
+# ggcyto::autoplot(SFC_GatingSet[[6]]) + theme_bw()
+```
+
+:::
+
+---
+
+![](images/openCytoAutoplot.png)
+
+---
+
+### Saving for later
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can still save our openCyto-gated GatingSet using `save_gs()` (using the same steps as detailed in the `flowGate` section). However, depending on the complexity of your gating scheme, once validated and properly constrained, it is also possibly to just reload everything from scratch with similar results, especially when using gate_mindensity (as flowClust is stochastic and may vary a bit). 
+:::
+:::
+
+---
+
+# Take Away
+
+::: {.fragment}
+::: {.callout-tip title="."}
+During the course of this session, we explored how to add both manual and automated gates using two Bioconductor packages, `flowGate` and `openCyto`. While the examples were shown today were introductory and separate, since they both end up adding to our GatingSets, we can combine them to be able to set up rather complicated gating schemes, targeting our cell populations of interest for our respective datasets.
+:::
+::: 
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Separately, I would be remiss not to briefly mention a couple additional packages that while in development, are available via GitHub, and may be useful to know about in the long-run. These are the [CytoExploreR](https://dillonhammill.github.io/CytoExploreR/articles/CytoExploreR-Manual-Gating.html) and [flowMagic](https://github.com/semontante/flowMagic) R packages. We will cover these as one-off sessions later in the course, but depending what you are trying to do with your own datasets, might be worth checking out before then. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next week, we will cover the last session of the "Intro to R" portion of the course (before proceeding into the intermediate Cytometry core portion) namely, how to create your own functions, i.e. the tools in our toolchest, that we have been using throughout the course. This was an area that when I first was starting out I didn't realize quite how important a skillset it would proove to be in the long run, so to set you up for success on your own future adventures, will be introducing how to do this in context of derriving cell concentration from our acquired .fcs files. 
+:::
+:::
+
+---
+
+![](images/TakeAway.jpg)
+
+---
+
+# Additional Resources
+
+::: {.fragment}
+::: {.callout-tip title="."}
+[flowGate: Introductory Vignetter](https://bioconductor.org/packages/release/bioc/vignettes/flowGate/inst/doc/flowGate.html) The introductory flowGate vignette on Bioconductor, while we covered the main points, there are still a few useful aspects we didn't have time to cover. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+[openCyto: An introduction to the openCyto Gating Package](https://bioconductor.org/packages/release/bioc/vignettes/openCyto/inst/doc/openCytoVignette.html) The introductory openCyto vignette, covers majority of the workflow in more depth than what we were able to look at today, and is worthwhile looking over while trying to implement your own automated gating schemes for your own datasets. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+[openCyto: How to use different auto gating functions](https://bioconductor.org/packages/release/bioc/vignettes/openCyto/inst/doc/HowToAutoGating.html) Explores the different gating_methods in more depth, including the arguments that they accept.
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+[openCyto: How to write a CSV gating template](https://bioconductor.org/packages/release/bioc/vignettes/openCyto/inst/doc/HowToWriteCSVTemplate.html) If you want to implement some complicated combination of gates in your template so you never need to draw a gate again in your life, this is the vignette for you (although you will still need to validate the gate outputs ;P )
+:::
+:::
+
+---
+
+# Take-home Problems
+
+:::{.callout-tip title="Problem 1"}
+Using `flowGate`, go ahead and create your own series of gates for either our data or your own for any cell populations that might interest you. Once done, save the GatingSet, and then successfully reload it. Add another gate, but intentionally misdraw it. Then proceed to visualize, identify and correct it, before saving again. 
+
+If you do plan to switch over to R for gating long-term, these skillsets will be essential, as you will need to be confident in your ability to adjust your gates as needed. 
+:::
+
+---
+
+:::{.callout-tip title="Problem 2"}
+Go ahead and create your own `openCyto` gate template, extending to whatever cell target population of interest. Visualize the differences, and ensure that the gates are correctly applied for everyone. Set gate_constaint arguments as needed until everything is just right. 
+
+If you do plan to switch over to R for gating long-term, these skillsets will be essential, as you will need to be confident in your ability to adjust your gates as needed.
+:::
+
+---
+
+:::{.callout-tip title="Problem 3"}
+Re-run your `openCyto` template, but then add a few additional `flowGate` on to to extend it further. Save the gating set, close out of positron, and successfully reload. 
+:::
+
+---
+
+![](images/TakeAway.jpg)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
