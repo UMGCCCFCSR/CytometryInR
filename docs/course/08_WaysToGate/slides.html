@@ -1,0 +1,3599 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
+
+  <meta name="author" content="David Rach">
+  <meta name="dcterms.date" content="2026-04-07">
+  <title>Cytometry in R – 08 - Manual and Automated Gating</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
+
+  <script type="text/javascript">
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
+  </script>
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">08 - Manual and Automated Gating</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+David Rach 
+</div>
+</div>
+</div>
+
+  <p class="date">2026-04-07</p>
+</section>
+<section class="slide level2">
+
+<p><img data-src="../../images/WebsiteBanner.png"></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img data-src="https://img.shields.io/badge/license-AGPLv3-blue.png" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img data-src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" alt="CC BY-SA 4.0"></a></p>
+</div>
+</section>
+<section class="slide level2">
+
+</section>
+<section>
+<section id="background" class="title-slide slide level1 center">
+<h1>Background</h1>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Welcome to Week 08 in the Cytometry in R course. The day that many of you have been patiently waiting for has arrived, today is the day we learn how to create gates in R!!! We will showcase two approaches, one a manual gating style, which is mediated through the <code>flowGate</code> R <a href="https://bioconductor.posit.co/packages/3.21/bioc/vignettes/flowGate/inst/doc/flowGate.html">package</a>, which launches an interactive <a href="https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/">R Shiny App</a> as an interface by which you can draw the desired Gates.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Separately, we will learn how to use the <code>openCyto</code> R <a href="https://bioconductor.org/packages/release/bioc/html/openCyto.html">package</a> to automated gate setup via a .csv template. We will also look at how to apply gate constraints, how to visualize our gates to ensure they were placed correctly, so that we can be confident with using either approach for our own projects.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="walk-through" class="title-slide slide level1 center">
+<h1>Walk Through</h1>
+<div title="Housekeeping">
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Housekeeping</strong></p>
+</div>
+<div class="callout-content">
+<p>As we do <a href="../../course/02_FilePaths/index.html">every week</a>, on GitHub, <a href="../../course/00_Homeworks/index.html#sync-your-fork">sync</a> your forked version of the CytometryInR course to bring in the most recent updates. Then within Positron, <a href="../../course/00_Homeworks/index.html#pull-to-local">pull</a> in those changes to your local computer.</p>
+<p>After <a href="../../course/00_Git/index.html#new-folder-from-template">setting up</a> a “Week08” project folder, copy over the contents of “course/00_WaysToGate/data” to that folder. This will hopefully prevent merge issues next week when attempting to pull in new course material. Once you have your new project folder organized, remember to <a href="../../course/00_Git/index.html#push">commit</a> and push your changes to GitHub to maintain remote version control.</p>
+<p>If you encounter issues syncing due to the Take-Home Problem merge conflict, see this <a href="https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/">walkthrough</a>. The updated homework submission protocol can be found <a href="https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/UpdatedPullRequest">here</a></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="setup" class="slide level2">
+<h2>Setup</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Lets first make sure whether we have the packages installed (as well as the correct <a href="../../course/05_GatingSets/index.html#installing-correct-versions">versions</a>). We can do this using the <code>packageVersion()</code> function, for the R packages that we are interested in.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">packageVersion</span>(<span class="st">"ggplot2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] '4.0.2'</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="fu">packageVersion</span>(<span class="st">"ggcyto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] '1.39.3'</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="fu">packageVersion</span>(<span class="st">"openCyto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] '2.22.0'</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">packageVersion</span>(<span class="st">"flowGate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] '0.99.2'</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Unfortunately, <a href="https://github.com/NKInstinct/flowGate">flowGate</a> is one of the Bioconductor packages that got caught up by the <code>ggplot2</code> version 4 changes that broke <code>ggcyto</code> earlier in the <a href="https://github.com/RGLab/ggcyto/issues?q=is%3Aissue%20state%3Aclosed">year</a>. While the <code>ggcyto</code> side of the code has now been updated and is in working order, the <code>flowGate</code> side of the code still needs to be updated accordingly.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>At the time of this class in April 2026, I have not heard back on my <a href="https://github.com/NKInstinct/flowGate/issues/11">bug report</a>. Functionally, this means if we try to use the package version installed via Bioconductor, it will install, but when we try to launch the Shiny app it will crash.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Fortunately, since the software is <a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">open-source</a>, we were able to look at the source code, find a solution to the bug, and implement the changes to our own <a href="https://en.wikipedia.org/wiki/Fork_(software_development)">forked</a> version of the R package. So for this class, while we wait for the <code>flowGate</code> maintainers to <a href="https://en.wikipedia.org/wiki/Upstream_(software_development)">upstream</a> the bug-fixes.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="installing-forked-flowgate">Installing forked flowGate</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>If you already have installed flowGate, you will need to use the <code>remove.packages()</code> function to uninstall it. Once this is done, close and reopen Positron.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="co"># remove.packages("flowGate")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As our forked version of <code>flowGate</code> is on GitHub, we will need to use the <code>remotes</code> package to install it using the <code>install_github()</code> command. Alternatively, if you completed the <a href="../../course/01_InstallingRPackages/index.html#take-home-problems">Week 01</a> take-home problems and have the <code>pak</code> R package installed, you could alternatively use the <code>pkg_install</code> function.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">library</span>(remotes) <span class="co"># CRAN # install.packages("remotes")</span></span>
+<span id="cb10-2"><a></a><span class="co"># library(pak) # CRAN # install.packages("pak")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">install_github</span>(<span class="st">"DavidRach/flowGate"</span>)</span>
+<span id="cb11-2"><a></a></span>
+<span id="cb11-3"><a></a><span class="co"># pkg_install("DavidRach/flowGate")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Once this forked version from GitHub is installed, you should see the following for the version number</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">packageVersion</span>(<span class="st">"flowGate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] '0.99.2'</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="attach-required-packages">Attach required packages</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Now that we have the working R package versions installed, let’s go ahead and attach them to our local environments, since we will be using them extensively throughout today</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">library</span>(flowWorkspace)</span>
+<span id="cb14-2"><a></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb14-3"><a></a><span class="fu">library</span>(ggcyto)</span>
+<span id="cb14-4"><a></a><span class="fu">library</span>(flowGate)</span>
+<span id="cb14-5"><a></a><span class="fu">library</span>(openCyto)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="identify-.fcs-files">Identify .fcs files</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Next up, lets identify the SFC .fcs files that are present within the data folder. For the course, we are reusing the dataset from <a href="../../course/05_GatingSets/">Week 05</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a><span class="co"># StorageLocation &lt;- file.path("course", "08_WaysToGate", "data") # When working interactively</span></span>
+<span id="cb15-2"><a></a> StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co"># Quarto Render</span></span>
+<span id="cb15-3"><a></a></span>
+<span id="cb15-4"><a></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".fcs"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
+<span id="cb15-5"><a></a>fcs_files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data/2025_07_26_AB_02_INF052_00_Ctrl.fcs"
+[2] "data/2025_07_26_AB_02_INF052_00_SEB.fcs" 
+[3] "data/2025_07_26_AB_02_INF100_00_Ctrl.fcs"
+[4] "data/2025_07_26_AB_02_INF100_00_SEB.fcs" 
+[5] "data/2025_07_26_AB_02_INF179_00_Ctrl.fcs"
+[6] "data/2025_07_26_AB_02_INF179_00_SEB.fcs" </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Having identified our .fcs files, lets proceed and load them into a GatingSet</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files,</span>
+<span id="cb17-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb17-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And as we saw last time, let’s go ahead and apply the transformation (and particular argument values), that we optimized during <a href="../../course/07_Transformations/index.html">Week 07</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>SFC_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(SFC_GatingSet)</span>
+<span id="cb18-2"><a></a>FluorophoresOnly <span class="ot">&lt;-</span> SFC_Parameters[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(SFC_Parameters, <span class="st">"FSC|SSC|Time"</span>)]</span>
+<span id="cb18-3"><a></a></span>
+<span id="cb18-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb18-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">2</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
+<span id="cb18-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb18-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb20-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="slides_files/figure-revealjs/unnamed-chunk-10-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Based on the plotting output, if you are content with the applied transformation, you are now ready to proceed to gating. If not, recreate the GatingSet, modify the transformation arguments, and plot again until you are.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="manual---flowgate" class="slide level2">
+<h2>Manual - flowGate</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p><code>flowGate</code> is a Bioconductor R package that launches an interactive R <a href="https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/">Shiny</a> app. This allows us to draw and apply various manual gates, which get added to our existing GatingSet object. It is one of the newer <a href="../../course/03_InsideFCSFile/index.html#flowcore">Bioconductor</a> packages, adresses a major need for the R cytometry workflows, which makes it especially unfortunate that it got caught up in the ggplot2 version 4 buggyness. While we wait for the maintainers to <a href="https://github.com/NKInstinct/flowGate/issues">upstream</a> the bug-fixes, we will use the <a href="https://github.com/DavidRach/flowGate">forked version</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Let’s start by replicating from scratch what would be my usual gating scheme, working our way down to various T cell populations. I typically start with singlets. The function we will be using first is the <code>gs_gate_interactive()</code> function.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="co"># ?gs_gate_interactive</span></span>
+<span id="cb21-2"><a></a>flowGate<span class="sc">::</span><span class="fu">gs_gate_interactive</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">filterId=</span><span class="st">"singlets"</span>, <span class="at">sample=</span><span class="dv">1</span>,</span>
+<span id="cb21-3"><a></a><span class="at">dims=</span><span class="fu">list</span>(<span class="st">"FSC-A"</span>, <span class="st">"FSC-H"</span>), <span class="at">subset=</span><span class="st">"root"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The main arguments we need to specify values for are: the name of our GatingSet (<strong>gs</strong>); provide a name for our new gate (<strong>filterId</strong>); designate which sample in the Gating Set to use for plotting (<strong>sample</strong>=1); provide the X and Y fluorophore within a list style argument (<strong>dims</strong>=list(“FSC-A”, “FSC-H”)); and finally the <strong>subset</strong> to be used as the parent gate. Given we haven’t drawn any gates at this point, we will specify the “root” gate.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>With the arguments briefly explained, let’s run the line of code, and wait for the RShiny App to launch!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>flowGate<span class="sc">::</span><span class="fu">gs_gate_interactive</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">filterId=</span><span class="st">"singlets"</span>, <span class="at">sample=</span><span class="dv">1</span>,</span>
+<span id="cb22-2"><a></a><span class="at">dims=</span><span class="fu">list</span>(<span class="st">"FSC-A"</span>, <span class="st">"FSC-H"</span>), <span class="at">subset=</span><span class="st">"root"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>When a Shiny R app launches, you will see the following appear in your console window</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/00_ShinyAppLaunch.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>When running a Shiny App, R stops taking inputs from the console, and focuses on listening for code commands coming through the App. As a result, the console will not accept typed commands until either the Shiny app is closed, or the red stop button is selected.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The Shiny app will generally initially launch in the Viewer portion of the secondary right side-bar, although you can modify Positron settings to have it open directly to your web browser. I recommend expanding the area by dragging the grey border until you can see everything without needing to use the scrollbars.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<p><img data-src="images/01_SingletsVisualized.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="polygon">Polygon</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>To draw a singlet gate, first click on the Polygon option under Gate Type.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<p><img data-src="images/02_Polygon.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Next click on the plot, to start drawing a gate. You won’t see a line visualized until you have clicked a second location.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<p><img data-src="images/02b_PolygonDraw.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Continue adding points until you have finished gating around your singlets.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<p><img data-src="images/02c_PolygonDraw.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And finally, select the Done button to finish the gate creation (which will add a line from your final point to the starting point)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<p><img data-src="images/02d_PolygonDone.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>At this point, the Shiny app will stop being active (notice the dissapearance of the red stop sign), and we should get the following output returned to the console corresponding to the gating information</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/03_PolygonGateWithVertices.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Now, if we were to check our gates within our GatingSet, we would see the following:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="fu">plot</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/04_SingletGateCreated.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The gate has been created and applied to our GatingSet. A question that may arise, was this gate applied to just one specimen, or to all specimens in the GatingSet? Let’s go ahead and check!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">gs_pop_get_count_fast</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/05_AllSpecimens.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The gate appears to have been applied across the board to all specimens, since we have counts for the respective gate for all the specimens.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Let’s continue, and add another gate, this time for viability dye Zombie NIR, to determine what cells are alive. We will need to modify the arguments we provide, since this will be a new gate, based on new parameters, and placed under the singlets gate.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>flowGate<span class="sc">::</span><span class="fu">gs_gate_interactive</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">filterId=</span><span class="st">"live"</span>, <span class="at">sample=</span><span class="dv">1</span>,</span>
+<span id="cb25-2"><a></a><span class="at">dims=</span><span class="fu">list</span>(<span class="st">"FSC-A"</span>, <span class="st">"Zombie NIR-A"</span>), <span class="at">subset=</span><span class="st">"singlets"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/06_LiveAbbreviated.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As you might notice, the included .fcs files look to have already been pre-processed, as there are few dead cells. Glancing at the y-axis, based on what we saw during <a href="../../course/06_Visualizing/index.html">Week 06</a> we can also deduce that behind-the-scenes the ggcyto/ggplot2 plot is not using <code>coords_cartesian()</code>, as it has zoomed in to the full extent of the data that is present.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="rectangle">Rectangle</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>To showcase the other gate shape options, lets go ahead and select the option to draw a rectangle.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<p><img data-src="images/08_Rectangle.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In this case, click and drag to highlight the desired area. Once the rectangle is drawn, and we are happy with it, we can select done to close the Shiny session and send the gate coordinates to the gating set.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<p><img data-src="images/08b_RectangleDone.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Similar to what we saw when we drew a polygon, a coordinate readout gets printed to our console window.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<p><img data-src="images/08c_RectangleReadout.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We can then circle back and check to make sure the gates were added within our GatingSet</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">plot</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/09_LiveGateAdded.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And validate by checking to see if the statistics output has changed</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="fu">gs_pop_get_count_fast</span>(SFC_GatingSet) <span class="sc">|&gt;</span> </span>
+<span id="cb27-2"><a></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(Population <span class="sc">%in%</span> <span class="st">"/singlets/live"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/10_LiveSingletsCounts.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="span">Span</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Next up, let’s see how to use a span type gate. In this case, the .fcs files in question were pre-gated for live T cells (to keep the file size small for this course example), so lets test out the span gating option when gating T cells. Lets start the new gate creation by modifying the gating arguments accordingly</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>flowGate<span class="sc">::</span><span class="fu">gs_gate_interactive</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">filterId=</span><span class="st">"Tcells"</span>, <span class="at">sample=</span><span class="dv">1</span>,</span>
+<span id="cb28-2"><a></a><span class="at">dims=</span><span class="fu">list</span>(<span class="st">"Spark Blue 550-A"</span>, <span class="st">"Spark Blue 574-A"</span>), <span class="at">subset=</span><span class="st">"live"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/11_Span.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We can then select the Span Gate Type option, and draw a rectangle spanning the direction we want out span gate created.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<p><img data-src="images/11b_SpanDone.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We can then finish the gate by clicking done, and check the console readout as a sanity check that it didn’t accidentally gate a Y-axis span on us.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/11c_SpanDoneOutput.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And similar process as we saw above to validate the gate was created and applied to our specimens.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a><span class="fu">plot</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/11d_Plot.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">gs_pop_get_count_fast</span>(SFC_GatingSet) <span class="sc">|&gt;</span> </span>
+<span id="cb30-2"><a></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(Population <span class="sc">%in%</span> <span class="st">"/singlets/live/Tcells"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/11e_SpanCounts.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Having gated down to T cells, lets go ahead and add a few gates for the individual T cell populations. Let’s start by drawing a polygon gate around CD4+ T cells.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>flowGate<span class="sc">::</span><span class="fu">gs_gate_interactive</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">filterId=</span><span class="st">"CD4+"</span>, <span class="at">sample=</span><span class="dv">1</span>,</span>
+<span id="cb31-2"><a></a><span class="at">dims=</span><span class="fu">list</span>(<span class="st">"BV650-A"</span>, <span class="st">"BUV805-A"</span>), <span class="at">subset=</span><span class="st">"Tcells"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/12_CD4.png" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/12b_CD4Done.png" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/12c_CD4Output.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Also, in case anyone was curious, <code>flowGate</code> retains <code>ggcyto</code> arguments, so if we wanted to, instead of fluorophore names, we could use alternatively use the marker names when specifying the axis for the flow cytometry plots.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a>flowGate<span class="sc">::</span><span class="fu">gs_gate_interactive</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">filterId=</span><span class="st">"CD4+"</span>, <span class="at">sample=</span><span class="dv">1</span>,</span>
+<span id="cb32-2"><a></a><span class="at">dims=</span><span class="fu">list</span>(<span class="st">"CD8"</span>, <span class="st">"CD4"</span>), <span class="at">subset=</span><span class="st">"Tcells"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We can also modify the setting to overlay already existing gates when we are drawing new gates for the other two T cell subsets. This is done by providing the gate name to the <strong>overlayGates</strong> argument.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>flowGate<span class="sc">::</span><span class="fu">gs_gate_interactive</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">filterId=</span><span class="st">"CD8+"</span>, <span class="at">sample=</span><span class="dv">1</span>,</span>
+<span id="cb33-2"><a></a><span class="at">dims=</span><span class="fu">list</span>(<span class="st">"CD8"</span>, <span class="st">"CD4"</span>), <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">overlayGates=</span><span class="st">"CD4+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/13_OverlayGates.png" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/13c_BothCD4andCD8.png" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/13b_OverlayOutputCD8.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And we can repeat this for CD4-CD8- (Double Negative (DN)) T cells.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>flowGate<span class="sc">::</span><span class="fu">gs_gate_interactive</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">filterId=</span><span class="st">"DN"</span>, <span class="at">sample=</span><span class="dv">1</span>,</span>
+<span id="cb34-2"><a></a><span class="at">dims=</span><span class="fu">list</span>(<span class="st">"CD8"</span>, <span class="st">"CD4"</span>), <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">overlayGates=</span><span class="fu">c</span>(<span class="st">"CD4+"</span>, <span class="st">"CD8+"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/14_DNDone.png" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/14b_DNOutput.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And a final-check to make sure the gates for the T cell subsets were added</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">plot</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/14c_Plot.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And a quick check for the statistics</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">gs_pop_get_count_fast</span>(SFC_GatingSet) <span class="sc">|&gt;</span> </span>
+<span id="cb36-2"><a></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(Population <span class="sc">%in%</span> <span class="st">"/singlets/live/Tcells/DN"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/14d_DNCounts.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="quadrant">Quadrant</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The last type of manual gate that we can implement with <code>flowGate</code> is a quadrant gate, in this case, let’s use it to create a quadrant for our two cytokines (TNFa and IFNg). We should ideally use one of the SEB-stimulated specimens for this if we want to visualize the cytokine-expressing cells, so I have switched over to the 6th sample in the GatingSet.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="co">#pData(SFC_GatingSet)</span></span>
+<span id="cb37-2"><a></a>flowGate<span class="sc">::</span><span class="fu">gs_gate_interactive</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">filterId=</span><span class="st">"Cytokines"</span>, <span class="at">sample=</span><span class="dv">6</span>,</span>
+<span id="cb37-3"><a></a><span class="at">dims=</span><span class="fu">list</span>(<span class="st">"TNFa"</span>, <span class="st">"IFNg"</span>), <span class="at">subset=</span><span class="st">"CD4+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/15_QuadrantDraw.png" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/15b_QuadDone.png" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/15d_QuadrantOutput.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">plot</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/15c_QuadrantsPlots.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="redraw-gate">Redraw Gate</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>But what happens if we misdraw a gate and need to correct it? If you are in the process of actively drawing, you can hit the reset button and try again</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/16_Resetting.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>But what if you had already created the gate?</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a>flowGate<span class="sc">::</span><span class="fu">gs_gate_interactive</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">filterId=</span><span class="st">"CD161+"</span>, <span class="at">sample=</span><span class="dv">1</span>,</span>
+<span id="cb39-2"><a></a><span class="at">dims=</span><span class="fu">list</span>(<span class="st">"CD161"</span>), <span class="at">subset=</span><span class="st">"CD8+"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/16a_Reset.png" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/16b_Reset.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>To completely redraw an existing gate, you would need to add the “regate” argument and set it to TRUE. This will delete the existing gate, and allow you to draw a new one in its place.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>flowGate<span class="sc">::</span><span class="fu">gs_gate_interactive</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">filterId=</span><span class="st">"CD161+"</span>, <span class="at">sample=</span><span class="dv">1</span>,</span>
+<span id="cb40-2"><a></a><span class="at">dims=</span><span class="fu">list</span>(<span class="st">"CD161"</span>), <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">regate=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/16c_Reset.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="saving-gates">Saving Gates</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Alright, so we have put effort and drawn all our gates. But what happens if we close Positron? Well, we loose all our effort and have to redraw them again. Which doesn’t sound like a particularly good use of our time.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">plot</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/FinalGates.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Fortunately, there is a way to save our existing GatingSet objet using <code>flowWorkspace</code> <code>save_gs()</code> function, allowing us to load back in the GatingSet object later on.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>StorageLocationAndName <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, <span class="st">"flowGateExampleGS.gs"</span>)</span>
+<span id="cb42-2"><a></a><span class="fu">save_gs</span>(SFC_GatingSet, StorageLocationAndName)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Our GatingSet ends up being stored as its own folder with various h5 and pb objects inside. Please note, re-loading them in successfully can be file.path sensitive, so avoid messing with the folder as much as possible.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/17_StorageLocation.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>To reload back into R, we would use the <code>load_gs()</code> function.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a>StorageLocationAndName <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, <span class="st">"flowGateExampleGS.gs"</span>)</span>
+<span id="cb43-2"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">load_gs</span>(StorageLocationAndName)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="fu">plot</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="slides_files/figure-revealjs/unnamed-chunk-34-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">gs_pop_get_count_fast</span>(SFC_GatingSet) <span class="sc">|&gt;</span> </span>
+<span id="cb45-2"><a></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(Population <span class="sc">%in%</span> <span class="st">"/singlets/live/Tcells/DN"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                  name               Population
+                                &lt;char&gt;                   &lt;char&gt;
+1: 2025_07_26_AB_02_INF052_00_Ctrl.fcs /singlets/live/Tcells/DN
+2:  2025_07_26_AB_02_INF052_00_SEB.fcs /singlets/live/Tcells/DN
+3: 2025_07_26_AB_02_INF100_00_Ctrl.fcs /singlets/live/Tcells/DN
+4:  2025_07_26_AB_02_INF100_00_SEB.fcs /singlets/live/Tcells/DN
+5: 2025_07_26_AB_02_INF179_00_Ctrl.fcs /singlets/live/Tcells/DN
+6:  2025_07_26_AB_02_INF179_00_SEB.fcs /singlets/live/Tcells/DN
+                  Parent Count ParentCount
+                  &lt;char&gt; &lt;int&gt;       &lt;int&gt;
+1: /singlets/live/Tcells   509        8850
+2: /singlets/live/Tcells   519        7176
+3: /singlets/live/Tcells   191        8546
+4: /singlets/live/Tcells   192        6721
+5: /singlets/live/Tcells   158        8769
+6: /singlets/live/Tcells   147        6438</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="rapid-gate-deployment">Rapid Gate Deployment</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In the examples above, we created separate gates by running individual chunks of code. There is an alternative method in <code>flowGate</code> to allow you to draw all your gates immediately after each other.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>GatingTable <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(</span>
+<span id="cb47-2"><a></a>  <span class="sc">~</span>filterId,    <span class="sc">~</span>dims,                          <span class="sc">~</span>subset,      </span>
+<span id="cb47-3"><a></a>  <span class="st">"singlets"</span>,   <span class="fu">list</span>(<span class="st">"FSC-A"</span>, <span class="st">"FSC-H"</span>),          <span class="st">"root"</span>,      </span>
+<span id="cb47-4"><a></a>  <span class="st">"live"</span>,       <span class="fu">list</span>(<span class="st">"FSC-A"</span>, <span class="st">"Zombie NIR-A"</span>),   <span class="st">"singlets"</span>,  </span>
+<span id="cb47-5"><a></a>  <span class="st">"Tcells"</span>,     <span class="fu">list</span>(<span class="st">"CD3"</span>, <span class="st">"CD45"</span>),              <span class="st">"live"</span>,     </span>
+<span id="cb47-6"><a></a>  <span class="st">"CD4+"</span>,       <span class="fu">list</span>(<span class="st">"CD8"</span>, <span class="st">"CD4"</span>),               <span class="st">"Tcells"</span>,   </span>
+<span id="cb47-7"><a></a>  <span class="st">"CD8+"</span>,       <span class="fu">list</span>(<span class="st">"CD8"</span>, <span class="st">"CD4"</span>),               <span class="st">"Tcells"</span>,   </span>
+<span id="cb47-8"><a></a>  <span class="st">"DN"</span>,         <span class="fu">list</span>(<span class="st">"CD8"</span>, <span class="st">"CD4"</span>),                <span class="st">"Tcells"</span>,  </span>
+<span id="cb47-9"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a>GatingTable</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  filterId dims       subset  
+  &lt;chr&gt;    &lt;list&gt;     &lt;chr&gt;   
+1 singlets &lt;list [2]&gt; root    
+2 live     &lt;list [2]&gt; singlets
+3 Tcells   &lt;list [2]&gt; live    
+4 CD4+     &lt;list [2]&gt; Tcells  
+5 CD8+     &lt;list [2]&gt; Tcells  
+6 DN       &lt;list [2]&gt; Tcells  </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Lets recreate our GatingSet object:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files,</span>
+<span id="cb50-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb50-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb50-4"><a></a></span>
+<span id="cb50-5"><a></a>SFC_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(SFC_GatingSet)</span>
+<span id="cb50-6"><a></a>FluorophoresOnly <span class="ot">&lt;-</span> SFC_Parameters[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(SFC_Parameters, <span class="st">"FSC|SSC|Time"</span>)]</span>
+<span id="cb50-7"><a></a></span>
+<span id="cb50-8"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb50-9"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">2</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
+<span id="cb50-10"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb50-11"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And now, let’s apply the GatingTable scheme. As we create and click done, the next gate will automatically pop up in the Shiny App.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="fu">gs_apply_gating_strategy</span>(SFC_GatingSet, <span class="at">gating_strategy =</span> GatingTable)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/18_Rapid.png" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/18b_Rapid.png" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/18c_Rapid.png" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/18d_Rapid.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a><span class="fu">plot</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/14c_Plot.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="visualizing-gates">Visualizing Gates</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As you may have noticed, using <code>flowGate</code>, the gates are applied generally to all specimens, and we are limited in our ability to customize to individual specimens. Consequently, being able to visualize each specimen, and regate as necessary is important if we want to have confidence in our data.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>For now, the simplest way to do so is using the <code>autoplot()</code> function from the <code>ggcyto()</code> package, repeating it for every specimen in the GatingSet. As we go further into the course, we will learn how to <a href="../../Schedule.html#its-raining-functions">iterate</a> through the specimens, and send the plot outputs to pdf files, reducing the need to write out individual lines of code for every specimen. We will also look at how to use <a href="https://davidrach.github.io/Luciernaga/articles/DataVisualization.html">other</a> visualization tools to compare individual gates across multiple specimens.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a>ggcyto<span class="sc">::</span><span class="fu">autoplot</span>(SFC_GatingSet[[<span class="dv">1</span>]]) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span>
+<span id="cb54-2"><a></a>ggcyto<span class="sc">::</span><span class="fu">autoplot</span>(SFC_GatingSet[[<span class="dv">2</span>]]) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span>
+<span id="cb54-3"><a></a>ggcyto<span class="sc">::</span><span class="fu">autoplot</span>(SFC_GatingSet[[<span class="dv">3</span>]]) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span>
+<span id="cb54-4"><a></a><span class="co"># ggcyto::autoplot(SFC_GatingSet[[4]]) + theme_bw()</span></span>
+<span id="cb54-5"><a></a><span class="co"># ggcyto::autoplot(SFC_GatingSet[[5]]) + theme_bw()</span></span>
+<span id="cb54-6"><a></a><span class="co"># ggcyto::autoplot(SFC_GatingSet[[6]]) + theme_bw()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/flowGateAutoplot.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="summary">Summary</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As we have surmized, <code>flowGate</code> can be used to facilitate drawing gates in a general manner for your main cell populations of interest, as we saw in this initial introduction.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>A couple things to keep in mind, namely, these gates are applied generally to all specimens, and we are limited in our ability to customize to individual specimens. Consequently, being able to visualize each specimen, and regate as necessary is important if we want to have confidence in our data.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>All in all, <code>flowGate</code> is a very nice R package for implementing supervised manual-style gates. While there are areas that can still be improved on, the beauty of the open-source nature is that if you have a good idea, and the know-how and/or time, these ideas can be implemented to extend the package to be able to do additional cool things.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="automated---opencyto" class="slide level2">
+<h2>Automated - openCyto</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The other gating approach that we will be learning today is implemented by the <code>openCyto</code> <a href="https://bioconductor.org/packages/release/bioc/html/openCyto.html">package</a> from Bioconductor, which is a sister package to both <code>flowWorkspace</code> and <code>CytoML</code>. It works through the use of gating template .csv files, which can be customized with various algorithmic gating functions and arguments, allowing for substantial flexibility in creating and implementing automated gating schemes.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>One of the advantages of this approach (in theory), is when properly constrained, it can “better” handle some of the inter-specimen variability differences that we may encounter due to batch effects, that might otherwise throw off a fixed-manual gate applied equally acrooss specimens.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>However, remember, there is one main truth to computational cytometry:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="https://images.squarespace-cdn.com/content/v1/60c132aaec9f3d01746650fa/81da7259-b9fd-4cf0-a781-a122e5c475d2/1579808366055.gif"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>So always always always check the outputs visually, because I hate writing letters to the editor.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="gatingtemplate">GatingTemplate</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Lets go ahead and locate an already assembled GatingTemplate for our particular dataset. This is also in the data folder, so we can separate it from our .fcs files by switching out the pattern argument</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a>OurGateTemplate <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".csv"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
+<span id="cb55-2"><a></a>Example <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(OurGateTemplate, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a>Example</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        alias pop      parent             dims   gating_method
+1    singlets   +        root      FSC-A,FSC-H     singletGate
+2 lymphocytes   +    singlets     FSC-A, SSC-A       flowClust
+3        live   - lymphocytes     Zombie NIR-A gate_mindensity
+4      Tcells   +        live Spark Blue 550-A gate_mindensity
+5         CD4   +      Tcells              CD4 gate_mindensity
+6         CD8   +      Tcells              CD8 gate_mindensity
+              gating_args collapseDataForGating groupBy preprocessing_method
+1                                         FALSE      NA                   NA
+2 K=2, target=c(2e6, 5e5)                 FALSE      NA                   NA
+3   gate_range=c(1e4,2e4)                 FALSE      NA                   NA
+4                                         FALSE      NA                   NA
+5                                         FALSE      NA                   NA
+6                                         FALSE      NA                   NA
+  preprocessing_args
+1                 NA
+2                 NA
+3                 NA
+4                 NA
+5                 NA
+6                 NA</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Each gate is represented by an individual row.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h4 id="singletgate">singletGate</h4>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>For the first example, we are gating for singlets. Later on after running the code, this will generate a gate that resembles the following:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/000_Singlets.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Looking at the row in the gatingTemplate, we can see the gate name (<strong>alias</strong>), the parent gate (<strong>parent</strong>), and the x and y dimensions (<strong>dims</strong>). The <strong>gating_method</strong> defines what kind of gate is being created, in this context, a singlet gating polygon.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a>Example[<span class="dv">1</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     alias pop parent        dims gating_method gating_args
+1 singlets   +   root FSC-A,FSC-H   singletGate            
+  collapseDataForGating groupBy preprocessing_method preprocessing_args
+1                 FALSE      NA                   NA                 NA</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The other columns are not as easy to interpret at first glance. <strong>pop</strong> designates whether you want to keep the cells within the gate (<strong>+</strong>) or those outside the gate (<strong>-</strong>).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a></a>Example[<span class="dv">1</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     alias pop parent        dims gating_method gating_args
+1 singlets   +   root FSC-A,FSC-H   singletGate            
+  collapseDataForGating groupBy preprocessing_method preprocessing_args
+1                 FALSE      NA                   NA                 NA</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>gating_args</strong> are specific to the <strong>gating_method</strong>, we will be using these later on when specifying gate constraints. The last four arguments are rather niche and won’t be the main focus of today, and I will refer you to the <a href="https://bioconductor.org/packages/release/bioc/html/openCyto.html">openCyto vignettes</a> for how to use them for more specialized projects.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a></a>Example[<span class="dv">1</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     alias pop parent        dims gating_method gating_args
+1 singlets   +   root FSC-A,FSC-H   singletGate            
+  collapseDataForGating groupBy preprocessing_method preprocessing_args
+1                 FALSE      NA                   NA                 NA</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h4 id="flowclust">flowClust</h4>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Looking at the entire gatingTemplate .csv, we can see we will be implementing automated gating for 6 gates (singlets, lymphocytes, live, Tcells, CD4 and CD8). Similar to what we saw with the singlets gate, each of these gates also has corresponding parent gate and (axis) dimension information provided.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a>Example <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">select</span>(alias, pop, parent, dims, gating_method)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        alias pop      parent             dims   gating_method
+1    singlets   +        root      FSC-A,FSC-H     singletGate
+2 lymphocytes   +    singlets     FSC-A, SSC-A       flowClust
+3        live   - lymphocytes     Zombie NIR-A gate_mindensity
+4      Tcells   +        live Spark Blue 550-A gate_mindensity
+5         CD4   +      Tcells              CD4 gate_mindensity
+6         CD8   +      Tcells              CD8 gate_mindensity</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>One thing we can notice is the second gate (lymphocytes), uses the <strong>flowClust</strong> gating_method.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a></a>Example[<span class="dv">2</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        alias pop   parent         dims gating_method             gating_args
+2 lymphocytes   + singlets FSC-A, SSC-A     flowClust K=2, target=c(2e6, 5e5)
+  collapseDataForGating groupBy preprocessing_method preprocessing_args
+2                 FALSE      NA                   NA                 NA</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>This row will later result in a gate that resembles the following</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/000_flowClust.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>One thing that is different compared to the singlets gate, is that the <strong>gating_args</strong> column has values. Behind the scenes, gating_method “flowClust” is reaching out to an <a href="https://bioconductor.org/packages//release/bioc/html/flowClust.html">R package</a> of the same name to identify populations based on density.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Especially when working with FSC-SSC (where multiple populations may be present, including lymphocytes, monocytes, granulocytes, debris, etc). having the ability to specify arguments to denote the region we are interested in can be important.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In this case, target specifies the x and y coordinate we expect our population center to be roughly at. Since we are gating for lymphocytes, x is around 2e6, while the y is between 5e5 and 1e6. If we wanted a different population (ex. monocytes), we would modify the values provided accordingly to match that population.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a></a>Example[<span class="dv">2</span>,] <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">pull</span>(gating_args)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "K=2, target=c(2e6, 5e5)"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="gate_mindensity">gate_mindensity</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The last several gates are all <strong>gate_mindensity</strong> gates</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a></a>Example <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">select</span>(alias, pop, parent, dims, gating_method, gating_args)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        alias pop      parent             dims   gating_method
+1    singlets   +        root      FSC-A,FSC-H     singletGate
+2 lymphocytes   +    singlets     FSC-A, SSC-A       flowClust
+3        live   - lymphocytes     Zombie NIR-A gate_mindensity
+4      Tcells   +        live Spark Blue 550-A gate_mindensity
+5         CD4   +      Tcells              CD4 gate_mindensity
+6         CD8   +      Tcells              CD8 gate_mindensity
+              gating_args
+1                        
+2 K=2, target=c(2e6, 5e5)
+3   gate_range=c(1e4,2e4)
+4                        
+5                        
+6                        </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>A good example of these is our CD4 gate</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a></a>Example[<span class="dv">5</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  alias pop parent dims   gating_method gating_args collapseDataForGating
+5   CD4   + Tcells  CD4 gate_mindensity                             FALSE
+  groupBy preprocessing_method preprocessing_args
+5      NA                   NA                 NA</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Which will generate a gate that resembles the following.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/000_gate_mindensity.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In this case, since we are specifying pop = +, we will be keeping the positive cells (landing to the right of the gate line).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>gate_mindensity is a fast calculation, finding the point with the fewest cells. It can however mistrigger, ending up with gates placed before any cell is present, or after every cell. When this occurs, we can constrain the search area by providing a gate_range to the <strong>gating_args</strong>, as we can see here for the viability gate</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a></a>Example[<span class="dv">3</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  alias pop      parent         dims   gating_method           gating_args
+3  live   - lymphocytes Zombie NIR-A gate_mindensity gate_range=c(1e4,2e4)
+  collapseDataForGating groupBy preprocessing_method preprocessing_args
+3                 FALSE      NA                   NA                 NA</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="creating-a-gatingtemplate">Creating a GatingTemplate</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>With this broad overview of the gatingtemplate, we can now proceed with loading it in. To do so, <code>openCyto</code> recommends reading in the .csv file using the <code>data.table</code> package’s <code>fread</code> function, to ensure the formatting is correctly retained</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a></a><span class="co"># install.packages("data.table") # CRAN</span></span>
+<span id="cb76-2"><a></a>GatesToApply <span class="ot">&lt;-</span> data.table<span class="sc">::</span><span class="fu">fread</span>(OurGateTemplate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Once this is done, we can pass it to the <code>gatingTemplate()</code> function, which will wrap it with the required information layer needed for <code>openCyto</code> to add the gates to the GatingSet.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a></a>TheFullTemplate <span class="ot">&lt;-</span> <span class="fu">gatingTemplate</span>(GatesToApply)</span>
+<span id="cb77-2"><a></a>TheFullTemplate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>--- Gating Template: default
+    with  7  populations defined</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a></a><span class="fu">str</span>(TheFullTemplate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Formal class 'gatingTemplate' [package "openCyto"] with 7 slots
+  ..@ name      : chr "default"
+  ..@ nodes     : chr [1:7] "root" "/singlets" "/singlets/lymphocytes" "/singlets/lymphocytes/live" ...
+  ..@ edgeL     :List of 7
+  .. ..$ root                                 :List of 1
+  .. .. ..$ edges: int 2
+  .. ..$ /singlets                            :List of 1
+  .. .. ..$ edges: num 3
+  .. ..$ /singlets/lymphocytes                :List of 1
+  .. .. ..$ edges: num 4
+  .. ..$ /singlets/lymphocytes/live           :List of 1
+  .. .. ..$ edges: num 5
+  .. ..$ /singlets/lymphocytes/live/Tcells    :List of 1
+  .. .. ..$ edges: num [1:2] 6 7
+  .. ..$ /singlets/lymphocytes/live/Tcells/CD4:List of 1
+  .. .. ..$ edges: num(0) 
+  .. ..$ /singlets/lymphocytes/live/Tcells/CD8:List of 1
+  .. .. ..$ edges: num(0) 
+  ..@ edgeData  :Formal class 'attrData' [package "graph"] with 2 slots
+  .. .. ..@ data    :List of 6
+  .. .. .. ..$ root|/singlets                                                         :List of 2
+  .. .. .. .. ..$ gtMethod   :Formal class 'gtMethod' [package "openCyto"] with 5 slots
+  .. .. .. .. .. .. ..@ name    : chr "singletGate"
+  .. .. .. .. .. .. ..@ dims    : chr "FSC-A,FSC-H"
+  .. .. .. .. .. .. ..@ args    : list()
+  .. .. .. .. .. .. ..@ groupBy : chr ""
+  .. .. .. .. .. .. ..@ collapse: logi FALSE
+  .. .. .. .. ..$ isReference: logi FALSE
+  .. .. .. ..$ /singlets|/singlets/lymphocytes                                        :List of 2
+  .. .. .. .. ..$ gtMethod   :Formal class 'gtMethod' [package "openCyto"] with 5 slots
+  .. .. .. .. .. .. ..@ name    : chr "gate_flowclust_2d"
+  .. .. .. .. .. .. ..@ dims    : chr "FSC-A, SSC-A"
+  .. .. .. .. .. .. ..@ args    :List of 2
+  .. .. .. .. .. .. .. ..$ K     : num 2
+  .. .. .. .. .. .. .. ..$ target: language c(2e+06, 5e+05)
+  .. .. .. .. .. .. ..@ groupBy : chr ""
+  .. .. .. .. .. .. ..@ collapse: logi FALSE
+  .. .. .. .. ..$ isReference: logi FALSE
+  .. .. .. ..$ /singlets/lymphocytes|/singlets/lymphocytes/live                       :List of 2
+  .. .. .. .. ..$ gtMethod   :Formal class 'gtMethod' [package "openCyto"] with 5 slots
+  .. .. .. .. .. .. ..@ name    : chr "gate_mindensity"
+  .. .. .. .. .. .. ..@ dims    : chr "Zombie NIR-A"
+  .. .. .. .. .. .. ..@ args    :List of 1
+  .. .. .. .. .. .. .. ..$ gate_range: language c(10000, 20000)
+  .. .. .. .. .. .. ..@ groupBy : chr ""
+  .. .. .. .. .. .. ..@ collapse: logi FALSE
+  .. .. .. .. ..$ isReference: logi FALSE
+  .. .. .. ..$ /singlets/lymphocytes/live|/singlets/lymphocytes/live/Tcells           :List of 2
+  .. .. .. .. ..$ gtMethod   :Formal class 'gtMethod' [package "openCyto"] with 5 slots
+  .. .. .. .. .. .. ..@ name    : chr "gate_mindensity"
+  .. .. .. .. .. .. ..@ dims    : chr "Spark Blue 550-A"
+  .. .. .. .. .. .. ..@ args    : list()
+  .. .. .. .. .. .. ..@ groupBy : chr ""
+  .. .. .. .. .. .. ..@ collapse: logi FALSE
+  .. .. .. .. ..$ isReference: logi FALSE
+  .. .. .. ..$ /singlets/lymphocytes/live/Tcells|/singlets/lymphocytes/live/Tcells/CD4:List of 2
+  .. .. .. .. ..$ gtMethod   :Formal class 'gtMethod' [package "openCyto"] with 5 slots
+  .. .. .. .. .. .. ..@ name    : chr "gate_mindensity"
+  .. .. .. .. .. .. ..@ dims    : chr "CD4"
+  .. .. .. .. .. .. ..@ args    : list()
+  .. .. .. .. .. .. ..@ groupBy : chr ""
+  .. .. .. .. .. .. ..@ collapse: logi FALSE
+  .. .. .. .. ..$ isReference: logi FALSE
+  .. .. .. ..$ /singlets/lymphocytes/live/Tcells|/singlets/lymphocytes/live/Tcells/CD8:List of 2
+  .. .. .. .. ..$ gtMethod   :Formal class 'gtMethod' [package "openCyto"] with 5 slots
+  .. .. .. .. .. .. ..@ name    : chr "gate_mindensity"
+  .. .. .. .. .. .. ..@ dims    : chr "CD8"
+  .. .. .. .. .. .. ..@ args    : list()
+  .. .. .. .. .. .. ..@ groupBy : chr ""
+  .. .. .. .. .. .. ..@ collapse: logi FALSE
+  .. .. .. .. ..$ isReference: logi FALSE
+  .. .. ..@ defaults:List of 3
+  .. .. .. ..$ gtMethod   : chr ""
+  .. .. .. ..$ ppMethod   : chr ""
+  .. .. .. ..$ isReference: logi FALSE
+  ..@ nodeData  :Formal class 'attrData' [package "graph"] with 2 slots
+  .. .. ..@ data    :List of 7
+  .. .. .. ..$ root                                 :List of 1
+  .. .. .. .. ..$ pop:Formal class 'gtPopulation' [package "openCyto"] with 3 slots
+  .. .. .. .. .. .. ..@ id   : chr "root"
+  .. .. .. .. .. .. ..@ name : chr "root"
+  .. .. .. .. .. .. ..@ alias: chr "root"
+  .. .. .. ..$ /singlets                            :List of 1
+  .. .. .. .. ..$ pop:Formal class 'gtPopulation' [package "openCyto"] with 3 slots
+  .. .. .. .. .. .. ..@ id   : chr "/singlets"
+  .. .. .. .. .. .. ..@ name : chr "+"
+  .. .. .. .. .. .. ..@ alias: chr "singlets"
+  .. .. .. ..$ /singlets/lymphocytes                :List of 1
+  .. .. .. .. ..$ pop:Formal class 'gtPopulation' [package "openCyto"] with 3 slots
+  .. .. .. .. .. .. ..@ id   : chr "/singlets/lymphocytes"
+  .. .. .. .. .. .. ..@ name : chr "+"
+  .. .. .. .. .. .. ..@ alias: chr "lymphocytes"
+  .. .. .. ..$ /singlets/lymphocytes/live           :List of 1
+  .. .. .. .. ..$ pop:Formal class 'gtPopulation' [package "openCyto"] with 3 slots
+  .. .. .. .. .. .. ..@ id   : chr "/singlets/lymphocytes/live"
+  .. .. .. .. .. .. ..@ name : chr "-"
+  .. .. .. .. .. .. ..@ alias: chr "live"
+  .. .. .. ..$ /singlets/lymphocytes/live/Tcells    :List of 1
+  .. .. .. .. ..$ pop:Formal class 'gtPopulation' [package "openCyto"] with 3 slots
+  .. .. .. .. .. .. ..@ id   : chr "/singlets/lymphocytes/live/Tcells"
+  .. .. .. .. .. .. ..@ name : chr "+"
+  .. .. .. .. .. .. ..@ alias: chr "Tcells"
+  .. .. .. ..$ /singlets/lymphocytes/live/Tcells/CD4:List of 1
+  .. .. .. .. ..$ pop:Formal class 'gtPopulation' [package "openCyto"] with 3 slots
+  .. .. .. .. .. .. ..@ id   : chr "/singlets/lymphocytes/live/Tcells/CD4"
+  .. .. .. .. .. .. ..@ name : chr "+"
+  .. .. .. .. .. .. ..@ alias: chr "CD4"
+  .. .. .. ..$ /singlets/lymphocytes/live/Tcells/CD8:List of 1
+  .. .. .. .. ..$ pop:Formal class 'gtPopulation' [package "openCyto"] with 3 slots
+  .. .. .. .. .. .. ..@ id   : chr "/singlets/lymphocytes/live/Tcells/CD8"
+  .. .. .. .. .. .. ..@ name : chr "+"
+  .. .. .. .. .. .. ..@ alias: chr "CD8"
+  .. .. ..@ defaults:List of 1
+  .. .. .. ..$ pop: chr ""
+  ..@ renderInfo:Formal class 'renderInfo' [package "graph"] with 4 slots
+  .. .. ..@ nodes: list()
+  .. .. ..@ edges: list()
+  .. .. ..@ graph: list()
+  .. .. ..@ pars : list()
+  ..@ graphData :List of 1
+  .. ..$ edgemode: chr "directed"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a></a><span class="fu">class</span>(TheFullTemplate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "gatingTemplate"
+attr(,"package")
+[1] "openCyto"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="prepare-your-gatingset">Prepare your GatingSet</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>With the gatingtemplate ready to go, we need to assemble our GatingSet object. We will repeat the code that we have already been working with today above.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files,</span>
+<span id="cb83-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb83-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb83-4"><a></a></span>
+<span id="cb83-5"><a></a>SFC_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(SFC_GatingSet)</span>
+<span id="cb83-6"><a></a>FluorophoresOnly <span class="ot">&lt;-</span> SFC_Parameters[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(SFC_Parameters, <span class="st">"FSC|SSC|Time"</span>)]</span>
+<span id="cb83-7"><a></a></span>
+<span id="cb83-8"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb83-9"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">2</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
+<span id="cb83-10"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb83-11"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="run-gt_gating">Run gt_gating</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The final step is applying the template to our GatingSet.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell" data-warnings="false">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a></a><span class="fu">gt_gating</span>(TheFullTemplate, SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/19_RunOpenCyto.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="visualizing-gates-1">Visualizing Gates</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And finally, similar to the process we did for <code>flowGate</code>, let’s go ahead and use <code>ggcyto</code> <code>autoplot()</code> function to see how we did.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a>ggcyto<span class="sc">::</span><span class="fu">autoplot</span>(SFC_GatingSet[[<span class="dv">1</span>]]) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span>
+<span id="cb86-2"><a></a>ggcyto<span class="sc">::</span><span class="fu">autoplot</span>(SFC_GatingSet[[<span class="dv">2</span>]]) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span>
+<span id="cb86-3"><a></a>ggcyto<span class="sc">::</span><span class="fu">autoplot</span>(SFC_GatingSet[[<span class="dv">3</span>]]) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span>
+<span id="cb86-4"><a></a><span class="co"># ggcyto::autoplot(SFC_GatingSet[[4]]) + theme_bw()</span></span>
+<span id="cb86-5"><a></a><span class="co"># ggcyto::autoplot(SFC_GatingSet[[5]]) + theme_bw()</span></span>
+<span id="cb86-6"><a></a><span class="co"># ggcyto::autoplot(SFC_GatingSet[[6]]) + theme_bw()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/openCytoAutoplot.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="saving-for-later">Saving for later</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We can still save our openCyto-gated GatingSet using <code>save_gs()</code> (using the same steps as detailed in the <code>flowGate</code> section). However, depending on the complexity of your gating scheme, once validated and properly constrained, it is also possibly to just reload everything from scratch with similar results, especially when using gate_mindensity (as flowClust is stochastic and may vary a bit).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="take-away" class="title-slide slide level1 center">
+<h1>Take Away</h1>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>During the course of this session, we explored how to add both manual and automated gates using two Bioconductor packages, <code>flowGate</code> and <code>openCyto</code>. While the examples were shown today were introductory and separate, since they both end up adding to our GatingSets, we can combine them to be able to set up rather complicated gating schemes, targeting our cell populations of interest for our respective datasets.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Separately, I would be remiss not to briefly mention a couple additional packages that while in development, are available via GitHub, and may be useful to know about in the long-run. These are the <a href="https://dillonhammill.github.io/CytoExploreR/articles/CytoExploreR-Manual-Gating.html">CytoExploreR</a> and <a href="https://github.com/semontante/flowMagic">flowMagic</a> R packages. We will cover these as one-off sessions later in the course, but depending what you are trying to do with your own datasets, might be worth checking out before then.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Next week, we will cover the last session of the “Intro to R” portion of the course (before proceeding into the intermediate Cytometry core portion) namely, how to create your own functions, i.e.&nbsp;the tools in our toolchest, that we have been using throughout the course. This was an area that when I first was starting out I didn’t realize quite how important a skillset it would proove to be in the long run, so to set you up for success on your own future adventures, will be introducing how to do this in context of derriving cell concentration from our acquired .fcs files.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/TakeAway.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="additional-resources" class="title-slide slide level1 center">
+<h1>Additional Resources</h1>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p><a href="https://bioconductor.org/packages/release/bioc/vignettes/flowGate/inst/doc/flowGate.html">flowGate: Introductory Vignetter</a> The introductory flowGate vignette on Bioconductor, while we covered the main points, there are still a few useful aspects we didn’t have time to cover.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p><a href="https://bioconductor.org/packages/release/bioc/vignettes/openCyto/inst/doc/openCytoVignette.html">openCyto: An introduction to the openCyto Gating Package</a> The introductory openCyto vignette, covers majority of the workflow in more depth than what we were able to look at today, and is worthwhile looking over while trying to implement your own automated gating schemes for your own datasets.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p><a href="https://bioconductor.org/packages/release/bioc/vignettes/openCyto/inst/doc/HowToAutoGating.html">openCyto: How to use different auto gating functions</a> Explores the different gating_methods in more depth, including the arguments that they accept.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p><a href="https://bioconductor.org/packages/release/bioc/vignettes/openCyto/inst/doc/HowToWriteCSVTemplate.html">openCyto: How to write a CSV gating template</a> If you want to implement some complicated combination of gates in your template so you never need to draw a gate again in your life, this is the vignette for you (although you will still need to validate the gate outputs ;P )</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="take-home-problems" class="title-slide slide level1 center">
+<h1>Take-home Problems</h1>
+<div title="Problem 1">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Problem 1</strong></p>
+</div>
+<div class="callout-content">
+<p>Using <code>flowGate</code>, go ahead and create your own series of gates for either our data or your own for any cell populations that might interest you. Once done, save the GatingSet, and then successfully reload it. Add another gate, but intentionally misdraw it. Then proceed to visualize, identify and correct it, before saving again.</p>
+<p>If you do plan to switch over to R for gating long-term, these skillsets will be essential, as you will need to be confident in your ability to adjust your gates as needed.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div title="Problem 2">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Problem 2</strong></p>
+</div>
+<div class="callout-content">
+<p>Go ahead and create your own <code>openCyto</code> gate template, extending to whatever cell target population of interest. Visualize the differences, and ensure that the gates are correctly applied for everyone. Set gate_constaint arguments as needed until everything is just right.</p>
+<p>If you do plan to switch over to R for gating long-term, these skillsets will be essential, as you will need to be confident in your ability to adjust your gates as needed.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div title="Problem 3">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Problem 3</strong></p>
+</div>
+<div class="callout-content">
+<p>Re-run your <code>openCyto</code> template, but then add a few additional <code>flowGate</code> on to to extend it further. Save the gating set, close out of positron, and successfully reload.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<p><img data-src="images/TakeAway.jpg"></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img data-src="https://www.gnu.org/graphics/agplv3-with-text-162x68.png" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img data-src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" alt="CC BY-SA 4.0"></a></p>
+</div>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
