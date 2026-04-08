@@ -1,0 +1,128 @@
+---
+title: "Take-Home Problems - Pull Fix Resolution"
+author: "David Rach"
+date: 02-22-2026
+format: html
+toc: true
+toc-depth: 4
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+# Background
+
+For those who have turned in the homework to the Cytometry in R - homework branches, many report having encountered merge issues pulling in the next week's data if the pull request hasn't been resolved yet. Creating a parallel branch, and submitting homework from there to the homework branch might solve the issue? But we will need to test that out. For now, here are the steps we used to resolve the issue locally without needing to delete and re-download. 
+
+
+# Getting Started 
+
+Start off checking your GitHub forked version of the CytometryInR, notice how many commits behind you are. 
+
+![](images/00_Start.png)
+
+<br>
+
+If you haven't submitted the optional Take-Home problems via a pull-request, proceed to do so. 
+
+![](images/01_Issue.png)
+
+<br>
+
+This was an example of the page you see when submitting the pull request. Upon submission, your branch may show merge conflicts due to difference in rendered docs. This is okay, we will resolve it on our end. 
+
+![](images/02_AsCurrentlyShowing.png)
+
+<br>
+
+What we will end up doing is ignore the changes and accept the current version. This issue is likely due to the weekly updating of the data resulting in new sidebar links.  We will then mark these issues as resolved
+
+![](images/03_ConflictResolution.png)
+
+We will then mark the issues as resolved. 
+
+![](images/04_MarkAsResolved.png)
+
+<br> 
+
+On return to the homework, we will be able to merge the branch once again. We will likely make our suggestions at this point for this branch. 
+
+![](images/05_PostEdits.png)
+
+<br>
+
+
+However, after pull request has been merged, you will see your branch is way ahead (due to everyone elses homework commits). This is the area we will need to address via the new branch method.
+
+![](images/06_Upps.png)
+
+<br>
+
+For now, proceed to discard the changes (you don't need the other participants homeworks cluttering your folder)
+
+
+![](images/07_DiscardCommits.png)
+
+<br>
+
+You will then appear as caught up with the main branch.
+
+![](images/08_Hmm.png)
+
+<br>
+
+On return to Positron, attempt to pull
+
+
+![](images/09_PullPostFix.png)
+
+<br>
+
+However, since your homework commit is still present, you will receive a pop-up asking you to see the GitLog. If you scroll up the problem log, it will give you several options.
+
+![](images/10_GitLog.png)
+
+<br>
+
+You will need to enter the following code into your terminal tab:
+
+```{r}
+#| eval: FALSE
+git config pull.rebase TRUE
+```
+
+
+![](images/11_gitconfigpullrebaseTRUE.png)
+
+<br>
+
+This will result in a branched appearance, and the button asking you to sync the changes. 
+
+
+![](images/12_Branched.png)
+
+<br>
+
+Upon doing so you will have a restored status vs. the main cytometry in R project folder. 
+
+![](images/13_Hmm2.png)
+
+
+# Take Away
+ 
+We have encountered a first growing pain for the course, in that the pull-request method we have been using still causes merge conflicts. We will be going to a homework branch to homework branch pull-request approach going forward, I will send out additional instructions on how to do so shortly. 
+
+Thanks for your patience!
+
+David
+
+
+# Additional Resources
+
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
