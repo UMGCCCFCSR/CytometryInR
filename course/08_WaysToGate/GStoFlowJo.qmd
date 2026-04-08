@@ -1,0 +1,172 @@
+---
+title: "Future Addendum"
+format: html
+---
+
+Did not have time to finish this section, will add details in the future. 
+
+
+## GatingSet to FlowJo v10
+
+Finally, there is one last area I would like to make everyone aware of. As we saw during [Week 05](/course/05_GatingSets/index.qmd), we were able to bring FlowJo .wsp files directly into GatingSet objects via the `CytoML` package. The opposite is also true, and we can convert our GatingSet objects from R into FlowJo .wsp that can be shared with a collaborator. 
+
+The main challenge, is that the current implementation is underdocumented, and relies on an old docker container. [Docker]() is a software that will containerize everything that is needed to run something (in this particular case, an .exe file). However, the current version has not been updated recently at all. Likewise, installing Docker can be its own can of worms, especially from a IT safety side, so if your IT department was giving you hassles over Positron, Quarto or Git, then it is unlikely to happen. 
+
+I have linked a walk-through of the process for anyone who is on their own computer and might be interested, as there are no other active instructions elsewhere as far as I know. 
+
+# Create your GatingSet. 
+
+For this walk-through, you will need to create a GatingSet. Alternatively, we can load in the saved GatingSet from [Week 08](/course/08_WaysToGate/index.qmd). 
+
+```{r}
+library(flowWorkspace)
+```
+
+```{r}
+# StorageLocation <- file.path("course", "08_WaysToGate", "data") # When working interactively
+StorageLocation <- file.path("data") # Quarto Render
+```
+
+```{r}
+StorageLocationAndName <- file.path(StorageLocation, "flowGateExampleGS.gs")
+SFC_GatingSet <- load_gs(StorageLocationAndName)
+```
+
+```{r}
+plot(SFC_GatingSet)
+```
+
+# Docker Setup
+
+To pull this off, you will need to have Docker correctly set up on your computer (with proper permissions, etc). There are two routes, either via Docker Desktop or via Docker Engine. 
+
+## Linux - Docker Engine
+
+For Debian distros, the originial instructions referenced can be found [here](https://docs.docker.com/engine/install/debian/#install-using-the-repository). The first step is to add Docker to the apt repositories to be able to pull updates. 
+
+```{bash}
+#| eval: FALSE
+
+# Set up Docker apt repository
+sudo apt update
+sudo apt install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add repository to apt sources
+sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
+Types: deb
+URIs: https://download.docker.com/linux/debian
+Suites: $(. /etc/os-release && echo "$VERSION_CODENAME")
+Components: stable
+Architectures: $(dpkg --print-architecture)
+Signed-By: /etc/apt/keyrings/docker.asc
+EOF
+sudo apt update
+```
+
+Next up, proceed to install Docker. 
+
+```{bash}
+#| eval: FALSE
+
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+```
+
+And verify install works correctly by running hello-world container
+
+```{bash}
+#| eval: FALSE
+
+sudo docker run hello-world
+```
+
+If everything was set up successfully, you should see the following output:
+
+![](images/0000_DockerSuccess.png)
+
+# Container Setup
+
+For the GatingSet to FlowJo Docker container to run successfully, we need to double check a couple things. First the [cytolib](https://bioconductor.org/packages/release/bioc/html/cytolib.html) version.
+
+```{r}
+#| eval: FALSE
+
+packageVersion("cytolib") # 2.20.0
+```
+
+Next up, lets attach `CytoML` to your local environment via the `library()` call. 
+
+```{r}
+library(CytoML)
+```
+
+Once loaded, we will be using the `gatingset_to_flowjo` function. Here is the help documentation as it currently stands. 
+
+```{r}
+#| eval: FALSE
+
+?gatingset_to_flowjo
+```
+
+![](images/0000_CytoMLDoc.png)
+
+As shown in the documentation, the current working docker is the cytoverse/gs-to-wsp:latest, which we will need to pull in. What makes this confusing, is that if we look at [Docker](https://hub.docker.com/r/rglab/gs-to-flowjo) we can also see a couple containers, but these from my testing no longer work with the current package versions. So off to Amazon we go!
+
+```{bash}
+#| eval: FALSE
+
+docker pull public.ecr.aws/x4k5d9i7/cytoverse/gs-to-wsp:latest
+
+```
+
+Next up, run the following and copy the ID for cytoverse/gs-to-wsp:latest, as you will need it later. 
+
+```{bash}
+#| eval: FALSE
+sudo docker images
+```
+
+You will likely also need to add docker group to be able to run via Positron. 
+
+```{bash}
+#| eval: FALSE 
+
+groups $USER
+sudo usermod -aG docker $USER
+newgrp docker
+docker run hello-world
+```
+
+# CytoML to Docker
+
+Just like `CytoML` can read in a FlowJo.wsp, it can output back to it (once the Docker container with the .exe is present). Lets see if we can get this to work. Next up, lets specify a file.path and name for our soon to be created .wsp file. 
+
+```{r}
+NewWorkspaceFilePath <- file.path(StorageLocation, "FlowJoTest.wsp")
+```
+
+Due to a break in the original function, we need to load in our modified function attached within this folder, we can activate it in our environment by sourcing it. 
+
+```{r}
+#| eval: FALSE
+
+TheRFunction <- file.path("course", "08_WaysToGate", "GatingSetToFlowJo.R")
+source(TheRFunction)
+```
+
+And with that, we just need to update the docker_img argument with the number we retrieved from our terminal window, and we are good to go. 
+
+```{r}
+#| eval: FALSE
+
+GatingSet_to_FlowJo(gs=SFC_GatingSet, outFile=NewWorkspaceFilePath, docker_img="YourRetrievedIDHere")
+```
+
+![](images/0000_DockerWSP.png)
+
+And we have successfully converted our GatingSet into a FlowJo.wsp
+
+![](images/0000_DockerWorkspace.png)
+
