@@ -1,0 +1,126 @@
+---
+title: "Updated Pull Request Protocol"
+author: "David Rach"
+date: 02-22-2026
+format: html
+toc: true
+toc-depth: 4
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+# Background
+
+Due to an encountered issue pulling in new updates for CytometryInR when you have an optional take-home problem still waiting to be reviewed, we will be modifying the protocol for submitting a pull request. You will first create a local homework branch, and submit from your branch to our homework branch. That should hopefully prevent any incoming changes from main to main from becoming conflicted. 
+
+# Getting Started 
+
+The first step is to open Positron, and navigate through the dropdown options to the Create a Branch option
+
+![](images2/000_CreateBranch.png)
+
+<br>
+
+And provide a name (since the homework was for Week 02, we set it as Week 02)
+
+![](images2/001_Week2.png)
+
+<br>
+
+Next, select the option to Publish the Branch
+
+![](images2/002_PublishBranch.png)
+
+<br>
+
+From here, importantly, select the option to make it a branch of YOUR forked CytometryInR version (since you don't have permissions for the main course repository)
+
+![](images2/003_ToYOURfork.png)
+
+<br>
+
+At this point, your new branch will have been created. You can check by entering the following code in the terminal, and verifying the * is next to the Week02 branch
+
+```{r}
+#| eval: FALSE
+git branch
+```
+
+![](images2/004_MakeSureWeek02.png)
+
+<br>
+
+Once you have confirmed you are in your homework branch, go ahead and transfer in all the files you will be submitting for the optional take-home problems
+
+![](images2/005_MakeAdditions.png)
+
+<br>
+
+And once done, make a commit as you would normally
+
+![](images2/006_Commit.png)
+
+<br>
+
+As you can see, you will now be ahead of the main branch by one commit. Go ahead and sync your branch to GitHub so the contents are available remotely for use in the pull-request. 
+
+![](images2/007_Week02.png)
+
+<br>
+
+Once synced, you will notice that your branch is now up to date with the remote (cloud) icon. Next, proceed to checkout to the main branch, either via the dropdown or via the terminal using
+
+```{r}
+#| eval: FALSE
+git checkout main
+
+```
+
+![](images2/008_CheckoutMain.png)
+
+<br>
+
+Returning to GitHub, you will see that your homework branch has received the incoming changes. You are now safe to sync your fork to bring in changes from the main course CytometryInR repository.
+
+![](images2/009_Sync.png)
+
+
+<br>
+
+And confirm yes.
+
+![](images2/010_SyncYes.png)
+
+<br>
+
+Returning to Positron, once verified you are in your main branch, proceed to pull in changes
+
+![](images2/011_Pull.png)
+
+<br>
+
+If you switch between branches, you will notice you have both the new changes to main, as well as your week specific side branch co-existing peacefully. 
+
+![](images2/012_SafeSideBranch.png)
+
+<br>
+
+You are then safe to make a pullrequest from your homework branch, to our homework branch, without running into risk of an additional commit from our end (or delay in reviewing) causing issues. 
+
+![](images2/012_PullRequestBranchToBranch.png)
+
+<br>
+
+
+# Additional Resources
+
+This method should hopefully avoid the previously encountered issues. Apologies once again to those who encountered the issue! Still learning how to use some of these aspects of Version control in a GitHub context. 
+
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
