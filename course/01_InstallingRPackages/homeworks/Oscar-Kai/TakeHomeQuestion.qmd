@@ -1,0 +1,602 @@
+---
+title: "Take-Home Problems Week #1"
+author: Oscar Kai
+date: 2026-03-30
+format: html
+embed-resources: true
+toc: true
+toc-expand: true
+---
+
+
+
+This is an example of turning in an assignment
+
+# Problem 1
+
+We installed PeacoQC during this session, but we didn’t have time to explore what functions are present within the package. Using what you have learned about accessing documentation, figure out and list what functions it contains
+
+# How to check documetation for PeacoQC in R
+
+## Use ? or Help()
+
+Once the package is installed and loaded:
+
+Confirm and ask for the help needed for the said package
+
+```{r}
+#| eval: false
+#| message: FALSE
+#| warning: FALSE
+#| code-fold: TRUE
+
+library(PeacoQC)
+
+?PeacoQC
+help("PeacoQC")
+```
+
+![](Images/Screenshot%202026-03-29%20205842.png)
+
+When i checked in the help file i saw the following:
+
+### Peak-based detection of high quality cytometry data
+
+PeacoQC will determine peaks on the channels in the flowframe. Then it will remove anomalies caused by e.g. clogs, changes in speed etc. by using an IsolationTree and/or the MAD method.
+
+In addition from other sites [Microsoft 365 coplit](https://m365.cloud.microsoft/chat/conversation/70d36592-5080-4f7e-a03a-a6d759bf38a3?auth=2&origindomain=Office&client-request-id=9cafa869-e52a-450e-a710-6a837d6c0dd3)
+
+States:
+
+#### What is PeacoQC?
+
+
+PeacoQC (Peak‑based Quality Control) is a Bioconductor package designed to perform automated quality control on flow cytometry and mass cytometry data. Its main goal is to detect and remove abnormal events caused by technical issues such as clogs, fluctuations in flow rate, or instability during acquisition.
+ [bioconductor.org](https://bioconductor.org/packages//release/bioc/html/PeacoQC.html), [bioc.r-universe.dev](https://bioc.r-universe.dev/PeacoQC/doc/manual.html)
+
+🔍 Core Functions of the PeacoQC Package
+Below are the major functionalities, directly supported by the documentation.
+
+#### 1. Pre‑processing cytometry data
+
+
+PeacoQC provides functions that:
+
+Remove margin events
+Compensate fluorescence spillover
+Apply data transformation (e.g., logicle)
+
+These preprocessing steps prepare the data before QC is applied.
+ [bioconductor.org](https://bioc.r-universe.dev/PeacoQC/doc/manual.html)
+
+#### 2. Detecting peaks in each channel
+
+
+A key part of PeacoQC is detecting signal peaks across every selected channel in a flowFrame. Peaks represent stable acquisition segments.
+
+Peaks are detected per channel
+Used to assess measurement stability
+ [bioc.r-universe.dev](https://bioc.r-universe.dev/PeacoQC/doc/manual.html)
+
+
+#### 3. Identifying and removing anomalous events
+
+
+After detecting peaks, PeacoQC removes “bad” events using:
+
+##### a) IsolationTree method
+
+
+This method detects instability or abrupt changes (e.g., caused by clogs).
+ [bioconductor.org](https://bioconductor.org/packages//release/bioc/html/PeacoQC.html)
+
+
+##### b) MAD (Median Absolute Deviation) method
+
+
+Events too far from the central tendency of the signal are flagged as outliers.
+ [bioconductor.org](https://bioconductor.org/packages//release/bioc/html/PeacoQC.html), [bioc.r-universe.dev](https://bioc.r-universe.dev/PeacoQC/doc/manual.html)
+
+
+Together, these methods:
+
+1. Identify unstable regions in the acquisition
+2. Remove abnormal measurements
+3. Keep only high‑quality "good cells"
+
+FlowJo describes this as separating data into Good Events and Bad Events.
+ [flowjo.com](https://bioc.r-universe.dev/PeacoQC/doc/manual.html)
+
+
+
+#### 4. Quality control of time‑dependent acquisition stability
+
+
+PeacoQC detects:
+
+Sudden drops or spikes
+Clogging events
+Changes in flow rate
+Non‑monotonic time‑channels
+ [github.com](https://github.com/saeyslab/PeacoQC)
+
+
+This is essential for ensuring downstream analyses aren’t biased by technical noise.
+
+#### Visualisation functions
+
+
+PeacoQC provides tools to:
+
+Visualize deleted cells
+Show quality control results for one sample
+Compare QC metrics across multiple samples
+Produce overview heatmaps of QC results
+ [bioc.r-universe.dev](https://bioc.r-universe.dev/PeacoQC/doc/manual.html)
+
+These plots help verify which events were cleaned and why.
+
+#### 6. Handles both Flow Cytometry and Mass Cytometry (CyTOF)
+
+
+The algorithms support:
+
+FCS files (flow cytometry)
+Mass cytometry data (CyTOF), where only transformation is required
+ [bioconductor.org](https://bioconductor.org/packages//release/bioc/html/PeacoQC.html)
+
+
+
+### 🧠 In Summary — What PeacoQC Does
+
+
+PeacoQC is a data-driven, peak-based QC algorithm that:
+✔ Removes margin events
+
+✔ Compensates and transforms cytometry data
+
+✔ Detects peaks in each channel
+
+✔ Removes clogs, speed shifts, anomalies
+
+✔ Applies IsolationTree + MAD outlier detection
+
+✔ Handles flow and mass cytometry
+
+✔ Produces plots and heatmaps for QC review
+
+It ensures that only high-quality, stable events remain for downstream analysis.
+
+
+## Check other functions (e.g., PeacoQCHeatmap, PlotPeacoQC, RemoveMargins):
+
+
+```{r}
+#| eval: false
+#| message: FALSE
+#| warning: FALSE
+#| code-fold: TRUE
+
+??PeacoQCHeatmap
+??PlotPeacoQC
+??RemoveMargins
+```
+
+![](images/Screenshot%202026-03-30%20094312.png)
+
+
+## Browse all documentation (all vignettes, manuals)
+
+### Use browseVignettes()
+
+```{r}
+#| eval: false
+#| message: FALSE
+#| warning: FALSE
+#| code-fold: TRUE
+
+browseVignettes("PeacoQC")
+```
+
+![](images/Screenshot%202026-03-30%20095006.png)
+
+### Open the reference manual (PDF)
+
+
+Bioconductor provides a full PDF manual for all functions.
+You can find it under Reference Manual on the package page
+
+##  List all help files in the package
+
+```{r}
+#| eval: false
+#| message: FALSE
+#| warning: FALSE
+#| code-fold: TRUE
+
+help(package = "PeacoQC")
+```
+
+![](images/Screenshot%202026-03-30%20095721.png)
+
+## View documentation online
+
+If you want to inspect functions from the web:
+
+### Bioconductor page (stable release)
+
+Contains vignettes, PDF manual, function list.
+[Bioconductor page](https://bioconductor.org/packages/PeacoQC/)
+
+
+### R-universe reference manual
+
+Gives detailed usage and arguments for the PeacoQC function.
+ [bioc.r-universe.dev](https://buesser.r-universe.dev/PeacoQC)
+
+### Man pages via rdrr.io
+
+Shows all documented functions (PeacoQC, PeacoQCHeatmap, PlotPeacoQC, RemoveMargins).
+ [rdrr.io]
+
+ [PeacoQC function list on RDrr.io](https://rdrr.io/bioc/PeacoQC/)
+
+ ## Example: Checking function documentation
+
+```{r}
+#| eval: false
+#| message: FALSE
+#| warning: FALSE
+#| code-fold: TRUE
+
+??PeacoQC
+```
+
+![](images/Screenshot%202026-03-30%20100735.png)
+
+
+
+
+# Problem 2
+
+Take a closer look at the list of Bioconductor cytometry packages. Report back on how many there are currently in Bioconductor, the author/maintainer with the most contributed cytometry R packages, and a couple packages that you would be interested in exploring more in-depth later in the course.
+
+### R 2/20 package: flowCore
+
+Location: Bioconductor
+Website: [Bioconductor-flowCore](https://www.bioconductor.org/packages/release/bioc/html/flowCore.html)
+
+If you really must install inside the document
+Set a CRAN mirror manually:
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+```{r}
+#| eval: false
+#| message: false
+#| warning: false
+#| code-fold: TRUE
+
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
+install.packages("BiocManager")
+BiocManager::install("flowCore")
+```
+
+### R 3/20 Package: FlowWorkspace
+
+Location: Bioconductor
+Website: [Bioconductor-FlowWorkspace](https://www.bioconductor.org/packages/release/bioc/html/flowWorkspace.html)
+
+
+```{r}
+#| eval: false
+#| message: false
+#| warning: false
+#| code-fold: TRUE
+
+install.packages("BiocManager")
+BiocManager::install("flowWorkspace")
+```
+
+### R 6/20 package: ggcyto
+
+Location: Bioconductor
+Website: [Bioconductor-ggcyto](https://www.bioconductor.org/packages/release/bioc/html/ggcyto.html)
+
+ggcyto depends on ggplots2 packages
+check if present
+
+
+```{r}
+#| eval: false
+#| message: false
+#| warning: false
+#| code-fold: true
+
+library(ggcyto)
+```
+
+ggcyto depends on ncdfflow packages
+check if present
+
+```{r}
+#| eval: false
+#| message: false
+#| warning: false
+#| code-fold: true
+
+library(ncdfFlow)
+```
+
+ggcyto also dependd on BH packages
+check if present
+
+```{r}
+#| eval: false
+#| message: false
+#| warning: false
+#| code-fold: true
+
+library(BH)
+```
+
+```{r}
+#| eval: false
+#| messages: false
+#| warning: false
+#| code-fold: TRUE 
+
+if (!require("BiocManager", quietly = TRUE))
+install.packages("BiocManager")
+BiocManager::install("ggcyto")
+BiocManager::install("ncdfFlow")
+BiocManager::install("BH")
+```
+
+### 8/20 R package: openCyto
+
+Location: Bioconductor
+Website:[Bioconductor-openCyto](https://www.bioconductor.org/packages/release/bioc/html/openCyto.html)
+
+```{r}
+#| eval: false
+#| messsage: false
+#| warning: false
+#| code-fold: TRUE
+
+if (!require("BiocManager", quietly = TRUE))
+install.packages("BiocManager")
+BiocManager::install("openCyto")
+```
+
+### 9/20 R package: FlowSOM
+
+Location: Bioconductor
+Website:[Bioconductor-FlowSOM](https://www.bioconductor.org/packages/release/bioc/html/FlowSOM.html)
+
+```{r}
+#| eval: false
+#| message: false
+#| warning: false
+#| code-fold: TRUE
+if (!require("BiocManager", quietly = TRUE))
+install.packages("BiocManager")
+BiocManager::install("FlowSOM")
+```
+
+### 14/20 R package: flowGate
+
+Location: Bioconductor
+Website:[Bioconductor-flowGate](https://www.bioconductor.org/packages/release/bioc/html/flowGate.html)
+
+```{r}
+#| eval: false
+#| message: false
+#| warning: false
+#| code-fold: TRUE
+
+if (!require("BiocManager", quietly = TRUE))
+install.packages("BiocManager")
+BiocManager::install("flowGate")
+```
+
+### 18/20 R package: CytoML
+
+Location: Bioconductor
+Website:[Bioconductor-CytML](https://www.bioconductor.org/packages/release/bioc/html/CytoML.html)
+
+```{r}
+#| eval: false
+#| message: false
+#| warning: false
+#| code-fold: TRUE
+
+if (!require("BiocManager", quietly = TRUE))
+install.packages("BiocManager")
+BiocManager::install("CytoML")
+```
+ 
+
+ Individual citation
+
+```{r}
+#| eval: false
+#| meassage: false
+#| warning: false
+#| code-fold: true
+citation("flowCore")
+```
+
+Citation for all the 7 packages on flowcytometry from Bioconductor
+Finak, G is the author/Maintainer with the most contributed cytometry R packages
+
+
+```{r}
+#| eval: false
+#| message: false
+#| warning: false
+#| code-fold: true
+
+pkgs <- c(
+  "flowCore",
+  "flowWorkspace",
+  "ggcyto",
+  "openCyto",
+  "FlowSOM",
+  "flowGate",
+  "CytoML"
+)
+
+# Print citations for each package
+for (p in pkgs) {
+  cat("=====================================\n")
+  cat("CITATION FOR:", p, "\n")
+  cat("=====================================\n")
+  print(citation(p))
+  cat("\n\n")
+}
+```
+
+## Frank, G is most with 5 of 7 while Jiang, M has 3 out of 7
+
+## Intersted more to look at flowPlots, FlowBeads, flowmeans, FlowGraph and flowPeaks
+
+# Problem 3
+
+There is another way to install R packages, using the newer pak package. Positron uses this when installing suggested dependencies.
+
+After learning more about it via the documentation and it’s pkgdown website, I would like you to attempt to install the following three R packages using this newer method: “broom”, “cytoMEM”, “DillonHammill/CytoExploreR”.
+
+Take screenshots, and in a new quarto markdown document, describe how the installation process differed from what you saw for install.packages(), install() and install_github().
+
+## What “installation with pkgdown” actually means
+
+a. pkgdown does not install R packages.
+b. pkgdown creates websites for R packages.
+
+When someone says:
+
+“Learn more via the documentation and its pkgdown website…”
+
+They mean:
+
+1. Visit the package’s online documentation website,
+2. That website was generated using pkgdown,
+3. But you do NOT install a package using pkgdown.
+
+❌ There is no such thing as “installing an R package with pkgdown”
+✔ There is “viewing a package’s documentation via a pkgdown website”
+
+### 🧠 So what is pkgdown?
+pkgdown is an R package that:
+
+Converts R package documentation → a full website
+Generates nice pages for functions, vignettes, tutorials
+Hosts those websites on GitHub Pages
+
+For example the pages for:
+
+[dplyr’s documentation](: https://dplyr.tidyverse.org)
+[ggplot2](: https://ggplot2.tidyverse.org)
+[CytoExploreR](: https://dillonhammill.github.io/CytoExploreR)
+[broom](: https://broom.tidymodels.org)
+
+All of these are pkgdown-generated websites.
+They are documentation, not installation sources.
+
+### 🌐 Then how do pkgdown websites relate to installation?
+
+
+pkgdown websites are simply documentation hubs.
+When you visit a pkgdown website, it often shows installation commands like:
+
+install.packages("packageName")
+
+This sometimes causes learners to think:
+
+“pkgdown is a way to install packages.”
+
+But no — pkgdown just displays instructions. It does not install anything.
+
+### ⭐ in Simple terms
+
+
+pkgdown does not install R packages.
+
+It builds documentation websites for R packages.
+
+A pkgdown website is where users read help pages, tutorials, and reference documentation.
+
+Packages themselves are installed from CRAN, Bioconductor, or GitHub.
+
+
+## Installing Broom using pkgdown
+
+```{r}
+#| eval: false
+#| messages: false
+#| warning: false
+#| code-fold: true
+
+# Install pak if needed
+if (!requireNamespace("pak", quietly = TRUE)) {
+  install.packages("pak")
+}
+
+library(pak)
+
+# CRAN package
+pak::pkg_install("broom")
+```
+
+![](images/Screenshot%202026-03-30%20204323.png)
+
+## Installing cytoMEM using pkgdown
+
+```{r}
+#| eval: false
+#| messages: false
+#| warning: false
+#| code-fold: true
+
+# Install pak if needed
+if (!requireNamespace("pak", quietly = TRUE)) {
+  install.packages("pak")
+}
+
+library(pak)
+
+# Bioconductor package
+pak::pkg_install("bioc::cytoMEM")
+```
+
+![](images/Screenshot%202026-03-30%20205039.png)
+
+
+## Installing DillonHammill/CytoExploreR using pkgdown
+
+```{r}
+#| eval: false
+#| messages: false
+#| warning: false
+#| code-fold: true
+
+# Install pak if needed
+if (!requireNamespace("pak", quietly = TRUE)) {
+  install.packages("pak")
+}
+
+library(pak)
+
+#installed the below seperately
+
+#pak::pkg_install("andrie/ggdendro")
+
+# GitHub package
+remotes::install_github("DillonHammill/CytoExploreR")
+
+```
+
+![](Images/Screenshot%202026-03-31%20152716.png)
+
+
