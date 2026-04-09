@@ -1,0 +1,88 @@
+---
+title: "Bonus Content"
+author: "David Rach"
+date: 02-23-2026
+format: html
+toc: true
+toc-depth: 5
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+```{r}
+thefilepath <- file.path("data", "Dataset.csv")
+
+thefilepath
+```
+
+```{r}
+Data <- read.csv(file=thefilepath, check.names=FALSE)
+colnames(Data)
+```
+
+## Pull
+
+## Case-When
+
+Case-when is an useful function, but may be a bit much to try to teach in the main segment. Basically, when the condition on the left side of the ~ is fulfilled, it will execute what is being specified on the right hand side. 
+
+In turn, we can combine these together by adding a ",". I tend to use this mutate str_detect case_when combination when encountering messy data out in the while where I need to selectively change particular cell values in a consistent reproducible manner
+
+# Quasiquosure
+
+```{r}
+library(dplyr)
+DateColumn <- select(Data, Date)
+DateColumn
+```
+
+
+## Selecting Columns (Base R)
+
+As we saw [last week](/course/03_InsideFCSFile/index.qmd), there are multiple ways to select values from particular columns in base R. If we had wanted to retrieve the "Date" column, why not first identify its index position, and use [,] to extract the underlying data?
+
+```{r}
+colnames(Data)
+```
+
+```{r}
+colnames(Data)[4]
+```
+
+```{r}
+DataColumn <- Data[,4] # Column specified after the ,
+DataColumn
+```
+
+However, looking at the output, we see this looks like the values, not a column. Our suspicions are confirmed when running DataColumn
+
+```{r}
+str(DataColumn)
+```
+
+This is similarly the case when we use the $ accessor. 
+
+```{r}
+DataColumn <- Data$Date
+str(DataColumn)
+```
+
+```{r}
+head(DataColumn, 3)
+```
+
+By contrast, when selecting two columns, the structure is maintained.
+
+```{r}
+TwoColumns <- Data[,4:5]
+```
+
+Why is the data.frame column structure lost in base R when isolating a single data.frame column? And who thought to make it that convoluted? If we were an R course in early 2010s, we might go into an explanation, but fortunately, we don't need to understand why, we have the `dplyr` R package to rescue us. 
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
