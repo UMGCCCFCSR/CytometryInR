@@ -1,0 +1,87 @@
+---
+title: "Take-home Questions week02"
+author: "Esther Peralbo Santaella"
+date: 02-16-2026
+format: html
+toc: true
+toc-depth: 3
+---
+
+# Problem 1
+
+*Try to copy your .fcs files from their current folder on your desktop to the "TargetFolder" on your drive using R*
+
+**Answer**:
+
+```{r}
+#| eval: false
+list.dirs(path = "D:")
+```
+
+![](images\1.png)
+
+```{r}
+#| eval: false
+NewDir <- file.path("D:", "TargetFolder")
+list.files(path=NewDir, full.names=FALSE, recursive=FALSE)
+```
+
+![](images\2.png)
+
+```{r}
+#| eval: false
+fcsfiles <- list.files(path="data", pattern=".fcs", full.names= TRUE, recursive=FALSE)
+fcsfiles
+```
+
+![](images\3.png)
+
+```{r}
+#| eval: false
+file.copy(from=fcsfiles, to=NewDir)
+```
+
+![](images\4.png)
+
+```{r}
+#| eval: false
+list.files(path=NewDir, full.names=TRUE, recursive=FALSE)
+```
+
+![](images\5.png)
+
+
+# Problem 2
+
+I’m sorry, but I understand clearly what needs to be done for this question.
+
+# Problem 3
+
+*Search your way down the file.directory of the FlowSOM and flowWorkspace packages, and identify any .fcs files that are present for use in the documentation.*
+
+**Answer**:
+
+```{r}
+#| eval: false
+DirFlowSOM <- file.path("C:/Users/epera/AppData/Local/R/win-library/4.5/FlowSOM/")
+```
+```{r}
+#| eval: false
+DirflowWorkspace <- file.path("C:/Users/epera/AppData/Local/R/win-library/4.5/flowWorkspace/")
+```
+Now we search for all .fcs files in all folders of each directory.
+
+```{r}
+#| eval: false
+list.files(path=DirFlowSOM, pattern=".fcs", full.names=TRUE, recursive=TRUE)
+```
+
+[1] "C:/Users/epera/AppData/Local/R/win-library/4.5/FlowSOM/extdata/68983.fcs"
+
+```{r}
+#| eval: false
+list.files(path=DirflowWorkspace, pattern=".fcs", full.names=TRUE, recursive=TRUE)
+```
+character(0)
+
+There are no .fcs files.
