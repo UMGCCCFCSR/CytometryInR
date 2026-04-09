@@ -13,9 +13,11 @@ toc-depth: 5
 [![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 :::
 
-For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
+For the YouTube livestream recording, see [here](https://youtu.be/x0SbK6PZF6Y?t=262)
 
-For screen-shot slides, click [here]()
+<iframe width="560" height="315" src="https://www.youtube.com/embed/x0SbK6PZF6Y?si=hxuqb6W6kQDXkPy7&amp;start=262" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+For screen-shot slides, click [here](/course/05_GatingSets/slides.qmd)
 
 <br>
 
@@ -75,7 +77,8 @@ library(flowCore)
 ```
 
 ```{r}
-flowFrame <- read.FCS(filename=fcs_files[1], truncate_max_range = FALSE, transformation = FALSE)
+flowFrame <- read.FCS(filename=fcs_files[1], truncate_max_range = FALSE,
+ transformation = FALSE)
 flowFrame
 ```
 
@@ -107,14 +110,16 @@ str(fcs_files)
 Consequently, we will need to use another function if we want to read in multiple .fcs files at once. For `flowCore`, this function is the `read.flowSet()` function. 
 
 ```{r}
-flowSet <- read.flowSet(files=fcs_files, truncate_max_range = FALSE, transformation = FALSE)
+flowSet <- read.flowSet(files=fcs_files, truncate_max_range = FALSE,
+ transformation = FALSE)
 flowSet
 ```
 
 Alternatively, we can designate specific files within "fcs_files" we want to read in using the [] and c() notation style we have encountered previously. 
 
 ```{r}
-read.flowSet(files=fcs_files[c(1, 3:4)], truncate_max_range = FALSE, transformation = FALSE)
+read.flowSet(files=fcs_files[c(1, 3:4)],
+ truncate_max_range = FALSE, transformation = FALSE)
 ```
 
 On follow-up, we can see that `read.flowSet()` has created a "flowSet" class object. 
@@ -149,7 +154,7 @@ While not today's focus, remember we could access individual components inside t
 
 Both "flowFrame" and "flowSet" objects were implemented in the `flowCore` package, which is the [oldest](/course/03_InsideFCSFile/#flowcore) extant flow cytometry R package on [Bioconductor](https://www.bioconductor.org/packages/release/bioc/html/flowCore.html). Consequently, a large proportion of the other flow cytometry R packages read in .fcs files as "flowFrame" and "flowSet" objects. 
 
-One consideration of this method is the contents of your .fcs files are read into your computer's random access memory [(RAM)](https://en.wikipedia.org/wiki/Random-access_memory). While for individual .fcs files or small experiments this present a problem for most modern computers, when working with large spectral flow cytometry files containing millions of events (or trying to analyze many .fcs files at once), you may encounter situations where you can quickly exceed your computers available RAM. 
+One consideration of this method is the contents of your .fcs files are read into your computer's random access memory [(RAM)](https://en.wikipedia.org/wiki/Random-access_memory). While for individual .fcs files or small experiments this will not present a problem for most modern computers, when working with large spectral flow cytometry files containing millions of events (or trying to analyze many .fcs files at once), you may encounter situations where you can quickly exceed your computers available RAM. 
 
 To build some contextual understanding of the problem, let's learn how to check how much memory is being used by our individual variables/objects within our R session. We will primarily use the `lobstr` R packages `obj_size()` function, as it better handles evaluating complicated objects than base R's `object.size()` function. 
 
@@ -176,16 +181,17 @@ If we were curious how much memory total we are using within R at the current mo
 mem_used()
 ```
 
-Ultimately, how many .fcs files you are able to read in and interact with before running out of available RAM memory space will be dictated by your individual computers hardware configuration. You can check programmatically how much RAM you have available, although the specific function you will need to use will depend on your computer's operating system. 
+Ultimately, how many .fcs files you are able to read in and interact with before running out of available RAM memory space will be dictated by your individual computers hardware configuration. There are various ways you can check programmatically how much RAM your computer has available, although the specific functions will vary depending on your computers operating system, since they often involve system-level code outside R. Using the `ps` R package's `ps_system_memory()` function is one of the easier ways for Windows users.
 
 To simplify the process, here is an additional example of where a [conditional](/course/02_FilePaths/index.qmd#conditionals) can prove useful, allowing us to check in an operating system specific manner.  It takes the output of the `Sys.info()` function, namely the "sysname" argument and then retrieves the relavent function. 
 
 ```{r}
-
 OperatingSystem <- Sys.info()[["sysname"]]
 
 if (OperatingSystem == "Windows") { # Windows
-    memory.limit()
+  Memory <- ps::ps_system_memory()
+  message("Total GB ", round(Memory$total / 1024^3, 2))
+  message("Free GB ", round(Memory$free / 1024^3, 2))
 
   } else if (OperatingSystem == "Darwin") { # MacOS
     system("top -l 1 | grep PhysMem")
@@ -196,8 +202,13 @@ if (OperatingSystem == "Windows") { # Windows
   } else {message("A wild FreeBSD-User appears")}
 ```
 
-When evaluating the returned outputs, primarily consider the total, used and free outputs. 
-
+```{r}
+# install.packages("ps") # CRAN
+library(ps)
+Memory <- ps::ps_system_memory()
+message("Total GB ", round(Memory$total / 1024^3, 2))
+message("Free GB ", round(Memory$free / 1024^3, 2))
+```
 
 ## cytoframe
 
