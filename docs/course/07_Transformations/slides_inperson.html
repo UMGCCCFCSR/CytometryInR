@@ -1,0 +1,3890 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
+
+  <meta name="author" content="David Rach">
+  <meta name="dcterms.date" content="2026-03-24">
+  <title>Cytometry in R – 07 - Applying Transformations</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
+
+  <script type="text/javascript">
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
+  </script>
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">07 - Applying Transformations</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+David Rach 
+</div>
+</div>
+</div>
+
+  <p class="date">2026-03-24</p>
+</section>
+<section class="slide level2">
+
+<p><img data-src="../../images/WebsiteBanner.png"></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img data-src="https://img.shields.io/badge/license-AGPLv3-blue.png" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img data-src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" alt="CC BY-SA 4.0"></a></p>
+</div>
+</section>
+<section class="slide level2">
+
+</section>
+<section>
+<section id="background" class="title-slide slide level1 center">
+<h1>Background</h1>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Week 7: For this seventh session, we take a closer look at the raw values of the data within our .fcs files, and explore the various ways to transform (ie. scale) flow cytometry data in R to better visualize “positive” and “negative populations”.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>There exist several commonly used transformations for Flow Cytometry data. Similarly, for Mass Cytometry data, the arsinh transformation is the most frequently applied.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Regardless of method, the goal remains to rescale the data in a way that allows for better interpretation. A misapplied transformation can be dangerous for an analysis, so don’t just accept the default. Always ensure that what your transformed data visually makes sense. Similarly, this approach is shared in many of the exploratory data analsyis approaches we will encounter later on during the course.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Additionally, due to near perfect timing, Felix Marsh-Wakefield did a good overview of transformation for <a href="https://www.youtube.com/watch?v=6jWLdZGbCH0">CytoBites</a> YouTube channel earlier this week that is worth checking out.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="walk-through" class="title-slide slide level1 center">
+<h1>Walk Through</h1>
+<div title="Housekeeping">
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Housekeeping</strong></p>
+</div>
+<div class="callout-content">
+<p>As we do <a href="../../course/02_FilePaths/index.html">every week</a>, on GitHub, <a href="../../course/00_Homeworks/index.html#sync-your-fork">sync</a> your forked version of the CytometryInR course to bring in the most recent updates. Then within Positron, <a href="../../course/00_Homeworks/index.html#pull-to-local">pull</a> in those changes to your local computer.</p>
+<p>After <a href="../../course/00_Git/index.html#new-folder-from-template">setting up</a> a “Week07” project folder, copy over the contents of “course/06_Visualizing/data” to that folder. This will hopefully prevent merge issues next week when attempting to pull in new course material. Once you have your new project folder organized, remember to <a href="../../course/00_Git/index.html#push">commit</a> and push your changes to GitHub to maintain remote version control.</p>
+<p>If you encounter issues syncing due to the Take-Home Problem merge conflict, see this <a href="https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/">walkthrough</a>. The updated homework submission protocol can be found <a href="https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/UpdatedPullRequest">here</a></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="load-libraries" class="slide level2">
+<h2>Load Libraries</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>This week, we will extensively be using the <code>flowWorkspace</code> package, as we learn how to build out our own <code>GatingSet</code> objects to include transformations. As we do so, we will need to visualize our underlying data, to ensure that the transformartions applied were correct for our datasets. Consequently, we will be using the <code>ggcyto</code> package extensively throughout the day. Therefore, it makes sense to go ahead and attach both packages to our local environment from the start.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(flowWorkspace)</span>
+<span id="cb1-2"><a></a><span class="fu">library</span>(ggcyto)</span>
+<span id="cb1-3"><a></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a></a><span class="fu">library</span>(stringr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section id="separating-sfc-and-mc-fcs-files" class="slide level2">
+<h2>Separating SFC and MC fcs files</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We will be using two cytometry datasets this week. For the <a href="https://www.immport.org/shared/study/SDY3080/summary">Spectral Flow Cytometry</a> dataset, we will be re-using the 6 unmixed .fcs file first shared during <a href="../../course/05_GatingSets/index.html">Week 05</a>. This time around, rather than bring them from a FlowJo.wsp into a GatingSet via the <code>CytoML</code> package, we will be building the GatingSet from scratch using the <code>flowWorkspace</code> package. These .fcs file names share the “2025” portion in the name, which we will use to filter them from the <code>list.files()</code> vector list.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>For the Mass Cytometry dataset, we will be using 3 .fcs files that I retrieved from <a href="https://www.immport.org/home">ImmPort</a> for the <a href="https://www.immport.org/browser/?path=SDY2739&amp;page=1">Study SDY2739</a> (Clinical Immunity to Malaria Involves Epigenetic Reprogramming of Innate Immune Cells). The .fcs file names for these files share the “G1_2” portion in the name, which we will use to filter them from the <code>list.files()</code> vector list.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co">#StorageLocation &lt;- file.path("course", "07_Transformations", "data") # When interactively writing the code </span></span>
+<span id="cb2-2"><a></a></span>
+<span id="cb2-3"><a></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co">#When Quarto Rendering</span></span>
+<span id="cb2-4"><a></a></span>
+<span id="cb2-5"><a></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="st">".fcs"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
+<span id="cb2-6"><a></a>SFC_files <span class="ot">&lt;-</span> fcs_files[stringr<span class="sc">::</span><span class="fu">str_detect</span>(fcs_files, <span class="st">"2025"</span>)]</span>
+<span id="cb2-7"><a></a>MC_files <span class="ot">&lt;-</span> fcs_files[stringr<span class="sc">::</span><span class="fu">str_detect</span>(fcs_files, <span class="st">"G1_2"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Lets start by working with the SFC dataset. First off, let’s double check that we have just the SFC files (as <code>flowWorkspace</code> will throw an error if the .fcs files passed contain different number of fluorophore/metal columns)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>SFC_files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data/2025_07_26_AB_02_INF052_00_Ctrl.fcs"
+[2] "data/2025_07_26_AB_02_INF052_00_SEB.fcs" 
+[3] "data/2025_07_26_AB_02_INF100_00_Ctrl.fcs"
+[4] "data/2025_07_26_AB_02_INF100_00_SEB.fcs" 
+[5] "data/2025_07_26_AB_02_INF179_00_Ctrl.fcs"
+[6] "data/2025_07_26_AB_02_INF179_00_SEB.fcs" </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Circling back to where we left off during <a href="../../course/05_GatingSets/">Week 05</a>, we will pass these file path locations to <code>load_cytoset_from_fcs()</code> to load them into a <code>GatingSet</code> object.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-2"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb5-3"><a></a></span>
+<span id="cb5-4"><a></a>SFC_GatingSet</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="colnames">colnames</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>When working with .fcs files that we have not worked with recently, it is often good to go ahead and check to see what fluorophores/markers are present at the start. This is also useful as different cytometer platforms have slightly different naming conventions. We can use <code>colnames()</code></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">colnames</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Time"              "SSC-W"             "SSC-H"            
+ [4] "SSC-A"             "FSC-W"             "FSC-H"            
+ [7] "FSC-A"             "SSC-B-W"           "SSC-B-H"          
+[10] "SSC-B-A"           "BUV395-A"          "BUV563-A"         
+[13] "BUV615-A"          "BUV661-A"          "BUV737-A"         
+[16] "BUV805-A"          "Pacific Blue-A"    "BV480-A"          
+[19] "BV570-A"           "BV605-A"           "BV650-A"          
+[22] "BV711-A"           "BV750-A"           "BV786-A"          
+[25] "Alexa Fluor 488-A" "Spark Blue 550-A"  "Spark Blue 574-A" 
+[28] "RB613-A"           "RB705-A"           "RB780-A"          
+[31] "PE-A"              "PE-Dazzle594-A"    "PE-Cy5-A"         
+[34] "PE-Fire 700-A"     "PE-Fire 744-A"     "PE-Vio770-A"      
+[37] "APC-A"             "Alexa Fluor 647-A" "APC-R700-A"       
+[40] "Zombie NIR-A"      "APC-Fire 750-A"    "APC-Fire 810-A"   
+[43] "AF-A"             </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As we can see from the output, most of the fluorophores have an “-A” appended to the end, although the FSC and SSC parameters feature area, height and width (“-A”, “-H”, “-W”) respectively.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="markernames">markernames</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>If we wanted to retrieve the markers corresponding to the individual fluorophores, rather than attempting the breaking into the <a href="https://bioconductor.org/help/course-materials/2017/Zurich/S4-classes-and-methods.html">S4 object</a> as we did during <a href="../../course/03_InsideFCSFile/">Week 03</a>, we can take advantage of the <code>markernames()</code> function provided by the developers.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">markernames</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         BUV395-A          BUV563-A          BUV615-A          BUV661-A 
+          "CD62L"            "CD69"            "CCR4"             "Vd2" 
+         BUV737-A          BUV805-A    Pacific Blue-A           BV480-A 
+           "CD38"             "CD4"            "Dump"           "CD161" 
+          BV570-A           BV605-A           BV650-A           BV711-A 
+           "CD16"          "CD45RA"             "CD8"           "Va7.2" 
+          BV750-A           BV786-A Alexa Fluor 488-A  Spark Blue 550-A 
+           "IFNg"            "CCR6"           "FoxP3"             "CD3" 
+ Spark Blue 574-A           RB613-A           RB705-A           RB780-A 
+           "CD45"             "PD1"            "CD26"           "CXCR5" 
+             PE-A    PE-Dazzle594-A          PE-Cy5-A     PE-Fire 700-A 
+           "ICOS"            "TNFa"           "CXCR3"           "CD127" 
+    PE-Fire 744-A       PE-Vio770-A             APC-A Alexa Fluor 647-A 
+           "CD25"          "HLA-DR"            "CD39"            "IL-2" 
+       APC-R700-A      Zombie NIR-A    APC-Fire 750-A    APC-Fire 810-A 
+         "CD107a"       "Viability"            "CD27"            "CCR7" </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="ggcyto">ggcyto</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>At this point, we can then use what we have learned about the <code>ggcyto</code> package to make sure that the FSC x SSC plotting is working correctly.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb11-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-7-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Please note, that for ggcyto it’s just one set of [] after the GatingSet name to subset for plotting.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">str</span>(SFC_GatingSet[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Formal class 'GatingSet' [package "flowWorkspace"] with 2 slots
+  ..@ pointer       :&lt;externalptr&gt; 
+  ..@ transformation: list()</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>By contrast, accidentally including two sets of [] would result in accidentally breaking into the S4 internals, and getting back a GatingHierarchy.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">str</span>(SFC_GatingSet[[<span class="dv">1</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Formal class 'GatingHierarchy' [package "flowWorkspace"] with 2 slots
+  ..@ pointer       :&lt;externalptr&gt; 
+  ..@ transformation: list()</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="untransformed-data">Untransformed Data</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Let’s go ahead and plot a couple of the fluorophores, to see what untransformed data in R looks like</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb16-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-10-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As we can see, the scale currently appears linear, with a wide stretch of positive values for both CD4 and CD8 T cells. By contrast, you may remember the transformed version brought for this same .fcs file brought in from FlowJo via <code>CytoML</code> resembled the following</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/00_Transformed.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>If we use the <code>gh_get_transformations</code> function, we can see that there are currently no transformations applied to the GatingSet.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">gh_get_transformations</span>(SFC_GatingSet[[<span class="dv">1</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>list()</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="transformers">Transformers</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p><code>flowWorkspace</code> provides several default transforms (with the option to create your own). The functions in question return transformer objects, which are list that collect the required information for the transformations that are subsequently applied.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>Logicle <span class="ot">&lt;-</span> <span class="fu">logicle_trans</span>()</span>
+<span id="cb19-2"><a></a><span class="fu">str</span>(Logicle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 9
+ $ name        : chr "logicle"
+ $ transform   :function (x)  
+ $ inverse     :function (x)  
+ $ d_transform : NULL
+ $ d_inverse   : NULL
+ $ breaks      :function (x)  
+ $ minor_breaks:function (b, limits, n)  
+ $ format      :function (x)  
+ $ domain      : num [1:2] -Inf Inf
+ - attr(*, "class")= chr "transform"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>()</span>
+<span id="cb21-2"><a></a><span class="fu">str</span>(Biexponential)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 9
+ $ name        : chr "flowJo_biexp"
+ $ transform   :function (x, deriv = 0)  
+  ..- attr(*, "type")= chr "biexp"
+  ..- attr(*, "parameters")=List of 5
+  .. ..$ channelRange: int 4096
+  .. ..$ maxValue    : num 262144
+  .. ..$ neg         : num 0
+  .. ..$ pos         : num 4.5
+  .. ..$ widthBasis  : num -10
+ $ inverse     :function (x, deriv = 0)  
+  ..- attr(*, "type")= chr "biexp"
+  ..- attr(*, "parameters")=List of 5
+  .. ..$ channelRange: int 4096
+  .. ..$ maxValue    : num 262144
+  .. ..$ neg         : num 0
+  .. ..$ pos         : num 4.5
+  .. ..$ widthBasis  : num -10
+ $ d_transform : NULL
+ $ d_inverse   : NULL
+ $ breaks      :function (x)  
+ $ minor_breaks:function (b, limits, n)  
+ $ format      :function (x)  
+ $ domain      : num [1:2] -Inf Inf
+ - attr(*, "class")= chr "transform"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>()</span>
+<span id="cb23-2"><a></a><span class="fu">str</span>(Asinh)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 9
+ $ name        : chr "flowJo_fasinh"
+ $ transform   :function (x)  
+ $ inverse     :function (x)  
+ $ d_transform : NULL
+ $ d_inverse   : NULL
+ $ breaks      :function (x)  
+ $ minor_breaks:function (b, limits, n)  
+ $ format      :function (x)  
+ $ domain      : num [1:2] -Inf Inf
+ - attr(*, "class")= chr "transform"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>AsinhGML <span class="ot">&lt;-</span> <span class="fu">asinhtGml2_trans</span>()</span>
+<span id="cb25-2"><a></a><span class="fu">str</span>(AsinhGML)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 9
+ $ name        : chr "asinhtGml2"
+ $ transform   :function (x)  
+ $ inverse     :function (x)  
+ $ d_transform : NULL
+ $ d_inverse   : NULL
+ $ breaks      :function (x)  
+ $ minor_breaks:function (b, limits, n)  
+ $ format      :function (x)  
+ $ domain      : num [1:2] -Inf Inf
+ - attr(*, "class")= chr "transform"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As always, it can be worthwhile to first check the help documentation, to investigate the various arguments that can be used within the setup.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="column-names-to-be-transformed">Column names to be transformed</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>While having the transformation parameters is one component, the other is the fluorophores that are to be transformed. Recalling the <code>colnames()</code> function, we can see we have the following fluorophores for this panel.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>SFC_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(SFC_GatingSet)</span>
+<span id="cb27-2"><a></a>SFC_Parameters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Time"              "SSC-W"             "SSC-H"            
+ [4] "SSC-A"             "FSC-W"             "FSC-H"            
+ [7] "FSC-A"             "SSC-B-W"           "SSC-B-H"          
+[10] "SSC-B-A"           "BUV395-A"          "BUV563-A"         
+[13] "BUV615-A"          "BUV661-A"          "BUV737-A"         
+[16] "BUV805-A"          "Pacific Blue-A"    "BV480-A"          
+[19] "BV570-A"           "BV605-A"           "BV650-A"          
+[22] "BV711-A"           "BV750-A"           "BV786-A"          
+[25] "Alexa Fluor 488-A" "Spark Blue 550-A"  "Spark Blue 574-A" 
+[28] "RB613-A"           "RB705-A"           "RB780-A"          
+[31] "PE-A"              "PE-Dazzle594-A"    "PE-Cy5-A"         
+[34] "PE-Fire 700-A"     "PE-Fire 744-A"     "PE-Vio770-A"      
+[37] "APC-A"             "Alexa Fluor 647-A" "APC-R700-A"       
+[40] "Zombie NIR-A"      "APC-Fire 750-A"    "APC-Fire 810-A"   
+[43] "AF-A"             </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We will only need to apply transformations to fluorophores, not to FSC, SSC or Time parameters. We will therefore need to remove these from the list. One way would be to use [] index method, combining a ! and <code>stringr</code> <code>str_detect()</code> to remove for values that would be shared by those parameters</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>FluorophoresOnly <span class="ot">&lt;-</span> SFC_Parameters[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(SFC_Parameters, <span class="st">"FSC|SSC|Time"</span>)]</span>
+<span id="cb29-2"><a></a>FluorophoresOnly</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "BUV395-A"          "BUV563-A"          "BUV615-A"         
+ [4] "BUV661-A"          "BUV737-A"          "BUV805-A"         
+ [7] "Pacific Blue-A"    "BV480-A"           "BV570-A"          
+[10] "BV605-A"           "BV650-A"           "BV711-A"          
+[13] "BV750-A"           "BV786-A"           "Alexa Fluor 488-A"
+[16] "Spark Blue 550-A"  "Spark Blue 574-A"  "RB613-A"          
+[19] "RB705-A"           "RB780-A"           "PE-A"             
+[22] "PE-Dazzle594-A"    "PE-Cy5-A"          "PE-Fire 700-A"    
+[25] "PE-Fire 744-A"     "PE-Vio770-A"       "APC-A"            
+[28] "Alexa Fluor 647-A" "APC-R700-A"        "Zombie NIR-A"     
+[31] "APC-Fire 750-A"    "APC-Fire 810-A"    "AF-A"             </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="transformerlist">transformerList</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Now that we have the fluorophore columns identified, using the <code>transformerList()</code> function we can combine them with the Transformer object we previously created.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb31-2"><a></a>MyBiexTransform</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`BUV395-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`BUV563-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`BUV615-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`BUV661-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`BUV737-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`BUV805-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`Pacific Blue-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`BV480-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`BV570-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`BV605-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`BV650-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`BV711-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`BV750-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`BV786-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`Alexa Fluor 488-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`Spark Blue 550-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`Spark Blue 574-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`RB613-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`RB705-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`RB780-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`PE-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`PE-Dazzle594-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`PE-Cy5-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`PE-Fire 700-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`PE-Fire 744-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`PE-Vio770-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`APC-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`Alexa Fluor 647-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`APC-R700-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`Zombie NIR-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`APC-Fire 750-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`APC-Fire 810-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+$`AF-A`
+Transformer: flowJo_biexp [-Inf, Inf]
+
+attr(,"class")
+[1] "transformerList" "list"           </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">str</span>(MyBiexTransform[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 3
+ $ BUV395-A:List of 9
+  ..$ name        : chr "flowJo_biexp"
+  ..$ transform   :function (x, deriv = 0)  
+  .. ..- attr(*, "type")= chr "biexp"
+  .. ..- attr(*, "parameters")=List of 5
+  .. .. ..$ channelRange: int 4096
+  .. .. ..$ maxValue    : num 262144
+  .. .. ..$ neg         : num 0
+  .. .. ..$ pos         : num 4.5
+  .. .. ..$ widthBasis  : num -10
+  ..$ inverse     :function (x, deriv = 0)  
+  .. ..- attr(*, "type")= chr "biexp"
+  .. ..- attr(*, "parameters")=List of 5
+  .. .. ..$ channelRange: int 4096
+  .. .. ..$ maxValue    : num 262144
+  .. .. ..$ neg         : num 0
+  .. .. ..$ pos         : num 4.5
+  .. .. ..$ widthBasis  : num -10
+  ..$ d_transform : NULL
+  ..$ d_inverse   : NULL
+  ..$ breaks      :function (x)  
+  ..$ minor_breaks:function (b, limits, n)  
+  ..$ format      :function (x)  
+  ..$ domain      : num [1:2] -Inf Inf
+  ..- attr(*, "class")= chr "transform"
+ $ BUV563-A:List of 9
+  ..$ name        : chr "flowJo_biexp"
+  ..$ transform   :function (x, deriv = 0)  
+  .. ..- attr(*, "type")= chr "biexp"
+  .. ..- attr(*, "parameters")=List of 5
+  .. .. ..$ channelRange: int 4096
+  .. .. ..$ maxValue    : num 262144
+  .. .. ..$ neg         : num 0
+  .. .. ..$ pos         : num 4.5
+  .. .. ..$ widthBasis  : num -10
+  ..$ inverse     :function (x, deriv = 0)  
+  .. ..- attr(*, "type")= chr "biexp"
+  .. ..- attr(*, "parameters")=List of 5
+  .. .. ..$ channelRange: int 4096
+  .. .. ..$ maxValue    : num 262144
+  .. .. ..$ neg         : num 0
+  .. .. ..$ pos         : num 4.5
+  .. .. ..$ widthBasis  : num -10
+  ..$ d_transform : NULL
+  ..$ d_inverse   : NULL
+  ..$ breaks      :function (x)  
+  ..$ minor_breaks:function (b, limits, n)  
+  ..$ format      :function (x)  
+  ..$ domain      : num [1:2] -Inf Inf
+  ..- attr(*, "class")= chr "transform"
+ $ BUV615-A:List of 9
+  ..$ name        : chr "flowJo_biexp"
+  ..$ transform   :function (x, deriv = 0)  
+  .. ..- attr(*, "type")= chr "biexp"
+  .. ..- attr(*, "parameters")=List of 5
+  .. .. ..$ channelRange: int 4096
+  .. .. ..$ maxValue    : num 262144
+  .. .. ..$ neg         : num 0
+  .. .. ..$ pos         : num 4.5
+  .. .. ..$ widthBasis  : num -10
+  ..$ inverse     :function (x, deriv = 0)  
+  .. ..- attr(*, "type")= chr "biexp"
+  .. ..- attr(*, "parameters")=List of 5
+  .. .. ..$ channelRange: int 4096
+  .. .. ..$ maxValue    : num 262144
+  .. .. ..$ neg         : num 0
+  .. .. ..$ pos         : num 4.5
+  .. .. ..$ widthBasis  : num -10
+  ..$ d_transform : NULL
+  ..$ d_inverse   : NULL
+  ..$ breaks      :function (x)  
+  ..$ minor_breaks:function (b, limits, n)  
+  ..$ format      :function (x)  
+  ..$ domain      : num [1:2] -Inf Inf
+  ..- attr(*, "class")= chr "transform"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">str</span>(MyBiexTransform<span class="sc">$</span><span class="st">`</span><span class="at">APC-A</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 9
+ $ name        : chr "flowJo_biexp"
+ $ transform   :function (x, deriv = 0)  
+  ..- attr(*, "type")= chr "biexp"
+  ..- attr(*, "parameters")=List of 5
+  .. ..$ channelRange: int 4096
+  .. ..$ maxValue    : num 262144
+  .. ..$ neg         : num 0
+  .. ..$ pos         : num 4.5
+  .. ..$ widthBasis  : num -10
+ $ inverse     :function (x, deriv = 0)  
+  ..- attr(*, "type")= chr "biexp"
+  ..- attr(*, "parameters")=List of 5
+  .. ..$ channelRange: int 4096
+  .. ..$ maxValue    : num 262144
+  .. ..$ neg         : num 0
+  .. ..$ pos         : num 4.5
+  .. ..$ widthBasis  : num -10
+ $ d_transform : NULL
+ $ d_inverse   : NULL
+ $ breaks      :function (x)  
+ $ minor_breaks:function (b, limits, n)  
+ $ format      :function (x)  
+ $ domain      : num [1:2] -Inf Inf
+ - attr(*, "class")= chr "transform"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As you can notice, for each of the fluorophores we specified, the transformer object with the desired parameters has now been added as its own list entry.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The final step is to then apply it to the GatingSet</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>If we now replot without having provided any arguments, we get the following:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb39-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-22-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As we can see, applying a default transformation to a random .fcs file is not quite the way to go. We will need to look up some of the specific parameter arguments that need to be provided. Going back to our transformer function</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>?flowjo_biexp_trans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/01_Questions.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In this case, the help documentation doesn’t provide much immediately. Part of this is that <code>flowjo_biexp_trans()</code> appears to be a wrapper function, which passes arguments on to the <code>flowJoTrans()</code> function. If we look this one up</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>?flowJoTrans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/02_flowJoTrans.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Under usage, we can see what the default options and arguments are.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/02_flowJoTrans.png" class="r-stretch"></section>
+<section id="transformation-arguments" class="slide level2">
+<h2>Transformation Arguments</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Lets evaluate what effect changing each of these arguments in has on visualizing our .fcs file. Our current visual is</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<span id="cb42-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb42-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb42-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb42-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">10</span>)</span>
+<span id="cb42-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb42-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb44-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-26-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We will also need a way to validate whether they are being updated in the background. We can revisit the output of <code>gh_get_transformations()</code> function from earlier, and specify just the first specimen, and the BUV805 fluorophore</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">gh_get_transformations</span>(SFC_GatingSet[[<span class="dv">1</span>]])<span class="sc">$</span><span class="st">`</span><span class="at">BUV805-A</span><span class="st">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (x, deriv = 0) 
+{
+    deriv &lt;- as.integer(deriv)
+    if (deriv &lt; 0 || deriv &gt; 3) 
+        stop("'deriv' must be between 0 and 3")
+    if (deriv &gt; 0) {
+        z0 &lt;- double(z$n)
+        z[c("y", "b", "c")] &lt;- switch(deriv, list(y = z$b, b = 2 * 
+            z$c, c = 3 * z$d), list(y = 2 * z$c, b = 6 * z$d, 
+            c = z0), list(y = 6 * z$d, b = z0, c = z0))
+        z[["d"]] &lt;- z0
+    }
+    res &lt;- stats:::.splinefun(x, z)
+    if (deriv &gt; 0 &amp;&amp; z$method == 2 &amp;&amp; any(ind &lt;- x &lt;= z$x[1L])) 
+        res[ind] &lt;- ifelse(deriv == 1, z$y[1L], 0)
+    res
+}
+&lt;bytecode: 0x5582e3b5e220&gt;
+&lt;environment: 0x5582e488f8d0&gt;
+attr(,"type")
+[1] "biexp"
+attr(,"parameters")
+attr(,"parameters")$channelRange
+[1] 4096
+
+attr(,"parameters")$maxValue
+[1] 262144
+
+attr(,"parameters")$neg
+[1] 0
+
+attr(,"parameters")$pos
+[1] 4.5
+
+attr(,"parameters")$widthBasis
+[1] -10</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="width">width</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Before we go messing with any of the other setting, let’s tackle width, which tends to be the one that gets missed by the default most often. Normally, in FlowJo most of my plots are set with biexponential transform width of around -1000, so lets go ahead and switch in that value.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<span id="cb47-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb47-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb47-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb47-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">1000</span>)</span>
+<span id="cb47-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb47-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb49-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-29-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Boom! That is more in line with what we were looking for. Let’s still check a couple other values.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<span id="cb50-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb50-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb50-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb50-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
+<span id="cb50-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb50-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb52-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-31-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>A width value of -500 still has the negavite population relative condensed, with the CD4+ cells into a more circular format. Lets try -100 next</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<span id="cb53-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb53-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb53-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb53-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">100</span>)</span>
+<span id="cb53-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb53-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb55-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-33-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And nope, too far. Let’s keep -500 for now.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="channelrange">channelRange</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Now that width is set closer to what we would expect, lets alter the next couple arguments and see if they have any effect. The argument channelRange is currently set for 4096. Lets double it</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<span id="cb56-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb56-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb56-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">8192</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb56-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
+<span id="cb56-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb56-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb58-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-35-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="fu">gh_get_transformations</span>(SFC_GatingSet[[<span class="dv">1</span>]])<span class="sc">$</span><span class="st">`</span><span class="at">BUV805-A</span><span class="st">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (x, deriv = 0) 
+{
+    deriv &lt;- as.integer(deriv)
+    if (deriv &lt; 0 || deriv &gt; 3) 
+        stop("'deriv' must be between 0 and 3")
+    if (deriv &gt; 0) {
+        z0 &lt;- double(z$n)
+        z[c("y", "b", "c")] &lt;- switch(deriv, list(y = z$b, b = 2 * 
+            z$c, c = 3 * z$d), list(y = 2 * z$c, b = 6 * z$d, 
+            c = z0), list(y = 6 * z$d, b = z0, c = z0))
+        z[["d"]] &lt;- z0
+    }
+    res &lt;- stats:::.splinefun(x, z)
+    if (deriv &gt; 0 &amp;&amp; z$method == 2 &amp;&amp; any(ind &lt;- x &lt;= z$x[1L])) 
+        res[ind] &lt;- ifelse(deriv == 1, z$y[1L], 0)
+    res
+}
+&lt;bytecode: 0x5582e3b5e220&gt;
+&lt;environment: 0x5582e2f110e8&gt;
+attr(,"type")
+[1] "biexp"
+attr(,"parameters")
+attr(,"parameters")$channelRange
+[1] 8192
+
+attr(,"parameters")$maxValue
+[1] 262144
+
+attr(,"parameters")$neg
+[1] 0
+
+attr(,"parameters")$pos
+[1] 4.5
+
+attr(,"parameters")$widthBasis
+[1] -500</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Not much apparent change, so lets go the opposite direction and reduce the original value by half.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<span id="cb61-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb61-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb61-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">2048</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb61-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
+<span id="cb61-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb61-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb63-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-38-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a><span class="fu">gh_get_transformations</span>(SFC_GatingSet[[<span class="dv">1</span>]])<span class="sc">$</span><span class="st">`</span><span class="at">BUV805-A</span><span class="st">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (x, deriv = 0) 
+{
+    deriv &lt;- as.integer(deriv)
+    if (deriv &lt; 0 || deriv &gt; 3) 
+        stop("'deriv' must be between 0 and 3")
+    if (deriv &gt; 0) {
+        z0 &lt;- double(z$n)
+        z[c("y", "b", "c")] &lt;- switch(deriv, list(y = z$b, b = 2 * 
+            z$c, c = 3 * z$d), list(y = 2 * z$c, b = 6 * z$d, 
+            c = z0), list(y = 6 * z$d, b = z0, c = z0))
+        z[["d"]] &lt;- z0
+    }
+    res &lt;- stats:::.splinefun(x, z)
+    if (deriv &gt; 0 &amp;&amp; z$method == 2 &amp;&amp; any(ind &lt;- x &lt;= z$x[1L])) 
+        res[ind] &lt;- ifelse(deriv == 1, z$y[1L], 0)
+    res
+}
+&lt;bytecode: 0x5582e3b5e220&gt;
+&lt;environment: 0x5582d6e713e8&gt;
+attr(,"type")
+[1] "biexp"
+attr(,"parameters")
+attr(,"parameters")$channelRange
+[1] 2048
+
+attr(,"parameters")$maxValue
+[1] 262144
+
+attr(,"parameters")$neg
+[1] 0
+
+attr(,"parameters")$pos
+[1] 4.5
+
+attr(,"parameters")$widthBasis
+[1] -500</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Few minor changes, but not much otherwise. So lets proceed on to the next argument!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="maxvalue">maxValue</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Same procedure, the current maxValue is 262144, lets double it and see what happens!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<span id="cb66-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb66-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb66-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">524288</span>,</span>
+<span id="cb66-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
+<span id="cb66-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb66-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb68-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-41-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>You will notice, that when we doubled the maxValue, we are phenocopying the result we got when we had width set to -1000, with the CD4 population. This is worth noting. Lets now try instead to reduce it!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<span id="cb69-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb69-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb69-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">131072</span>,</span>
+<span id="cb69-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
+<span id="cb69-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb69-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb71-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-43-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And likewise, we are going the opposite to our intended effect. As maxValue can in part be determined by our instrument settings (as well as individual fluorophores), this is an argument we should keep an eye on. Let’s leave it at its current default for now.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="pos">pos</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The next argument pos corresponds to the number of positive decades. It is currently set at 4.5</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<span id="cb72-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb72-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb72-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb72-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
+<span id="cb72-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb72-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb74-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-45-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Although this can be increased on some instrument settings. Let’s walk it up to 5!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<span id="cb75-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb75-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb75-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb75-5"><a></a>     <span class="at">pos=</span><span class="dv">5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
+<span id="cb75-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb75-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb77-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-47-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And on first glance no. If we had our settings for 5 positive decades, we would need to adjust both the maxValue and widthBasis to return to a closer to expected shape.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<span id="cb78-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb78-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb78-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">524288</span>,</span>
+<span id="cb78-5"><a></a>     <span class="at">pos=</span><span class="dv">5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">1000</span>)</span>
+<span id="cb78-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb78-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb80-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-49-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="neg">neg</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We have a similar story for adding negative decades.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<span id="cb81-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb81-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb81-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb81-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
+<span id="cb81-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb81-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb83-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-51-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Adding an extra negative decade doesn’t seem to noticiblt affect these two fluorophores.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<span id="cb84-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb84-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb84-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb84-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">1</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
+<span id="cb84-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb84-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb86-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-53-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>It is only when we increase to 2 (i.e.&nbsp;-2 decades) that we start to see a spreading effect.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<span id="cb87-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb87-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
+<span id="cb87-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb87-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">2</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
+<span id="cb87-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb87-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 6 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb89-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-55-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="recap">Recap</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We have looked at how the various arguments can affect the overall visualization, and seen how some of these are interconnected. It might be worthwhile to verify what your own instrument settings are at first (especially in context of maxValue and positive decades), and then use these when starting in R for the first time.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="mc" class="slide level2">
+<h2>MC</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Having now had some experience applying transformations to SFC data, let’s turn and look at how to apply arsinh to our mass cytometry (CyTOF) dataset. Lets once again make sure we have the correct .fcs files</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a></a>MC_files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data/G1_2_concatenated.txt_m039A.1147901.fcs"
+[2] "data/G1_2_concatenated.txt_m039B.1147889.fcs"
+[3] "data/G1_2_concatenated.txt_m039C.1147913.fcs"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And modify the steps from <a href="../../course/05_GatingSets/">Week 05</a> to load them into a <code>GatingSet</code> object.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb92-2"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
+<span id="cb92-3"><a></a></span>
+<span id="cb92-4"><a></a>MC_GatingSet</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 3 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Let’s examine the names for the metal tags</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a></a><span class="fu">colnames</span>(MC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Ce140Di"      "Ce142Di"      "Dy161Di"      "Dy162Di"      "Dy163Di"     
+ [6] "Dy164Di"      "Er166Di"      "Er167Di"      "Er168Di"      "Er170Di"     
+[11] "Eu151Di"      "Eu153Di"      "Event_length" "Gd155Di"      "Gd156Di"     
+[16] "Gd158Di"      "Gd160Di"      "Ho165Di"      "Ir191Di"      "Ir193Di"     
+[21] "Lu175Di"      "Lu176Di"      "Nd142Di"      "Nd143Di"      "Nd144Di"     
+[26] "Nd145Di"      "Nd146Di"      "Nd148Di"      "Nd150Di"      "Pd102Di"     
+[31] "Pd104Di"      "Pd105Di"      "Pd106Di"      "Pd108Di"      "Pd110Di"     
+[36] "Pr141Di"      "Pt195Di"      "Sm147Di"      "Sm149Di"      "Sm152Di"     
+[41] "Sm154Di"      "Tb159Di"      "Tm169Di"      "Y89Di"        "Yb171Di"     
+[46] "Yb172Di"      "Yb173Di"      "Yb174Di"      "Yb176Di"      "Time"        </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And the corresponding markers associated with each</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a></a><span class="fu">markernames</span>(MC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Ce140Di                Ce142Di                Dy161Di 
+               "Beads"                "Beads"   "H2BK120Ub-macroH2A" 
+               Dy162Di                Dy163Di                Dy164Di 
+   "CrotonylK-H3K4me3"        "H3R2cit-H2A.Z"     "H3K14ac-H3K36me1" 
+               Er166Di                Er167Di                Er168Di 
+                "CD33"                 "CD16"     "H4K16ac-H4K20me1" 
+               Er170Di                Eu151Di                Eu153Di 
+                 "CD3"     "H3K23ac-H3K27me1"    "H2BS14ph-H3K36me2" 
+               Gd155Di                Gd156Di                Gd158Di 
+               "CD11c"     "H3K18ac-H4K20me2"         "H3K56ac-H3.3" 
+               Gd160Di                Ho165Di                Ir191Di 
+      "PADI4-H4K20me3"     "H33Xcit-H3K27me3"                  "DNA" 
+               Ir193Di                Lu175Di                Lu176Di 
+                 "DNA"                 "CD19"                "beads" 
+               Nd142Di                Nd143Di                Nd144Di 
+      "gammaH2AX-Rme1"      "H2BK5ac-Rme2sym"      "H3S10ph-H3K4me2" 
+               Nd145Di                Nd146Di                Nd148Di 
+                 "CD4"                  "CD8"                 "CD34" 
+               Nd150Di                Pd102Di                Pd104Di 
+  "H3.3S31ph-H3K36me3"              "Barcode"              "Barcode" 
+               Pd105Di                Pd106Di                Pd108Di 
+             "Barcode"              "Barcode"              "Barcode" 
+               Pd110Di                Pr141Di                Pt195Di 
+             "Barcode"                   "H3"             "livedead" 
+               Sm147Di                Sm149Di                Sm152Di 
+      "H4K5ac-H3K9me2" "CleavedH3T22-H3K9me1"       "H3K9ac-Rme2asy" 
+               Sm154Di                Tb159Di                Tm169Di 
+  "H2AK119Ub-H3K27me2"                 "CD14"                "CD123" 
+                 Y89Di                Yb171Di                Yb172Di 
+                "CD45"                 "CD38"                 "CD56" 
+               Yb173Di                Yb174Di                Yb176Di 
+                  "H4"        "H3K27ac-CENPA"                "HLADR" </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And lets go ahead and visualize the CD4 x CD8 plot for the first specimen.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb98-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-60-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We can then select the particular markers we are interested, that we want to end up transforming. For this example, lets say we wanted to remove the multiple Barcode and Beads entries</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a></a>MC_Parameters <span class="ot">&lt;-</span> <span class="fu">markernames</span>(MC_GatingSet)</span>
+<span id="cb99-2"><a></a>MC_MarkersInterest <span class="ot">&lt;-</span> MC_Parameters[<span class="sc">!</span><span class="fu">str_detect</span>(<span class="st">"Barcode|Beads"</span>, MC_Parameters)]</span>
+<span id="cb99-3"><a></a>MC_MarkersInterest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               Dy161Di                Dy162Di                Dy163Di 
+  "H2BK120Ub-macroH2A"    "CrotonylK-H3K4me3"        "H3R2cit-H2A.Z" 
+               Dy164Di                Er166Di                Er167Di 
+    "H3K14ac-H3K36me1"                 "CD33"                 "CD16" 
+               Er168Di                Er170Di                Eu151Di 
+    "H4K16ac-H4K20me1"                  "CD3"     "H3K23ac-H3K27me1" 
+               Eu153Di                Gd155Di                Gd156Di 
+   "H2BS14ph-H3K36me2"                "CD11c"     "H3K18ac-H4K20me2" 
+               Gd158Di                Gd160Di                Ho165Di 
+        "H3K56ac-H3.3"       "PADI4-H4K20me3"     "H33Xcit-H3K27me3" 
+               Ir191Di                Ir193Di                Lu175Di 
+                 "DNA"                  "DNA"                 "CD19" 
+               Lu176Di                Nd142Di                Nd143Di 
+               "beads"       "gammaH2AX-Rme1"      "H2BK5ac-Rme2sym" 
+               Nd144Di                Nd145Di                Nd146Di 
+     "H3S10ph-H3K4me2"                  "CD4"                  "CD8" 
+               Nd148Di                Nd150Di                Pr141Di 
+                "CD34"   "H3.3S31ph-H3K36me3"                   "H3" 
+               Pt195Di                Sm147Di                Sm149Di 
+            "livedead"       "H4K5ac-H3K9me2" "CleavedH3T22-H3K9me1" 
+               Sm152Di                Sm154Di                Tb159Di 
+      "H3K9ac-Rme2asy"   "H2AK119Ub-H3K27me2"                 "CD14" 
+               Tm169Di                  Y89Di                Yb171Di 
+               "CD123"                 "CD45"                 "CD38" 
+               Yb172Di                Yb173Di                Yb174Di 
+                "CD56"                   "H4"        "H3K27ac-CENPA" 
+               Yb176Di 
+               "HLADR" </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Of which, we want the names for this named list. So….</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a></a>InterestingMetalsOnly <span class="ot">&lt;-</span> <span class="fu">names</span>(MC_MarkersInterest)</span>
+<span id="cb101-2"><a></a>InterestingMetalsOnly</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Dy161Di" "Dy162Di" "Dy163Di" "Dy164Di" "Er166Di" "Er167Di" "Er168Di"
+ [8] "Er170Di" "Eu151Di" "Eu153Di" "Gd155Di" "Gd156Di" "Gd158Di" "Gd160Di"
+[15] "Ho165Di" "Ir191Di" "Ir193Di" "Lu175Di" "Lu176Di" "Nd142Di" "Nd143Di"
+[22] "Nd144Di" "Nd145Di" "Nd146Di" "Nd148Di" "Nd150Di" "Pr141Di" "Pt195Di"
+[29] "Sm147Di" "Sm149Di" "Sm152Di" "Sm154Di" "Tb159Di" "Tm169Di" "Y89Di"  
+[36] "Yb171Di" "Yb172Di" "Yb173Di" "Yb174Di" "Yb176Di"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>With these, we can then combine them with our transformer of interest to create the <code>transformerList()</code> that we can then apply to the samples.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>()</span>
+<span id="cb103-2"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
+<span id="cb103-3"><a></a><span class="fu">str</span>(MyAsinhTransform[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 3
+ $ Dy161Di:List of 9
+  ..$ name        : chr "flowJo_fasinh"
+  ..$ transform   :function (x)  
+  ..$ inverse     :function (x)  
+  ..$ d_transform : NULL
+  ..$ d_inverse   : NULL
+  ..$ breaks      :function (x)  
+  ..$ minor_breaks:function (b, limits, n)  
+  ..$ format      :function (x)  
+  ..$ domain      : num [1:2] -Inf Inf
+  ..- attr(*, "class")= chr "transform"
+ $ Dy162Di:List of 9
+  ..$ name        : chr "flowJo_fasinh"
+  ..$ transform   :function (x)  
+  ..$ inverse     :function (x)  
+  ..$ d_transform : NULL
+  ..$ d_inverse   : NULL
+  ..$ breaks      :function (x)  
+  ..$ minor_breaks:function (b, limits, n)  
+  ..$ format      :function (x)  
+  ..$ domain      : num [1:2] -Inf Inf
+  ..- attr(*, "class")= chr "transform"
+ $ Dy163Di:List of 9
+  ..$ name        : chr "flowJo_fasinh"
+  ..$ transform   :function (x)  
+  ..$ inverse     :function (x)  
+  ..$ d_transform : NULL
+  ..$ d_inverse   : NULL
+  ..$ breaks      :function (x)  
+  ..$ minor_breaks:function (b, limits, n)  
+  ..$ format      :function (x)  
+  ..$ domain      : num [1:2] -Inf Inf
+  ..- attr(*, "class")= chr "transform"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 3 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>With this done, let’s try replotting the previous CD4 by CD8 plot</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb107-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-65-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="asinh-arguments">Asinh Arguments</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Similar to the case with SFC, we may need to revise some of the values provided to the individual arguments. Lets similarly investigate what we can do</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a></a>?flowjo_fasinh_trans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/03_flowjoAsinh.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Which turns out to be another wrapper. Lets try the similarly named function</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a></a>?flowjo_fasinh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/04_Asinh.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As we may remember, our current setting are the following</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<span id="cb110-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb110-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
+<span id="cb110-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="fl">0.7</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
+<span id="cb110-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
+<span id="cb110-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 3 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb112-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-69-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a></a><span class="fu">gh_get_transformations</span>(MC_GatingSet[[<span class="dv">1</span>]])<span class="sc">$</span><span class="st">`</span><span class="at">Nd145Di</span><span class="st">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>function (x) 
+{
+    length * ((asinh(x * sinh(m * log(10))/t) + a * log(10))/((m + 
+        a) * log(10)))
+}
+&lt;bytecode: 0x5582e306b330&gt;
+&lt;environment: 0x5582d4e408f0&gt;
+attr(,"type")
+[1] "fasinh"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h4 id="m">m</h4>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Being completionist, lets change the MC arguments as well. M is width in asymptotic decades, currently set to 4.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<span id="cb115-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb115-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
+<span id="cb115-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="fl">0.7</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
+<span id="cb115-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
+<span id="cb115-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 3 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb117-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-72-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Lets set it to 5!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<span id="cb118-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb118-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
+<span id="cb118-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">5</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="fl">0.7</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
+<span id="cb118-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
+<span id="cb118-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 3 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb120-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-74-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Vs. when we set it to 3</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<span id="cb121-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb121-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
+<span id="cb121-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">3</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="fl">0.7</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
+<span id="cb121-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
+<span id="cb121-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 3 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb123-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-76-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="t">t</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Increase t to 24000</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<span id="cb124-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb124-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
+<span id="cb124-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">24000</span>, <span class="at">a =</span> <span class="fl">0.7</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
+<span id="cb124-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
+<span id="cb124-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 3 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb126-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-78-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Decrease t to 6000</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb127"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<span id="cb127-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb127-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
+<span id="cb127-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">6000</span>, <span class="at">a =</span> <span class="fl">0.7</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
+<span id="cb127-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
+<span id="cb127-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 3 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb129-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-80-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="a">a</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Increase negative decade to 1</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<span id="cb130-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb130-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
+<span id="cb130-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="dv">1</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
+<span id="cb130-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
+<span id="cb130-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 3 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb132-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-82-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Vs. set to 0</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb133"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<span id="cb133-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb133-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
+<span id="cb133-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="dv">0</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
+<span id="cb133-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
+<span id="cb133-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 3 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb135"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb135-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-84-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="length">length</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Doubling numeric max value of transformed data to 512</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<span id="cb136-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb136-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
+<span id="cb136-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="dv">1</span>, <span class="at">length =</span> <span class="dv">512</span>)</span>
+<span id="cb136-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
+<span id="cb136-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 3 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb138-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-86-1.png" width="960" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Vs. reducing it to 128</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<span id="cb139-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb139-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
+<span id="cb139-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="dv">1</span>, <span class="at">length =</span> <span class="dv">128</span>)</span>
+<span id="cb139-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
+<span id="cb139-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 3 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb141-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+</div>
+<img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-88-1.png" width="960" class="r-stretch"></section>
+<section id="extracting-data" class="slide level2">
+<h2>Extracting Data</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>One area where we will separately need to remember whether a transformation is applied or not is later on in the course, when we are trying to extract out the underlying exprs data for use in downstream analysis. If we wanted to do this for our current GatingSet, we first need to fetch the pointer contents to return a CytoSet object.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a></a>MyCytoSet <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(SFC_GatingSet[[<span class="dv">1</span>]], <span class="st">"root"</span>)</span>
+<span id="cb142-2"><a></a>MyCytoSet</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A cytoset with 1 samples.
+
+  column names:
+    Time, SSC-W, SSC-H, SSC-A, FSC-W, FSC-H, FSC-A, SSC-B-W, SSC-B-H, SSC-B-A, BUV395-A, BUV563-A, BUV615-A, BUV661-A, BUV737-A, BUV805-A, Pacific Blue-A, BV480-A, BV570-A, BV605-A, BV650-A, BV711-A, BV750-A, BV786-A, Alexa Fluor 488-A, Spark Blue 550-A, Spark Blue 574-A, RB613-A, RB705-A, RB780-A, PE-A, PE-Dazzle594-A, PE-Cy5-A, PE-Fire 700-A, PE-Fire 744-A, PE-Vio770-A, APC-A, Alexa Fluor 647-A, APC-R700-A, Zombie NIR-A, APC-Fire 750-A, APC-Fire 810-A, AF-A
+
+cytoset has been subsetted and can be realized through 'realize_view()'.</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We can then extract our the underlying MFI data using the <code>exprs()</code> function.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb144"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a></a><span class="fu">exprs</span>(MyCytoSet[[<span class="dv">1</span>]])[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Time    SSC-W  SSC-H    SSC-A    FSC-W   FSC-H   FSC-A  SSC-B-W
+[1,] 396.1327 741155.4 495200 611700.2 735140.7 1398530 1713527 715626.7
+[2,] 539.4743 730091.3 504832 614289.1 714323.2 1607285 1913535 728604.2
+[3,] 590.1619 842852.1 267735 376101.7 715528.4  824483  983235 781794.9
+     SSC-B-H  SSC-B-A BUV395-A BUV563-A BUV615-A BUV661-A BUV737-A BUV805-A
+[1,]  416383 496624.7 3150.359 2315.777 2182.396 2132.781 2889.922 3597.062
+[2,]  385314 467902.4 2064.067 3614.399 2124.969 1805.567 2639.037 1866.229
+[3,]  309681 403511.7 3336.325 2874.082 2627.830 2043.606 3079.823 3621.227
+     Pacific Blue-A  BV480-A  BV570-A  BV605-A  BV650-A  BV711-A  BV750-A
+[1,]       2228.710 1951.972 2101.419 3463.058 1927.428 2248.063 2060.087
+[2,]       1999.236 2086.402 2219.585 2549.794 3716.182 2128.070 2092.538
+[3,]       2317.032 2325.820 1490.307 3675.083 1788.000 1427.809 2477.396
+      BV786-A Alexa Fluor 488-A Spark Blue 550-A Spark Blue 574-A  RB613-A
+[1,] 2392.586          2060.505         3532.579         3168.161 2255.820
+[2,] 2267.093          2243.353         3402.286         3383.590 1700.675
+[3,] 1642.587          2500.961         3638.622         3162.447 1787.978
+      RB705-A  RB780-A     PE-A PE-Dazzle594-A PE-Cy5-A PE-Fire 700-A
+[1,] 3850.380 2200.319 2602.714       2087.706 2216.431      2843.651
+[2,] 2149.019 1946.190 2252.872       2207.007 2933.298      3160.401
+[3,] 3751.768 2133.048 2754.971       2474.266 2275.351      2759.448
+     PE-Fire 744-A PE-Vio770-A    APC-A Alexa Fluor 647-A APC-R700-A
+[1,]      2187.363    2112.620 1965.414          2199.804   2264.987
+[2,]      2050.162    2190.069 2072.289          2058.767   2266.735
+[3,]      2239.013    1918.631 2536.166          1664.451   2332.929
+     Zombie NIR-A APC-Fire 750-A APC-Fire 810-A     AF-A
+[1,]     2333.349       3265.242       3262.465 2913.750
+[2,]     2252.724       2853.149       2093.584 2897.793
+[3,]     2060.233       3339.516       3174.300 2227.430</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>If you look at the data for a while, you may notice the MFI values seem abnormally abbreviated. This is because the values present were themselves transformed. If we had wanted to retrieve the raw, untransformed values, we would have needed to provide the inverse.transform = TRUE argument when fetching the CytoSet. This would have trigerred the inverse.transformation stored within the transformerList, reverting values back to the original.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a></a>MyInversedCytoSet <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(SFC_GatingSet[[<span class="dv">1</span>]], <span class="st">"root"</span>, <span class="at">inverse.transform=</span><span class="cn">TRUE</span>)</span>
+<span id="cb146-2"><a></a><span class="fu">exprs</span>(MyInversedCytoSet[[<span class="dv">1</span>]])[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Time    SSC-W  SSC-H    SSC-A    FSC-W   FSC-H   FSC-A  SSC-B-W
+[1,] 396.1327 741155.4 495200 611700.2 735140.7 1398530 1713527 715626.7
+[2,] 539.4743 730091.3 504832 614289.1 714323.2 1607285 1913535 728604.2
+[3,] 590.1619 842852.1 267735 376101.7 715528.4  824483  983235 781794.9
+     SSC-B-H  SSC-B-A    BUV395-A   BUV563-A  BUV615-A  BUV661-A BUV737-A
+[1,]  416383 496624.7  9453.96973   865.5593  422.8893  265.4719 4429.869
+[2,]  385314 467902.4    50.15964 45181.5781  240.8778 -778.2961 2294.426
+[3,]  309681 403511.7 17222.40234  4243.2021 2228.7263  -13.7176 7624.175
+       BUV805-A Pacific Blue-A   BV480-A    BV570-A   BV605-A    BV650-A
+[1,] 42471.6328       572.5627 -300.9588   166.9555 26514.346  -378.7812
+[2,]  -576.0316      -152.3773  119.9522   542.8082  1814.396 65177.4258
+[3,] 46297.8867       869.9310  900.6817 -2103.8748 56177.691  -838.5793
+        BV711-A    BV750-A    BV786-A Alexa Fluor 488-A Spark Blue 550-A
+[1,]   636.1760   37.73475  1143.6769          39.03822         33800.78
+[2,]   250.6365  139.14844   699.4824         620.62848         21516.37
+[3,] -2473.9214 1483.97839 -1383.3655        1586.81445         49274.09
+     Spark Blue 574-A    RB613-A     RB705-A   RB780-A      PE-A PE-Dazzle594-A
+[1,]         9992.747   661.8845 106387.0312  480.4331 2087.5488       124.0298
+[2,]        20191.494 -1154.0510    316.7392 -319.2414  652.0997       502.0220
+[3,]         9816.074  -838.6561  74171.4688  266.3120 3095.6575      1470.6257
+      PE-Cy5-A PE-Fire 700-A PE-Fire 744-A PE-Vio770-A      APC-A
+[1,]  532.5582      3909.615    438.796295    202.0780 -258.55743
+[2,] 4992.3154      9753.685      6.749563    447.4721   75.84125
+[3,]  727.2120      3131.895    606.339661   -406.8256 1748.74023
+     Alexa Fluor 647-A APC-R700-A Zombie NIR-A APC-Fire 750-A APC-Fire 810-A
+[1,]         478.77539   692.4367    927.23083      13622.885     13500.3311
+[2,]          33.61102   698.2842    651.61072       4010.373       142.4233
+[3,]       -1294.83301   925.7467     38.18906      17406.982     10186.6602
+          AF-A
+[1,] 4729.0576
+[2,] 4526.1870
+[3,]  568.3808</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Right now, this won’t affect much, but we will encounter where this matters in a couple weeks when we discuss how to visualize <a href="">fluorescent signatures</a>, and their subsequent use in unmixing.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="take-away" class="title-slide slide level1 center">
+<h1>Take Away</h1>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>This week, we looked at how to set up our underlying data for transformation within the <code>flowWorkspace</code> context, providing the transform and column names of interest to create a <code>transformerList</code>, and then applying it to our GatingSet. We also investigated how to visualize our data and provide additional arguments to ensure that we are optimally transforming the data rather than accepting the default options.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As cytometry instrument platforms will often vary on their range settings, the parameter argument values we used for this particular visualization may not be applicable to your own dataset, so you may need to tinker with your own .fcs files to ensure that you are visualizing the underlying data properly, depending on what you are doing (whether supervised manual analysis, or more unsupervised algorithmic style analysis).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Next week, we will have no class (I will be presenting at the <a href="">ABRF</a> conference). I had to split this weeks combined Transformation/Compensation lesson into two separate parts, I am still deciding whether to have compensation be a separate stand-alone bonus class (given primary audience is those doing conventional flow cytometry) or to push it into the current rotation ahead of <a href="">manual and automated gating</a>. I will let you know once I figure it out.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Also, as a heads up, I will be sending out the first class feedback survey. This is our first year doing this course, and any feedback you can provide will help make sure we address any areas that we are falling short to make things better both for those currently taking the course, as well as those who may follow later.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/TakeAway.png" class="r-stretch"></section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="additional-resources" class="title-slide slide level1 center">
+<h1>Additional Resources</h1>
+<p><a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/flowWorkspace/inst/doc/flowWorkspace-Introduction.html#04_Build_the_GatingSet_from_scratch">flowWorkspace Bioconductor Vignette</a></p>
+<p><a href="https://docs.flowjo.com/flowjo/graphs-and-gating/gw-transform-overview/">FlowJo Data Transformation</a></p>
+<p><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3243046/">Optimizing transformations for automated, high throughput analysis of flow cytometry data</a></p>
+<p><a href="https://immunedynamics.io/Spectre/articles/data_transformation.html">Spectre: Data Transformation</a></p>
+<p><a href="https://www.colibri-cytometry.com/post/data-analysis-scaling-your-data-for-dimensionality-reduction">Colibri Cytometry: Scaling your Data for Dimensionality Reduction</a></p>
+<p><a href="https://www.youtube.com/watch?v=6jWLdZGbCH0">CytoBites: Why do we transform Cytometry Data</a></p>
+<p><a href="https://med.stanford.edu/iti/himc/immune-monitoring-virtual-course-2020/part-3.html">CyTOF data analysis</a></p>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="take-home-problems" class="title-slide slide level1 center">
+<h1>Take-home Problems</h1>
+<div title="Problem 1">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Problem 1</strong></p>
+</div>
+<div class="callout-content">
+<p>We had not selected FSC and SSC parameters in this attempt, as they are normally displayed in the linear scale. Include them in the list of fluorophores to be transformed, and see how this impacts the visualization (imitating what could accidentally happen in practice if they were left in)</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div title="Problem 2">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Problem 2</strong></p>
+</div>
+<div class="callout-content">
+<p>For the SFC data, I showed the setup for both Logicle and Biexponential, but didn’t have time to dive into the Logicle transformation. Select a couple markers of interest for the SFC data, visualize and screenshot the before, and then attempt to customize the biexponential arguments to best visualize the underlying data, and then repeat for Logicle. Take screenshots of both and compare/contrast the difference.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div title="Problem 3">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Problem 3</strong></p>
+</div>
+<div class="callout-content">
+<p>There are to asinh style transformations provided by the <code>flowWorkspace</code> package. Using the mass cytometry data, select two metal markers of interest, visualize each, customize the arguments until you have properly visualized the underlying populations, and see if you can spot any major differences between the methods.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<p><img data-src="images/TakeAway.png"></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img data-src="https://www.gnu.org/graphics/agplv3-with-text-162x68.png" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img data-src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" alt="CC BY-SA 4.0"></a></p>
+</div>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

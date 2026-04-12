@@ -1,0 +1,112 @@
+---
+title: "Solutions for week01"
+author: Jarkko Toivonen
+date: "`r Sys.Date()`"
+format: 
+    html:
+        embed-resources: true
+---
+
+```{r}
+library(PeacoQC)
+```
+
+
+## Problem 1
+
+> We installed PeacoQC during this session, but we didn’t have time to explore what functions are present within the package. Using what you have learned about accessing documentation, figure out and list what functions it contains
+
+```{r}
+help(package = PeacoQC)
+```
+
+
+```{r}
+ls("package:PeacoQC")
+```
+
+## Problem 2
+
+> Take a closer look at the list of Bioconductor cytometry packages. Report back on how many there are currently in Bioconductor, the author/maintainer with the most contributed cytometry R packages, and a couple packages that you would be interested in exploring more in-depth later in the course.
+
+There are 69 Bioconductor packages about cytometry.
+
+Mike Jiang has contributed to 10 cytometry packages.
+
+These packages seem interesting:
+
+Package | Maintainer | Title | Rank
+--------+------------+-------+-----
+flowViz | 	Mike Jiang |	Visualization for flow cytometry 	| 227
+ggcyto 	| Mike Jiang 	| Visualize Cytometry data with ggplot 	| 237
+flowPeaks | 	Yongchao Ge |  	An R package for flow data clustering |	648
+
+## Problem 3
+
+
+
+> There is another way to install R packages, using the newer pak package. Positron uses this when installing suggested dependencies.
+
+> After learning more about it via the documentation and it’s pkgdown website, I would like you to attempt to install the following three R packages using this newer method: “broom”, “cytoMEM”, “DillonHammill/CytoExploreR”.
+
+> Take screenshots, and in a new quarto markdown document, describe how the installation process differed from what you saw for install.packages(), install() and install_github().
+
+### broom
+
+```{r}
+pak::pkg_install("broom")
+```
+
+It is easy to see in what stage the installation is. Meaning that all the time it
+shows how many packages have finished installing out of the total number of needed packages.
+It is then easier to estimate how long the installation will still take.
+
+### cytoMEM
+
+```{r}
+pak::pkg_install("cytoMEM")
+```
+
+
+![](cytomem.png)
+
+![](kernsmooth_fail1.png)
+
+![](kernsmooth_fail2.png)
+
+Installing cytoMEM causes pak::pkg_install() to install also KernSmooth, even though it is already installed.
+It fails installing it because fortran compiler and blas library development package are not installed.
+
+Works after installing these.
+
+### DillonHammill/CytoExploreR
+
+The next chunk is disabled.
+
+```{r}
+#| eval: FALSE
+pak::pkg_install("DillonHammill/CytoExploreR")
+```
+
+Error:
+! ! error in pak subprocess
+Caused by error: 
+! Could not solve package dependencies:
+* DillonHammill/CytoExploreR:
+  * Can't install dependency EmbedSOM (>= 1.0.0)
+  * Can't install dependency superheat (>= 1.0.0)
+* EmbedSOM: Can't find package called EmbedSOM.
+Show Traceback
+
+![](failure_due_to_embed_som.png)
+
+Package ‘EmbedSOM’ was removed from the CRAN repository.
+
+Formerly available versions can be obtained from the archive.
+
+Archived on 2025-12-22 as issues were not corrected in time. 
+
+So, it seems that this package cannot be installed. At least not with pkg_install().
+
+pkg_install() does not print endless messages about compilation, unlike some other installation
+methods, which is good.
