@@ -1,0 +1,62 @@
+---
+tittle: "Take-home problems week 1"
+author: "Julián Chamucero"
+format: html
+embed-resources: true
+---
+
+### Problem 1. 
+We installed PeacoQC during this session, but we didn’t have time to explore what functions are present within the package. Using what you have learned about accessing documentation, figure out and list what functions it contains
+
+
+```{r}
+#| eval: false
+?PeacoQC
+```
+
+The index shows: 
+
+![PeacoQC index](images/PeakQC.png){width=70% fig-align="center"}
+
+I found the following functions:
+- PeacoQC
+- PeacoQCHeatmap
+- PlotPeacoQC
+- RemoveDoublets
+- RemoveMargins
+
+### Problem 2. 
+Take a closer look at the list of Bioconductor cytometry packages. Report back on how many there are currently in Bioconductor, the author/maintainer with the most contributed cytometry R packages, and a couple packages that you would be interested in exploring more in-depth later in the course.
+
+Bioconductor has 7 cytometry packages. 
+Mike Jiang is the maintainer with the most contributed cytometry R packages with 5/7. I'd like to explore more in depth flowSOM and flowGate.
+
+### Problem 3. 
+There is another way to install R packages, using the newer pak package. Positron uses this when installing suggested dependencies.
+
+After learning more about it via the documentation and it’s pkgdown website, I would like you to attempt to install the following three R packages using this newer method: “broom”, “cytoMEM”, “DillonHammill/CytoExploreR”.
+
+```{r}
+#| eval: false
+install.packages("pak")
+library(pak)
+pak::pkg_install("broom")
+pak::pkg_install("cytoMEM")
+pak::pkg_install("RGLab/cytoinstaller")
+pak::pkg_install("DillonHammill/CytoExploreRData")
+pak::pkg_install("DillonHammill/CytoExploreR")
+```
+
+I got an error installing CytoExploreR using pak. Aparrently pak could'n solve dependencies source.
+
+![pak_installation_error](images/pak_installation_error.png){width=70% fig-align="center"}
+
+ 
+
+
+```{r}
+#| eval: false
+BiocManager::install("EmbedSOM")
+```
+
+I tried using bioconductor but I got this warning message: package ‘EmbedSOM’ is not available for Bioconductor version '3.22'. 
