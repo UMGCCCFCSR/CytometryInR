@@ -1,0 +1,45 @@
+---
+title: "Week 4 Take Home problems"
+embed-resources: true
+format: html
+---
+
+## Problem 1
+```{r}
+# import data
+thefilepath <- file.path("data", "Dataset.csv")
+Data <- read.csv(file = thefilepath, check.names = FALSE)
+
+# subset, rename, and rearrange columns
+library(dplyr)
+Cleaned_data <- Data |> select(!c(Date, singletsFSC, singletsSSC, singletsSSCB, NotMonocytes, nonDebris, 'Dump+', Tcells_count, lymphocytes_count, CD45_count, Debris)) |> rename(Donor = 'bid', Treatment = 'Condition', Sex = 'infant_sex', Dump_neg = 'Dump-', Vd2_pos = 'Vd2+', Vd2_neg = 'Vd2-', Va7.2_pos = 'Va7.2+', Va7.2_neg = 'Va7.2-', CD4_pos = 'CD4+', CD4_neg = 'CD4-', CD8_pos = 'CD8+', CD8_neg = 'CD8-') |> relocate(live, .after = root) |> relocate(Monocytes, .after = CD45)
+
+# pull all timepoint 0 samples that recieved the PPD treatment
+Cleaned_data_subset <- Cleaned_data |> filter(Treatment == "PPD") |> filter(timepoint == "0")
+
+# export the subsetted table as a new .csv file
+StorageLocation <- file.path("data", paste0("MyNewDataset", ".csv"))
+write.csv(Cleaned_data_subset, StorageLocation, row.names=FALSE)
+```
+
+## Problem 2
+```{r}
+# round numeric columns
+Cleaned_data_rounded <- Cleaned_data |> mutate(live = round(live, 2)) |> mutate(CD45 = round(CD45, 2)) |> mutate(Monocytes = round(Monocytes, 2)) |> mutate(lymphocytes = round(lymphocytes, 2)) |> mutate(Dump_neg = round(Dump_neg, 2)) |> mutate(Tcells = round(Tcells, 2)) |> mutate(Vd2_pos = round(Vd2_pos, 2)) |> mutate(Vd2_neg = round(Vd2_neg, 2)) |> mutate(Va7.2_pos = round(Va7.2_pos, 2)) |> mutate(Va7.2_neg = round(Va7.2_neg, 2)) |> mutate(CD4_pos = round(CD4_pos, 2)) |> mutate(CD4_neg = round(CD4_neg, 2)) |> mutate(CD8_pos = round(CD8_pos, 2)) |> mutate(CD8_neg = round(CD8_neg, 2))
+
+#export a new .csv file
+StorageLocation <- file.path("data", paste0("MyNewRoundedDataset", ".csv"))
+write.csv(Cleaned_data_subset, StorageLocation, row.names=FALSE)
+```
+
+## Problem 3
+
+```{r}
+# add filename column
+roundedDataWithFilename <- Cleaned_data_rounded |> mutate(filename = paste0(Cleaned_data_rounded$Donor, Cleaned_data_rounded$Treatment, Cleaned_data_rounded$timepoint))
+
+# determine if there are duplicate filenames
+list_of_filenames <- roundedDataWithFilename |> pull(filename)
+list_of_unique_filenames <- unique(list_of_filenames)
+if (length(list_of_filenames) > length(list_of_unique_filenames)){print("Duplicate filenames detected")}
+```

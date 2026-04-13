@@ -1,0 +1,117 @@
+---
+title: Solutions for week04
+author: Jarkko Toivonen
+date: "`r Sys.Date()`"
+format: 
+    html:
+        df-print: kable
+        embed-resources: true
+toc: true
+toc-depth: 5
+---
+
+
+
+```{r}
+#| label: setup
+#| output: false
+
+library(dplyr)
+library(stringr)
+
+# Put the results in a separate directory
+result_path <- "result"
+if (! dir.exists(result_path)) result_path
+```
+
+## Problem 1
+
+Taking a dataset (either todays or one of your own), work through the column-operating functions (select(), rename(), and relocate()). Once this is done, filter() by conditions from two separate columns, arrange in an order that makes sense, and export this “tidy” data as a .csv file.
+
+```{r}
+filename <- file.path("data", "Dataset.csv")
+df <- read.csv(filename, check.names = FALSE)
+```
+
+Rename columns.
+
+```{r}
+replace_plus  <- function(name) { str_replace(name, "\\+$", "_pos")}
+replace_minus <- function(name) { str_replace(name, "\\-$", "_minus")}
+res1 <- df %>% 
+    rename_with(replace_plus) %>% 
+    rename_with(replace_minus)
+```
+
+Verify that column with type double are really proportions (i.e. numbers in range [0,1]).
+
+```{r}
+res1 %>% 
+    select(where(is.double)) %>% 
+    summary()
+```
+
+Yes, they are.
+
+Move the variables that correspond to proportions to first columns.
+
+```{r}
+res1 <- res1 %>% 
+    relocate(where(is.double))
+res1 %>% head(5)
+```
+
+Filter and arrange.
+
+```{r}
+res1 <- res1 %>% 
+    filter(CD45 > lymphocytes) %>%
+    arrange(desc(CD45))
+as_tibble(res1) %>% head()
+```
+
+
+
+Export.
+
+```{r}
+filename <- file.path(result_path, "result1.csv")
+write.csv(res1, filename)
+```
+
+##  Problem 2
+
+> We used the mutate() function to create new columns, but it can also be used to modify existing ones. Various numeric columns are showing way to many significant digits. As was shown, use round() to round all these proportion columns, but use mutate to overwrite the existing column. Export this as it’s own .csv file.
+
+
+```{r}
+myround <- function(x) round(x, digits=3)
+res2 <- df %>% mutate(across(where(is.double), myround))
+res2 %>% 
+    relocate(where(is.double)) %>%
+    head()
+```
+
+
+```{r}
+filename <- file.path(result_path, "result2.csv")
+write.csv(res2, filename)
+```
+
+## Problem 3
+
+> We can also use mutate() to combine columns. For our dataset, “bid”, “timepoint”, “Condition” are separate columns that originally were all part of the filename for the individual .fcs file. Try to figure out a way to combine them back together using paste0(), and save the new column as “filename”. Once this is done, pull() the contents of this column, and using try to determine whether there were any duplicates (think innovative ways of using !, length() and unique())
+
+
+```{r}
+df3 <- df %>% 
+    mutate(filename = paste0(bid, timepoint, Condition, ".fcs"))
+df3 %>% select(filename) %>% head()
+```
+
+Are the any duplicates?
+
+```{r}
+f <- df3 %>% pull(filename)
+length(f) != length(unique(f))
+```
