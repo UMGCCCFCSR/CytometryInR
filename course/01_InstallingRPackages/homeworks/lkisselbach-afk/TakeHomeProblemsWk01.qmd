@@ -1,0 +1,78 @@
+---
+title: "Take-home Problems Week 01"
+format: html
+embed-resources: true
+toc: true
+---
+
+# Lynn Kisselbach
+
+# Problem 1
+
+We installed PeacoQC during this session, but we didn’t have time to explore what functions are present within the package. Using what you have learned about accessing documentation, figure out and list what functions it contains
+
+## Answer 1
+
+PeacoQC is an R package designed for peak-based selection of high-quality cytometry data, supporting both flow and mass cytometry. It integrates preprocessing, quality control, and visualization tools to remove artifacts and unstable events.
+
+Core functions include:
+
+PeacoQC ()
+
+Detects peaks in each channel of a flowframe; Remove anomalies (e.g., clogs, speed changes) using IsolationTree and/or MAD outlier detection;Ffilters bad measurements based on determine_good_cells (all, MAD, IT or none); Outputs a QC report and optionally saves cleaned FCS files
+
+PeacoQCHeatmap()
+
+Creates an overview heatmap of the QC analysis, showing quality scores across channels and events
+
+PlotPeacoQC()
+
+Visualizes the QC results for one or multiple samples, including deleted cells and peak detection
+
+RemoveDoublets()
+
+Identifies and removes doublet events from flow cytometry data
+
+RemoveMargins()
+
+Removes margin events (low-quality events near the start/end of acquisition)
+
+# Problem 2
+
+Take a closer look at the list of Bioconductor cytometry packages. Report back on how many there are currently in Bioconductor, the author/maintainer with the most contributed cytometry R packages, and a couple packages that you would be interested in exploring more in-depth later in the course.
+
+## Answer 2
+
+There are currently 69 flow cytometry packages available in Bioconductor.
+
+Mike Jiang is the author/maintainer with the most contributed cytometry R packages.
+
+A couple of packages I'd be interested in exploring more in-depth later in the course include: treekoR, flowGraph, flowGate, COMPASS, flowWorkspace, flowClust, flowStats, flowSpecs, CytoPipeline
+
+# Problem 3
+
+There is another way to install R packages, using the newer pak package. Positron uses this when installing suggested dependencies.
+
+After learning more about it via the documentation and it’s pkgdown website, I would like you to attempt to install the following three R packages using this newer method: “broom”, “cytoMEM”, “DillonHammill/CytoExploreR”.
+
+Take screenshots, and in a new quarto markdown document, describe how the installation process differed from what you saw for install.packages(), install() and install_github().
+
+## Answer 3
+
+The installation process differs from what you saw for install.packages(), install() and install_github().
+
+First, install from CRAN: install.packages ("pak")
+
+For CRAN or Bioconductor, instead of using install.packages("") or install (""), respectively, you would use pak::pkg_install("")
+
+![](images/paste-2.png)
+
+For GitHub, instead of using install_github ("username/package"), you would use pak::pkg_install("package/username")
+
+For GitHub, I ran into an issue regarding version control. I entered the error message into Claude AI, and it gave 3 options to fix the issue.
+
+The one that worked was: Use remotes with force = TRUE
+
+![](images/paste-4.png)
+
+Root Cause: The CytoExploreR developer set the version requirement to \>= 1.0.0 anticipating a future release of superheat, but that release never happened — superheat has been unmaintained since 2017. There's an open GitHub issue (#66) where the developer has noted that superheat will eventually be replaced by their own HeatmapR package, but this work isn't complete yet in the current release.
