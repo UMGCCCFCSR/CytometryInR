@@ -582,316 +582,7 @@
     "href": "course/02_FilePaths/index.html",
     "title": "02 - File Paths",
     "section": "",
-    "text": "For the YouTube livestream recording, see here\nFor screen-shot slides, click here\nWelcome to the second week of Cytometry in R! This week we will learn about file.path, namely, how to communicate to our computer (and R) where various files are stored.",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#set-up",
-    "href": "course/02_FilePaths/index.html#set-up",
-    "title": "02 - File Paths",
-    "section": "Set Up",
-    "text": "Set Up\nBefore we begin, let’s make sure you get the data needed for today transferred to your local computer, and then get the .fcs files copied over from there to your own working project folder. This is the process you will repeat each week throughout the course.\n\nNew Repository\nFirst off, login to your GitHub account. Once there, you will select the options to create a new repository (similar to what you did during Using GitHub)\n\n\n\nFor this week, let’s set this new repository up as a private repository, and call it Week2. This will keep things consistent with the file.paths we will be showing in the examples.\n\n\n\nOnce the new repository has been created, copy the URL.\n\n\n\nNext, open up Positron, set the interpreter to use R, and then select the option to bring in a “New Folder from Git”.\n\n\n\nPaste in your new repository’s url. Additionally, if you want to match file.paths shown in the examples, set your storage location to your local Documents folder (please note the start of the file.path will look differently depending on whether you are on Windows, MacOS, or Linux).\n\n\n\nYour new repository will then be imported from GitHub. Once this is done, create two subfolders (data and images) and a new .qmd file (naming it filepaths.qmd).\n\n\n\n\n\nSync\nWith this done, return to GitHub and open your forked version of the CytometryInR course folder. If you haven’t yet done so, click on sync to bring in this week’s code and datasets.\n\n\n\nReturning to Positron, you will need to switch Project Folders, switching from Week2 over to CytometryInR.\n\n\n\n\n\nPull\nOnce CytometryInR project folder has opened, you will need to pull in the new data from GitHub to your local computer.\n\n\n\n\n\nCopy Files to Week2\nOnce this is done, you will see within the course folder, containing this weeks folder (02_FilePaths). Within it there is a data folder with .fcs files. To avoid causing conflicts when bringing in next week’s materials, you will want to manually copy over these .fcs files (via your File Explorer) to the data folder within your “Week2” Project Folder.\n\n\n\n\n\nCommit and Push\nWhen you reopen your Week2 project folder in Positron, you should now be able to see the .fcs files within the data folder. Next, from the action bar on the far left, select the Source Control tab. Stage all the changes (as was done in Using Git), and write a short commit message.\n\n\n\nWith these files now being tracked by version control, push (ie. send) your changes to GitHub so that they are remotely backed up.\n\n\n\nAnd with this setup complete, you are now ready to proceed. Remember, run code and write notes in your working project folder (Week2 or otherwise named) to avoid conflicts next week in the CytometryInR folder when you are trying to bring in the Week #3 code and datasets.",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#working-directory",
-    "href": "course/02_FilePaths/index.html#working-directory",
-    "title": "02 - File Paths",
-    "section": "Working Directory",
-    "text": "Working Directory\nNow that we are back in our Week2 folder, let’s start by seeing our current location similarly to how our computer perceives it.\nWe will use getwd() function (ie. get working directory) to return the location of the folder we are currently inside of. For example, when getwd() is run within my Week2 project folder, I see the following location\n\ngetwd()\n\n\nThis returns a file path. The final location (Week2 in this case) is the Working Directory. Your computer when working in R will be descern other locations in relation to this directory.",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#directories",
-    "href": "course/02_FilePaths/index.html#directories",
-    "title": "02 - File Paths",
-    "section": "Directories",
-    "text": "Directories\nWithin this working directory, we have a variety of project folders and files related to the course. We can see the folders that are present using the list.dirs() function.\n\nlist.dirs(path=\".\", full.names=FALSE, recursive=FALSE)\n\n\nWithin this list.dirs() function, we are specifying two arguments with which we will be working with later today, full.names and recursive. For now, lets set their arguments to FALSE, which means they conditions they implement are inactive (turned off).\n\n\nThe path argument is currently set to “.”, which is a stand-in for the present directory. In R, if an argument is not specified directly, it is inferred based on an order of expected arguments. Thus, if not present, we could still get the same output as seen before.\n\nlist.dirs(full.names=FALSE, recursive=FALSE)\n\n\n\n\nWithin Positron, in addition to visible folders, we also have hidden folders (denoted by the “.” in front of the folder name when using list.dirs()). In the case of one of our course website folders, we can see a “.quarto” folder shown in a lighter gray . The “.git” folder we saw from list.dirs() is typically hidden when viewing from Positron.\n\nIn the case of Week2, the two not-hidden folders we created are listed. We will see how to navigate these in a second.",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#variables",
-    "href": "course/02_FilePaths/index.html#variables",
-    "title": "02 - File Paths",
-    "section": "Variables",
-    "text": "Variables\nBefore exploring file paths, we need to have some basic R code knowledge that we can use to work with them. Within R, we have the ability to assign particular values (be they character strings, numbers or logicals) to objects (ie. variables) that can be used when called upon later.\nFor example:\n\nWhatDayDidIWriteThis &lt;- \"Saturday\"\n\nIn this case, the variable name is what the assignment arrow (“&lt;-”) is pointing at. In this case, WhatDayDidIWriteThis\n\n\nWhen we run this, we create a variable, that will appear within the right-sidebar.\n\nWhatDayDidIWriteThis &lt;- \"Saturday\"\n\n\n\n\nThese variables can subsequently be retrieved by printing (ie. running) the name of the variable\n\nWhatDayDidIWriteThis \n\n[1] \"Saturday\"\n\n\n\n\nYou can create variables with almost any name you can think of\n\nTopSecretMeetingDay &lt;- \"Saturday\"\n\n\n\nWith a few exceptions. R doesn’t play well with spaces:\n\nTop Secret Meeting Day &lt;- \"Saturday\"\n\nError in parse(text = input): &lt;text&gt;:1:5: unexpected symbol\n1: Top Secret\n        ^\n\n\n\n\nBut does play well with underscores:\n\nTop_Secret_Meeting_Day &lt;- \"Saturday\"\n\n\n\nThe above (with individual words separated by _) is collectively known as snake case. The alternate way to help delineate variable names is “camelCase”, with first letter of each word being capitalized (seen in the previous example).\n\n\n\n\nTopSecretMeetingDay\n\n[1] \"Saturday\"\n\n\n\n\nYou can overwrite a Variable name by assigning a different value to it:\n\nTopSecretMeetingDay &lt;- \"Monday\"\n\n\nTopSecretMeetingDay\n\n[1] \"Monday\"\n\n\n\n\nYou can also remove individual variables via the rm function\n\nrm(Top_Secret_Meeting_Day)\n\n\n\nOr if trying to remove all, via the right sidebar\n\n\n\nIn the prior case, we are creating a variable that is a “string” of character values, due to our use of “” around the word. We can see this when we use the str() function.\n\nFluorophores &lt;- \"FITC\"\nstr(Fluorophores)\n\n chr \"FITC\"\n\n\nThe “chr” in front denotating that Fluorophores contains a character string.\n\n\nThis could also be retrieved using the class() function.\n\nclass(Fluorophores)\n\n[1] \"character\"\n\n\n\n\nAlternatively, we could assign a numeric value to a variable\n\nFluorophores &lt;- 29\nstr(Fluorophores)\n\n num 29\n\n\nWhich returns “num”, ie. numeric.\n\n\nWe can also specify a logical (ie. True or FALSE) to a particular object\n\nIsPerCPCy5AGoodFluorophore &lt;- FALSE\nstr(IsPerCPCy5AGoodFluorophore)\n\n logi FALSE\n\n\nWhich returns logi in front, denoting this variable contains a logical value.\n\n\nLast week, when we were installing dplyr, the reason that installation failed was install.packages() expects a character string. However, when we left off the ““, it looked within our local environments created variables for the dplyr variable, couldn’t find it, and thus failed.\nWe could of course, have assigned a character value to a variable name, and then used that variable name, which would have worked.\n\nPackageToInstall &lt;- \"dplyr\"\n\ninstall.packages(PackageToInstall)",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#indexing",
-    "href": "course/02_FilePaths/index.html#indexing",
-    "title": "02 - File Paths",
-    "section": "Indexing",
-    "text": "Indexing\nNot all variables contain single objects.\nFor example, we can modify Fluorophores and add additional entries:\n\nFluorophores &lt;- c(\"BV421\", \"FITC\", \"PE\", \"APC\")\nstr(Fluorophores)\n\n chr [1:4] \"BV421\" \"FITC\" \"PE\" \"APC\"\n\n\nThe c stands for concatenate. It concatenates the objects into a larger object, known as a vector.\nIn this case, you notice in addition to the specification the values are characters, we get a [1:4], denoting four objects are present.\n\n\nWe can similarly retrieve this information using the length() function\n\nlength(Fluorophores)\n\n[1] 4\n\n\n\n\nWhen multiple objects are present, we can specify them individidually by providing their index number within square brackets [].\n\nFluorophores[1]\n\n[1] \"BV421\"\n\n\n\n\n\nFluorophores[3]\n\n[1] \"PE\"\n\n\n\n\nOr specify in sequence using a colon (:)\n\nFluorophores[3:4]\n\n[1] \"PE\"  \"APC\"\n\n\n\n\nOr if not adjacent, reusing c within the square brackets\n\nFluorophores[c(1,4)]\n\n[1] \"BV421\" \"APC\"  \n\n\n\n\nWe will revisit these concepts throughout the course, with what we have covered today, this will help us create file.paths and select fcs files that we want to work with via index number.",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#listing-files",
-    "href": "course/02_FilePaths/index.html#listing-files",
-    "title": "02 - File Paths",
-    "section": "Listing Files",
-    "text": "Listing Files\nAfter this detour into variables and indexing, let’s return our focus to how to use these in context of file paths. Working from within our Week2 project folder, let’s see what directories (folders) are present\n\nlist.dirs(path=\".\", full.names=FALSE, recursive=FALSE)\n\n\n\n\nWe can also list any files that are present within our working directory using the list.files() function.\n\nlist.files()\n\n\nIn this case, in addition to our filepaths.qmd file, we can see the LICENSE and README files created when we set up the repository.\n\n\nWe can also specify a particular folder we want to show items present within by changing the path argument. For example, if we wanted to see the contents of the “data” folder\n\nlist.files(path=\"data\", full.names=FALSE, recursive=FALSE)\n\n\nWhich in this case returns the fcs files we copied over at the start of this lesson.\n\n\nIn this case, there are no folders under “data”. Let’s go ahead and create a new one, calling it target.",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#creating-directories",
-    "href": "course/02_FilePaths/index.html#creating-directories",
-    "title": "02 - File Paths",
-    "section": "Creating directories",
-    "text": "Creating directories\nAlternatively, we can also create a folder via R using the dir.create() function. Since we want it within data, we would modify the path accordingly\n\nNewFolderLocation &lt;- file.path(\"data\", \"target2\")\n\ndir.create(path=NewFolderLocation)\n\n\n\n\nBefore continuing, let’s copy the first two .fcs files into both target and target2.\n\n\n\nGiven our working directory is set the top-level of the Week2 project folder, we can’t just check inside nested target folders directly. If we attempt to:\n\nlist.files(path=\"target\", full.names=FALSE, recursive=FALSE)\n\ncharacter(0)\n\n\n\n\nNo files are returned (ie, character(0)), since from our computers perspective, “target” doesn’t exist within the active working directory.\n\nfile.exists(\"target\")\n\n[1] FALSE\n\n\n\n\nOn the other hand, within it’s view, it knows that the data folder exist\n\nfile.exists(\"data\")\n\n\nSo here we encounter the first challenge when communicating to our computer where to search for and find files. We need to provide a file.path that incorporates the path of folders between where the computer is currently at (ie. the working directory) and the target file itself.",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#file-paths",
-    "href": "course/02_FilePaths/index.html#file-paths",
-    "title": "02 - File Paths",
-    "section": "File Paths",
-    "text": "File Paths\nOne way we can do this is through a file.path argument. We could potentially provide this by adding either a / or a  into the path argument, depending on your computers operating system.\n\nlist.files(path=\"data/target\", full.names=FALSE, recursive=FALSE)\n\n\n\nWhile this works in your particular context, if you are sharing the code with others who have a different operating system, these hard-coded “/” or “\" will cause the code for them to error out at these particular steps.\n\nFor that reason, it is better to assemble a file.path using the file.path() function. This function takes into account the operating system, removing your need to have to worry about this particular computing nuance, and write code that is reproducible and replicable for everyone.\n\nFolderLocation &lt;- file.path(\"data\", \"target\")\nFolderLocation\n\n[1] \"data/target\"\n\n\n\nlist.files(path=FolderLocation, full.names=FALSE, recursive=FALSE)\n\n\n\n\nWe can also append additional locations to existing file paths, by including the variable name within the file.path() we are creating.\n\nFolderLocation &lt;- \"data\"\nScreenshotFolder &lt;- file.path(FolderLocation, \"target\")\nScreenshotFolder\n\n[1] \"data/target\"\n\n\n\nlist.files(path=ScreenshotFolder, full.names=FALSE, recursive=FALSE)\n\n\n\n\nAdditionally, list.files() has the ability to filter for files that contain a particular character string. This can be useful is we are searching for “.fcs” or “.csv” files, but also for files that contain a particular word. In the case of the ScreenshotFolders\n\nlist.files(path=ScreenshotFolder, pattern=\"ND050\", full.names=FALSE, recursive=FALSE)\n\n\nYou will notice, the index numbers are in the context of what is filtered, not all the folder contents.",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#selecting-for-patterns",
-    "href": "course/02_FilePaths/index.html#selecting-for-patterns",
-    "title": "02 - File Paths",
-    "section": "Selecting for Patterns",
-    "text": "Selecting for Patterns\nIf we currently listed the files within data, we get a return that looks like this:\n\nlist.files(\"data\", full.names=FALSE, recursive=FALSE)\n\n\n\n\nAs you can see, we are getting back both folders and individual .fcs files. We could consequently change the pattern to provide a character string that will only return the .fcs files. We will go ahead and assign this list to a variable named files, for later retrieval.\n\nfiles &lt;- list.files(\"data\", pattern=\".fcs\", full.names=FALSE, recursive=FALSE)\nfiles\n\n\n\n\nOne of the R packages we will be using througout the course is the stringr package. It contains two functions that can be useful when identifying more complicated character strings. In this case, if we run the str_detect() function to identify which of the .fcs files within the files variable contains the “INF” character string, we get a vector of logical (ie. True or FALSE) outputs corresponding to each file.\n\n# install.packages(\"stringr\") # CRAN\nlibrary(stringr)\n\n\nstr_detect(files, \"INF\")\n\n\n\n\nSimilar to how we indexed the Fluorophore list (ex. Fluorophore[1:2]) which returned a subset, we can similarly use this logical vector to subset files that returned as TRUE for containing the pattern “INF”\n\nfiles[str_detect(files, \"INF\")]\n\n\n\n\nLet’s go ahead and save these subsetted file names to a new variable, called Infants.\n\nInfants &lt;- files[str_detect(files, \"INF\")]",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#conditionals",
-    "href": "course/02_FilePaths/index.html#conditionals",
-    "title": "02 - File Paths",
-    "section": "Conditionals",
-    "text": "Conditionals\nOne useful thing is that within R, we can set conditions on whether something is carried out. The most typical conditional you will encounter are the “If” statements. They typically take a form that resembles the following.\n\nNeedCoffee &lt;- TRUE\n\nif (NeedCoffee){\n    print(\"Take a break\")\n}\n\n\n\nIn this case of the above, if the variable within the () is equal to true, the code within the {} will be executed.\n\nNeedCoffee &lt;- TRUE\n\nif (NeedCoffee){\n    print(\"Take a break\")\n}\n\n[1] \"Take a break\"\n\n\n\n\nBy contrast, when the variable within the () is equal to false, the code within the {} will not be executed.\n\nNeedCoffee &lt;- FALSE\n\nif (NeedCoffee){\n    print(\"Take a break\")\n}\n\n\n\nThese “If” statements will trigger as long as the specified condition within the () is TRUE. For a different example:\n\nRowNumber &lt;- 299\n2 + RowNumber &gt; 300\n\n[1] TRUE\n\n\n\nif (2 + RowNumber &gt; 3){\n    print(\"Stop Iterating\")\n}\n\n[1] \"Stop Iterating\"\n\n\n\n\nWhen you add an ! in front a conditional, it flips the expected outcome.\n\nItsRaining &lt;- TRUE\n\nif (ItsRaining){print(\"Bring an Umbrella\")}\n\n[1] \"Bring an Umbrella\"\n\n\n\n!ItsRaining\n\n[1] FALSE\n\n\n\nif (!ItsRaining){print(\"Bring an Umbrella\")}\n\n\nItsRaining &lt;- TRUE\n\nif (!ItsRaining){print(\"Bring Sunglasses\")}\n\n\n\nWe will explore more complicated conditionals throughout the course, but for now, let’s implement a couple simple ones in the context of copying over the .fcs files in Infants over to a new target3 folder.",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#conditionals-in-practice",
-    "href": "course/02_FilePaths/index.html#conditionals-in-practice",
-    "title": "02 - File Paths",
-    "section": "Conditionals in practice",
-    "text": "Conditionals in practice\nFirst off, let’s write a conditional to check if there is a target3 folder within data.\n\nfiles_present &lt;- list.files(\"data\", full.names=FALSE, recursive=FALSE)\nfiles_present\n\n\n\n\n\nFolderTarget3 &lt;- file.path(\"data\", \"target3\")\ndir.exists(FolderTarget3)\n\n\n\n\nWe can write a conditional to create a folder if one does not yet exist.\n\nif (!dir.exists(FolderTarget3)){\n    dir.create(FolderTarget3)\n}",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#copying-files",
-    "href": "course/02_FilePaths/index.html#copying-files",
-    "title": "02 - File Paths",
-    "section": "Copying Files",
-    "text": "Copying Files\nTo copy files to another folder location, we use the file.copy() function. It has two arguments that we will be working with, from being the .fcs files, and to being the folder location we wish to transfer them to. If we tried using them as we currently have them:\n\n# Variable Infants containing 4 .fcs file names\n\nfile.copy(from=Infants, to=FolderTarget3)\n\n\n\n\nThe reason for this error is we are only working with a partial file path, as viewed from our Working directory. In this case, what is needed is the full file.path, so the file.path should also include the upstream folders from your current working directory.\n\ngetwd()\n\n\n\n\nIn this case, we can update the .fcs files location by switching the full.names argument within list.files() from FALSE, to TRUE.\n\nfiles_present &lt;- list.files(\"data\", full.names=TRUE, recursive=FALSE)\nfiles_present\n\n\nAnd filter for those containing “INF” again\n\nInfants &lt;- files_present[str_detect(files_present, \"INF\")]\n\nAnd then try again:\n\n# Variable Infants containing 4 .fcs file names\n\nfile.copy(from=Infants, to=FolderTarget3)",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#removing-files.",
-    "href": "course/02_FilePaths/index.html#removing-files.",
-    "title": "02 - File Paths",
-    "section": "Removing files.",
-    "text": "Removing files.\nJust like we can add files via R, we can also remove them. However, when we remove them via this route, they are removed permanently, not sent to the recycle bin. We will revisit how later on in the course after you have gained additional experience with file.paths.\n\n?unlink()",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#basename",
-    "href": "course/02_FilePaths/index.html#basename",
-    "title": "02 - File Paths",
-    "section": "Basename",
-    "text": "Basename\nIf we look at Infants with the full.names=TRUE, we see the additional pathing folder has been added, allowing us to successfully copy over the files.\n\nInfants\n\n\n\n\nIf we were trying to retrieve just the local file names from the full.names, we could do so with basename() function. We will use this in combination with additional arguments later in the course\n\nbasename(Infants)",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#recursive",
-    "href": "course/02_FilePaths/index.html#recursive",
-    "title": "02 - File Paths",
-    "section": "Recursive",
-    "text": "Recursive\nAnd finally that we have created additional nested folders and populated them with fcs files, let’s see what setting list.files() recursive argument to TRUE\n\nall_files_present &lt;- list.files(full.names=TRUE, recursive=TRUE)\nall_files_present \n\n\n\n\nIn this case, all files in all folders within the working directory are shown. This can be useful when exploring folder contents, but if there are a lot of files present within the folder, it will take a while to return the list.",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/index.html#saving-changes-to-version-control",
-    "href": "course/02_FilePaths/index.html#saving-changes-to-version-control",
-    "title": "02 - File Paths",
-    "section": "Saving changes to Version Control",
-    "text": "Saving changes to Version Control\nAnd as is good practice, to maintain version control, let’s stage all the files and folders we created today within the Week2 Project Folder, write a commit message, and send these files back to GitHub until they are needed again next time.",
-    "crumbs": [
-      "About",
-      "Intro to R",
-      "02 - File Paths"
-    ]
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#set-up",
-    "href": "course/02_FilePaths/slides.html#set-up",
-    "title": "02 - File Paths",
-    "section": "Set Up",
-    "text": "Set Up\n\n\n\n\n\n\n\n\n.\n\n\nBefore we begin, let’s make sure you get the data needed for today transferred to your local computer, and then get the .fcs files copied over from there to your own working project folder. This is the process you will repeat each week throughout the course."
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#working-directory",
-    "href": "course/02_FilePaths/slides.html#working-directory",
-    "title": "02 - File Paths",
-    "section": "Working Directory",
-    "text": "Working Directory\n\n\n\n\n\n\n\n\n.\n\n\nNow that we are back in our Week2 folder, let’s start by seeing our current location similarly to how our computer perceives it.\nWe will use getwd() function (ie. get working directory) to return the location of the folder we are currently inside of. For example, when getwd() is run within my Week2 project folder, I see the following location"
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#directories",
-    "href": "course/02_FilePaths/slides.html#directories",
-    "title": "02 - File Paths",
-    "section": "Directories",
-    "text": "Directories\n\n\n\n\n\n\n\n\n.\n\n\nWithin this working directory, we have a variety of project folders and files related to the course. We can see the folders that are present using the list.dirs() function.\n\n\n\n\n\n\n\n\n\n\nlist.dirs(path=\".\", full.names=FALSE, recursive=FALSE)"
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#variables",
-    "href": "course/02_FilePaths/slides.html#variables",
-    "title": "02 - File Paths",
-    "section": "Variables",
-    "text": "Variables\n\n\n\n\n\n\n\n\n.\n\n\nBefore exploring file paths, we need to have some basic R code knowledge that we can use to work with them. Within R, we have the ability to assign particular values (be they character strings, numbers or logicals) to objects (ie. variables) that can be used when called upon later.\nFor example:\n\n\n\n\n\n\n\nWhatDayDidIWriteThis &lt;- \"Saturday\"\n\n\n\n\n\n\n\n\n\n\n.\n\n\nIn this case, the variable name is what the assignment arrow (“&lt;-”) is pointing at. In this case, WhatDayDidIWriteThis"
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#indexing",
-    "href": "course/02_FilePaths/slides.html#indexing",
-    "title": "02 - File Paths",
-    "section": "Indexing",
-    "text": "Indexing\n\n\n\n\n\n\n\n\n.\n\n\nNot all variables contain single objects.\nFor example, we can modify Fluorophores and add additional entries:\n\n\n\n\n\n\n\nFluorophores &lt;- c(\"BV421\", \"FITC\", \"PE\", \"APC\")\nstr(Fluorophores)\n\n chr [1:4] \"BV421\" \"FITC\" \"PE\" \"APC\"\n\n\n\n\n\n\n\n\n\n\n\n.\n\n\nThe c stands for concatenate. It concatenates the objects into a larger object, known as a vector.\nIn this case, you notice in addition to the specification the values are characters, we get a [1:4], denoting four objects are present."
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#listing-files",
-    "href": "course/02_FilePaths/slides.html#listing-files",
-    "title": "02 - File Paths",
-    "section": "Listing Files",
-    "text": "Listing Files\n\n\n\n\n\n\n\n\n.\n\n\nAfter this detour into variables and indexing, let’s return our focus to how to use these in context of file paths. Working from within our Week2 project folder, let’s see what directories (folders) are present\n\n\n\n\n\n\n\nlist.dirs(path=\".\", full.names=FALSE, recursive=FALSE)"
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#creating-directories",
-    "href": "course/02_FilePaths/slides.html#creating-directories",
-    "title": "02 - File Paths",
-    "section": "Creating directories",
-    "text": "Creating directories\n\n\n\n\n\n\n\n\n.\n\n\nAlternatively, we can also create a folder via R using the dir.create() function. Since we want it within data, we would modify the path accordingly\n\n\n\n\n\n\n\nNewFolderLocation &lt;- file.path(\"data\", \"target2\")\n\ndir.create(path=NewFolderLocation)"
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#file-paths",
-    "href": "course/02_FilePaths/slides.html#file-paths",
-    "title": "02 - File Paths",
-    "section": "File Paths",
-    "text": "File Paths\n\n\n\n\n\n\n\n\n.\n\n\nOne way we can do this is through a file.path argument. We could potentially provide this by adding either a “/” or a “\" into the path argument, depending on your computers operating system.\n\n\n\n\n\n\n\nlist.files(path=\"data/target\", full.names=FALSE, recursive=FALSE)"
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#selecting-for-patterns",
-    "href": "course/02_FilePaths/slides.html#selecting-for-patterns",
-    "title": "02 - File Paths",
-    "section": "Selecting for Patterns",
-    "text": "Selecting for Patterns\n\n\n\n\n\n\n\n\n.\n\n\nIf we currently listed the files within data, we get a return that looks like this:\n\n\n\n\n\n\n\nlist.files(\"data\", full.names=FALSE, recursive=FALSE)"
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#conditionals",
-    "href": "course/02_FilePaths/slides.html#conditionals",
-    "title": "02 - File Paths",
-    "section": "Conditionals",
-    "text": "Conditionals\n\n\n\n\n\n\n\n\n.\n\n\nOne useful thing is that within R, we can set conditions on whether something is carried out. The most typical conditional you will encounter are the “If” statements. They typically take a form that resembles the following.\n\n\n\n\n\n\n\nNeedCoffee &lt;- TRUE\n\nif (NeedCoffee){\n    print(\"Take a break\")\n}"
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#conditionals-in-practice",
-    "href": "course/02_FilePaths/slides.html#conditionals-in-practice",
-    "title": "02 - File Paths",
-    "section": "Conditionals in practice",
-    "text": "Conditionals in practice\n\n\n\n\n\n\n\n\n.\n\n\nFirst off, let’s write a conditional to check if there is a target3 folder within data.\n\n\n\n\n\n\n\nfiles_present &lt;- list.files(\"data\", full.names=FALSE, recursive=FALSE)\nfiles_present"
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#copying-files",
-    "href": "course/02_FilePaths/slides.html#copying-files",
-    "title": "02 - File Paths",
-    "section": "Copying Files",
-    "text": "Copying Files\n\n\n\n\n\n\n\n\n.\n\n\nTo copy files to another folder location, we use the file.copy() function. It has two arguments that we will be working with, from being the .fcs files, and to being the folder location we wish to transfer them to. If we tried using them as we currently have them:\n\n\n\n\n\n\n\n# Variable Infants containing 4 .fcs file names\n\nfile.copy(from=Infants, to=FolderTarget3)"
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#removing-files.",
-    "href": "course/02_FilePaths/slides.html#removing-files.",
-    "title": "02 - File Paths",
-    "section": "Removing files.",
-    "text": "Removing files.\n\n\n\n\n\n\n\n\n.\n\n\nJust like we can add files via R, we can also remove them. However, when we remove them via this route, they are removed permanently, not sent to the recycle bin. We will revisit how later on in the course after you have gained additional experience with file.paths.\n\n\n\n\n\n\n\n?unlink()"
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#basename",
-    "href": "course/02_FilePaths/slides.html#basename",
-    "title": "02 - File Paths",
-    "section": "Basename",
-    "text": "Basename\n\n\n\n\n\n\n\n\n.\n\n\nIf we look at Infants with the full.names=TRUE, we see the additional pathing folder has been added, allowing us to successfully copy over the files.\n\n\n\n\n\n\n\nInfants"
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#recursive",
-    "href": "course/02_FilePaths/slides.html#recursive",
-    "title": "02 - File Paths",
-    "section": "Recursive",
-    "text": "Recursive\n\n\n\n\n\n\n\n\n.\n\n\nAnd finally that we have created additional nested folders and populated them with fcs files, let’s see what setting list.files() recursive argument to TRUE\n\n\n\n\n\n\n\nall_files_present &lt;- list.files(full.names=TRUE, recursive=TRUE)\nall_files_present"
-  },
-  {
-    "objectID": "course/02_FilePaths/slides.html#saving-changes-to-version-control",
-    "href": "course/02_FilePaths/slides.html#saving-changes-to-version-control",
-    "title": "02 - File Paths",
-    "section": "Saving changes to Version Control",
-    "text": "Saving changes to Version Control\n\n\n\n\n\n\n\n\n.\n\n\nAnd as is good practice, to maintain version control, let’s stage all the files and folders we created today within the Week2 Project Folder, write a commit message, and send these files back to GitHub until they are needed again next time."
+    "text": "This is an example .qmd file, being used to debug the pull request process.\n\nLoading File\n\nfile &lt;- list.files(\"data\", full.names=TRUE, pattern=\".fcs\")\nflowCore::read.FCS(file, transformation = FALSE, truncate_max_range = FALSE)\n\nflowFrame object 'CellCounts3L_AB_02-INF052-00.fcs'\nwith 100 cells and 45 observables:\n       name   desc     range  minRange  maxRange\n$P1    Time     NA    287375         0    287374\n$P2   SSC-H     NA   4194304         0   4194303\n$P3   SSC-A     NA   4194304         0   4194303\n$P4    V1-A     NA   4194304      -111   4194303\n$P5    V2-A     NA   4194304      -111   4194303\n...     ...    ...       ...       ...       ...\n$P41   R4-A     NA   4194304      -111   4194303\n$P42   R5-A     NA   4194304      -111   4194303\n$P43   R6-A     NA   4194304      -111   4194303\n$P44   R7-A     NA   4194304      -111   4194303\n$P45   R8-A     NA   4194304      -111   4194303\n361 keywords are stored in the 'description' slot\n\n\n\n\nCurrent Class Image"
   },
   {
     "objectID": "course/01_InstallingRPackages/slides_inperson.html#checking-for-loaded-packages",
@@ -1153,43 +844,32 @@
     "text": "Git\n\n\n\n\n\n\n\n\n.\n\n\nThe Git tab on the left side bar is where once version control is initiated for the project folder, we can see changes that have occurred to the individual files since the last commit. These changes can be added to a new commit by clicking on the + sign. This will be covered more extensively in the next section"
   },
   {
-    "objectID": "course/00_Homeworks/slides.html#discussions-forum",
-    "href": "course/00_Homeworks/slides.html#discussions-forum",
-    "title": "Getting Help",
-    "section": "Discussions Forum",
-    "text": "Discussions Forum\n\n\n\n\n\n\n\n\n.\n\n\nOn the course’s GitHub repository, we have opened up a Discussions page that we plan to use as a community forum. We hope that it will serve multiple functions, from providing a better sense of community for the online participants, to facilitating asking and receiving help on something that is not clear, provide feedback about something that it not working out, as well as a place to celebrate and show off your coding wins."
+    "objectID": "course/00_GitHub/index.html",
+    "href": "course/00_GitHub/index.html",
+    "title": "Using GitHub",
+    "section": "",
+    "text": "For screen-shot slides, click here\nFor the YouTube narration, click here",
+    "crumbs": [
+      "About",
+      "Getting Started",
+      "00 - GitHub"
+    ]
   },
   {
-    "objectID": "course/00_Homeworks/slides.html#polls",
-    "href": "course/00_Homeworks/slides.html#polls",
-    "title": "Getting Help",
-    "section": "Polls",
-    "text": "Polls\n\n\n\n\n\n\n\n\n\n.\n\n\nOccasionally, we will need to gather community feedback on what is working and what is not working. We will sporadically post Polls for this purpose."
-  },
-  {
-    "objectID": "course/00_Homeworks/slides.html#issues",
-    "href": "course/00_Homeworks/slides.html#issues",
-    "title": "Getting Help",
-    "section": "Issues",
-    "text": "Issues"
-  },
-  {
-    "objectID": "course/00_Homeworks/slides.html#submitting-take-home-problems",
-    "href": "course/00_Homeworks/slides.html#submitting-take-home-problems",
-    "title": "Getting Help",
-    "section": "Submitting Take-Home Problems",
-    "text": "Submitting Take-Home Problems\n\n\n\n\n\n\n\n\n.\n\n\nEach week, during the course, we introduce and cover the main concepts for the particular concept. Our goal is to provide you with the necessary code and enough code to be able to get the jist. However, to become comfortable and be able to apply what you have learned, you will need to explore beyond our examples, try it with your own datasets, encounter things that don’t work, and troubleshoot your way through them. It’s this cycle of venturing into the unknown that develops strong coding skills that are needed to overcome any barrier you encounter. The goal of the take-home questions is to provide some less curated problems that will take a little longer to answer to help get you started on your own exploration of the topic."
-  },
-  {
-    "objectID": "course/00_GitHub/slides.html#creating-an-account",
-    "href": "course/00_GitHub/slides.html#creating-an-account",
+    "objectID": "course/00_GitHub/index.html#creating-an-account",
+    "href": "course/00_GitHub/index.html#creating-an-account",
     "title": "Using GitHub",
     "section": "Creating an Account",
-    "text": "Creating an Account\n\n\n\n\n\n\n\n\n.\n\n\nWe will first navigate to the GitHub homepage. If you haven’t previously created an account, click on the button to sign up for an account."
+    "text": "Creating an Account\nWe will first navigate to the GitHub homepage. If you haven’t previously created an account, click on the button to sign up for an account.\n\n\n\nOn the sign-up page, you will fill in various details needed to create an account. Please remember that GitHub usernames are visible to others. Additionally, if you end up sharing code with others as part of a manuscript, or use GitHub to create a personal portfolio website in the future, your username will appear as part of the URL.\nFor example, in my case, my user name is DavidRach, so my GitHub profile ends up as: https://github.com/DavidRach. For our course, the core’s GitHub user name is UMGCCCFCSR, so the github profile ends up as https://github.com/UMGCCCFCSR, while the course website ends up as https://umgcccfcsr.github.io/CytometryInR/\n\n\n\nOnce you have entered your new account information, you will need your account creation by entering the code sent to the email address that you provided.\n\n\n\nOnce account creation has been confirmed, please proceed to login to GitHub for the first time.",
+    "crumbs": [
+      "About",
+      "Getting Started",
+      "00 - GitHub"
+    ]
   },
   {
-    "objectID": "course/00_GitHub/slides.html#github-profile",
-    "href": "course/00_GitHub/slides.html#github-profile",
+    "objectID": "course/00_GitHub/index.html#github-profile",
+    "href": "course/00_GitHub/index.html#github-profile",
     "title": "Using GitHub",
     "section": "GitHub Profile",
     "text": "GitHub Profile\n\n\n\n\n\n\n\n\n.\n\n\nUpon creating a brand new account, your GitHub homepage will initially look rather empty, and can be intimidating to navigate for the first time.\nFor now, on the upper right, go ahead and click on the default profile picture icon…"
@@ -1893,31 +1573,31 @@
     "crumbs": [
       "About",
       "Getting Started",
-      "00 - Floreada"
+      "00 - GitHub"
     ]
   },
   {
-    "objectID": "course/00_Floreada/index.html#floreada",
-    "href": "course/00_Floreada/index.html#floreada",
-    "title": "Using Floreada",
-    "section": "Floreada",
-    "text": "Floreada\n\nLoading Dataset\nFirst, open your web browser and navigate to the website\nClick on Start to proceed to the next page.\n\n\n\n\n\n\nOnce that is done, select the File tab on the upper navigation bar. Then click on Open File(s).\n\n\n\n\n\n\n\nFrom there, select your .fcs files of interest, and click Open.\n\n\n\nThe .fcs files will now load in, and you should see a view similar to the one below. On the left side-bar, you have your gating options (Rectangle, Polygon, Range, Elipse, Quad, etc). Next to these on the right you have the FCS files that are loaded into the workspace. Then on the right, you have the visual display for your selected specimen.\n\n\n\n\n\nSwitching Axis Markers\nIf you left click on the axis name (SSC-H or FSC-H in this case), you will be able to select other markers by which to gate your specimen. For the provided example, we were using a raw spectral flow cytometry .fcs file, so the names of the detectors are present.\n\n\n\nFor now, I plan to start off by gating for singlets. I switch the y-axis to FSC-H, and then proceed to switch the x-axis to FSC-A.\n\n\n\n\n\nCreating Gates\nWith this done, I can now select the Poly gate tab on the upper left.\n\n\n\nThen manually click on the locations on the plot to add the individual gate nodes.\n\n\n\nTo complete the gate, I click back to the original node point. At this point, the popup will allow you to name the gate.\n\n\n\nTo adjust the polygon gate, you can click on a node and drag it to expand or contract in a particular direction\n\n\n\nTo move the entire gate, first click on a node to select the gate, then click in the center of the gate to adjust its location.\n\n\n\n\n\nAdditional Gates\nUnfortunately for those with the force-of-habit from using other softwares, double-clicking within the gate doesn’t do anything. To continue gating on the selected cells, you will need to click on the newly created gate name on the left. This will result in visualizing the isolated cells.\n\n\n\nOnce this is done, you can repeat the previous steps to change the axis markers and create a second gate. For this example, we went with a “Cells” gate to exclude debris from this particular sample.\n\n\n\nHaving created the “Cells” gate, we will be switching gating based on FSC and SSC to using the detector parameters.\nThe samples in this example were acquired to derive the cell counts and concentration of various cell populations within cryopreserved cord and peripheral blood mononuclear cells (CBMC and PBMC) specimens after thawing.\nThey were stained with CD19 BV421, CD45 PE, and CD14 APC on a 5-Laser Cytek Aurora, before unmixing, this would correspond respectively to V1, YG1/B4, R1/YG4 peaks respectively.\n\n\n\n\nScaling/Transformation\nWhen we switch the axis, we can see that the scaling/transformation is not ideal, as the staining and not-staining populations are scrunched up together in the center of the plot.\n\n\n\nTo change the scaling/transformation, we need to click directly on the axis.\n\n\n\nFrom there, when we click on the drop-down, we see the various transformation options. We will select Logicle, given we are working with spectral flow cytometry files.\n\n\n\nThis y-axis values are subsequently visualized with the logicle transformation applied, increasing our resolution between the positive and negative population.\n\n\n\nWe can then repeat this for the x-axis, adjusting the fine-tune options for the scaling as needed.\n\n\n\n\n\nNavigating Gating Hierarchy\nWith this done, let’s first draw a rectangle gate for the CD45+ (B4-A) cells.\n\n\n\nAnd then selecting that population by clicking on the gate name, let’s proceed and gate the CD19+ cells (V2-A).\n\n\n\nAs you can see, we now have the various gates present in the gating hierarchy for the respective .fcs file. To return to a previous gated population, we would click on the parent population above it.\n\n\n\nWe can subsequently add an additional gate at this gating level for the likely debris population (the threshold setting was suboptimal for this experimental run).\n\n\n\n\n\nCopying Gates\nThis was the process for gating for a single specimen. To copy gates over to the other specimens, we have two options. First, holding down your Ctrl (or equivalent) button, you can click on the individual gate names.\n\n\n\nFrom there, you can drag them down to the next specimen and apply them.\n\n\n\nAlternatively, you can drag down the highlighted gated to the Pipelines Tab, and apply to All Files. This will result in the gates being copied to all specimens in the experiment.\n\n\n\n\n\n\nAdjustments within Pipelines will carry over to all other respective unmodified specimens that share it’s gates.\n\n\n\nOnce this is done, I recommend cycling through the gates for each specimen, just to ensure that the gates were positioned correctly before saving the workspace.\n\n\n\n\n\nSaving Workspace\nWith everyone now “correctly” gated, we can proceed to save the workspace so that we can reopen it later from another browser.\nTo do this we open the File tab from the upper navigation bar, and select Save Workspace.\n\n\n\nFrom there we have a couple options, for now let’s select Floreada Workspace. Where it is saved at will depend on your individual browser settings, so watch for a popup.\n\n\n\nAlternatively (and crucially for the CytoML pipeline) we can also choose to save it as a FlowJo v10 .wsp file.\n\n\n\nIn both cases, you will end up with Workspace files that can be used later to access your created gates\n\n\n\n\n\nReopening Workspace\nTo reopen the Floreada workspace within the browser, reopen the website, and select the Open File(s) option.\n\n\n\nFrom there, select both the Floreada Workspace file as well as the .fcs files\n\n\n\nAt which point you will now be back to the point you last saved at.",
+    "objectID": "course/00_GitHub/index.html#github-repository",
+    "href": "course/00_GitHub/index.html#github-repository",
+    "title": "Using GitHub",
+    "section": "GitHub Repository",
+    "text": "GitHub Repository\nHaving set up your GitHub profile, it now is time to make sure you have access to our course materials. We will have you navigate to our course’s GitHub profile\nOn the profile page, you will be able to see our version of the README, our repositories, and the Contributions graph and Contribution activity sections.\nPlease click on the CytometryInR to navigate to its repository (folder)\n\n\n\nOn this page, you will see several elements that you will be circling back to throughout the course.\nFor our course, we will be extentsively ussing the Discussions page as a community forum. If you have any questions, are looking for feedback, or want to show off something that you worked on, this is the place for it. This will also help make sure\n\n\n\nThe Issues tab is where you will need to go to open an Issue if you encounter a bug (or major documentation typo), so that I can cicle back and correct them when I have the chance.\n\n\n\nTo submit the optional take-home problems, you would turn in these problems by going to the Pull Request tab, and initiating a pull request between your forked version of the project and our “homework” branch (more details on this later).\n\n\n\nOptionally, you can “Star” a repository. This is basically the GitHub equivalent of liking a project. In our case, we will often star a repository since it will be saved under the Stars tab of our profile, which makes finding it again significantly easier a few weeks later after forgetting the repository name.\n\n\n\nTo see projects that you have starred, you can select the Stars option from the same dropdown you used to get to Settings.\n\n\n\nOr from your GitHub profile, you can see these under Stars tab.",
     "crumbs": [
       "About",
       "Getting Started",
-      "00 - Floreada"
+      "00 - GitHub"
     ]
   },
   {
-    "objectID": "course/00_Floreada/index.html#cytoml",
-    "href": "course/00_Floreada/index.html#cytoml",
-    "title": "Using Floreada",
-    "section": "CytoML",
-    "text": "CytoML\nDue to a unknown formatting bug, the Floreada produced FlowJo v10 .wsp is not directly accessible by CytoML at the time of this course. However, the issue is resolved as soon as the file is opened the first time within FlowJo v10, regardless of whether you have a log in or not. Strange? Yes, but we will take the workaround.\nSo, for anyone on Windows or MacOS, download FlowJo v10. Once installed, open the software, and close the login popups. Once there, open the Floreada created FlowJo.wsp file. Since you haven’t logged in, it won’t show any events. But it will correct the formatting bug. Close the software, and return to R. Your Floreada sourced .WSP file should now be readable by CytoML.\nOdd? For sure. Fixable? Likely, I will set a reminder to work with the Floreada and CytoML devs to see if we can cut out the need for this workaround.",
+    "objectID": "course/00_GitHub/index.html#forking-cytometryinr",
+    "href": "course/00_GitHub/index.html#forking-cytometryinr",
+    "title": "Using GitHub",
+    "section": "Forking CytometryInR",
+    "text": "Forking CytometryInR\nBefore we go further, we will need you to make your own copy of the course repository (ie. fork it). This will allow you to quickly retrieve all the new materials and code corrections by simply rereshing (ie. syncing) your forked version with our upstream parent branch once a week.\n\n\nTo fork the course repository, you will select the “Fork repository” option on the upper-center portion of your screen.\n\n\n\nBy “Fork-ing” a repository, you are basically copying the contents from that repository to a newly created repository on your own GitHub. Forked projects are still linked to the original (parent) fork, and can retrieve any updates via syncing, as well as return changes via a pull request.\nFor this course, when you create the fork, keep the existing repository name (“CytometryInR”). Importantly, select the copy main branch option. This will ensure you only get the code and data needed for the course copied over, and don’t end up with your entire hard-drive filled will website elements, or other people’s solutions to the take-home problems.\n\n\n\nOnce you have created the fork, you will see your copy of the forked repository under your own username. Seeing as you have just now forked the project, you will see the notification that you are up to date with the existing version of the CytometryInR course repository.\nAs we go through the course, and new material is released each week on Sunday at 2200 EST (Monday 0300 GMT+0), you will see this changed to behind the main branch by a number of commits, and have the option to sync in the changes to your fork to gain access to that week’s material.\n\n\n\nIf you remember, previously under your GitHub profile, the Repositories tab only contained the repository corresponding to your ReadMe section.\n\n\n\nYou should however now be able to see your fork of the CytometryInR repository. As you add project specific repositories throughout the course, they will also appear here.",
     "crumbs": [
       "About",
       "Getting Started",
-      "00 - Floreada"
+      "00 - GitHub"
     ]
   },
   {
@@ -1925,7 +1605,7 @@
     "href": "course/00_Git/index.html",
     "title": "Version Control with Git",
     "section": "",
-    "text": "For the YouTube livestream recording, see here\nFor screen-shot slides, click here",
+    "text": "For screen-shot slides, click here\nFor the YouTube narration, click here",
     "crumbs": [
       "About",
       "Getting Started",
@@ -2005,95 +1685,226 @@
     ]
   },
   {
-    "objectID": "course/00_GitHub/index.html",
-    "href": "course/00_GitHub/index.html",
-    "title": "Using GitHub",
+    "objectID": "course/00_Floreada/index.html",
+    "href": "course/00_Floreada/index.html",
+    "title": "Using Floreada",
     "section": "",
-    "text": "For the YouTube livestream recording, see here\nFor screen-shot slides, click here",
+    "text": "For screen-shot slides, click here\nFor the YouTube narration, click here",
     "crumbs": [
       "About",
       "Getting Started",
-      "00 - GitHub"
+      "00 - Floreada"
     ]
   },
   {
-    "objectID": "course/00_GitHub/index.html#creating-an-account",
-    "href": "course/00_GitHub/index.html#creating-an-account",
+    "objectID": "course/00_Floreada/index.html#floreada",
+    "href": "course/00_Floreada/index.html#floreada",
+    "title": "Using Floreada",
+    "section": "Floreada",
+    "text": "Floreada\n\nLoading Dataset\nFirst, open your web browser and navigate to the website\nClick on Start to proceed to the next page.\n\n\n\n\n\n\nOnce that is done, select the File tab on the upper navigation bar. Then click on Open File(s).\n\n\n\n\n\n\n\nFrom there, select your .fcs files of interest, and click Open.\n\n\n\nThe .fcs files will now load in, and you should see a view similar to the one below. On the left side-bar, you have your gating options (Rectangle, Polygon, Range, Elipse, Quad, etc). Next to these on the right you have the FCS files that are loaded into the workspace. Then on the right, you have the visual display for your selected specimen.\n\n\n\n\n\nSwitching Axis Markers\nIf you left click on the axis name (SSC-H or FSC-H in this case), you will be able to select other markers by which to gate your specimen. For the provided example, we were using a raw spectral flow cytometry .fcs file, so the names of the detectors are present.\n\n\n\nFor now, I plan to start off by gating for singlets. I switch the y-axis to FSC-H, and then proceed to switch the x-axis to FSC-A.\n\n\n\n\n\nCreating Gates\nWith this done, I can now select the Poly gate tab on the upper left.\n\n\n\nThen manually click on the locations on the plot to add the individual gate nodes.\n\n\n\nTo complete the gate, I click back to the original node point. At this point, the popup will allow you to name the gate.\n\n\n\nTo adjust the polygon gate, you can click on a node and drag it to expand or contract in a particular direction\n\n\n\nTo move the entire gate, first click on a node to select the gate, then click in the center of the gate to adjust its location.\n\n\n\n\n\nAdditional Gates\nUnfortunately for those with the force-of-habit from using other softwares, double-clicking within the gate doesn’t do anything. To continue gating on the selected cells, you will need to click on the newly created gate name on the left. This will result in visualizing the isolated cells.\n\n\n\nOnce this is done, you can repeat the previous steps to change the axis markers and create a second gate. For this example, we went with a “Cells” gate to exclude debris from this particular sample.\n\n\n\nHaving created the “Cells” gate, we will be switching gating based on FSC and SSC to using the detector parameters.\nThe samples in this example were acquired to derive the cell counts and concentration of various cell populations within cryopreserved cord and peripheral blood mononuclear cells (CBMC and PBMC) specimens after thawing.\nThey were stained with CD19 BV421, CD45 PE, and CD14 APC on a 5-Laser Cytek Aurora, before unmixing, this would correspond respectively to V1, YG1/B4, R1/YG4 peaks respectively.\n\n\n\n\nScaling/Transformation\nWhen we switch the axis, we can see that the scaling/transformation is not ideal, as the staining and not-staining populations are scrunched up together in the center of the plot.\n\n\n\nTo change the scaling/transformation, we need to click directly on the axis.\n\n\n\nFrom there, when we click on the drop-down, we see the various transformation options. We will select Logicle, given we are working with spectral flow cytometry files.\n\n\n\nThis y-axis values are subsequently visualized with the logicle transformation applied, increasing our resolution between the positive and negative population.\n\n\n\nWe can then repeat this for the x-axis, adjusting the fine-tune options for the scaling as needed.\n\n\n\n\n\nNavigating Gating Hierarchy\nWith this done, let’s first draw a rectangle gate for the CD45+ (B4-A) cells.\n\n\n\nAnd then selecting that population by clicking on the gate name, let’s proceed and gate the CD19+ cells (V2-A).\n\n\n\nAs you can see, we now have the various gates present in the gating hierarchy for the respective .fcs file. To return to a previous gated population, we would click on the parent population above it.\n\n\n\nWe can subsequently add an additional gate at this gating level for the likely debris population (the threshold setting was suboptimal for this experimental run).\n\n\n\n\n\nCopying Gates\nThis was the process for gating for a single specimen. To copy gates over to the other specimens, we have two options. First, holding down your Ctrl (or equivalent) button, you can click on the individual gate names.\n\n\n\nFrom there, you can drag them down to the next specimen and apply them.\n\n\n\nAlternatively, you can drag down the highlighted gated to the Pipelines Tab, and apply to All Files. This will result in the gates being copied to all specimens in the experiment.\n\n\n\n\n\n\nAdjustments within Pipelines will carry over to all other respective unmodified specimens that share it’s gates.\n\n\n\nOnce this is done, I recommend cycling through the gates for each specimen, just to ensure that the gates were positioned correctly before saving the workspace.\n\n\n\n\n\nSaving Workspace\nWith everyone now “correctly” gated, we can proceed to save the workspace so that we can reopen it later from another browser.\nTo do this we open the File tab from the upper navigation bar, and select Save Workspace.\n\n\n\nFrom there we have a couple options, for now let’s select Floreada Workspace. Where it is saved at will depend on your individual browser settings, so watch for a popup.\n\n\n\nAlternatively (and crucially for the CytoML pipeline) we can also choose to save it as a FlowJo v10 .wsp file.\n\n\n\nIn both cases, you will end up with Workspace files that can be used later to access your created gates\n\n\n\n\n\nReopening Workspace\nTo reopen the Floreada workspace within the browser, reopen the website, and select the Open File(s) option.\n\n\n\nFrom there, select both the Floreada Workspace file as well as the .fcs files\n\n\n\nAt which point you will now be back to the point you last saved at.",
+    "crumbs": [
+      "About",
+      "Getting Started",
+      "00 - Floreada"
+    ]
+  },
+  {
+    "objectID": "course/00_Floreada/index.html#cytoml",
+    "href": "course/00_Floreada/index.html#cytoml",
+    "title": "Using Floreada",
+    "section": "CytoML",
+    "text": "CytoML\nDue to a unknown formatting bug, the Floreada produced FlowJo v10 .wsp is not directly accessible by CytoML at the time of this course. However, the issue is resolved as soon as the file is opened the first time within FlowJo v10, regardless of whether you have a log in or not. Strange? Yes, but we will take the workaround.\nSo, for anyone on Windows or MacOS, download FlowJo v10. Once installed, open the software, and close the login popups. Once there, open the Floreada created FlowJo.wsp file. Since you haven’t logged in, it won’t show any events. But it will correct the formatting bug. Close the software, and return to R. Your Floreada sourced .WSP file should now be readable by CytoML.\nOdd? For sure. Fixable? Likely, I will set a reminder to work with the Floreada and CytoML devs to see if we can cut out the need for this workaround.",
+    "crumbs": [
+      "About",
+      "Getting Started",
+      "00 - Floreada"
+    ]
+  },
+  {
+    "objectID": "course/00_BonusContent/index.html",
+    "href": "course/00_BonusContent/index.html",
+    "title": "Bonus Content",
+    "section": "",
+    "text": "This is a miscellaneous page to host walk-throughs of topics that come up via the Discussion Page. Rather than re-explain how to in the comments, I want to have a place to post short-walkthroughs to solve these issues, while avoiding incorporating it into the existing walk-throughs at this point in time. I hope you find it useful, and pardon the organized chaos of miscellaneous topics."
+  },
+  {
+    "objectID": "course/00_BonusContent/index.html#windows-arm",
+    "href": "course/00_BonusContent/index.html#windows-arm",
+    "title": "Bonus Content",
+    "section": "Windows Arm",
+    "text": "Windows Arm\n\nPositron\nOn the main Positron installation page, only the installers for Windows Computers with x86 chips are currently shown. There is a beta (experimental) version of Positron for Windows ARM (ex. Snapdragons), but it needs to be installed from Positron’s GitHub releases page.\n\nPlease note, you should download the most recent version that is available to you, as they continue to update it and fix bugs. As of February 04, 2026, you would also need to install Quarto separately.\nTo install Quarto, first navigate to their website. Quarto for Windows ARM was implemented in 2023, so the regular installer should work.\n\nAlso, you would need a Python arm64 installation installed if you decide you want to venture into using Python at any point."
+  },
+  {
+    "objectID": "course/00_BonusContent/index.html#visual-mode",
+    "href": "course/00_BonusContent/index.html#visual-mode",
+    "title": "Bonus Content",
+    "section": "Visual Mode",
+    "text": "Visual Mode\nWithin Positron, there exist a toggle button to switch between source and visual mode on Quarto documents. But what do you do when you can’t find it?\n\nTuns out…. Visual Mode is currently broken, so the developers removed it about two weeks ago.\nThe current way to switch to it is via right-click, then select edit visual mode.\n\nVice versa, once there, you can revert by right-clicking and selecting Edit Source Mode\n\nThe process of figuring what is going on highlights how to use a GitHub Discussion Page. This is Positrons when I searched for visual button. I then found that a similar question was asked 3 days ago that led me to the linked thread above."
+  },
+  {
+    "objectID": "course/00_BonusContent/index.html#not-detecting-git",
+    "href": "course/00_BonusContent/index.html#not-detecting-git",
+    "title": "Bonus Content",
+    "section": "Not Detecting Git",
+    "text": "Not Detecting Git\nIf you leave the “Initialize Git Repository” option unclicked when setting up a New Folder from Template, Git will not be active within your project folder.\n\nAs a result, when you try to use the usethis packages use_github(private=true) function, you will get an error that resembles the one below\n\nTo initiate a Git repository after the fact, you will need to go to the Version Control tab in the action bar, and select the option.\n\nThen, you will need to stage the files you want to work with, and commit them.\n\nuse_github(private=TRUE) should now be functional at that point. However, you can also choose to continue via Positron’s interface instead by selecting Publish.\n\nIt will then ask you whether you want to save it as either a Public or a Private repository.\n\nAnd if all goes well, you will see the “Successs” pop-up in the lower-right"
+  },
+  {
+    "objectID": "course/index.html",
+    "href": "course/index.html",
+    "title": "Cytometry in R",
+    "section": "",
+    "text": "Cytometry in R is a free virtual mini-course being organized by the Flow Cytometry Shared Resource Core at the University of Maryland’s Greenebaum Comprehensive Cancer Center. This course is a passion project arising from our desire to contribute back to the community.\nWe are excited that so many individuals worldwide have chosen to take part, and we look forward to helping you get started on your own learning journeys."
+  },
+  {
+    "objectID": "course/index.html#resources",
+    "href": "course/index.html#resources",
+    "title": "Cytometry in R",
+    "section": "Resources",
+    "text": "Resources\nThe pre-course learning materials are now available, providing walkthroughs of how to set up your workstations with the required software, and exercises to help you become more familiar with the various teaching and coding resources we will be using throughout the course.\nNarrated versions of the walk through materials are now also available via YouTube"
+  },
+  {
+    "objectID": "course/index.html#in-person-baltimore",
+    "href": "course/index.html#in-person-baltimore",
+    "title": "Cytometry in R",
+    "section": "In-Person (Baltimore)",
+    "text": "In-Person (Baltimore)\nFor those joining us in person, the class is being offered on Monday, Tuesday and Thursday from 4-5 pm EST in Bressler Research Building Room 7-035. We invite you to make whichever session best fits your schedule. Monitors to plug your laptops in will be available on a first come, first served basis. These in-person sessions will not be recorded, but with the smaller class size you will have our undivided attention should you have any questions."
+  },
+  {
+    "objectID": "course/index.html#virtual-worldwide",
+    "href": "course/index.html#virtual-worldwide",
+    "title": "Cytometry in R",
+    "section": "Virtual (Worldwide)",
+    "text": "Virtual (Worldwide)\nFor those joining us virtually, we will have three separate livestreams throughout the week on YouTube. These will be offered on:\n\nTuesday 2200 EST (Wednesday 0300 GMT+0)\nWednesday 1600 EST (Wednesday 2100 GMT+0)\nThursday 1000 EST (Thursday 1500 GMT+0)\n\nAll three livestreams will be recorded and available on YouTube immediately afterwards."
+  },
+  {
+    "objectID": "course/index.html#discussion-forum",
+    "href": "course/index.html#discussion-forum",
+    "title": "Cytometry in R",
+    "section": "Discussion Forum",
+    "text": "Discussion Forum\nWe will be using the Cytometry in R Discussions page as a community forum, and a place to ask questions, celebrate wins, and provide feedback. After creating a a GitHub account, pleae go introduce yourself."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "About",
+    "section": "",
+    "text": "Cytometry in R is a free weekly mini-course being offered both in-person and online by the Flow Cytometry Shared Resource staff at the University of Maryland Greenebaum Comprehensive Cancer Center. Its primary audience is for those with prior flow cytometry knowledge, who have limited previous experience with the programming language R. However, we welcome everyone regardless of their existing  flow cytometry  or coding experience.\nThis course is a passion project arising from our desire to contribute back to the community. We are excited that so many of you have chosen to sign up, and look forward to helping you get started on your own learning journeys.\nFor more information on topics-covered, please see our schedule.\nIf you did not previously complete the interest form, and would like to be added to our mailing list, please complete the form here\n\n\nAbout\n\n\nMotivation\nWhile many cytometry enthusiast express an interest in learning how to carry out flow cytometry analyses in R, they often do not know where to start. Additionally, many of the limited existing resources are focused towards users with intermediate bioinformatic skills, contributing to a greater barrier for entry for those just starting out. Our motivation in offering this mini-course tailored towards beginners is to make the learning journey smoother than the one we ourselves experienced.\n\nWhile designing the course, we kept the following concepts in mind:\n\nBeginning coders benefit both by having detailed examples that they can initially work through on their own time, as well as less defined problems that through troubleshooting enable the acquisition of the thought-process and skills needed for coding.\nSome topics will take individuals a longer time to fully grasp. Providing a format and resources that enable being able to revisit the material multiple times is incredibly helpful. Likewise, life is busy, and missing a workshop session is highly probable. If this happens, it shouldn’t make or break the ability of the individual to understanding the rest of the course.\nConsistency is key, and being able to apply what you are learning to your own datasets, files, and questions of interest helps achieve this.\n\n\n\n\n\nCourse Details\n\nEach week, the mini-course will cover a particular topic for an hour. This individual class is offered on multiple days, at different times, both in-person and online. We invite you to attend the one that best fits your schedule each week. If life gets busy and you can’t make regular day, the online livestream recordings will be available on YouTube.\n \n\nCourse Materials\n\nWe will release the course materials for the upcoming week on Sundays 2200 EST (Monday 0300 GMT+0) via our course website and GitHub. These materials will normally be Quarto Markdown documents containing code, explanation, and other resources needed for that week. If you have your own data, you can use your own data! If you don’t have any data, we will make sure to provide some of our own available data for each lesson so that you can use it and be able to follow along.\nIn our commitment to open-source and open-science, all teaching materials are freely offered under a CC-BY-SA license, while all code examples are offered under the AGPL3-0 copyleft license.\n \n\n\nIn-Person (Baltimore)\n\nFor those who are local and attending in person, the class will be offered on Monday, Tuesday and Thursday from 4-5 pm EST in Bressler Research Building Conference Room 7-035 (around the corner from the Flow Core).\nWe invite you to make whichever session best fits your schedule. If you have your own laptop, feel free to bring it. If you don’t have a laptop, please reach out, the Flow Core has 6 laptops running Linux that we can lend out to participants for use during the session.\nFor those who arrive early, we will have a limited number of second screens with provided mouse and keyboard that you can plug a laptop into via HDMI cable to set up a larger workstation. For those arriving later, the room has enough space (and electrical plugs) for up to 20 people, but you will need to balance a laptop on your lap.\n \n\n\nOnline (Worldwide)\n\nFor those joining us virtually, we will have three separate livestreams throughout the week on YouTube. These will be offered on:\n\nTuesday 2200 EST (Wednesday 0300 GMT+0)\nWednesday 1600 EST (Wednesday 2100 GMT+0)\nThursday 1000 EST (Thursday 1500 GMT+0)\n\n \n\n\nRecordings\n\nAll three livestreams will be recorded and available on YouTube immediately afterwards. Our plan is to eventually circle back after the course and properly edit them (ie. less minutes of random background noise, highlighting the relevant lines of code, time-stamps, subtitles, translations, etc.) later on as time allows, so that they can serve as a more permanent resource.   \n\n\nDiscussion Forum\n\nWe will be using our GitHub Discussions page as a community forum. This will allow us to answer questions, and benefit from insights from others in the community. One advantage of having so many people signed up for the course is that if you have a question, someone else likely does as well, so go start a post and ask it!\n \n\n\nOptional Take-Home Problems\n\nEach week, we will offer optional take-home problems. These are intended to allow you to work with your own data on similar problems, but in a not-so-structured manner. Challenges that you and overcome during the process will help grow your problem solving and debugging skills, and help solidify concepts covered during the course.\nTo get feedback on these problems, you can reach out to the community on the Discussions page, or once far enough open a pull request to the homework branch and we will provide additional feedback.\n \n\n\nCost\nIs there a cost to participate? No, it’s absolutely free! Is there a catch? Yes, you learn R, and may wind up with strong feelings about flowframes vs. cytoframes. This is also our first year offering this course, so we will sporadically ask you to fill out a feedback forms to help us improve.\n\n \n\n\nComputing Requirements\n\nFor those attending online, you will need a computer with internet access. Operating system shouldn’t matter, as we will be offering code examples for Windows, Mac and Linux. As with all things flow-cytometry software, having a faster CPU with multiple cores, more RAM and greater storage space is generally helpful, but not a deal breaker.\n\nYou will need to be able to install the required software (R, Rtools, Positron, Quarto, and Git) as well as install and compile R packages from the CRAN and Bioconductor repositories (as well as a few GitHub-based R packages). Installation walkthroughs for each computer operating system can be found here.\nFor those using university or company administered computers, please be aware that you may not have the necessary permissions to install these directly, and may need to reach out to your IT department to help get these initial requirements set up. If you are using your own computer, congratulations, you are your system administrator, and should already have the necessary permissions.\n\nFor those attending in-person, we have set up a pop-up computer lab in the conference room. For those who arrive early, we have a limited number of second screens with provided mouse and keyboard that you can plug a laptop into via HDMI cable to set up a workstation. For those arriving later, the room has enough space (and electrical plugs) for 20 people, but you will need to balance a laptop on your lap. If you have your own laptop, feel free to bring it. If you don’t have a laptop, the flow core has 6 loaner laptops running Linux that we can let participants use for that session.\n\n\n\n\nLicense\nIn our commitment to open-science and open-source, all teaching materials are freely offered under a CC-BY-SA license, while all code examples are offered under the AGPL3-0 copyleft license."
+  },
+  {
+    "objectID": "Schedule.html",
+    "href": "Schedule.html",
+    "title": "Cytometry in R",
+    "section": "",
+    "text": "Cytometry in R: A Course for Beginners\nCytometry in R is a free virtual mini-course being organized by the Flow Cytometry Shared Resource core at the University of Maryland’s Greenebaum Comprehensive Cancer Center. This course is a passion project arising from our desire to contribute back to the community. We are excited that you have chosen to take part and look forward to helping you get started on your own learning journey.\nIf you did not complete the original interest form, and would like to be added to our mailing list, please complete the form here\nThe pre-course learning materials are now available via the Course tab. They consist of walkthroughs of how to set up your workstations with the required software, and exercises to help you become more familiar with the various teaching and coding resources we will be using throughout the course.\n\n\n\nWorkstation Setup\n\nWeek 1: February 2, 2026 During this first session, we will ensure that everyone’s computer gets properly setup, as well as start building individual participants familiarity with the software infrastructure that they will be using throughout the rest of the course. Namely, you will need to install R, Rtools, Positron, Quarto, and Git; as well as setup and link to a GitHub account. This session also touches on concepts behind version control and how to install R package from the various repositories (CRAN, Bioconductor, GitHub).\n \n\n\nFile Paths\n\nWeek 2: February 9, 2026 For this session, we focus on how to programmatically tell your computer where to locate your experimental files, introducing the concept of file paths. We explore how the various operating systems (Linux, MacOS, Windows) specify their respective folders and files, and how to identify where you are currently within the directory. Our goal by the end of this session is to have walked you through how to figure out where an .fcs file of interest is stored, and convey to your computer where you want it copied/moved to, without encountering the common pitfalls.\n \n\n\nInside an .FCS file\n\nWeek 3: February 16, 2026 In the course of this session we will slice into an .FCS file and find out what the individual components that make it up are. In the process, we will cover the concepts of main data structures within R (vectors, matrices, data.frames, list) and how to identify what we are working with. Additionally, we will explore how various cytometry softwares store their metadata variables under various keywords that can be useful to know about.\n \n\n\nIntroduction to the Tidyverse\n\nWeek 4: February 23, 2026 Within this session, we explore how the various tidyverse packages can be utilized to reorganize rows and columns of data in ways that are useful for data analysis. We will primarily work with the MFI expression data we isolated from within the .fcs file in the previous session, identifying and isolating events that meet certain criterias. We introduce the concepts behind “tidy” data and how it can improve our workflows.\n \n\n\nGating Sets\n\nWeek 5: As part of this session, we learn about the two main flow cytometry infrastructure packages in R we will be working with during the course, flowcore and flowWorkspace. Throughout the session, we will compare how they differ in naming, memory usage, and accessing .fcs file metadata. We additionally explore how to add keywords to their respective metadata for use in filtering specimens of interest from the larger set of .fcs files.\n \n\n\nVisualizing with ggplot2\n\nWeek 6: During this session we provide an introduction to the ggplot2 package. We will take the datasets we have collected from the previous sessions and see how in varying in different arguments at the respective plot layers we can produce and customize many different forms of plots, focusing on both cytometry and statistics plots. We close out providing links to additional helpful resources and highlight the TidyTuesday project.\n \n\n\nApplying Transformations and Compensation\n\nWeek 7: For this seventh session, we take a closer look at the raw values of the data within our .fcs files, and explore the various ways to transform (ie. scale) flow cytometry data in R to better visualize “positive” and “negative populations”. In the process, we visualize the differences resulting from applying different transformations commonly used by commercial software. Similarly, we learn how to apply and visualize compensation in context of conventional flow cytometry files.\n \n\n\nManual and Automated Gating\n\nWeek 8: Within this session, we explore various ways to implement gating for flow cytometry files in R. We will explore manual approaches utilizing flowGate, as well as automated options with openCyto and it’s gating templates. We additionally will explore how to provide gate constraints and various ways to visually screen and evaluate the outcomes within the context of our own projects.\n \n\n\nIt’s Raining Functions!\n\nWeek 9: In the course of this ninth session, we tackle one of the harder but most useful concepts to learn for a begginer, namely functions. We explore what they are, how their individual arguments work, how they differ from for-loops, and how to create our own to do useful work, reduce the number times code gets copied and pasted. Additionally, some functional programming best practices will be introduced, as well as provide introduction to how to use the walk and map functions from the purrr package.\n \n\n\nDownsampling and Concatenation\n\nWeek 10: Within this session, we will expand on our growing understanding of GatingSets, functions and fcs file internals to write a script to downsample your fcs files to a desired number (or percentage) of cells for a given cell population. We will additionally learn how to concatenate these downsampled files together, and save them to a new .fcs file in ways that the metadata can be read by commercial software without the scaling being widely thrown off.\n \n\n\nRetrieving data for Statistics\n\nWeek 11: Leveraging the increased familiarity working with the various packages this far in the course, in this session we will retrieve summary statistics for the gates within our GatingSet, and programmatically derrive out tidy data.frames for use in statistical analyses typically used by many Immunologist. In the process, we add a couple additional plot types to our ggplot2 arsenal to hold in reserve should Prism prices go up again.\n \n\n\nSpectral Signatures\n\nWeek 12: As part of this session, we will explore how to extract fluorescent signatures from our raw spectral flow cytometry reference controls. Building on prior concepts, we will learn to isolate median signatures from positive and negative gates, and how to derrive and plot normalized signatures. We also introduce plotly package and it’s interactive plotting features, before showcasing various packages attempts at facilitating signature retrieval.\n \n\n\nSimilarities and Hotspots\n\nWeek 13: During this session, we will utilize the spectral signature matrix isolated from raw spectral flow cytometry controls and evaluate different ways of evaluating how similar different fluorescent signatures are to each other. In the process, we will gain better understanding of the metrics behind similarity (cosine), panel complexity (kappa), and unmixing-dependent spreading (collinearity).\n \n\n\nUnmixing in R\n\nWeek 14: In the course of this session, we will attempt a reach goal of many, namely carry out unmixing of raw .fcs files using the spectral signatures we have isolated from our unmixing controls, and write to new .fcs files. After evaluating the necessary internals, we will explore how various current cytometry R packages have implemented their own unmixing functions, and the various limitations that each approach has encountered.\n \n\n\nCleaning Algorithms\n\nWeek 15: In the span of this session, we will directly compare how various Bioconductor data cleanup algorithms (namely PeacoQC, FlowAI, FlowCut, and FlowClean) tackle distinguishing and removing bad quality events. We will see how they perform with previously identified good quality and horrific quality .fcs files. We will whether the implemented algorithmic decisions made sense, and how to customize them within our workflows to achieve our own desired goals.\n \n\n\nClustering Algorithms\n\nWeek 16: As part of this session, we venture away from supervised and semi-supervised analyses to explore unsupervised clustering approaches, namely FlowSOM and Phenograph. We will compare outcomes depending markers included, transformations applied, and panel used to gain a greater familiarity with how they work. We wrap up by investigating ways to visualize marker expression of cells ending up in each cluster, and how to backgate them to our manual gates.\n \n\n\nNormalization: Batch Effect or Real Biology\n\nWeek 17: During this session, we will dive into evaluating the performance of two commonly used normalization algorithms, CytoNorm and CyCombine. We will utilize our ggplot2 and functional programming toolkits to create a customized workflow to visualize the differences for our respective cell populations before and after normalization, to better evaluate how the respective parameter choices can affect the process.\n \n\n\nDimensionality Visualization\n\nWeek 18: For this session, we explore how dimensionality visualization algorithms perform tSNE and UMAP in R using our raw and unmixed samples. In the process, we will explore how markers included, number of cells, and presence of bad quality events can impact the final visualizations. Finally, we will provide an overview of how to link to Python to additionally run PaCMAP and PHATE visualizations for use in R.\n \n\n\nAnnotating Unsupervised Clusters\n\nWeek 19: In the course of this session, we explore ways to scale our efficiency in figuring out what an unsupervised cluster of cells may be, by employing several annotation packages. We explore how these work under the hood in their decision making process, and how to link them to reference data from external repositories for additional evaluation.\n \n\n\nThe Art of GitHub Diving\n\nWeek 20: Within this session, we delve into the art of investigating a new-to-you GitHub repository. We discuss the overall structure of R packages stored as source files within GitHub repositories, and how to leverage this knowledge when troubleshooting errors thrown by underdocumented R packages. We discuss how to modify identified functions, evaluate them, and process to submit helpful bug reports back to the original project to help fix the issue.\n \n\n\nXML Files All The Way Down\n\nWeek 21: Breaking news alert, most of the experiment templates and worksheet layouts we work with as cytometrist are .xml files. In this session, we learn some additional coding tools to allow us to work with these types of files to extract useful data. In this session, we test out our new problem solving abilities to retrieve data from SpectroFlo and Diva .xml files to monitor how our core’s flow cytometers behaved for various users last week.\n \n\n\nUtilizing Bioconductor packages\n\nWeek 22: Many of the R packages for Flow Cytometry we have utilized in this course were packages from the Bioconductor project. We take a look at what makes Bioconductor packages unique compared to packages found on GitHub and CRAN, explore some of their specific infrastructure types for flow cytometry data, and highlight some useful packages for downstream analysis that we haven’t had time to properly explore.\n \n\n\nBuilding your First R package\n\nWeek 23: For most of the course, we have been working with R packages that other individuals built and maintained. In this session, we leverage all your hard work from the rest of the course and corral the unwieldly arsenal of functions you wrote into your first R package for easier use. We will discuss the individual pieces of an R package, the importance of a well-setup namespace file, and how to generate help page manuals to refer future-you back to what your individual function arguments actually do.\n \n\n\nReproducibility and Replicability\n\nWeek 24: Throughout the course, we emphasized the importance of making your workspaces and code reproducible and replicable. But what do we mean by these terms, and are there best practices we could add to our existing workflow to do this more efficiently? We explore a couple community-led efforts within the cytometry space and troubleshoot their implementation into a previously published pipeline.\n \n\n\nValidating Algorthmic Tools\n\nWeek 25: We will be the first to admit, new implementations of algorithms as R packages are awesome! We appreciate the effort that went into them and making them available to the community at large. But what is the best way of evaluating whether they behave as promised, or work for our dataset? During this session, we share tips and tricks to gain better understanding of how a new R package works, and things to watch out for when evaluating complicated algortithms. We wrap with walkthrough of how to generate simulated datasets with known distributions for use in testing.\n \n\n\nEveryone Get’s a Quarto Website\n\nWeek 26: In this session, we will extend the knowledge of .R and .qmd files you have gained from the course and extend them to create your own website using Quarto. We discuss the additional files that are required, how to customize and render the website locally, and finally set up Quarto Pub or GitHub Pages website that we are to access online.\n \n\n\nOpen Source Licenses\n\nWeek 27: For this course, we have relied extensively on open-source software to create our own data analysis pipelines. In the process, you may have some recollection of the various license names. But what impact do all these different names have in the end? We take a brief deep-dive into the ecosystem of free and open-source licenses, and evaluate what their respective license terms mean for us as individual users of the code, as well as potential developers extending existing codebases.\n \n\n\nDatabases and Repositories\n\nWeek 28: During this session, we will learn how to identify and retrieve .fcs files from databases. While many of us are accustomed to working with large datasets of our own making, many of us are increasingly encountering larger-than-memory datasets, as well as files stored in large repositories. In this session, we will explore several database focused R packages, before investigating how to identify and retrieve .fcs files and associated metadata of interest from repositories, namely ImmPort (and maybe FlowRepository if it can be pinged that afternoon).\n \n\n\nAssembling Web Data\n\nWeek 29: In this session, we briefly delve into the concepts of web-scraping and APIs in general. We highlight useful packages, namely httr2 and rvest, and best practices implemented to allow respectful retrieval of useful data without crashing someone’s server like some AI startup bot. We finish by providing a list of additional useful resources for those interested in learning more.\n \n\n\nFuture Directions\n\nWeek 30: In this final of the planned sessions, we revisit our solutions to the challenge problems set out during the beginning of the course. We also discuss potential future topics to visit in the future, and any additional resources that proved helpful throughout the course.",
+    "crumbs": [
+      "About",
+      "Cytometry Core"
+    ]
+  },
+  {
+    "objectID": "course/00_BonusContent/Immport/images/index.html",
+    "href": "course/00_BonusContent/Immport/images/index.html",
+    "title": "ImmPort - Downloading Datasets",
+    "section": "",
+    "text": "To download data from the ImmPort Shared Data Repository, first navigate to the website\n\nFor help setting up Aspera Connect, see the following help documentation"
+  },
+  {
+    "objectID": "course/00_Floreada/slides.html#floreada",
+    "href": "course/00_Floreada/slides.html#floreada",
+    "title": "Using Floreada",
+    "section": "Floreada",
+    "text": "Floreada\nLoading Dataset\n\n\n\n\n\n\n\n\n.\n\n\nFirst, open your web browser and navigate to the website\nClick on Start to proceed to the next page."
+  },
+  {
+    "objectID": "course/00_Floreada/slides.html#cytoml",
+    "href": "course/00_Floreada/slides.html#cytoml",
+    "title": "Using Floreada",
+    "section": "CytoML",
+    "text": "CytoML\n\n\n\n\n\n\n\n\n.\n\n\nDue to a unknown formatting bug, the Floreada produced FlowJo v10 .wsp is not directly accessible by CytoML at the time of this course. However, the issue is resolved as soon as the file is opened the first time within FlowJo v10, regardless of whether you have a log in or not. Strange? Yes, but we will take the workaround.\nSo, for anyone on Windows or MacOS, download FlowJo v10. Once installed, open the software, and close the login popups. Once there, open the Floreada created FlowJo.wsp file. Since you haven’t logged in, it won’t show any events. But it will correct the formatting bug. Close the software, and return to R. Your Floreada sourced .WSP file should now be readable by CytoML.\nOdd? For sure. Fixable? Likely, I will set a reminder to work with the Floreada and CytoML devs to see if we can cut out the need for this workaround."
+  },
+  {
+    "objectID": "course/00_Git/slides.html#new-folder-from-template",
+    "href": "course/00_Git/slides.html#new-folder-from-template",
+    "title": "Version Control with Git",
+    "section": "New Folder from Template",
+    "text": "New Folder from Template\n\n\n\n\n\n\n\n\n.\n\n\nSince Positron can use multiple programming languages, when we select “New Folder from Template” we will be asked what kind of folder template we want to use. Since we are working in R, we will select the “R Project” option."
+  },
+  {
+    "objectID": "course/00_Git/slides.html#creating-subfolders",
+    "href": "course/00_Git/slides.html#creating-subfolders",
+    "title": "Version Control with Git",
+    "section": "Creating SubFolders",
+    "text": "Creating SubFolders\n\n\n\n\n\n\n\n\n.\n\n\nOnce your new project folder has opened, you should be seeing the main layout elements that we briefly covered in the Positron walk-through.\nFor this section, we will primarily be focused on what is happening within the primary side bar on the left, where changes to the individual files within the folder since the last save/commit will be reflected by colored text.\nFor my own projects, there are some elements of organization that I go ahead and add for each new folder. These include both a data and an images subfolders to help keep things a little more organized.\nTo create these folders, we would click on the respective add folder (+) button on the side bar. Files and Folders can be clicked and dragged within the primary side bar to move things to new folder locations."
+  },
+  {
+    "objectID": "course/00_Git/slides.html#creating-files",
+    "href": "course/00_Git/slides.html#creating-files",
+    "title": "Version Control with Git",
+    "section": "Creating Files",
+    "text": "Creating Files\n\n\n\n\n\n\n\n\n.\n\n\nIn context of this course, we will primarily be working with two types of files when coding:\n\nR Scripts: These files end in .R. These contain only code (with occasional # comment line). These are often used for self-contained code that once we get them working we rarely need to modify.\nQuarto Markdowns: These files end in .qmd. They contain a .yaml header, followed by a mix of regular written text (often explanations or other documentation), and sections (ie. chunks) that contain code. These are used when we are still getting the code to work, when we need to modify inputs frequently, or simply when we need to document what and why we are doing something to make life easier for our future-self two months from now."
+  },
+  {
+    "objectID": "course/00_Git/slides.html#qmd-files",
+    "href": "course/00_Git/slides.html#qmd-files",
+    "title": "Version Control with Git",
+    "section": "QMD Files",
+    "text": "QMD Files\n\n\n\n\n\n\n\n\n.\n\n\nOnce this is done, we can now see we have a new .qmd file (“Example.qmd” in this case).\n\n\n\n\n\nYAML\n\n\n\n\n\n\n\n\n.\n\n\nAs previously mentioned, the start of a Quarto Markdown file containg a YAML code chunk that is used to set formatting choices (we will explore this in-depth during the next section)\nWhat designates the location of the YAML block are three hyphens at the start, and three hyphens at the end. For this example, we will also provide a “title:” and “format:” field for the time being (see additional options here)."
+  },
+  {
+    "objectID": "course/00_Git/slides.html#local-version-control",
+    "href": "course/00_Git/slides.html#local-version-control",
+    "title": "Version Control with Git",
+    "section": "Local Version Control",
+    "text": "Local Version Control\n\n\n\n\n\n\n\n\n.\n\n\nHaving introduced the main elements of a Quarto Markdown file, let’s turn our attention to the tab within the editor showing our newly created .qmd file.\nWe can see there is a solid circle next to the file name, and it is appearing as green. The circle denotes unsaved changes, which we can correct by clicking on the Save Button to save the changes to our file."
+  },
+  {
+    "objectID": "course/00_Git/slides.html#remote-version-control",
+    "href": "course/00_Git/slides.html#remote-version-control",
+    "title": "Version Control with Git",
+    "section": "Remote Version Control",
+    "text": "Remote Version Control\nCopying Project Folder to GitHub\n\n\n\n\n\n\n\n\n.\n\n\nWhile having local version control in place is helpful when you need to revert back after encountering issues, where Git shines is the ability to pass your changes to your online GitHub repository.\nNot only does this allow you to switch between computers, but should something disastrous happen to your main computer, you still have all your hard work backed up and readily assessible.\nFor this subsection, first, double check that Positron is still connected to your GitHub account by checking the user tab on the bottom-left. If not, repeat the connection setup."
+  },
+  {
+    "objectID": "course/00_GitHub/slides.html#creating-an-account",
+    "href": "course/00_GitHub/slides.html#creating-an-account",
     "title": "Using GitHub",
     "section": "Creating an Account",
-    "text": "Creating an Account\nWe will first navigate to the GitHub homepage. If you haven’t previously created an account, click on the button to sign up for an account.\n\n\n\nOn the sign-up page, you will fill in various details needed to create an account. Please remember that GitHub usernames are visible to others. Additionally, if you end up sharing code with others as part of a manuscript, or use GitHub to create a personal portfolio website in the future, your username will appear as part of the URL.\nFor example, in my case, my user name is DavidRach, so my GitHub profile ends up as: https://github.com/DavidRach. For our course, the core’s GitHub user name is UMGCCCFCSR, so the github profile ends up as https://github.com/UMGCCCFCSR, while the course website ends up as https://umgcccfcsr.github.io/CytometryInR/\n\n\n\nOnce you have entered your new account information, you will need your account creation by entering the code sent to the email address that you provided.\n\n\n\nOnce account creation has been confirmed, please proceed to login to GitHub for the first time.",
-    "crumbs": [
-      "About",
-      "Getting Started",
-      "00 - GitHub"
-    ]
+    "text": "Creating an Account\n\n\n\n\n\n\n\n\n.\n\n\nWe will first navigate to the GitHub homepage. If you haven’t previously created an account, click on the button to sign up for an account."
   },
   {
-    "objectID": "course/00_GitHub/index.html#github-profile",
-    "href": "course/00_GitHub/index.html#github-profile",
+    "objectID": "course/00_GitHub/slides.html#github-profile",
+    "href": "course/00_GitHub/slides.html#github-profile",
     "title": "Using GitHub",
     "section": "GitHub Profile",
-    "text": "GitHub Profile\nUpon creating a brand new account, your GitHub homepage will initially look rather empty, and can be intimidating to navigate for the first time.\nFor now, on the upper right, go ahead and click on the default profile picture icon…\n\n\n\nAnd then select Profile…\n\n\n\nYou are now on your public GitHub profile page. For a newly created account, it will look something like this:\n\n\n\nFor a more established account, this page will look a little different, and can be customized to highlight various projects that you are working on.\nFor this course, we will have you set up a basic GitHub profile page for now, although you are free to customize and personalize it as much as you may want to in the future!\nTo start, first select the edit profile button on the left below the default profile icon.\n\n\n\nYou can then proceed to fill in any details that you feel are relevant and are comfortable sharing.\n\n\n\nWith the quick access details filled in, it is now time to navigate to the Settings tab. You will return to the previous menu dropdown on the upper right, and instead of selecting Profile, click on the Settings option.\n\n\n\nYou should now end up within your Public Profile Settings page.\nFeel free to edit the default profile picture, and any other fields that you feel are relevant. Once done, continue to scroll down the page past ORCID ID.\n\n\n\nWhen you reach Contributions and Activity, go ahead and select the option to include private repositories in the activity summary graphic. Then scroll down and click save. You will now be returned to your GitHub profile page.\n\n\n\nAt the top of the profile, you will see a “Your contributions” calendar graph. For a new account, it will look like this:\n\n\n\nIf you are just starting out, this chart will be mostly empty, but will fill in as you work on projects, see here as an example.\nEvery time you save your code (ie. make a commit), the activity will be reflected in this chart. By clicking the option in settings, code made within a private repository will remain private, but will count toward your contribution chart. As you progress through the course, this will provide a nice visual reminder of the progress you have made, and the obstacles that you have overcome.",
-    "crumbs": [
-      "About",
-      "Getting Started",
-      "00 - GitHub"
-    ]
+    "text": "GitHub Profile\n\n\n\n\n\n\n\n\n.\n\n\nUpon creating a brand new account, your GitHub homepage will initially look rather empty, and can be intimidating to navigate for the first time.\nFor now, on the upper right, go ahead and click on the default profile picture icon…"
   },
   {
-    "objectID": "course/00_GitHub/index.html#github-readme",
-    "href": "course/00_GitHub/index.html#github-readme",
+    "objectID": "course/00_GitHub/slides.html#github-readme",
+    "href": "course/00_GitHub/slides.html#github-readme",
     "title": "Using GitHub",
     "section": "GitHub ReadMe",
-    "text": "GitHub ReadMe\nWith this done, we modify your GitHub profile by adding one customized element, a ReadMe page. This will be used for a couple projects during the course, and can be personalized further in the future.\nTo create a ReadMe page for your profile, we will navigate to the upper right of the screen and click on the + sign.\n\n\n\nWe will then select the Create New Repository option.\n\n\n\nYou will next create a repository (folder), naming it exactly the same as your username. This will be recognized by GitHub as being a special type of repository corresponding to the ReadMe section of your profile.\nFor options, leave the visibility as Public, and Add README set to On. And proceed to Create Repository.\n\n\n\nHaving created the repository (folder), you will see it has been populated by a few default files. For now, you will be editing the README.md file. On a new repository, the easiest way to access it is by clicking the green option on the right side of your screen.\n\n\n\nWith the README.md file now opened, you will be able to see generic filler text that is suggested by GitHub.\nFor this course, I will ask you to add a couple elements for now. You are free to return and further personalize it later if you wish to do so.\n\n\n\nThe type of file that we are working with is a Markdown file, which can allow for a bunch of customizations which we will cover throughout the course.\nFor now, please add and customize the following questions:\nCytometry In R\nLocation: Baltimore, Maryland, USA\nMy Favorite Fluorophore/Metal-Isotope: Spark Blue 550\nPrevious Coding Experience: Repeatedly Calling IT\nWhat I Hope to Get From This Course: A faster way to match FlowSOM clusters to their likely cell type.\n\n\n\nNext, to save you will select the green “Commit changes” button. We will cover the meaning of “Commit” more in-depth during the Git section.\nFor now, write a short summary of the change you made to the file in the “Commit message”, and any additional details within the “Extended description” field. When ready, click the green “Commit changes” button.\n\n\n\nYou will now be able to see the updated README.md file, as you can see in our example below. To make additional edits, you would select the pencil icon on the right-center side of the screen.\n\n\n\nNext, navigate back to your profile page (by clicking on either your username or the Overview option on the tabs).\nYou will see that the README file contents are now displayed on the upper portion of your GitHub profile. Feel free to circle back and customize this further to your liking.\nIn this last example, we created your first repository (folder). Since this is public, it is now shown below the README section of the profile under your repositories. You can also see that your commits made in the process of making the changes are now shown both in the Contributions graph, and under the Contributor Activity summary at the bottom of the page.",
-    "crumbs": [
-      "About",
-      "Getting Started",
-      "00 - GitHub"
-    ]
+    "text": "GitHub ReadMe\n\n\n\n\n\n\n\n\n.\n\n\nWith this done, we modify your GitHub profile by adding one customized element, a ReadMe page. This will be used for a couple projects during the course, and can be personalized further in the future.\nTo create a ReadMe page for your profile, we will navigate to the upper right of the screen and click on the + sign."
   },
   {
-    "objectID": "course/00_GitHub/index.html#github-repository",
-    "href": "course/00_GitHub/index.html#github-repository",
+    "objectID": "course/00_GitHub/slides.html#github-repository",
+    "href": "course/00_GitHub/slides.html#github-repository",
     "title": "Using GitHub",
     "section": "GitHub Repository",
-    "text": "GitHub Repository\nHaving set up your GitHub profile, it now is time to make sure you have access to our course materials. We will have you navigate to our course’s GitHub profile\nOn the profile page, you will be able to see our version of the README, our repositories, and the Contributions graph and Contribution activity sections.\nPlease click on the CytometryInR to navigate to its repository (folder)\n\n\n\nOn this page, you will see several elements that you will be circling back to throughout the course.\nFor our course, we will be extentsively ussing the Discussions page as a community forum. If you have any questions, are looking for feedback, or want to show off something that you worked on, this is the place for it. This will also help make sure\n\n\n\nThe Issues tab is where you will need to go to open an Issue if you encounter a bug (or major documentation typo), so that I can cicle back and correct them when I have the chance.\n\n\n\nTo submit the optional take-home problems, you would turn in these problems by going to the Pull Request tab, and initiating a pull request between your forked version of the project and our “homework” branch (more details on this later).\n\n\n\nOptionally, you can “Star” a repository. This is basically the GitHub equivalent of liking a project. In our case, we will often star a repository since it will be saved under the Stars tab of our profile, which makes finding it again significantly easier a few weeks later after forgetting the repository name.\n\n\n\nTo see projects that you have starred, you can select the Stars option from the same dropdown you used to get to Settings.\n\n\n\nOr from your GitHub profile, you can see these under Stars tab.",
-    "crumbs": [
-      "About",
-      "Getting Started",
-      "00 - GitHub"
-    ]
+    "text": "GitHub Repository\n\n\n\n\n\n\n\n\n.\n\n\nHaving set up your GitHub profile, it now is time to make sure you have access to our course materials. We will have you navigate to our course’s GitHub profile\nOn the profile page, you will be able to see our version of the README, our repositories, and the Contributions graph and Contribution activity sections.\nPlease click on the CytometryInR to navigate to its repository (folder)"
   },
   {
-    "objectID": "course/00_GitHub/index.html#forking-cytometryinr",
-    "href": "course/00_GitHub/index.html#forking-cytometryinr",
+    "objectID": "course/00_GitHub/slides.html#forking-cytometryinr",
+    "href": "course/00_GitHub/slides.html#forking-cytometryinr",
     "title": "Using GitHub",
     "section": "Forking CytometryInR",
-    "text": "Forking CytometryInR\nBefore we go further, we will need you to make your own copy of the course repository (ie. fork it). This will allow you to quickly retrieve all the new materials and code corrections by simply rereshing (ie. syncing) your forked version with our upstream parent branch once a week.\n\n\nTo fork the course repository, you will select the “Fork repository” option on the upper-center portion of your screen.\n\n\n\nBy “Fork-ing” a repository, you are basically copying the contents from that repository to a newly created repository on your own GitHub. Forked projects are still linked to the original (parent) fork, and can retrieve any updates via syncing, as well as return changes via a pull request.\nFor this course, when you create the fork, keep the existing repository name (“CytometryInR”). Importantly, select the copy main branch option. This will ensure you only get the code and data needed for the course copied over, and don’t end up with your entire hard-drive filled will website elements, or other people’s solutions to the take-home problems.\n\n\n\nOnce you have created the fork, you will see your copy of the forked repository under your own username. Seeing as you have just now forked the project, you will see the notification that you are up to date with the existing version of the CytometryInR course repository.\nAs we go through the course, and new material is released each week on Sunday at 2200 EST (Monday 0300 GMT+0), you will see this changed to behind the main branch by a number of commits, and have the option to sync in the changes to your fork to gain access to that week’s material.\n\n\n\nIf you remember, previously under your GitHub profile, the Repositories tab only contained the repository corresponding to your ReadMe section.\n\n\n\nYou should however now be able to see your fork of the CytometryInR repository. As you add project specific repositories throughout the course, they will also appear here.",
-    "crumbs": [
-      "About",
-      "Getting Started",
-      "00 - GitHub"
-    ]
-  },
-  {
-    "objectID": "course/00_Homeworks/index.html",
-    "href": "course/00_Homeworks/index.html",
-    "title": "Getting Help",
-    "section": "",
-    "text": "For the YouTube livestream recording, see here\nFor screen-shot slides, click here",
-    "crumbs": [
-      "About",
-      "Getting Started",
-      "00 - Getting Help"
-    ]
+    "text": "Forking CytometryInR\n\n\n\n\n\n\n\n\n.\n\n\nBefore we go further, we will need you to make your own copy of the course repository (ie. fork it). This will allow you to quickly retrieve all the new materials and code corrections by simply rereshing (ie. syncing) your forked version with our upstream parent branch once a week."
   },
   {
     "objectID": "course/00_Homeworks/index.html#discussions-forum",
     "href": "course/00_Homeworks/index.html#discussions-forum",
     "title": "Getting Help",
     "section": "Discussions Forum",
-    "text": "Discussions Forum\nOn the course’s GitHub repository, we have opened up a Discussions page that we plan to use as a community forum. We hope that it will serve multiple functions, from providing a better sense of community for the online participants, to facilitating asking and receiving help on something that is not clear, provide feedback about something that it not working out, as well as a place to celebrate and show off your coding wins.\n\nTo keep the Discussions forum semi-organized, we have set up several categories, please select the appropiate category when opening a new discussion!\n\n\n\nCode of Conduct\n\nWe ask that all course participants read and adhere to the spirit of our Code of Conduct. We are all human, at different points in our learning journeys, so what may be obvious to you at your point of your learning journey may have necessarily be obvious to someone just getting started. This course is our giving back to those in the community, but is on a voluntary basis in addition to our regular workload. While we try to reply quickly, sometimes our cell sorters fully melt down sending everything into chaos. We will reply when we can.\n\n\n\n\nAnnouncements\n\nWhen we send out an email to all participants, we will also repost it as an announcement. This ensures that even if you are not on our mailing list, you will still be able to have access to important information and course updates.\n\n\n\n\n\n\n\nGeneral\n\nThis section category can be used for any discussions that you think are worth having, that don’t fall under any of the other category. Good examples are continuing a discussion that was held during one of the livestreams; wanting to discuss and dive further into a given week’s topic; or bringing in additional resources that you found useful to understandingn something that didn’t click initially. This space is for the community to shape as they see best.\n\n\n\n\n\n\n\nIdeas\n\nHave an idea for a new topic or a way to improve the course? We would love to hear them. Provide as many details, and ideally, an example, and if it is doable, we will try to implement them.\n\n\n\n\n\n\n\nIntroductions\n\nOnline courses can be odd in terms of replicating in-person dynamics. Fortunately, we have gathered the largest cohort of “cytometrist with no-to-little flow experience trying to learn R at the same time” that the world has ever seen, so best to take advantage of this while we can. Treat this section as if we had just met at a conference, tell us about yourself, what brings you here, and what you want to hopefully be able to do after the course ends.",
+    "text": "Discussions Forum\nOn the course’s GitHub repository, we have opened up a Discussions page that we plan to use as a community forum. We hope that it will serve multiple functions, from providing a better sense of community for the online participants, to facilitating asking and receiving help on something that is not clear, provide feedback about something that it not working out, as well as a place to celebrate and show off your coding wins.\n\nTo keep the Discussions forum semi-organized, we have set up several categories, please select the appropiate category when opening a new discussion!\n\n\n\nCode of Conduct\n\nWe ask that all course participants read and adhere to the spirit of our Code of Conduct. We are all human, at different points in our learning journeys, so what may be obvious to you at your point of your learning journey may have necessarily be obvious to someone just getting started. This course is our giving back to those in the community, but is on a voluntary basis in addition to our regular workload. While we try to reply quickly, sometimes our cell sorters fully melt down sending everything into chaos. We will reply when we can.\n\n\n\n\nAnnouncements\n\nWhen we send out an email to all participants, we will also repost it as an announcement. This ensures that even if you are not on our mailing list, you will still be able to have access to important information and course updates.\n\n\n\n\nGeneral\n\nThis section category can be used for any discussions that you think are worth having, that don’t fall under any of the other category. Good examples are continuing a discussion that was held during one of the livestreams; wanting to discuss and dive further into a given week’s topic; or bringing in additional resources that you found useful to understandingn something that didn’t click initially. This space is for the community to shape as they see best.\n\n\n\n\nIdeas\n\nHave an idea for a new topic or a way to improve the course? We would love to hear them. Provide as many details, and ideally, an example, and if it is doable, we will try to implement them.\n\n\n\n\nIntroductions\n\nOnline courses can be odd in terms of replicating in-person dynamics. Fortunately, we have gathered the largest cohort of “cytometrist with no-to-little flow experience trying to learn R at the same time” that the world has ever seen, so best to take advantage of this while we can. Treat this section as if we had just met at a conference, tell us about yourself, what brings you here, and what you want to hopefully be able to do after the course ends.",
     "crumbs": [
       "About",
       "Getting Started",
@@ -2105,7 +1916,7 @@
     "href": "course/00_Homeworks/index.html#polls",
     "title": "Getting Help",
     "section": "Polls",
-    "text": "Polls\n\nOccasionally, we will need to gather community feedback on what is working and what is not working. We will sporadically post Polls for this purpose.\n\n\n\n\n\n\nQ&A\n\nThe Questions and Answers (Q&A) section is where you go if something is not clear, not working, and you are trying to troubleshoot your way through it. First thing before posting, search! to see if someone has already asked the question. If you don’t find anything, go ahead and open a new discussion.\nSince we are not at your computer, and don’t have your dataset, when troubleshooting it is best to include a minimal reproducible example of the issuen you are encountering, slimming down the number of files needed to be transferred, and generalizing down the code so that other course participants and instructors can follow along. If this is not doable, or if the problem requires added context (and larger files), create a new repository on your GitHub, make it public, and share the links to it in your post. The goal would be to download the folder and be able to replicate the issue that you are encountering.\n\n\n\n\n\n\n\n\n\n\nShow and Tell\n\nWhere Q&A section is for getting help on code that is frustratingly not working, Show and Tell is where to go and celebrate when you finally get things to work. Share your wins, show us the extra pretty graphs, bizarre autofluorescence signatures, or odd outputs that just make you laugh.",
+    "text": "Polls\n\nOccasionally, we will need to gather community feedback on what is working and what is not working. We will sporadically post Polls for this purpose.\n\n\n\nQ&A\n\nThe Questions and Answers (Q&A) section is where you go if something is not clear, not working, and you are trying to troubleshoot your way through it. First thing before posting, search! to see if someone has already asked the question. If you don’t find anything, go ahead and open a new discussion.\nSince we are not at your computer, and don’t have your dataset, when troubleshooting it is best to include a minimal reproducible example of the issuen you are encountering, slimming down the number of files needed to be transferred, and generalizing down the code so that other course participants and instructors can follow along. If this is not doable, or if the problem requires added context (and larger files), create a new repository on your GitHub, make it public, and share the links to it in your post. The goal would be to download the folder and be able to replicate the issue that you are encountering.\n\n\n\n\nShow and Tell\n\nWhere Q&A section is for getting help on code that is frustratingly not working, Show and Tell is where to go and celebrate when you finally get things to work. Share your wins, show us the extra pretty graphs, bizarre autofluorescence signatures, or odd outputs that just make you laugh.",
     "crumbs": [
       "About",
       "Getting Started",
@@ -2117,7 +1928,7 @@
     "href": "course/00_Homeworks/index.html#issues",
     "title": "Getting Help",
     "section": "Issues",
-    "text": "Issues\nMost of the time, if you are having trouble getting you code to run, you should first stop after some initial troubleshooting should be to open a new Discussion under the Q&A category. Here you will be able to get both community and instructor help and suggestions to hopefully resolve whatever is going on.\n\nThe Issues page is primarily meant for course-specific problems that require the course instructor intervention to fix. For example, we release a new week of material, and while it runs fine for both Windows and Linux, the code fails to run for all MacOS users. While you may be able to find workarounds on your own, it’s ultimately our responsibility to help provide a solution so that everyone can move forward. This is the situation where opening an Issue is appropiate.\n\n\n\nSimilarly, if our code contains a wrong argument, is returning a deprecation warning, etc. open an issue to let us know. While we may not be able to fix something that is not directly related to our code, we can redirect it to the package maintainers so that they can fix the issue.\nAnd likewise, if you find multiple typos in the documentation, you can open an issue and propose carrying out a pull-request to fix them.",
+    "text": "Issues\nMost of the time, if you are having trouble getting you code to run, you should first stop after some initial troubleshooting should be to open a new Discussion under the Q&A category. Here you will be able to get both community and instructor help and suggestions to hopefully resolve whatever is going on.\n\nThe Issues page is primarily meant for course-specific problems that require the course instructor intervention to fix. For example, we release a new week of material, and while it runs fine for both Windows and Linux, the code fails to run for all MacOS users. While you may be able to find workarounds on your own, it’s ultimately our responsibility to help provide a solution so that everyone can move forward. This is the situation where opening an Issue is appropiate.\nSimilarly, if our code contains a wrong argument, is returning a deprecation warning, etc. open an issue to let us know. While we may not be able to fix something that is not directly related to our code, we can redirect it to the package maintainers so that they can fix the issue.\nAnd likewise, if you find multiple typos in the documentation, you can open an issue and propose carrying out a pull-request to fix them.",
     "crumbs": [
       "About",
       "Getting Started",

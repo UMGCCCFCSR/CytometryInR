@@ -1,0 +1,75 @@
+---
+title: "Week1 Homework"
+format: html
+---
+
+Problem 1: PeacoQC functions:
+
+ff
+channels
+determine_good_cells
+plot
+save_fcs
+output_directory
+name_directory
+report
+events_per_bin
+min_cells
+max_bins
+step
+MAD
+IT_limit
+consecutive_bins
+remove_zeros
+suffix_fcs
+force_IT
+peak_removal
+min_nr_bins_peakdetection
+time_channel_parameter
+
+PeacoQC also has a Heatmap function - PeacoQCHeatmap() that contains:
+
+report_location
+show_values
+show_row_names
+latest_tests
+title
+
+And you can add extra parameters to the heatmap function.
+
+You can also plot the deleted cells from running PeacoQC using PlotPeacoQC()
+
+Preprocessing functions to PeacoQC are:
+
+RemoveMargins()
+flowCore::compensate()
+flowCore::transform()
+flowCore::estimateLogicle()
+
+Problem 2: 1. How many cytometry packages are currently in Bioconductor and the 2. author/maintainer with the most contributed cytometry R packages. 3. Couple of packages to explore later in the course
+
+1. There are 69 cytometry packages currently in Bioconductor
+2.  Mike Jiang
+3. cytoMEM, FlowSOM
+
+Problem 3: Using pak to install “broom”, “cytoMEM”, “DillonHammill/CytoExploreR”.
+
+First thing I had to do was install pak itself from CRAN using install.packages("pak")
+Then, using pak to install these packages meant that I had to call the pkg_install function from pak using the pak::pkg_install() command. It generated a different string of installation commands for each package installed.
+
+I ran into a problem attempting to install CytoExploreR. I had to specifically call for a version 1.0.0 of the package "superheat" from GitHub, that was a dependency of CytoExploreR. Once I had that installed, CytoExploreR successfully installed using pak.
+
+Code used for this is below.
+
+```{r}
+install.packages("pak")
+library(pak)
+pak::pkg_install("broom")
+pak::pkg_install("cytoMEM")
+
+
+# Install superheat 1.0.0 from GitHub
+pak::pkg_install("rlbarter/superheat")
+pak::pkg_install("DillonHammill/CytoExploreR")
+```
+
