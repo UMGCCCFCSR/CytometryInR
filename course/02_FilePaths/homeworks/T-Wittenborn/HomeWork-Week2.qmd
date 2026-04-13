@@ -1,0 +1,41 @@
+# Problem 1
+Plugged in an external USB drive and trying to programmmatically create a folder and afterwards transfer some fcs-files to the newly created foilder.
+
+Creating the folder on my USB (which was assigned the letter D)
+```{r}
+getwd()
+list.files(path="D:/", full.names = TRUE, recursive = FALSE)
+NewFolderLocation <- file.path("D:/", "Test")
+dir.create(path=NewFolderLocation)
+```
+
+Copying fcs-files from data directory
+
+```{r}
+library(dplyr)
+all_files <- list.files("data", full.names = TRUE, recursive = FALSE)
+fcs_files <- list.files("data", pattern=".fcs", full.names = TRUE, recursive = FALSE)
+file.copy(from=fcs_files, to=NewFolderLocation)
+```
+
+# Problem 2
+
+Not sure I understand the question correctly, but if we want to list the files within a specific directory, we can use this code.
+
+```{r}
+#list.files(full.names = TRUE, recursive = TRUE)
+#list.files(path="images", full.names = TRUE, recursive = TRUE)
+Files <- list.dirs(path="data", full.names = TRUE, recursive = TRUE)
+normalizePath(path=Files, winslash = "/", mustWork = TRUE)
+```
+
+# Problem 3
+
+```{r}
+system.file("extdata", package="FlowSOM")
+system.file("extdata", package="flowWorkspace")
+list.files(path="C:/Users/au160129/AppData/Local/Programs/R/R-4.5.2/library/FlowSOM/extdata", pattern=".fcs", full.names = TRUE, recursive = TRUE)
+list.files(path="C:/Users/au160129/AppData/Local/Programs/R/R-4.5.2/library/flowWorkspace/extdata", pattern=".fcs", full.names = TRUE, recursive = TRUE)
+```
+
+It appears there is only one fcs file in the FlowSOM package and none in the flowWorkspace package.
