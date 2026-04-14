@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="David Rach">
+<meta name="dcterms.date" content="2026-04-08">
 
-<title>Future Addendum – Cytometry in R</title>
+<title>From R GatingSet to FlowJo v10 – Cytometry in R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -81,7 +118,7 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-sidebar floating nav-fixed fullcontent quarto-light">
+<body class="nav-sidebar floating nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -113,6 +150,10 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
     <a class="nav-link" href="../../course/index.html"> 
 <span class="menu-text">Course</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../Announcements.html"> 
+<span class="menu-text">Announcements</span></a>
+  </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
@@ -122,6 +163,10 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
   <li class="nav-item">
     <a class="nav-link" href="https://github.com/UMGCCCFCSR/CytometryInR/discussions"> 
 <span class="menu-text">Discussions</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../Homeworks.html"> 
+<span class="menu-text">Homeworks</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://www.youtube.com/@CytometryInR"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
@@ -144,7 +189,7 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">Future Addendum</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">From R GatingSet to FlowJo v10</li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -269,6 +314,12 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
  <span class="menu-text">08 - Ways to Gate</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/09_Functions/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">09 - It’s Raining Functions!</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -288,20 +339,51 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#docker-setup" id="toc-docker-setup" class="nav-link" data-scroll-target="#docker-setup">Docker Setup</a>
+  <ul>
+  <li><a href="#docker-desktop---windows" id="toc-docker-desktop---windows" class="nav-link" data-scroll-target="#docker-desktop---windows">Docker Desktop - Windows</a></li>
+  <li><a href="#docker-engine---debian-linux" id="toc-docker-engine---debian-linux" class="nav-link" data-scroll-target="#docker-engine---debian-linux">Docker Engine - Debian Linux</a></li>
+  </ul></li>
+  <li><a href="#r-gatingset-to-flowjo.wsp" id="toc-r-gatingset-to-flowjo.wsp" class="nav-link" data-scroll-target="#r-gatingset-to-flowjo.wsp">R GatingSet to FlowJo.wsp</a>
+  <ul>
+  <li><a href="#gatingset_to_flowjo-function" id="toc-gatingset_to_flowjo-function" class="nav-link" data-scroll-target="#gatingset_to_flowjo-function">GatingSet_to_FlowJo Function</a></li>
+  <li><a href="#create-your-gatingset" id="toc-create-your-gatingset" class="nav-link" data-scroll-target="#create-your-gatingset">Create your GatingSet</a></li>
+  <li><a href="#pull-the-lever-kronk" id="toc-pull-the-lever-kronk" class="nav-link" data-scroll-target="#pull-the-lever-kronk">Pull the lever, Kronk!</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Future Addendum</h1>
+<h1 class="title">From R GatingSet to FlowJo v10</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>David Rach </p>
+          </div>
+  </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 8, 2026</p>
+    </div>
+  </div>
   
     
   </div>
@@ -311,14 +393,190 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 </header>
 
 
-<p>Did not have time to finish this section, will add details in the future.</p>
-<section id="gatingset-to-flowjo-v10" class="level2">
-<h2 class="anchored" data-anchor-id="gatingset-to-flowjo-v10">GatingSet to FlowJo v10</h2>
-<p>Finally, there is one last area I would like to make everyone aware of. As we saw during <a href="../../course/05_GatingSets/index.html">Week 05</a>, we were able to bring FlowJo .wsp files directly into GatingSet objects via the <code>CytoML</code> package. The opposite is also true, and we can convert our GatingSet objects from R into FlowJo .wsp that can be shared with a collaborator.</p>
-<p>The main challenge, is that the current implementation is underdocumented, and relies on an old docker container. <a href="">Docker</a> is a software that will containerize everything that is needed to run something (in this particular case, an .exe file). However, the current version has not been updated recently at all. Likewise, installing Docker can be its own can of worms, especially from a IT safety side, so if your IT department was giving you hassles over Positron, Quarto or Git, then it is unlikely to happen.</p>
-<p>I have linked a walk-through of the process for anyone who is on their own computer and might be interested, as there are no other active instructions elsewhere as far as I know.</p>
+<p><img src="../../images/WebsiteBanner.png" class="img-fluid"></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://img.shields.io/badge/license-AGPLv3-blue.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
+</div>
+<p><br></p>
+<hr>
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>As we saw during <a href="../../course/05_GatingSets/index.html">Week 05</a>, we were able to bring FlowJo .wsp files directly into GatingSet objects via the <code>CytoML</code> package. The opposite is also true, and we can convert our GatingSet objects from R into FlowJo .wsp that can be shared with a collaborator. This can be especially helpful starting on <a href="../../course/08_WaysToGate/index.html">Week 08</a>, when we start creating GatingSets with manual and automated gates, that we may want to save for later.</p>
+<p>The main challenge, is that the current implementation is underdocumented, and relies on an old Cytoverse <a href="https://www.docker.com/">Docker</a> container originally provided by <a href="https://ozette.com/">Ozette</a> as part of the <a href="https://www.bioconductor.org/packages/release/bioc/html/CytoML.html">CytoML</a> R package. <a href="https://www.docker.com/">Docker</a> is a software that will containerize everything that is needed to run something (in this particular case, an .exe file). However, the current Docker image has not been updated recently, which alongside the lack of documentation makes the implementation tricky.</p>
+<p>Likewise, installing Docker can be its own can of worms, especially from a IT safety side, so if your IT department was giving you hassles over Positron, Quarto or Git, then it is unlikely to happen.</p>
+<p>Consequently, this walk-through of the process is for anyone who is on their own computer and might be interested in this extended functionality to the <code>CytoML</code> package.</p>
+</section>
+<section id="docker-setup" class="level1">
+<h1>Docker Setup</h1>
+<p>To be able to convert a GatingSet to a FlowJo workspace using the <code>CytoML</code> package, you will need to have <a href="https://www.docker.com/">Docker</a> correctly set up on your computer (with proper permissions, etc), and have downloaded the Cytoverse container that contains the .exe file needed for the conversion step.</p>
+<p>Please note, Docker can be its own can of IT worms, so I am assuming you are installing it on your own computer, or have your IT-departments blessing to proceed in a limited capacity.</p>
+<p>There are two general ways that you can install Docker, one via Docker Desktop (more graphical-user interface (GUI) elements, available for Windows, MacOS, and Linux) or via Docker Engine (more command-line interface (CLI), typically for Linux). We will showcase a representative installation process for both below, before reconvening on the conversion steps once back to Positron and R.</p>
+<section id="docker-desktop---windows" class="level2">
+<h2 class="anchored" data-anchor-id="docker-desktop---windows">Docker Desktop - Windows</h2>
+<p>This is the typical setup for Docker Desktop. In the case of this documentation, it was done on a Windows Operating System, but you would see something similar for both MacOS and Linux.</p>
+<p>The first step is to go ahead and download <a href="https://docs.docker.com/desktop/">Docker Desktop</a> and proceed through the installation.</p>
+<p>Once the installation is complete, proceed to open Docker Desktop, and proceed to skip the account creation (unless you plan to use it extensively).</p>
+<p><img src="images/DD_00.png" class="img-fluid"></p>
+<p>Once you are within DockerDesktop, go ahead and click on the terminal tab on the lower right.</p>
+<p><img src="images/DD_01.png" class="img-fluid"></p>
+<p>You will then be asked to enable the Docker terminal so that it can communicate with your operating system’s terminal (PowerShell, since we are using a Windows computer for this example).</p>
+<p><img src="images/DD_02.png" class="img-fluid"></p>
+<p>Once enabled, the terminal will be live.</p>
+<p><img src="images/DD_04.png" class="img-fluid"></p>
+<p>The link to the currently working (as of April 2026) is documented within the CytoML help documentation for the <code>gatingset_to_flowjo()</code> function</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(CytoML)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>?gatingset_to_flowjo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="images/0000_CytoMLDoc.png" class="img-fluid"></p>
+<p>Go ahead and copy and paste this line of code into the Docker terminal, then press Enter.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull public.ecr.aws/x4k5d9i7/cytoverse/gs-to-wsp:latest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="images/DD_05.png" class="img-fluid"></p>
+<p>It will then proceed to download the Docker contained, when successful you will see the an output similar to this one in your terminal window.</p>
+<p><img src="images/DD_06_ImageAcquired.png" class="img-fluid"></p>
+<p>Next, run the following line of code within the Docker terminal, and copy the “IMAGE ID” number, as you will need it later.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> images</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="images/DD_07.png" class="img-fluid"></p>
+<p>With this done, return to Positron and continue with the walk-through.</p>
+</section>
+<section id="docker-engine---debian-linux" class="level2">
+<h2 class="anchored" data-anchor-id="docker-engine---debian-linux">Docker Engine - Debian Linux</h2>
+<p>This is the setup process for Docker Engine (more command-line interface (CLI), typically for Linux Operating Systems). In the context of this walkthrough, we were installing for Debian Linux (Trixie) distro. For installation instructions for other distros, please consult <a href="https://docs.docker.com/engine/install/">here</a>. The original instructions for Debian can be found <a href="https://docs.docker.com/engine/install/debian/#install-using-the-repository">here</a>.</p>
+<p>The first step for Debian is via our terminal to add Docker to the apt repositories to be able to pull updates.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up Docker apt repository</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ca-certificates curl</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> install <span class="at">-m</span> 0755 <span class="at">-d</span> /etc/apt/keyrings</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> curl <span class="at">-fsSL</span> https://download.docker.com/linux/debian/gpg <span class="at">-o</span> /etc/apt/keyrings/docker.asc</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> chmod a+r /etc/apt/keyrings/docker.asc</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Add repository to apt sources</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tee /etc/apt/sources.list.d/docker.sources <span class="op">&lt;&lt;EOF</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="st">Types: deb</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="st">URIs: https://download.docker.com/linux/debian</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="st">Suites: </span><span class="va">$(</span><span class="bu">.</span> /etc/os-release <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> <span class="st">"</span><span class="va">$VERSION_CODENAME</span><span class="st">"</span><span class="va">)</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="st">Components: stable</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="st">Architectures: </span><span class="va">$(</span><span class="ex">dpkg</span> <span class="at">--print-architecture</span><span class="va">)</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="st">Signed-By: /etc/apt/keyrings/docker.asc</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="op">EOF</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Once this is done, we can proceed to install Docker.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Once complete, let’s verify it is in working condition by running the following line of code in our terminal.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> docker run hello-world</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If everything was set up successfully, you should see the following output:</p>
+<p><img src="images/0000_DockerSuccess.png" class="img-fluid"></p>
+<p>You will likely also need to add docker group to be able to run via Positron.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">groups</span> <span class="va">$USER</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> usermod <span class="at">-aG</span> docker <span class="va">$USER</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">newgrp</span> docker</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run hello-world</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With Docker now running, we need to install the container. The link to the currently working container (as of April 2026) is documented within the CytoML help documentation for the <code>gatingset_to_flowjo()</code> function</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(CytoML)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>?gatingset_to_flowjo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="images/0000_CytoMLDoc.png" class="img-fluid"></p>
+<p>Go ahead and copy and paste this line of code into the Docker terminal, then press Enter.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> pull public.ecr.aws/x4k5d9i7/cytoverse/gs-to-wsp:latest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="images/DD_05.png" class="img-fluid"></p>
+<p>Once the download is complete, run this line of code in your terminal, and copy the “IMAGE ID” as you will need it later in Positron and R.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> docker images</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With this done, return to Positron and continue with the walk-through.</p>
+</section>
+</section>
+<section id="r-gatingset-to-flowjo.wsp" class="level1">
+<h1>R GatingSet to FlowJo.wsp</h1>
+<p>With Docker and the Cytoverse container containing the .exe now installed (and hopefully functional), we can now return to Positron and R and proceed with this walk-through.</p>
+<p>Let’s go ahead and attach <code>CytoML</code> to your local environment via the <code>library()</code> call.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(CytoML)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="gatingset_to_flowjo-function" class="level2">
+<h2 class="anchored" data-anchor-id="gatingset_to_flowjo-function">GatingSet_to_FlowJo Function</h2>
+<p>Once loaded, we will be using a modified version of the <code>gatingset_to_flowjo</code> function. Here is the help documentation as it currently stands for the original.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>?gatingset_to_flowjo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="images/0000_CytoMLDoc.png" class="img-fluid"></p>
+<p>Due to a bug in the original function, we will be using a modified version of the function that can be found in the GatingSetToFlowJo.R file within “course/08_WaysToGate”. To activate the functions within this .R file, we will need to <code>source()</code> the R file, which will result in functions becoming active within our session environment.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>TheRFunction <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"course"</span>, <span class="st">"08_WaysToGate"</span>, <span class="st">"GatingSetToFlowJo.R"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(TheRFunction)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="images/ActiveFunctions.png" class="img-fluid"></p>
+</section>
+<section id="create-your-gatingset" class="level2">
+<h2 class="anchored" data-anchor-id="create-your-gatingset">Create your GatingSet</h2>
+<p>For this walkthrough, we will need a GatingSet to later convert to a .wsp. Alternatively, we can go ahead and load in the saved GatingSet from <a href="../../course/08_WaysToGate/index.html">Week 08</a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowWorkspace)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>As part of improvements to flowWorkspace, some behavior of
+GatingSet objects has changed. For details, please read the section
+titled "The cytoframe and cytoset classes" in the package vignette:
+
+  vignette("flowWorkspace-Introduction", "flowWorkspace")</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># StorageLocation &lt;- file.path("course", "08_WaysToGate", "data") # When working interactively</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co"># Quarto Render</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>StorageLocationAndName <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, <span class="st">"flowGateExampleGS.gs"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">load_gs</span>(StorageLocationAndName)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="GStoFlowJo_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="pull-the-lever-kronk" class="level2">
+<h2 class="anchored" data-anchor-id="pull-the-lever-kronk">Pull the lever, Kronk!</h2>
+<p>Next up, lets specify a file.path and name for our soon to be created .wsp file.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>NewWorkspaceFilePath <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, <span class="st">"FlowJoTest.wsp"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And with that, we just need to paste in the “IMAGE ID” number we copied over from Docker into the “docker_img” argument, and we are ready to go.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">GatingSet_to_FlowJo</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">outFile=</span>NewWorkspaceFilePath, <span class="at">docker_img=</span><span class="st">"YourRetrievedIDHere"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="images/0000_DockerWSP.png" class="img-fluid"></p>
+<p>One thing to note is you may get back a warning message about your <code>cytolib</code> package version when running the line of code above. The version difference we are warned about does not appear to make a difference, as we still get back a working fully compatible .wsp file returned to our designated storage location.</p>
+<p><img src="images/0000_DockerWorkspace.png" class="img-fluid"></p>
+<p>The version difference is likely result of Bioconductor rolling-release models resulting in twice yearly version update numbers (but minimal changes behind the scenes to the underlying code)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"cytolib"</span>) <span class="co"># 2.20.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="images/DD_09.png" class="img-fluid"></p>
+<p>And now, if we open the FlowJo.wsp, we find what we normally expect to see, just for the gates that we originally created in R.</p>
+<p><img src="images/DD_08.png" class="img-fluid"></p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

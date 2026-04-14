@@ -1,0 +1,243 @@
+---
+title: "Optional Take-Home Problems"
+format: html
+toc: TRUE
+toc-location: right
+sidebar: false
+---
+
+Below you will find the optional take-home problems for each week. Learning how to code well requires continous practice, and that involves cycles of trying something, failing, and troubleshooting to get it working. The goal of these problems is to help you explore the topic in greater depth than the currated boundaries of this one lecture. 
+
+You are more than welcome to open a [Discussion](https://github.com/UMGCCCFCSR/CytometryInR/discussions) to engage with others in the course to discuss these questions. Once you are done tinkering, and want to get final instructor feedback on your work, place your files within a folder, and follow the instructions to submit it as a [Pull Request](/course/00_Homeworks/index.qmd#submitting-take-home-problems) to the Cytometry In R repositories homework branch. 
+
+
+# Week 1 - Installing R Packages
+
+![](/course/01_InstallingRPackages/images/ExitImage.png)
+
+Redirect to [Week 01](course/01_InstallingRPackages/index.qmd) content. 
+
+:::{.callout-tip title="Problem 1"}
+We installed PeacoQC during this session, but we didn't have time to explore what functions are present within the package. Using what you have learned about accessing documentation, figure out and list what functions it contains
+:::
+
+:::{.callout-tip title="Problem 2"}
+Take a closer look at the list of Bioconductor [cytometry](https://www.bioconductor.org/packages/release/BiocViews.html#___FlowCytometry) packages. Report back on how many there are currently in Bioconductor, the author/maintainer with the most contributed cytometry R packages, and a couple packages that you would be interested in exploring more in-depth later in the course. 
+:::
+ 
+:::{.callout-tip title="Problem 3"}
+There is another way to install R packages, using the newer [pak](https://pak.r-lib.org/) package. Positron uses this when installing suggested dependencies. 
+
+After learning more about it via the documentation and it's pkgdown website, I would like you to attempt to install the following three R packages using this newer method: "broom", "cytoMEM", "DillonHammill/CytoExploreR". 
+
+Take screenshots, and in a new [quarto markdown document](/course/00_Quarto/index.qmd), describe how the installation process differed from what you saw for `install.packages()`, `install()` and `install_github()`.
+:::
+
+## Community Attempts
+
+Click [here](https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3AWeek01) to see previous community attempts at answering these optional take-home problems.
+
+Stay tuned for our [walk-through]() answers on Course section completion. 
+
+<br>
+
+
+# Week 2 - File Paths
+
+![](/course/02_FilePaths/images/Week2Exit.jpg)
+
+Redirect to [Week 02](course/02_FilePaths/index.qmd) content. 
+
+
+:::{.callout-tip title="Problem 1"}
+Plug in an external hard-drive or USB into your computer. Manually, create a folder within called "TargetFolder". Try to programmatically specify the file path to identify the folders and files present on your external drive. Then, try to copy your .fcs files from their current folder on your desktop to the TargetFolder on your drive using R. Remember, just copy, no deletion, you need to walk before you can run :D
+:::
+
+:::{.callout-tip title="Problem 2"}
+In this session, we used `list.files()` with the "full.names argument" set to TRUE, as well as the `basename()` function to identify specific files. But what if you wanted a particular directory. Run `list.files()` with "full.names argument" and "recursive" argument set to TRUE, and then search online to find an R function that would retrieve the "" individual directory folders. 
+:::
+
+:::{.callout-tip title="Problem 3"}
+R packages often come with internal datasets, that are typically used for use in the help documentation examples. These can be accessed through the use of the `system.file()` function. See an example below. 
+
+```{r}
+#| eval: FALSE
+system.file("extdata", package = "FlowSOM")
+```
+
+Using what we have learned about file.path navigation, search your way down the file.directory of the `FlowSOM` and `flowWorkspace` packages, and identify any .fcs files that are present for use in the documentation. 
+:::
+
+## Community Attempts
+
+Click [here](https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3AWeek02) to see previous community attempts at answering these optional take-home problems.
+
+Stay tuned for our [walk-through]() answers on Course section completion. 
+
+<br>
+
+# Week 3 - Inside an .FCS file
+
+![](/course/03_InsideFCSFile/images/TakeAway.jpg)
+
+Redirect to [Week 03](course/03_InsideFCSFile/index.qmd) content. 
+
+
+:::{.callout-tip title="Problem 1"}
+Today's walkthrough focused on a raw spectral flow cytometry file. Within a subfolder in data you will also find an unmixed .fcs file (2025_07_26...). Using what learned to day, investigate it, and see if you can catalog the main differences that occured to the keyword, parameters and exprs. Did any keywords get added, changed, deleted entirely? etc.
+:::
+
+:::{.callout-tip title="Problem 2"}
+Today's files were for spectral .fcs files from a Cytek Aurora within a subfolder in data you will also find a conventional flow cytometry file (2025-10_22...). Similarly, explore and see if you find any major differences (beyond the different detector or fluorophore names which will vary based on antibody panel used, etc)
+:::
+
+:::{.callout-tip title="Problem 3"}
+If you have access to commercial software, take one of the .fcs files and try to see if you can see similar internal information from within the software. For those without commercial access, try the equivalent process using [Floreada.io](/course/00_Floreada/index.qmd). 
+:::
+
+## Community Attempts
+
+Click [here](https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+03%22) to see previous community attempts at answering these optional take-home problems.
+
+Stay tuned for our [walk-through]() answers on Course section completion. 
+
+<br>
+
+# Week 4 - Introduction to Tidyverse
+
+![](/course/04_IntroToTidyverse/images/TakeAway.jpg)
+
+Redirect to [Week 04](course/04_IntroToTidyverse/index.qmd) content. 
+
+:::{.callout-tip title="Problem 1"}
+Taking a dataset (either todays or one of your own), work through the column-operating functions (`select()`, `rename()`, and `relocate()`). Once this is done, `filter()` by conditions from two separate columns,  arrange in an order that makes sense, and export this "tidy" data as a .csv file. 
+:::
+
+:::{.callout-tip title="Problem 2"}
+We used the `mutate()` function to create new columns, but it can also be used to modify existing ones. Various numeric columns are showing way to many significant digits. As was shown, use `round()` to round all these proportion columns, but use mutate to overwrite the existing column. Export this as it's own .csv file. 
+:::
+
+:::{.callout-tip title="Problem 3"}
+We can also use `mutate()` to combine columns. For our dataset, "bid", "timepoint", "Condition" are separate columns that originally were all part of the filename for the individual .fcs file. Try to figure out a way to combine them back together using `paste0()`, and save the new column as "filename". Once this is done, `pull()` the contents of this column, and using try to determine whether there were any duplicates (think innovative ways of using !, `length()` and `unique()`) 
+:::
+
+## Community Attempts
+
+Click [here](https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+04%22) to see previous community attempts at answering these optional take-home problems.
+
+Stay tuned for our [walk-through]() answers on Course section completion. 
+
+<br>
+
+# Week 5 - Gating Sets
+
+![](/course/05_GatingSets/images/SunsetSatzi.jpg)
+
+Redirect to [Week 05](course/05_GatingSets/index.qmd) content. 
+
+:::{.callout-tip title="Problem 1"}
+
+Using what you learned last week in [Introduction to Tidyverse](/course/04_IntroToTidyverse/), for the imported GatingSet, retrieve the data.frame from cell counts per gate and attempt  to mutate a new column showing percent of the parent gate. Remember, this is intentionally tricky at this point, we will go over how to efficiently do this in a [few weeks](/Schedule.qmd#retrieving-data-for-statistics)
+
+:::
+
+:::{.callout-tip title="Problem 2"}
+
+As we saw, `CytoML` can be finicky when names are repeated, or .fcs files are not present. Try removing a couple of the .fcs files from the data folder, and re-run the code. Document what kind of errors result. 
+
+:::
+
+:::{.callout-tip title="Problem 3"}
+
+For `ggcyto`, attempt to generate plots to visualize TNFa and IFNg for the various cell populations, across both Ctrl and SEB samples. In the process, change the bins argument until you end up with a resolution that you would be happy with for your own plots, and write it down. 
+
+:::
+
+
+## Community Attempts
+
+Click [here](https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+05%22) to see previous community attempts at answering these optional take-home problems.
+
+Stay tuned for our [walk-through]() answers on Course section completion. 
+
+<br>
+
+# Week 6 - Visualizing with ggplot2
+
+![](/course/06_Visualizing/images/TakeAway.jpg)
+
+Redirect to [Week 06](course/06_Visualizing/index.qmd) content. 
+
+:::{.callout-tip title="Problem 1"}
+In this session, we created beeswarm-style boxplot to display our T-cell frequencies on the y-axis, and timepoint on the x-axis. Using the concepts covered this week, swap out "timepoint" for the "Condition" variable. Adjust other layer arguments accordingly until you can return a similar plot at the end of the class. Finally, figure out how to switch around the order the Condition values are displayed on the x-axis. 
+:::
+
+:::{.callout-tip title="Problem 2"}
+Circle back to the CytoML-ggcyto flowplot, and modify it until happy with the visual appearance. You may use any resource on the internet to assist, but you must document your steps so that we can also repeat them. 
+:::
+
+:::{.callout-tip title="Problem 3"}
+In Mismatched Assumptions, we saw two examples of a histogram/density overlay showing the distribution of a variable on the x-axis. Similar to what we did during class to show values according to a different data column, try to modify the plot to show data on the basis of group (whether condition, ptype, infant_sex, etc.) similar to what you can see [here](https://umgcccfcsr.github.io/CytometryInR/Schedule.html#introduction-to-the-tidyverse)
+:::
+
+## Community Attempts
+
+Click [here](https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+06%22) to see previous community attempts at answering these optional take-home problems.
+
+Stay tuned for our [walk-through]() answers on Course section completion. 
+
+<br>
+
+# Week 7 - Applying Transformations
+
+![](/course/07_Transformations/images/TakeAway.png)
+
+Redirect to [Week 07](course/07_Transformations/index.qmd) content. 
+
+:::{.callout-tip title="Problem 1"}
+We had not selected FSC and SSC parameters in this attempt, as they are normally displayed in the linear scale. Include them in the list of fluorophores to be transformed, and see how this impacts the visualization (imitating what could accidentally happen in practice if they were left in)
+:::
+
+:::{.callout-tip title="Problem 2"}
+For the SFC data, I showed the setup for both Logicle and Biexponential, but didn't have time to dive into the Logicle transformation. Select a couple markers of interest for the SFC data, visualize and screenshot the before, and then attempt to customize the biexponential arguments to best visualize the underlying data, and then repeat for Logicle. Take screenshots of both and compare/contrast the difference. 
+:::
+
+:::{.callout-tip title="Problem 3"}
+There are to asinh style transformations provided by the `flowWorkspace` package. Using the mass cytometry data, select two metal markers of interest, visualize each, customize the arguments until you have properly visualized the underlying populations, and see if you can spot any major differences between the methods.  
+:::
+
+## Community Attempts
+
+Click [here](https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3AWeek07) to see previous community attempts at answering these optional take-home problems.
+
+Stay tuned for our [walk-through]() answers on Course section completion. 
+
+<br>
+
+# Week 8 - Manual and Automated Gating
+
+![](/course/08_WaysToGate/images/TakeAway.jpg)
+
+Redirect to [Week 08](course/08_WaysToGate/index.qmd) content. 
+
+:::{.callout-tip title="Problem 1"}
+Using `flowGate`, go ahead and create your own series of gates for either our data or your own for any cell populations that might interest you. Once done, save the GatingSet, and then successfully reload it. Add another gate, but intentionally misdraw it. Then proceed to visualize, identify and correct it, before saving again. 
+
+If you do plan to switch over to R for gating long-term, these skillsets will be essential, as you will need to be confident in your ability to adjust your gates as needed. 
+:::
+
+:::{.callout-tip title="Problem 2"}
+Go ahead and create your own `openCyto` gate template, extending to whatever cell target population of interest. Visualize the differences, and ensure that the gates are correctly applied for everyone. Set gate_constaint arguments as needed until everything is just right. 
+
+If you do plan to switch over to R for gating long-term, these skillsets will be essential, as you will need to be confident in your ability to adjust your gates as needed.
+:::
+
+:::{.callout-tip title="Problem 3"}
+Re-run your `openCyto` template, but then add a few additional `flowGate` on to to extend it further. Save the gating set, close out of positron, and successfully reload. 
+:::
+
+## Community Attempts
+
+Click [here](https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+08%22) to see previous community attempts at answering these optional take-home problems.
+
+Stay tuned for our [walk-through]() answers on Course section completion. 

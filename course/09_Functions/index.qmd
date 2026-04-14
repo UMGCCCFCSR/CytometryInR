@@ -1,0 +1,873 @@
+---
+title: "09 - It's Raining Functions!"
+author: "David Rach"
+date: 04-13-2026
+format: html
+toc: true
+toc-depth: 5
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
+
+For screen-shot slides, click [here](/course/09_Functions/slides.qmd)
+
+<br>
+
+---
+
+# Background
+
+Welcome to the ninth week of the "Cytometry in R course". Over the last couple months, we have gradually built out a foundation of basic R skills, and explored some of the flow cytometry analysis infrastructure that we will be using throughout the course. 
+
+In the process, we have extensively used functions, i.e., the tools within a toolbox, to carry out various useful tasks. We saw during [Week 01](/course/01_InstallingRPackages/) that when we install new packages, we gain access to their functions, enabling us to extend far beyond the boundaries of what the base R software is capable of by itself (as long as we remember to to attahc the package to our local environment (via the `library()` call) of course). 
+
+We also saw how just like tools in a toolbox, different functions take different [types](/course/03_InsideFCSFile/index.qmd#) of input objects, and the outputs we get back can be modified by providing additional arguments (typically show-in within ()). 
+
+While it is great that the R community as a whole has developed a small horde of useful functions, sometimes we need something that is not yet available. Today we will learn how to write our own functions, which will enable us to start exploring beyond the bounds of what others have already done. In the process, we will learn of a couple ways to iterate through vectors or lists, reducing the times we need to copy and paste the same of codes for slightly different inputs, and start to gain an appreciation of [functional programming](https://en.wikipedia.org/wiki/Functional_programming) in the R context.
+
+# Walk Through
+
+## Functions
+
+### Structure
+
+At the most basic level, what makes up a function in R? Let's take a look at a simple example.
+
+```{r}
+MyFirstFunction <- function(){
+    message("Always spin-down your antibodies!")
+}
+```
+
+The name of the function is defined by placing it on the left-side of the assignment arrow.  To the right we place the `function()`, which conveys to R that it will be creating a function. Although currently empty, individual function arguments that will make up the inputs are placed within the parenthesis (). And finally, the actual code being run by the function is palced within the curly brackets {}. 
+
+When we run this code-block, we end up creating a function. We can see this appear within our local environment, appearing under the variables tab in the right-secondary sidebar. 
+
+![](images/00_Functions.png)
+
+Once we have created a function that is present in our environment, we are able to run/use it. In the case of the first function example, no inputs or arguments are needed (as there is nothing between the ()). For output, all that is present within the {} is code to send a message to console, which we will get back if we run the function by calling its name in our console. 
+
+```{r}
+MyFirstFunction()
+```
+
+
+### Arguments
+
+In the case of our first function above, no input arguments were provided, meaning the function was entirely self-contained, allowing us to retrieve the code output by simply running the function name. 
+
+```{r}
+MyFirstFunction()
+```
+
+Lets modify this initial self-contained argument to allow us to provide an input argument to change the output message. To modify our function to accept input arguments, we decide on our argument name, and place it within the parenthesis (). From there, we can modify our line of code within the {} to achieve our desired outcome.  
+
+```{r}
+MySecondFunction <- function(BestFluorophore){
+    message("Unquestionably, the best fluorophore is ", BestFluorophore)
+}
+```
+
+And we can check to make sure it is running correctly similar to how we would for any function we might encounter, by running the line of code
+
+```{r}
+MySecondFunction(BestFluorophore = "APC")
+```
+
+Lets continue our roll and see if we can provide multiple arguments to our function. We can achieve this by separating individual function arguments within the () with commas. Don't forget to also make sure the argument you specified within the () is also accounter for within the {}. 
+
+```{r}
+MyThirdFunction <- function(BestFluorophore, WorstFluorophore){
+    message("Unquestionably, the best fluorophore is ", BestFluorophore)
+    message("And by far, the worst fluorophore is ", WorstFluorophore)
+}
+```
+
+```{r}
+MyThirdFunction(BestFluorophore = "APC", WorstFluorophore = "PerCP-Cy5.5")
+```
+
+Once we have a function set up that accepts multiple arguments, what happens if we forget to provide an argument? Let's intentionally forget "WorstFluorophore" and see. 
+
+```{r}
+#| error: TRUE
+MyThirdFunction(BestFluorophore="APC")
+```
+
+As you see, we get back an error. The reason for this is that a function lives in relative isolation from the rest of our R session. It typically can only see what you provided as inputs, or what is spun up by the code within the function itself. 
+
+We can also provide default values for our given arguments. For example, we could modify to provide WorstFluorophore default by setting a value equal to it within the ()
+
+```{r}
+MyFourthFunction <- function(BestFluorophore, WorstFluorophore="PerCP-Cy5.5"){
+    message("Unquestionably, the best fluorophore is ", BestFluorophore)
+    message("And by far, the worst fluorophore is ", WorstFluorophore)
+}
+```
+
+Which would then allow for the partially incomplete function to fall back on the default argument. 
+
+```{r}
+MyFourthFunction(BestFluorophore="APC")
+```
+
+However, you are not locked in on your default option, as if you provide an actual argument, it will take preference over the provided default. 
+
+```{r}
+MyFourthFunction(BestFluorophore="APC", WorstFluorophore="Zombie Aqua")
+```
+
+
+## Iteration
+
+Recalling back to [Week 02](/course/02_FilePaths/index.qmd), we ended up creating our first vector, which contained a list of fluorophores.
+
+```{r}
+Fluorophores <- c("BV421", "FITC", "PE", "APC")
+str(Fluorophores)
+```
+
+Individual fluorophores from this vector can be provided as arguments to our function, by specifying their index location within the vector. For example: 
+
+```{r}
+MySecondFunction(BestFluorophore = Fluorophores[1])
+```
+
+If we wanted to check the output message for each item in our vector, one approach would be to copy-and-paste the line of code, and swap out the vector index position for each new line. 
+
+```{r}
+MySecondFunction(BestFluorophore = Fluorophores[2])
+```
+```{r}
+MySecondFunction(BestFluorophore = Fluorophores[3])
+```
+```{r}
+MySecondFunction(BestFluorophore = Fluorophores[4])
+```
+
+While achievable, this ends up producing several lines of code. As you get further into the course, and more code is written to tidy individual dataframes, generate individual plots, having to copy-and-paste repeated blocks of text that only change based on the input values can become a chore. 
+
+For this reason, there are a couple ways that we can sequentially pass through the objects within a vector or list to our function of interest, and retrieve the outputs that result. 
+
+### For-loops
+
+A for-loop is one way to iterate through a vector. The syntax can look quite startling when encountered for a first time. 
+
+```{r}
+#| eval: FALSE
+for (Name in Fluorophores){
+    MySecondFunction(BestFluorophore=Name)
+}
+```
+
+In a way, it is similar to the "if" [conditional](/course/02_FilePaths/index.qmd) we have encountered previously, with "for" being syntax highlighted. Immediately after for we find our parenthesis (), followed by {} that surround individual lines of code. 
+
+Within the (), the vector or list is being iterated through is placed after "in" (which also ends up being syntax highlighted). So in this case, we place our vector Fluorophores. 
+
+For what is placed before "in", we basically provide an argument that will stand-in for the "i-nth" item in our vector. You will often see "i" used, but you can call it whatever you like, so we will use Name in this case. You will see this "i-nth" standin is then used in place of the value within our line of code present within the {}. 
+
+Consequently, when we run the for-loop, we get the following outputs:
+
+```{r}
+for (Name in Fluorophores){
+    MySecondFunction(BestFluorophore=Name)
+}
+```
+
+Can these outputs be saved? Yes they can, but some modification will be needed. Messages in R are kind of ephemeral and not saved, we could modify our original function from using `messsages()`to a more permanent `paste0` statement to show-case this in a for-loop. 
+
+```{r}
+MySecondFunctionPartB <- function(BestFluorophore){
+    Message <- paste0("Unquestionably, the best fluorophore is ", BestFluorophore)
+    Message
+}
+```
+
+Secondly, we would need to save the output to something external that can be retrieved. This can be accomplished by setting up an external list using the `list()` function, and then adding the message to the list for each iteration within the for-loop brackets {} 
+
+```{r}
+MyOutputList <- list()
+
+SavedOutputs <- for (Name in Fluorophores){
+    InthMessage <- MySecondFunctionPartB(BestFluorophore=Name)
+    MyOutputList[[Name]] <- InthMessage 
+}
+
+MyOutputList
+```
+
+So as you can see, for-loops are a bit complicated, but can be useful once you get the hang of the structure and syntax. One thing to note, is that they can be slow (especially if you are haven't predefined the list size), which is why opinions on their use will be contested by individual R developers. 
+
+### purrr
+
+When iterating through a vector or list to pass the values to a function, a commonly used alternative to for-loops are higher-order functions like the `walk()` and `map()` functions from the `purrr` package. These are the tidyverse equivalents to base R `apply()`, `lapply()`, etc. but with less nuanced argument syntax. We will use these frequently throughout the rest of the course. 
+
+```{r}
+library(dplyr)
+library(purrr)
+```
+
+Let's first see how these two differ, starting with `walk()`
+
+```{r}
+walk(.x=Fluorophores, .f=MySecondFunction)
+```
+
+As you can see, unlike for-loops, the additional structural elements provided are minimal. Within the (), our Fluorophore vector we want to iterate through is provided to the ".x" argument, while to ".f" we designate the function we want to provide the iterated outputs.  
+
+Let's see how `walk()` differs from its counterpart `map()`
+
+```{r}
+Outputs <- map(.x=Fluorophores, .f=MySecondFunction)
+Outputs
+```
+
+In this case, we can see we get both the messages to console, but also individual empty (NULL) entries to a list-style object. This is partly due to the `message()` use we specified above for SecondFunction (which we corrected for with SecondFunctionPartB)
+
+If we try to save `walk()` outputs using our modified PartB function, we quickly realize nothing is being saved, with only the input being recorded
+
+```{r}
+Outputs <- walk(.x=Fluorophores, .f=MySecondFunctionPartB)
+Outputs
+```
+
+The reason behind this is `walk()` is more behind the scenes, used under circumstances when you want something run, but don't need the return. By contrast, returning things is the main focus of `map()`. 
+
+Let's see how `walk()` differs from its counterpart `map()`
+
+```{r}
+Outputs <- map(.x=Fluorophores, .f=MySecondFunctionPartB)
+Outputs
+```
+
+We will explore how these can be used more extensively in a bit. 
+
+## Building Functions
+
+### Background
+
+With this bit of background on general function structure, and a brief introduction to iteration, lets try to write a function that might be conceivably useful for some of us who are still active at the lab-bench. 
+
+Our dataset for today is made up of cell count .fcs files. Our lab works [extensively](https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2025.1628145/full) with cryopreserved cord blood mononuclear cells, which have large fractions of CD45- cells. Since our primary focus is on T cells, when resting or stimulating the cells we need to be able to calculate the concentration of CD45+ cells for each specimen vial following the thaw so that we can appropiately resuspend the vial to the correct resting concentration of R10 media. 
+
+To do this, after thawing and the initial spin, I stain 5 uL of cells for for 7 minutes with a small fluorophore cocktail, consisting of CD45 (APC), CD19 (Pacific Blue) and CD14 (PE). After incubation, cells are resuspended in 500 uL (so a 1:100 dilution), before quickly acquiring on a a 4-laser Cytek Aurora, set to stop collecting after 5000 events are reached. 
+ 
+If you remember back to [Week 03](/course/03_InsideFCSFile/), we saw that within the keyword/description list a volume recorded measurement was stored. Since we have volume, if we are able to gate for CD45+ (using either `openCyto` or `flowGate`) and retrieve the cell counts, we can then solve for cell concentration (since C1V1=C2V2, etc.) This is then followed by multiplying for dilution (x100), multiplying by total volume, and tada! we have the information that is needed.  
+
+After doing this all by hand-for-several years, one of the first things I did after finally having my "it-finally-clicks" moment in R was to automate this process to [get back back reports](https://github.com/DavidRach/AlphaBeta/tree/main/LabNotebook) that look like this, shortening the overall experiment day
+
+![](images/CellRestCounts_2025-07-31.png)
+
+Since this all occurs at the level of a [function](https://github.com/DavidRach/Luciernaga/blob/main/R/Wetlab_Concentration.R), I think sequentially walking through this function creation would be a good bridging component for learning how to write your own functions. Granted, it may be too much, too quick, which is why this session is called "It's Raining Functions!", since it may ultimately viewed as a torrential downpour. 
+
+And with that, let's brave the rain. 
+
+![](https://images2.minutemediacdn.com/image/upload/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/shape/cover/sport/raining-monkeys-e3fa8001e4eb47433b1cc58e2017d2b8.png){width=75%}
+
+
+### Planning
+
+So based on our initial idea, we know that we will need to get our .fcs files into a GatingSet, which we will then be able to iterate through. 
+
+As we iterate through these files, we will need to retrieve the description/keyword for volume that was encoded by the instrument, as well as any other useful metadata. 
+
+And we will need to apply gates (either through openCyto or flowGate), that would allow us to retrieve the counts for various cell populations we might be wanting to retrieve concentration info for. 
+
+Let's go ahead and tackle these in turn, re-using code that we have encountered over the last several weeks
+
+Getting started, as always, we will need to load any libraries we will be using extensively. 
+
+```{r}
+library(flowWorkspace)
+library(flowGate)
+library(ggplot2)
+library(ggcyto)
+library(dplyr)
+library(purrr)
+```
+
+And then we need to identify our fcs files
+
+
+```{r}
+# StorageLocation <- file.path("course", "09_Functions", "data") # Interactive path
+StorageLocation <- file.path("data") # Quarto Rendering path
+
+fcs_files <- list.files(StorageLocation, pattern=".fcs", full.names=TRUE)
+```
+
+Before proceeding to add them into a GatingSet
+
+```{r}
+MyCytoset <- load_cytoset_from_fcs(fcs_files, transformation=FALSE, truncate_max_range=FALSE)
+MyGatingSet <- GatingSet(MyCytoset)
+```
+
+For this particular counting fluorophore panel, only 3 antibodies were used. Since the goal was to quickly acquire the .fcs files before passing off to R, the files were never unmixed, and are still in a raw. fcs format. So we will need to figure out the peak detectors for APC, PE, and Pacific Blue on a 4-laser Cytek Aurora. 
+
+```{r}
+# remotes::install_github("DavidRach/Luciernaga")
+# install.packages("plotly")
+Plots <- Luciernaga::QC_ReferenceLibrary(FluorNameContains="APC$|PE$|Pacific Blue", 
+    NumberDetectors=54, returnPlots=TRUE)[[2]]
+plotly::ggplotly(Plots)
+```
+
+So the equivalent raw detectors we should be paying attention to are going to be V3 (CD19+), B4 (CD45+), and R1 (CD14+)
+
+Since scale can vary dramatically for individual fluorophores, we might as well and go ahead and transform those three detectors while we are here. 
+
+```{r}
+MainDetectorsOnly <- c("V3-A", "B4-A", "R1-A")
+
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=2, widthBasis=-500)
+MyBiexTransform <- transformerList(MainDetectorsOnly, Biexponential)
+transform(MyGatingSet, MyBiexTransform)
+```
+
+And a quick-plot check to make sure the transformation looks reasonable enough
+
+```{r}
+ggcyto(MyGatingSet[[1]], subset="root",
+ aes(x="V3-A", y="R1-A")) + geom_hex(bins=100)
+
+ggcyto(MyGatingSet[[1]], subset="root",
+ aes(x="V3-A", y="B4-A")) + geom_hex(bins=100)
+
+ggcyto(MyGatingSet[[1]], subset="root",
+ aes(x="R1-A", y="B4-A")) + geom_hex(bins=100)
+```
+
+With that done, let's [add some gates](/course/08_WaysToGate/index.qmd) to separate out CD45+ cells, and below those cells identify CD14+ (mainly monocytes), CD19+ (B cells), and CD14-CD19- (mostly T cells and NK cells for cord blood). My automated version uses `openCyto` with gate constraints to handle the variability, but for this example, lets reuse the `flowGate` approach using `tribble` function for quicker setup. 
+
+
+```{r}
+GatingTable <- tibble::tribble(
+  ~filterId,    ~dims,                          ~subset,           
+  "CD45",       list("B4-A", "SSC-A"),            "root",     
+  "CD19",       list("V3-A", "SSC-A"),            "CD45",   
+  "CD14",       list("R1-A", "SSC-A"),            "CD45", 
+  "TandNKcells",  list("V3-A", "SSC-A"),            "CD45",
+)
+```
+
+```{r}
+#| eval: FALSE
+flowGate::gs_apply_gating_strategy(MyGatingSet, gating_strategy = GatingTable)
+```
+
+And add a general CD45+ gate (i.e. those that I need actual concentration for)
+
+![](images/00_CD45.png)
+
+And add a general CD19+ gate (B cells)
+
+![](images/01_CD19.png)
+
+And add a general CD14+ (Monocytes)
+
+![](images/02_CD14.png)
+
+And add a general gate for likely T and NK cells
+
+![](images/03_TandNKprobs.png)
+
+```{r}
+#| include: FALSE
+#| eval: FALSE
+
+# Please ignore this code-chunk, it is used for the website generation to ensure the gated'
+# GatingSet is retrieved from storage for use in the subsequent chunks. If you gated via flowGate,
+# stick to those. Thanks!
+
+GatingSetStorageLocation <- file.path(StorageLocation, "TheGatingSet.gs")
+
+save_gs(MyGatingSet, GatingSetStorageLocation)
+```
+
+```{r}
+#| include: FALSE
+
+# Please ignore this code-chunk, it is used for the website generation to ensure the gated'
+# GatingSet is retrieved from storage for use in the subsequent chunks. If you gated via flowGate,
+# stick to those. Thanks!
+
+GatingSetStorageLocation <- file.path(StorageLocation, "TheGatingSet.gs")
+
+MyGatingSet <- load_gs(GatingSetStorageLocation)
+```
+
+Ending up with a GatingSet that looks like this. 
+
+```{r}
+plot(MyGatingSet)
+```
+
+![](images/CountingGates.png)
+
+And with that done, let's quickly check the gates using `ggcyto` `autoplot()` function, switching between specimen index values to double check. 
+
+```{r}
+ggcyto::autoplot(MyGatingSet[[6]]) + theme_bw()
+```
+
+
+### Building
+
+Alright, lets start by creating the first layer of our function
+
+```{r}
+CellConcentration <- function(){
+
+}
+```
+
+At the moment, our function is literally nothing but a wrapper, but when we run the line of code, it is now present under the variables tab. 
+
+![](images/04_Variables.png)
+
+Lets start by considering what we want to do. We have each of our .fcs files currently contained within a GatingSet object. Ultimately, we want to be able to retrieve the cell concentration from each of these files. 
+
+To do so, lets go ahead and plan that we will use the `map()` function to iterate our way through each specimen of the GatingSet object
+
+```{r}
+pData(MyGatingSet)$name
+```
+
+Since when we iterate with `map()` we need to specify a .x argument, let's go ahead and set that as our argument within the (). 
+
+```{r}
+CellConcentration <- function(x){
+
+}
+```
+
+And to make our lives a little easier, we should provide some function documentation as we go, so that future us several months from now can remember what under-caffenaited us today did. In R, this typically is done via what is known as a [roxygen2 skeleton](https://roxygen2.r-lib.org/), which looks like this. 
+
+```{r}
+#' This function will figure out the cell concentration
+#'  for a given gated population in an .fcs file
+#'
+#' @param x A GatingSet object (typically iterated in)
+#' 
+CellConcentration <- function(x){
+
+}
+```
+
+In a Roxygen skeleton, we use a modified comment (#') format to identify this as documentation. The start is a generic description for our function. The @ param is used to list the individual argument, and a short description of what it does. 
+
+Alright, with that bit of documentation done so that we can contextualize what we did later, let's go back and think mechanics. We will be passing our function through `map()`, so our line of code that we will run will look something like this
+
+```{r}
+#| eval: FALSE
+purrr::map(.x=MyGatingSet, .f=CellConcentration)
+```
+
+As map is triggered, we will basically be indexing our way through MyGatingSet, similar to if we ran the lines of code like this
+
+```{r}
+MyGatingSet[[1]]
+```
+
+```{r}
+MyGatingSet[[2]]
+```
+
+Let's go ahead and add something inside our function so we can get a readout of what is happening inside the function. Let's use our old-friend `class()` to confirm what is being passed in via `map()`.
+
+
+```{r}
+#' This function will figure out the cell concentration
+#'  for a given gated population in an .fcs file
+#'
+#' @param x A GatingSet object (typically iterated in)
+#' 
+CellConcentration <- function(x){
+    class(x)
+}
+```
+
+```{r}
+purrr::map(.x=MyGatingSet, .f=CellConcentration)
+```
+
+So passing through map, we are ending up with invidual "GatingHierarchy" (GatingSet = 1). 
+
+So with a GatingHierarchy object inside, let's turn to seeing what `flowWorkspace` functions we can use to get our desired outputs out of the description/keyword list. 
+
+```{r}
+#' This function will figure out the cell concentration
+#'  for a given gated population in an .fcs file
+#'
+#' @param x A GatingSet object (typically iterated in)
+#' 
+CellConcentration <- function(x){
+    keyword(x)
+}
+```
+
+Let's also set `map()` to only target the first specimen in MyGatingSet for now
+
+```{r}
+KeywordList <- purrr::map(.x=MyGatingSet[1], .f=CellConcentration)
+head(KeywordList[[1]], 20)
+```
+
+Alright, so we have access to the internal .fcs file keywords, similar to what we saw during [Week 03](/course/03_InsideFCSFile/index.qmd). We can check through the full list and see what might be useful for us for this targeted problem, and within the function isolate them to their own respective variables for subsequent use. 
+
+
+```{r}
+#' This function will figure out the cell concentration
+#'  for a given gated population in an .fcs file
+#'
+#' @param x A GatingSet object (typically iterated in)
+#' 
+CellConcentration <- function(x){
+    Volume <- keyword(x)$`$VOL`
+}
+```
+
+```{r}
+purrr::map(.x=MyGatingSet[1], .f=CellConcentration)
+```
+
+As you can see, since we have changed the internal code within the function, we are now getting back the value recorded for acquired volume when our function is run. 
+
+```{r}
+#' This function will figure out the cell concentration
+#'  for a given gated population in an .fcs file
+#'
+#' @param x A GatingSet object (typically iterated in)
+#' 
+CellConcentration <- function(x){
+    Date <- keyword(x)$`$DATE` # Day-Month-Year
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+    Volume <- keyword(x)$`$VOL`
+}
+```
+
+```{r}
+purrr::map(.x=MyGatingSet[1], .f=CellConcentration)
+```
+
+You will notice however that despite finding all these other keywords, we are only getting back the volume as an output. The reason for this is a function returns by default the last object created within it. We can change this by setting a `return()` value equal to something else. 
+
+
+```{r}
+#' This function will figure out the cell concentration
+#'  for a given gated population in an .fcs file
+#'
+#' @param x A GatingSet object (typically iterated in)
+#' 
+CellConcentration <- function(x){
+    Date <- keyword(x)$`$DATE` # Day-Month-Year
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+    Volume <- keyword(x)$`$VOL`
+
+    return(InstrumentSerial)
+}
+```
+
+```{r}
+purrr::map(.x=MyGatingSet[1], .f=CellConcentration)
+```
+
+In this case, we are just retrieving individual bits and pieces. Ideally, we will want to cobble these together into a "data.frame" row or column so that we get everything back in a single go, and have a dataset that can then be used for tidyverse filtering, plotting, etc. 
+
+One thing to notice,there is a Total Events (TOT) keyword. 
+
+```{r}
+#' This function will figure out the cell concentration
+#'  for a given gated population in an .fcs file
+#'
+#' @param x A GatingSet object (typically iterated in)
+#' 
+CellConcentration <- function(x){
+    Date <- keyword(x)$`$DATE` # Day-Month-Year
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+    Volume <- keyword(x)$`$VOL`
+
+    return(TotalFileEvents)
+}
+```
+
+```{r}
+purrr::map(.x=MyGatingSet[1], .f=CellConcentration)
+```
+
+This however corresponds to every event in the .fcs file, including doublets, debris, and miscellaneous cell populations, nothing specific to our individually drawn gates. 
+
+What we can do instead, is use a `flowWorkspace` function we learned about during [Week 05](/course/05_GatingSets/index.qmd), namely the `gs_pop_get_data()` function. 
+
+```{r}
+MySubset <- gs_pop_get_data(MyGatingSet[[1]], "root")
+nrow(MySubset)[[1]]
+```
+
+The main purpose for `gs_pop_get_data()` is to reach through the pointer and retrieve the data associated with a particular gate. We can then assess this subsetted data using our regular R functions. 
+
+You may have noticed the subset argument. We can switch it out for the respective gate names to retrieve the counts for cells present within each. 
+
+```{r}
+TheSubset <- gs_pop_get_data(MyGatingSet[1], "CD45")
+nrow(TheSubset)
+```
+
+```{r}
+TheSubset <- gs_pop_get_data(MyGatingSet[1], "CD14")
+nrow(TheSubset)
+```
+
+```{r}
+TheSubset <- gs_pop_get_data(MyGatingSet[1], "CD19")
+nrow(TheSubset)
+```
+
+```{r}
+TheSubset <- gs_pop_get_data(MyGatingSet[1], "TandNKcells")
+nrow(TheSubset)
+```
+
+As you can see, we can access the counts for the cells found within the respective gate by providing the gate name as the second argument. Let's modify our function, to add subset argument
+
+```{r}
+#' This function will figure out the cell concentration
+#'  for a given gated population in an .fcs file
+#'
+#' @param x A GatingSet object (typically iterated in)
+#' @param subset The gate from which to retrieve cell counts from
+#' 
+CellConcentration <- function(x, subset){
+    Date <- keyword(x)$`$DATE` # Day-Month-Year
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+    Volume <- keyword(x)$`$VOL`
+
+    EventsInTheGate <- gs_pop_get_data(x, subset)
+    Cells <- nrow(EventsInTheGate)
+
+    return(Cells)
+}
+```
+
+```{r}
+purrr::map(.x=MyGatingSet[1], .f=CellConcentration, subset="CD45")
+```
+
+![](images/05_Count.png)
+
+Alright, we have now found all the bits and pieces we will likely need to estimate cell concentration. Let's start by making sure that Volume is switched over to numeric (as keywords can often be stored as character values)
+
+```{r}
+#' This function will figure out the cell concentration
+#'  for a given gated population in an .fcs file
+#'
+#' @param x A GatingSet object (typically iterated in)
+#' @param subset The gate from which to retrieve cell counts from
+#' 
+CellConcentration <- function(x, subset){
+    Date <- keyword(x)$`$DATE` # Day-Month-Year
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+
+
+    Volume <- keyword(x)$`$VOL`
+    Volume <- as.numeric(Volume)
+
+    EventsInTheGate <- gs_pop_get_data(x, subset)
+    Cells <- nrow(EventsInTheGate)
+
+    return(Cells)
+}
+```
+
+Next, remembering our C1V1 = C2V2, we can set up the formula
+
+```{r}
+#' This function will figure out the cell concentration
+#'  for a given gated population in an .fcs file
+#'
+#' @param x A GatingSet object (typically iterated in)
+#' @param subset The gate from which to retrieve cell counts from
+#' 
+CellConcentration <- function(x, subset){
+    Date <- keyword(x)$`$DATE` # Day-Month-Year
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+
+
+    Volume <- keyword(x)$`$VOL`
+    Volume <- as.numeric(Volume)
+
+    EventsInTheGate <- gs_pop_get_data(x, subset)
+    Cells <- nrow(EventsInTheGate)[[1]] #[[1]] since the output is in a list
+
+    Concentration <- (Cells*1000)/Volume
+
+    return(Concentration)
+}
+```
+
+And let's check across our specimens:
+
+```{r}
+purrr::map(.x=MyGatingSet, .f=CellConcentration, subset="CD19")
+```
+
+In the case for our counting tubes, after staining they were diluted 1:100. So we need to add a dilution multiplier to the above. We can set that as our third argument.
+
+```{r}
+#' This function will figure out the cell concentration
+#'  for a given gated population in an .fcs file
+#'
+#' @param x A GatingSet object (typically iterated in)
+#' @param subset The gate from which to retrieve cell counts from
+#' @param dilutionMultiplier Multiplies the estimated concentration
+#'  to bring correct digits. 
+#' 
+CellConcentration <- function(x, subset, dilutionMultiplier){
+    Date <- keyword(x)$`$DATE` # Day-Month-Year
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+
+
+    Volume <- keyword(x)$`$VOL`
+    Volume <- as.numeric(Volume)
+
+    EventsInTheGate <- gs_pop_get_data(x, subset)
+    Cells <- nrow(EventsInTheGate)[[1]] #[[1]] since the output is in a list
+
+    Concentration <- (Cells*1000)/Volume
+    Concentration <- Concentration*dilutionMultiplier
+
+    return(Concentration)
+}
+```
+
+```{r}
+purrr::map(.x=MyGatingSet, .f=CellConcentration, subset="CD19", dilutionMultiplier=100)
+```
+
+With this calculated, we can now proceed to data tidying to make sure everything important gets returned back to us as an individual row. 
+
+```{r}
+#' This function will figure out the cell concentration
+#'  for a given gated population in an .fcs file
+#'
+#' @param x A GatingSet object (typically iterated in)
+#' @param subset The gate from which to retrieve cell counts from
+#' @param dilutionMultiplier Multiplies the estimated concentration
+#'  to bring correct digits. 
+#' 
+CellConcentration <- function(x, subset, dilutionMultiplier){
+    Date <- keyword(x)$`$DATE` # Day-Month-Year
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+
+    Volume <- keyword(x)$`$VOL`
+    Volume <- as.numeric(Volume)
+
+    EventsInTheGate <- gs_pop_get_data(x, subset)
+    Cells <- nrow(EventsInTheGate)[[1]] #[[1]] since the output is in a list
+
+    Concentration <- (Cells*1000)/Volume
+    Concentration <- Concentration*dilutionMultiplier
+
+    Data <- data.frame(
+        Date=Date,
+        InstrumentSerial=InstrumentSerial,
+        Specimen=Specimen,
+        StartTime=StartTime,
+        EndTime=EndTime,
+        Volume=Volume, 
+        Cells=Cells,
+        Concentration=Concentration
+        )
+
+    return(Data)
+}
+```
+
+```{r}
+purrr::map(.x=MyGatingSet[1], .f=CellConcentration, subset="CD19", dilutionMultiplier=100)
+```
+
+And we can use the `dplyr` package `bind_rows()` to assemble all our outputs for the individual .fcs files
+
+```{r}
+Dataset <- purrr::map(.x=MyGatingSet, .f=CellConcentration, subset="CD19", dilutionMultiplier=100) |> bind_rows()
+```
+
+```{r}
+Dataset
+```
+
+And now with our dataset complete, we can save it out for later use. 
+
+```{r}
+#| eval: FALSE
+StorageLocation <- file.path("C:", "User", "FulanoDeTal", "Desktop")
+StorageLocationAndName <- file.path(StorageLocation, "CellConcentrationsForTodaysExperiment.csv")
+write.csv(Dataset, StorageLocationAndName, row.names=FALSE)
+```
+
+# Discussion
+
+Check back tonight! 
+
+# Additional Resources
+
+Check back tonight!
+
+# Take-home Problems
+
+:::{.callout-tip title="Problem 1"}
+Check back tonight!
+:::
+
+:::{.callout-tip title="Problem 2"}
+Check back tonight!
+:::
+
+:::{.callout-tip title="Problem 3"}
+Check back tonight!
+:::
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
