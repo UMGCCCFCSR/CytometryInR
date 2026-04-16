@@ -1,0 +1,217 @@
+---
+title: Solutions for week05
+author: Jarkko Toivonen
+date: "`r Sys.Date()`"
+format: 
+    html:
+        df-print: kable
+        embed-resources: true
+toc: true
+toc-depth: 5
+---
+
+```{r}
+#| label: setup
+library(flowCore)
+library(flowWorkspace)
+library(CytoML)
+library(ggcyto)
+library(tidyverse)
+library(fs)   # for file_move
+```
+
+## Problem 1
+
+> Using what you learned last week in Introduction to Tidyverse, for the imported GatingSet, retrieve the data.frame from cell counts per gate and attempt to mutate a new column showing percent of the parent gate. Remember, this is intentionally tricky at this point, we will go over how to efficiently do this in a few weeks
+
+```{r}
+data_path <- file.path("data")
+fcs_files <- list.files(data_path, pattern=".fcs", full.names=TRUE)
+fcs_files
+```
+
+```{r}
+flowSet <- flowCore::read.flowSet(files=fcs_files, truncate_max_range = FALSE,
+                        transformation = FALSE)
+flowSet
+```
+
+```{r}
+GatingSet1 <- flowWorkspace::GatingSet(flowSet)
+GatingSet1
+```
+
+
+```{r}
+FlowJoWsp <- list.files(path = data_path, pattern = ".wsp", full = TRUE)
+FlowJoWsp
+```
+
+
+```{r}
+ThisWorkspace <- FlowJoWsp[stringr::str_detect(FlowJoWsp, "Opened")]
+ThisWorkspace
+```
+
+
+```{r}
+ws <- CytoML::open_flowjo_xml(ThisWorkspace)
+ws
+```
+
+
+```{r}
+gs <- CytoML::flowjo_to_gatingset(ws=ws, name=1, path = data_path,
+    additional.keys="GROUPNAME")
+gs
+```
+
+
+```{r}
+plot(gs)
+```
+
+
+```{r}
+gs_get_pop_paths(gs)
+```
+
+```{r}
+data <- flowWorkspace::gs_pop_get_count_fast(gs)
+head(data, 5)
+```
+
+
+```{r}
+data <- data %>%
+    mutate(percent_of_parent = Count / ParentCount * 100)
+```
+
+I'm not sure if I understood the problem correctly.
+
+```{r}
+head(data, 5)
+```
+
+## Problem 2
+
+> As we saw, CytoML can be finicky when names are repeated, or .fcs files are not present. Try removing a couple of the .fcs files from the data folder, and re-run the code. Document what kind of errors result.
+
+
+```{r}
+my_move <- function(files, to) {
+    #file.rename(files, to)  # This does not work since files and to should be vectors of equal length
+    files %>% map(~ file.rename(., file.path(to, basename(.))))
+}
+tmp_dir <- file.path("tmp")
+if (! dir.exists(tmp_dir)) dir.create(tmp_dir)
+couple_files <- fcs_files[c(1,4, 5)]
+#my_move(couple_files, tmp_dir)
+fs::file_move(couple_files, tmp_dir)   # This is easiest
+#file.copy(couple_files, tmp_dir)
+#file.remove(couple_files)
+```
+
+```{r}
+list.files(data_path)
+```
+
+```{r}
+gs <- CytoML::flowjo_to_gatingset(ws=ws, name=1, path = data_path, additional.keys="GROUPNAME")
+gs
+```
+
+I got the following message:
+
+```
+FCS not found for sample 00_SEB.fcs_INF100 from searching the file extension: .fcs
+A GatingSet with 5 samples
+```
+
+Why the result contained 5 samples instead of 3, as I moved 3 files away?
+
+```{r}
+pData(gs)
+```
+
+Move files to a nested subdirectory.
+
+```{r}
+nested_tmp_dir <- file.path(data_path, "tmp")
+if (! dir.exists(nested_tmp_dir)) dir.create(nested_tmp_dir)
+tmp_files <- list.files(tmp_dir, pattern="*.fcs", full.names = TRUE)
+fs::file_move(tmp_files, nested_tmp_dir)
+```
+
+```{r}
+gs <- CytoML::flowjo_to_gatingset(ws=ws, name=1, path = data_path, 
+    additional.keys="GROUPNAME")
+gs
+```
+
+```{r}
+pData(gs)
+```
+
+From there it found all files, recursively.
+
+Move the file back to original location.
+
+```{r}
+tmp_files <- list.files(nested_tmp_dir, pattern="*.fcs", full.names = TRUE)
+fs::file_move(tmp_files, data_path)
+```
+
+If I move all SEB files  away, I get the following message:
+
+```{r}
+couple_files <- fcs_files %>% keep(~ str_detect(., "SEB"))
+```
+
+```
+FCS not found for sample 00_SEB.fcs_INF052 from searching the file extension: .fcs
+FCS not found for sample 00_SEB.fcs_INF100 from searching the file extension: .fcs
+FCS not found for sample 00_SEB.fcs_INF179 from searching the file extension: .fcs
+A GatingSet with 3 samples
+```
+
+So, maybe CytoML::flowjo_to_gatingset creates automatically some
+control file?
+
+## Problem 3
+
+> For ggcyto, attempt to generate plots to visualize TNFa and IFNg for the various cell populations, across both Ctrl and SEB samples. In the process, change the bins argument until you end up with a resolution that you would be happy with for your own plots, and write it down.
+
+
+### CD8+
+
+```{r}
+g1 <- ggcyto(gs[1], subset="CD8+", aes(x="IFNg", y="TNFa")) + geom_hex(bins=100) 
+g1
+```
+
+
+```{r}
+g2 <- ggcyto(gs[4], subset="CD8+", aes(x="IFNg", y="TNFa")) + geom_hex(bins=100) 
+g2
+```
+
+### CD4+
+
+```{r}
+g1 <- ggcyto(gs[1], subset="CD4+", aes(x="IFNg", y="TNFa")) + geom_hex(bins=70) 
+g1
+```
+
+
+```{r}
+g2 <- ggcyto(gs[4], subset="CD4+", aes(x="IFNg", y="TNFa")) + geom_hex(bins=70) 
+g2
+```
+
+## Session info
+
+
+```{r}
+utils::sessionInfo()
+```

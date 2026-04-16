@@ -1,0 +1,317 @@
+---
+title: "homework week 05"
+author: "Gabriela Ferreira"
+date: 09/03/2026
+format: html
+toc: true
+toc-depth: 4
+---
+
+# Problem 1
+
+"Using what you learned last week in Introduction to Tidyverse, for the imported GatingSet, retrieve the data.frame from cell counts per gate and attempt to mutate a new column showing percent of the parent gate. Remember, this is intentionally tricky at this point, we will go over how to efficiently do this in a few weeks"
+
+
+### Solution
+
+```{r}
+#| eval: FALSE
+
+#establish working directory, folder paths and files to be used:
+getwd()
+folder_path = file.path("data")
+
+fcs_files = list.files(folder_path, pattern = ".fcs", full.names = TRUE)
+
+fcs_files
+
+
+#activating the needed libraries:
+
+library(CytoML) #for gatingset functions
+library(stringr) #for str_detect function
+library(dplyr) #for mutate and round functions later on
+
+
+#I also want to import the gatingset already prepared
+flowjo_workspace = list.files(folder_path, pattern=".wsp", full.names= TRUE)
+
+flowjo_workspace
+
+#open just the workspace needed:
+this_workspace = flowjo_workspace[str_detect(flowjo_workspace, "Opened")]
+
+this_workspace
+
+work_space = open_flowjo_xml(this_workspace)
+work_space
+
+gating_set = flowjo_to_gatingset(ws = work_space, name=1, path = folder_path, additional.keys = "GROUPNAME")
+
+gating_set
+
+class(gating_set)
+
+#getting the cell counts using gs_pop_get_count_fast:
+
+data = gs_pop_get_count_fast(gating_set)
+
+head(data, 5)
+
+# I need to use mutate to add a new column with the percentages:
+
+data_w_percentages = data |> mutate(percent_parent = round((Count/ParentCount)*100, 3))
+
+
+#checking that I actually did what I want:
+head(data_w_percentages)
+```
+
+To answer this question I retrieved the full path for all the .fcs files and opened the flowjo workspace using flowjo_to_gatingset() function. 
+
+I collected the data from gs_pop_get_count_fast() function inside a variable called data:
+
+![](/course/05_GatingSets/homeworks/alexandragabrielaferreira/images/Problem1_getting_cell_counts.PNG)
+
+Then I used mutate() and round() functions from the  dplyr package to get the percentage of parent rounded to 3 significant numbers.
+
+![](/course/05_GatingSets/homeworks/alexandragabrielaferreira/images/Problem1_percentage_parent_rounded.PNG)
+
+
+
+# Problem 2
+
+"As we saw, CytoML can be finicky when names are repeated, or .fcs files are not present. Try removing a couple of the .fcs files from the data folder, and re-run the code. Document what kind of errors result."
+
+
+### Solution
+
+Currently we have 6 .fcs files in our data folder. 
+
+```{r}
+#| eval: FALSE
+
+fcs_files
+```
+
+
+I temporarily moved SEB files to another folder.
+
+
+```{r}
+#| eval: FALSE
+
+
+#establish working directory, folder paths and files to be used:
+getwd()
+folder_path = file.path("data")
+
+fcs_files = list.files(folder_path, pattern = ".fcs", full.names = TRUE)
+
+fcs_files
+```
+
+![](/course/05_GatingSets/homeworks/alexandragabrielaferreira/images/Problem2_fcs_files_w_cntr_only.PNG)
+
+Now fcs_files only has 3 full paths attributed. 
+
+```{r}
+#| eval: FALSE
+
+
+problm_2_file = list.files(folder_path, pattern=".wsp", full.names= TRUE)
+
+problm_2_file
+
+#open just the workspace needed:
+problm_2_ws = problm_2_file[str_detect(problm_2_file, "Opened")]
+
+problm_2_ws
+
+problm_2_open = open_flowjo_xml(problm_2_ws)
+problm_2_open
+```
+
+
+![](/course/05_GatingSets/homeworks/alexandragabrielaferreira/images/Problem2_beforegatingset_function.PNG)
+
+```{r}
+#| eval: FALSE
+
+
+gating_set_2 = flowjo_to_gatingset(ws = problm_2_open, name=1, path = folder_path, additional.keys = "GROUPNAME")
+
+gating_set_2
+
+class(gating_set_2)
+```
+
+In this case, the flowjo_to_gatingset() function outputs an error in the console:
+
+![](/course/05_GatingSets/homeworks/alexandragabrielaferreira/images/Problem2_FCS_not_found.PNG)
+
+It still was capable of attributing it to the gating_set_2 structure but only with 3 samples.
+
+
+I will try following the solution to problem 1:
+
+```{r}
+#| eval: FALSE
+
+
+#getting the cell counts using gs_pop_get_count_fast:
+
+data_problm_2 = gs_pop_get_count_fast(gating_set_2)
+
+head(data_problm_2, 5)
+
+# I need to use mutate to add a new column with the percentages:
+
+data_w_percentages_2 = data_problm_2 |> mutate(percent_parent = round((Count/ParentCount)*100, 3))
+
+
+#checking that I actually did what I want:
+
+head(data_w_percentages_2)
+str(data_w_percentages_2)
+glimpse(data_w_percentages_2)
+glimpse(data_problm_2)
+```
+
+After the initial hiccup on not finding .FCS files, the following code to retrieve cell counts and calculate percentage of parent worked fine for the data that it was able to import. 
+
+![](/course/05_GatingSets/homeworks/alexandragabrielaferreira/images/Problem2_no_errors.PNG)
+
+
+# Problem 3
+
+"For ggcyto, attempt to generate plots to visualize TNFa and IFNg for the various cell populations, across both Ctrl and SEB samples. In the process, change the bins argument until you end up with a resolution that you would be happy with for your own plots, and write it down"
+
+### Solution
+
+Re-running initial code from problem 1 to open the full set with all the files available:
+
+```{r}
+#| eval: FALSE
+
+#establish working directory, folder paths and files to be used:
+getwd()
+folder_path = file.path("data")
+
+fcs_files = list.files(folder_path, pattern = ".fcs", full.names = TRUE)
+
+fcs_files
+
+
+#activating the needed libraries:
+
+library(CytoML) #for gatingset functions
+library(stringr) #for str_detect function
+library(dplyr) #for mutate and round functions later on
+
+
+#I also want to import the gatingset already prepared
+flowjo_workspace = list.files(folder_path, pattern=".wsp", full.names= TRUE)
+
+flowjo_workspace
+
+#open just the workspace needed:
+this_workspace = flowjo_workspace[str_detect(flowjo_workspace, "Opened")]
+
+this_workspace
+
+work_space = open_flowjo_xml(this_workspace)
+work_space
+
+gating_set = flowjo_to_gatingset(ws = work_space, name=1, path = folder_path, additional.keys = "GROUPNAME")
+
+gating_set
+
+class(gating_set)
+
+#list of samples inside gating_set:
+samples = pData(gating_set)
+samples
+
+#reminder of what the population tree looks like:
+manual_gates = gs_get_pop_paths(gating_set)
+manual_gates
+```
+
+![](/course/05_GatingSets/homeworks/alexandragabrielaferreira/images/Problem3_manual_gate_paths.PNG)
+
+Next I will use ggcyto to plot some of the populations at different values for the bin argument:
+
+
+Control sample INF052, CD4+
+bin  = 10 
+
+```{r}
+#| eval: FALSE
+
+#Control sample INF052, CD4+, bin = 10
+
+ggcyto(gating_set[1], subset="CD4+", aes(x="TNFa", y="IFNg")) + geom_hex(bins=10)
+
+#Control sample INF052, CD4+, bin = 50
+ggcyto(gating_set[1], subset="CD4+", aes(x="TNFa", y="IFNg")) + geom_hex(bins=50)
+
+
+#Control sample INF052, CD4+, bin = 100
+ggcyto(gating_set[1], subset="CD4+", aes(x="TNFa", y="IFNg")) + geom_hex(bins=100)
+
+
+#Control sample INF052, CD4+, bin = 1000:
+ggcyto(gating_set[1], subset="CD4+", aes(x="TNFa", y="IFNg")) + geom_hex(bins=1000)
+
+
+#Control sample INF052, CD4+, bin = 200:
+ggcyto(gating_set[1], subset="CD4+", aes(x="TNFa", y="IFNg")) + geom_hex(bins=200)
+
+
+#fixing bin = 200:
+
+#ctrl CD8+
+
+#Control sample INF052, CD8+, bin = 200:
+ggcyto(gating_set[1], subset="CD8+", aes(x="TNFa", y="IFNg")) + geom_hex(bins=200)
+
+
+#SEB sample, INF052 I presume, CD4+, CD8+, bin= 200:
+# CD4+ 
+ggcyto(gating_set[4], subset="CD4+", aes(x="TNFa", y="IFNg")) + geom_hex(bins=200)
+
+# CD8+
+ggcyto(gating_set[4], subset="CD8+", aes(x="TNFa", y="IFNg")) + geom_hex(bins=200)
+```
+
+I don't like the following representations:
+
+Bin = 10:
+![](/course/05_GatingSets/homeworks/alexandragabrielaferreira/images/ctrl_CD4_bin10.png)
+
+Bin = 50:
+![](/course/05_GatingSets/homeworks/alexandragabrielaferreira/images/ctrl_CD4_bin50.png)
+
+
+Bin = 100:
+![](/course/05_GatingSets/homeworks/alexandragabrielaferreira/images/ctrl_CD4_bin100.png)
+
+Bin = 1000:
+![](/course/05_GatingSets/homeworks/alexandragabrielaferreira/images/ctrl_CD4_bin1000.png)
+
+
+At bin = 100, the events don't look exactly as I'm used to in FlowJo, and at a 1000 the events are so small it's difficult to see if there's any population there. I think that the bigger the number of events in a file, the bigger the bin needs to be.
+
+Bin = 200:
+![](/course/05_GatingSets/homeworks/alexandragabrielaferreira/images/ctrl_CD4_bin200.png)
+
+I quite like bin = 200, it looks very similar to flowjo representations I'm used to work with!
+
+Some plots for other samples and populations:
+
+![](/course/05_GatingSets/homeworks/alexandragabrielaferreira/images/ctrl_CD8_bin200.png)
+
+![](/course/05_GatingSets/homeworks/alexandragabrielaferreira/images/SEB_CD4_bin200.png)
+
+![](/course/05_GatingSets/homeworks/alexandragabrielaferreira/images/SEB_CD8_bin200.png)

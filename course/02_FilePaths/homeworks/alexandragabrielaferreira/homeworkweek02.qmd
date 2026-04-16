@@ -1,0 +1,149 @@
+---
+title: "homework week 02"
+author: "Alexandra Gabriela Ferreira"
+date: 2026-02-16
+format: html
+toc: TRUE
+toc-expand: true
+---
+
+# Coding style
+I prefer the following conventions when writing code:
+
+* variable naming system: snake_case
+
+* symbol for variable attribution: "="
+
+
+# Problem 1
+
+"Plug in an external hard-drive or USB into your computer. Manually, create a folder within called “TargetFolder”. Try to programmatically specify the file path to identify the folders and files present on your external drive. Then, try to copy your .fcs files from their current folder on your desktop to the TargetFolder on your drive using R. Remember, just copy, no deletion, you need to walk before you can run :D"
+
+### Solution
+
+1. I will open my working directory where I have the folder data using getwd()
+
+
+2. I will list the files inside the data folder and attribute them to a variable files_to_copy by using list.files() function. I will use full.names = TRUE so that I already have the full path from them. I will also have to filter using pattern = ".fcs" so that the list contains only the fcs files.
+
+3. checking what directories and files are inside the external hard drive. I am hardcoding it, but is there a way to open another directory in R?
+
+4. I will assign the created folder path to a new variable using file.path() function
+
+5. If folder exists (TRUE) then copy the files inside files_to_copy using file.copy() function. This is not entirely necessary as I created the folder manually and know it's there. Just using it for training purposes. I can see using this to create a new folder plus copy files in the same code chunk (then I would have to set it as if NOT exists -> dir.create + file.copy)
+
+6. Checking the files were copied by list.files, this time without full names.
+
+
+```{r}
+#| eval: False
+
+#set working directory
+getwd()
+
+#create list of files to copy and verifying the variable contains the full names of said files
+files_to_copy = list.files(path="data", pattern=".fcs", full.names=TRUE, recursive=FALSE)
+files_to_copy 
+
+#checking directories inside the external drive path
+list.dirs(path="F:/", full.names=FALSE, recursive=FALSE)
+
+#attributing the new folder path to a variable
+new_folder_path = file.path("F:/", "Target_folder")
+
+#copy files inside the files_to_copy to the new folder:
+if (dir.exists(new_folder_path)){
+    file.copy(from=files_to_copy, to=new_folder_path)
+}
+
+#check the files were copied:
+list.files(path="F:/Target_folder", full.name=FALSE, recursive=FALSE)
+```
+Confirmation of the copied files!
+
+![](/course/02_FilePaths/homeworks/alexandragabrielaferreira/images/Copied_files_to_external_drive.PNG)
+
+
+# Problem 2
+In this session, we used list.files() with the “full.names argument” set to TRUE, as well as the basename() function to identify specific files. But what if you wanted a particular directory. Run list.files() with “full.names argument” and “recursive” argument set to TRUE, and then search online to find an R function that would retrieve the “” individual directory folders.
+
+### Solution 
+
+1. Attribute the files with their full name path to a variable. Check variable includes the files in the correct format.
+![](/course/02_FilePaths/homeworks/alexandragabrielaferreira/images/files_in_wd.PNG)
+
+2. The function basename() shows the name of the files without the directory
+
+3. The function that retrieves the path of a file from a full.name is **dirname()**
+![](/course/02_FilePaths/homeworks/alexandragabrielaferreira/images/dirname_output.PNG)
+
+
+```{r}
+#| eval: False
+#I'm looking at which working directory I'm in the beginning as a training exercise
+getwd()
+
+#list of files in working directory with full path names, plus all the files inside working directory will be included
+
+files_in_wd = list.files(full.names=TRUE, recursive=TRUE) #omitting the path argument defaults to working directory, the same as if using path="."
+files_in_wd
+
+#example of using basename for files_in_wd, only outputing the file names without directories.
+basename(files_in_wd)
+
+#using dirname for files_in_wd to show their respective directory name
+dirname(files_in_wd)
+```
+
+# Problem 3
+"R packages often come with internal datasets, that are typically used for use in the help documentation examples. These can be accessed through the use of the system.file() function. See an example below.
+
+system.file("extdata", package = "FlowSOM")
+
+Using what we have learned about file.path navigation, search your way down the file.directory of the FlowSOM and flowWorkspace packages, and identify any .fcs files that are present for use in the documentation."
+
+### Solution
+
+1. Activate the libraries first
+
+2. system.file() function retrieves the directory where extdata (externaldata?) is set? let's test the theory:
+![](/course/02_FilePaths/homeworks/alexandragabrielaferreira/images/systemfile_function_example.PNG)
+
+3. Previous point is correct. Attribute this directory path to a variable.
+
+4. List directories and files inside this path. list.dirs outputs 0, I'm assuming there are no folders inside.
+
+5. list.files finds the files inside the flow_som_path and I can see there is an .fcs file in there, together with a .wsp file, a .csv and .xml files too.
+![](/course/02_FilePaths/homeworks/alexandragabrielaferreira/images/test_files_flowSOM.PNG)
+
+6. Repeat the same thing with flowWorkspace
+    * issue 1. when I run list.files() for flowWorkspace with recursive FALSE there is only one xml file in there.
+![issue 1 print](/course/02_FilePaths/homeworks/alexandragabrielaferreira/images/flowWORK_listfiles_recursive_FALSE.PNG)
+
+Small observation: as I found it weird it only had a xml file inside, I tried to run ?flowWorkspace in case they had something there regarding external data. The help page is not very helpful for this library and the reference link connects to a for-sale domain ("http://www.rglab.org/"). 
+
+
+```{r}
+#| eval: FALSE
+
+#activate the library flowSOM and flowWorkspace
+library(FlowSOM)
+library(flowWorkspace)
+
+#example of using system.file() function:
+flow_som_path=system.file("extdata", package = "FlowSOM")
+flow_som_path
+
+#list directories inside flow_som_path:
+dir_inside_flow_som = list.dirs(flow_som_path, full.names=FALSE, recursive=FALSE)
+dir_inside_flow_som #output is 0, which means probably there are no folders inside
+
+#list files inside flow_som_path
+list.files(flow_som_path, full.names=FALSE, recursive=FALSE)
+
+#Repeat for workspace:
+flowWORK_path=system.file("extdata", package = "flowWorkspace")
+flowWORK_path
+list.dirs(flowWORK_path)
+list.files(flowWORK_path, full.names=FALSE, recursive=FALSE)
+```

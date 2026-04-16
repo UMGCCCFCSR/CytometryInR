@@ -1,0 +1,173 @@
+---
+title: "Take -home problems Week5"
+author: "Denise Brito"
+format: html
+execute: 
+    code-fold: show
+    warning: false
+---
+
+## Problem 1 : Mutate GatingSet
+### 1.1 GatingSet
+
+```{r}
+#Libraries needed
+library(stringr)
+library(CytoML)
+library(dplyr)
+library(ggplot2)
+library(ggcyto)
+```
+
+```{r}
+#Path and Files
+Folder <- file.path("data")
+FlowJoWsp <- list.files(path=Folder , pattern="wsp", full=TRUE)
+FlowJoWsp
+```
+
+```{r}
+#Workspace Selection
+ThisWorkspace <- FlowJoWsp[stringr:: str_detect(FlowJoWsp, "Opened")]
+ThisWorkspace
+ws <- open_flowjo_xml(ThisWorkspace)
+```
+
+```{r}
+#Gating Set
+gs <- flowjo_to_gatingset(ws=ws, name=1, path=Folder, additional.keys = "GROUPNAME")
+```
+
+### 1.2 Retrieve the data.frame from cell counts per gate
+
+```{r}
+plot(gs)
+PopCount <- gs_pop_get_count_fast(gs)
+head(PopCount,5)
+```
+
+### 1.3 Mutate a new column showing percent of the parent gate. 
+
+```{r}
+PopCount_mutated <- PopCount |> mutate(percent_of_parent_gate = round((Count / ParentCount)*100,2))
+head(PopCount_mutated,5)
+```
+
+
+## Problem 2 : Removing FCS files and Documenting Errors
+
+**I deleted: 2025_07_26_AB_02_INF179_00_Ctrl.fcs**
+
+Error detected here:
+
+gs <- flowjo_to_gatingset(ws=ws, name=1, path=Folder, additional.keys = "GROUPNAME")
+
+"FCS not found for sample 00_Ctrl.fcs_INF179 from searching the file extension: .fcs"
+
+**Then I deleted all files except: 2025_07_26_AB_02_INF052_00_SEB.fcs**
+
+Error detected :
+
+FCS not found for sample 00_Ctrl.fcs_INF052 from searching the file extension: .fcs
+FCS not found for sample 00_Ctrl.fcs_INF100 from searching the file extension: .fcs
+FCS not found for sample 00_Ctrl.fcs_INF179 from searching the file extension: .fcs
+
+**Finally, deleted all samples:**
+
+error : ! No samples in this workspace to parse!
+    ▆
+ 1. └─CytoML::flowjo_to_gatingset(...) at Cytometry%20in%20R/CytometryInR-Week5/take-home-problems-week5.qmd:38:1
+ 2.   ├─base::do.call(parse_workspace, args)
+ 3.   └─CytoML (local) `<fn>`(...)
+
+## Problem 3 : Visualize TNFa vs IFNg for the various cell populations,  across both Ctrl and SEB samples
+
+For this exercise i used the ggcyto vignette documentation:
+https://www.bioconductor.org/packages/release/bioc/vignettes/ggcyto/inst/doc/Top_features_of_ggcyto.html#low_level:_ggplot
+
+### 3.1 Discover TNF and IFN parameters name:
+
+```{r}
+fr <- gh_pop_get_data(gs[[1]]) #to extract data from file 1
+pData(parameters(fr)) # to identify the parameter names for TNFa and IFNg
+```
+
+### 3.2 Plot tests
+### 3.2.1 Plot test 1 - Sample 1 ,  CD4+ cells, bins=100
+
+TNFa -> Comp-PE-Dazzle594-A       
+IFNg -> Comp-BV750-A
+
+```{r}
+ggcyto(gs[4], subset="CD4+", aes(x="Comp-PE-Dazzle594-A", y="Comp-BV750-A")) + geom_hex(bins=100)
+```
+
+### 3.2.2 Plot test 2 - Sample 1 ,  CD4+ cells, bins=1000
+
+```{r}
+ggcyto(gs[4], subset="CD4+", aes(x="Comp-PE-Dazzle594-A", y="Comp-BV750-A")) + geom_hex(bins=1000)
+```
+
+### 3.2.3 Plot test 2 - Sample 1 ,  CD4+ cells, bins=10
+
+```{r}
+ggcyto(gs[4], subset="CD4+", aes(x="Comp-PE-Dazzle594-A", y="Comp-BV750-A")) + geom_hex(bins=10)
+```
+
+### 3.2.4 Plot test 2 - Sample 1 ,  CD4+ cells, bins=80
+
+```{r}
+ggcyto(gs[4], subset="CD4+", aes(x="Comp-PE-Dazzle594-A", y="Comp-BV750-A")) + geom_hex(bins=80)
+```
+
+
+### 3.3 Ctrl and SEB samples
+
+Chosen populations:
+CD4+
+CD8+
+CD4-CD8-
+
+1st sample
+```{r}
+#Layout for sample 1
+sample_1 <- gs[[1]]
+
+gs_get_pop_paths(sample_1, path= "auto") # To check the indexes of the populations I'm interested in.
+
+pops_to_plot<- gs_get_pop_paths(sample_1, path= "auto")[c(6:20)]
+pops_to_plot 
+
+#To create several plots
+plots_for_sample1 <- autoplot(sample_1, pops_to_plot, bins= 80)
+plots_for_sample1
+
+#To view plots in one row
+gt <- ggcyto_arrange(plots_for_sample1, nrow=1) 
+plot(gt)
+```
+
+2nd Sample
+```{r}
+#Layout for sample 2
+sample_2 <- gs[[4]]
+
+gs_get_pop_paths(sample_2, path= "auto") # To verify the indexes of the populations I'm interested in.
+
+pops_to_plot_2<- gs_get_pop_paths(sample_2, path= "auto")[c(6:20)]
+pops_to_plot_2 
+
+#To create several plots
+plots_for_sample2 <- autoplot(sample_2, pops_to_plot_2, bins= 80)
+plots_for_sample2
+
+#To view plots in 1 row
+gt2 <- ggcyto_arrange(plots_for_sample2, nrow=1) 
+plot(gt2)
+```
+
+```{r}
+gt3 <- gridExtra::gtable_rbind(gt,gt2)
+plot(gt3)
+```
+
