@@ -1,0 +1,3873 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
+
+  <meta name="author" content="David Rach">
+  <meta name="dcterms.date" content="2026-04-14">
+  <title>Cytometry in R – 09 - It’s Raining Functions</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
+
+  <script type="text/javascript">
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
+  </script>
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <link href="../../site_libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+  <script src="../../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+  <script src="../../site_libs/plotly-binding-4.12.0/plotly.js"></script>
+  <script src="../../site_libs/typedarray-0.1/typedarray.min.js"></script>
+  <script src="../../site_libs/jquery-3.5.1/jquery.min.js"></script>
+  <link href="../../site_libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+  <script src="../../site_libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+  <link href="../../site_libs/plotly-htmlwidgets-css-2.25.2/plotly-htmlwidgets.css" rel="stylesheet">
+  <script src="../../site_libs/plotly-main-2.25.2/plotly-latest.min.js"></script>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">09 - It’s Raining Functions</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+David Rach 
+</div>
+</div>
+</div>
+
+  <p class="date">2026-04-14</p>
+</section>
+<section class="slide level2">
+
+<p><img data-src="../../images/WebsiteBanner.png"></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img data-src="https://img.shields.io/badge/license-AGPLv3-blue.png" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img data-src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" alt="CC BY-SA 4.0"></a></p>
+</div>
+<p>For the YouTube livestream schedule, see <a href="https://www.youtube.com/@cytometryinr">here</a></p>
+<p>For screen-shot slides, click <a href="../../course/09_Functions/slides.html">here</a></p>
+<p><br></p>
+</section>
+<section class="slide level2">
+
+</section>
+<section>
+<section id="background" class="title-slide slide level1 center">
+<h1>Background</h1>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Welcome to the ninth week of the “Cytometry in R course”. Over the last couple months, we have gradually built out a foundation of basic R skills, and explored some of the flow cytometry analysis infrastructure that we will be using throughout the course.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In the process, we have extensively used functions, i.e., the tools within a toolbox, to carry out various useful tasks. We saw during <a href="../../course/01_InstallingRPackages/">Week 01</a> that when we install new packages, we gain access to their functions, enabling us to extend far beyond the boundaries of what the base R software is capable of by itself (as long as we remember to to attahc the package to our local environment (via the <code>library()</code> call) of course).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We also saw how just like tools in a toolbox, different functions take different <a href="../../course/03_InsideFCSFile/index.html#">types</a> of input objects, and the outputs we get back can be modified by providing additional arguments (typically show-in within ()).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>While it is great that the R community as a whole has developed a small horde of useful functions, sometimes we need something that is not yet available. Today we will learn how to write our own functions, which will enable us to start exploring beyond the bounds of what others have already done. In the process, we will learn of a couple ways to iterate through vectors or lists, reducing the times we need to copy and paste the same of codes for slightly different inputs, and start to gain an appreciation of <a href="https://en.wikipedia.org/wiki/Functional_programming">functional programming</a> in the R context.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="walk-through" class="title-slide slide level1 center">
+<h1>Walk Through</h1>
+<div title="Housekeeping">
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Housekeeping</strong></p>
+</div>
+<div class="callout-content">
+<p>As we do <a href="../../course/02_FilePaths/index.html">every week</a>, on GitHub, <a href="../../course/00_Homeworks/index.html#sync-your-fork">sync</a> your forked version of the CytometryInR course to bring in the most recent updates. Then within Positron, <a href="../../course/00_Homeworks/index.html#pull-to-local">pull</a> in those changes to your local computer.</p>
+<p>For YouTube walkthrough of this process, click <a href="https://www.youtube.com/live/Zfctacqpe90?si=a7Ad61kj6_UDNkGw&amp;t=32">here</a></p>
+<p>After <a href="../../course/00_Git/index.html#new-folder-from-template">setting up</a> a “Week09” project folder, copy over the contents of “course/00_Functions/data” to that folder. This will hopefully prevent merge issues next week when attempting to pull in new course material. Once you have your new project folder organized, remember to <a href="../../course/00_Git/index.html#push">commit</a> and push your changes to GitHub to maintain remote version control.</p>
+<p>If you encounter issues syncing due to the Take-Home Problem merge conflict, see this <a href="https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/">walkthrough</a>. The updated homework submission protocol can be found <a href="https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/UpdatedPullRequest">here</a></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="functions" class="slide level2">
+<h2>Functions</h2>
+<h3 id="structure">Structure</h3>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>At the most basic level, what makes up a function in R? Let’s take a look at a simple example.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>MyFirstFunction <span class="ot">&lt;-</span> <span class="cf">function</span>(){</span>
+<span id="cb1-2"><a></a>    <span class="fu">message</span>(<span class="st">"Always spin-down your antibodies!"</span>)</span>
+<span id="cb1-3"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The name of the function is defined by placing it on the left-side of the assignment arrow. To the right we place the <code>function()</code>, which conveys to R that it will be creating a function. Although currently empty, individual function arguments that will make up the inputs are placed within the parenthesis (). And finally, the actual code being run by the function is palced within the curly brackets {}.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>When we run this code-block, we end up creating a function. We can see this appear within our local environment, appearing under the variables tab in the right-secondary sidebar.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="images/00_Functions.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Once we have created a function that is present in our environment, we are able to run/use it. In the case of the first function example, no inputs or arguments are needed (as there is nothing between the ()). For output, all that is present within the {} is code to send a message to console, which we will get back if we run the function by calling its name in our console.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="fu">MyFirstFunction</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Always spin-down your antibodies!</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="arguments">Arguments</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In the case of our first function above, no input arguments were provided, meaning the function was entirely self-contained, allowing us to retrieve the code output by simply running the function name.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">MyFirstFunction</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Always spin-down your antibodies!</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Lets modify this initial self-contained argument to allow us to provide an input argument to change the output message. To modify our function to accept input arguments, we decide on our argument name, and place it within the parenthesis (). From there, we can modify our line of code within the {} to achieve our desired outcome.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>MySecondFunction <span class="ot">&lt;-</span> <span class="cf">function</span>(BestFluorophore){</span>
+<span id="cb6-2"><a></a>    <span class="fu">message</span>(<span class="st">"Unquestionably, the best fluorophore is "</span>, BestFluorophore)</span>
+<span id="cb6-3"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And we can check to make sure it is running correctly similar to how we would for any function we might encounter, by running the line of code</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">MySecondFunction</span>(<span class="at">BestFluorophore =</span> <span class="st">"APC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is APC</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Lets continue our roll and see if we can provide multiple arguments to our function. We can achieve this by separating individual function arguments within the () with commas. Don’t forget to also make sure the argument you specified within the () is also accounter for within the {}.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>MyThirdFunction <span class="ot">&lt;-</span> <span class="cf">function</span>(BestFluorophore, WorstFluorophore){</span>
+<span id="cb9-2"><a></a>    <span class="fu">message</span>(<span class="st">"Unquestionably, the best fluorophore is "</span>, BestFluorophore)</span>
+<span id="cb9-3"><a></a>    <span class="fu">message</span>(<span class="st">"And by far, the worst fluorophore is "</span>, WorstFluorophore)</span>
+<span id="cb9-4"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a><span class="fu">MyThirdFunction</span>(<span class="at">BestFluorophore =</span> <span class="st">"APC"</span>, <span class="at">WorstFluorophore =</span> <span class="st">"PerCP-Cy5.5"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is APC</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>And by far, the worst fluorophore is PerCP-Cy5.5</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Once we have a function set up that accepts multiple arguments, what happens if we forget to provide an argument? Let’s intentionally forget “WorstFluorophore” and see.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="fu">MyThirdFunction</span>(<span class="at">BestFluorophore=</span><span class="st">"APC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `MyThirdFunction()`:
+! argument "WorstFluorophore" is missing, with no default</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As you see, we get back an error. The reason for this is that a function lives in relative isolation from the rest of our R session. It typically can only see what you provided as inputs, or what is spun up by the code within the function itself.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We can also provide default values for our given arguments. For example, we could modify to provide WorstFluorophore default by setting a value equal to it within the ()</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>MyFourthFunction <span class="ot">&lt;-</span> <span class="cf">function</span>(BestFluorophore, <span class="at">WorstFluorophore=</span><span class="st">"PerCP-Cy5.5"</span>){</span>
+<span id="cb15-2"><a></a>    <span class="fu">message</span>(<span class="st">"Unquestionably, the best fluorophore is "</span>, BestFluorophore)</span>
+<span id="cb15-3"><a></a>    <span class="fu">message</span>(<span class="st">"And by far, the worst fluorophore is "</span>, WorstFluorophore)</span>
+<span id="cb15-4"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Which would then allow for the partially incomplete function to fall back on the default argument.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">MyFourthFunction</span>(<span class="at">BestFluorophore=</span><span class="st">"APC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is APC</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>And by far, the worst fluorophore is PerCP-Cy5.5</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>However, you are not locked in on your default option, as if you provide an actual argument, it will take preference over the provided default.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a><span class="fu">MyFourthFunction</span>(<span class="at">BestFluorophore=</span><span class="st">"APC"</span>, <span class="at">WorstFluorophore=</span><span class="st">"Zombie Aqua"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is APC</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>And by far, the worst fluorophore is Zombie Aqua</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="iteration" class="slide level2">
+<h2>Iteration</h2>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Recalling back to <a href="../../course/02_FilePaths/index.html">Week 02</a>, we ended up creating our first vector, which contained a list of fluorophores.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>Fluorophores <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"BV421"</span>, <span class="st">"FITC"</span>, <span class="st">"PE"</span>, <span class="st">"APC"</span>)</span>
+<span id="cb22-2"><a></a><span class="fu">str</span>(Fluorophores)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> chr [1:4] "BV421" "FITC" "PE" "APC"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Individual fluorophores from this vector can be provided as arguments to our function, by specifying their index location within the vector. For example</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">MySecondFunction</span>(<span class="at">BestFluorophore =</span> Fluorophores[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is BV421</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>If we wanted to check the output message for each item in our vector, one approach would be to copy-and-paste the line of code, and swap out the vector index position for each new line.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="fu">MySecondFunction</span>(<span class="at">BestFluorophore =</span> Fluorophores[<span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is FITC</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">MySecondFunction</span>(<span class="at">BestFluorophore =</span> Fluorophores[<span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is PE</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">MySecondFunction</span>(<span class="at">BestFluorophore =</span> Fluorophores[<span class="dv">4</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is APC</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>While achievable, this ends up producing several lines of code. As you get further into the course, and more code is written to tidy individual dataframes, generate individual plots, having to copy-and-paste repeated blocks of text that only change based on the input values can become a chore.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>For this reason, there are a couple ways that we can sequentially pass through the objects within a vector or list to our function of interest, and retrieve the outputs that result.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="for-loops">For-loops</h3>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>A for-loop is one way to iterate through a vector. The syntax can look quite startling when encountered for a first time.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="cf">for</span> (Name <span class="cf">in</span> Fluorophores){</span>
+<span id="cb32-2"><a></a>    <span class="fu">MySecondFunction</span>(<span class="at">BestFluorophore=</span>Name)</span>
+<span id="cb32-3"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In a way, it is similar to the “if” <a href="../../course/02_FilePaths/index.html">conditional</a> we have encountered previously, with “for” being syntax highlighted. Immediately after for we find our parenthesis (), followed by {} that surround individual lines of code.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Within the (), the vector or list is being iterated through is placed after “in” (which also ends up being syntax highlighted). So in this case, we place our vector Fluorophores.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>For what is placed before “in”, we basically provide an argument that will stand-in for the “i-nth” item in our vector. You will often see “i” used, but you can call it whatever you like, so we will use Name in this case. You will see this “i-nth” standin is then used in place of the value within our line of code present within the {}.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Consequently, when we run the for-loop, we get the following outputs:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="cf">for</span> (Name <span class="cf">in</span> Fluorophores){</span>
+<span id="cb33-2"><a></a>    <span class="fu">MySecondFunction</span>(<span class="at">BestFluorophore=</span>Name)</span>
+<span id="cb33-3"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is BV421</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is FITC</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is PE</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is APC</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Can these outputs be saved? Yes they can, but some modification will be needed. Messages in R are kind of ephemeral and not saved, we could modify our original function from using <code>messsages()</code>to a more permanent <code>paste0</code> statement to show-case this in a for-loop.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a>MySecondFunctionPartB <span class="ot">&lt;-</span> <span class="cf">function</span>(BestFluorophore){</span>
+<span id="cb38-2"><a></a>    Message <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"Unquestionably, the best fluorophore is "</span>, BestFluorophore)</span>
+<span id="cb38-3"><a></a>    Message</span>
+<span id="cb38-4"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Secondly, we would need to save the output to something external that can be retrieved. This can be accomplished by setting up an external list using the <code>list()</code> function, and then adding the message to the list for each iteration within the for-loop brackets {}</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a>MyOutputList <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb39-2"><a></a></span>
+<span id="cb39-3"><a></a>SavedOutputs <span class="ot">&lt;-</span> <span class="cf">for</span> (Name <span class="cf">in</span> Fluorophores){</span>
+<span id="cb39-4"><a></a>    InthMessage <span class="ot">&lt;-</span> <span class="fu">MySecondFunctionPartB</span>(<span class="at">BestFluorophore=</span>Name)</span>
+<span id="cb39-5"><a></a>    MyOutputList[[Name]] <span class="ot">&lt;-</span> InthMessage </span>
+<span id="cb39-6"><a></a>}</span>
+<span id="cb39-7"><a></a></span>
+<span id="cb39-8"><a></a>MyOutputList</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$BV421
+[1] "Unquestionably, the best fluorophore is BV421"
+
+$FITC
+[1] "Unquestionably, the best fluorophore is FITC"
+
+$PE
+[1] "Unquestionably, the best fluorophore is PE"
+
+$APC
+[1] "Unquestionably, the best fluorophore is APC"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>So as you can see, for-loops are a bit complicated, but can be useful once you get the hang of the structure and syntax. One thing to note, is that they can be slow (especially if you are haven’t predefined the list size), which is why opinions on their use will be contested by individual R developers.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="purrr">purrr</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>When iterating through a vector or list to pass the values to a function, a commonly used alternative to for-loops are higher-order functions like the <code>walk()</code> and <code>map()</code> functions from the <code>purrr</code> package. These are the tidyverse equivalents to base R <code>apply()</code>, <code>lapply()</code>, etc. but with less nuanced argument syntax. We will use these frequently throughout the rest of the course.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb41-2"><a></a><span class="fu">library</span>(purrr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Let’s first see how these two differ, starting with <code>walk()</code></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a><span class="fu">walk</span>(<span class="at">.x=</span>Fluorophores, <span class="at">.f=</span>MySecondFunction)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is BV421</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is FITC</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is PE</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is APC</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As you can see, unlike for-loops, the additional structural elements provided are minimal. Within the (), our Fluorophore vector we want to iterate through is provided to the “.x” argument, while to “.f” we designate the function we want to provide the iterated outputs.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Let’s see how <code>walk()</code> differs from its counterpart <code>map()</code></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>Outputs <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>Fluorophores, <span class="at">.f=</span>MySecondFunction)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is BV421</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is FITC</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is PE</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Unquestionably, the best fluorophore is APC</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a>Outputs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+NULL
+
+[[2]]
+NULL
+
+[[3]]
+NULL
+
+[[4]]
+NULL</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In this case, we can see we get both the messages to console, but also individual empty (NULL) entries to a list-style object. This is partly due to the <code>message()</code> use we specified above for SecondFunction (which we corrected for with SecondFunctionPartB)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>If we try to save <code>walk()</code> outputs using our modified PartB function, we quickly realize nothing is being saved, with only the input being recorded</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a>Outputs <span class="ot">&lt;-</span> <span class="fu">walk</span>(<span class="at">.x=</span>Fluorophores, <span class="at">.f=</span>MySecondFunctionPartB)</span>
+<span id="cb54-2"><a></a>Outputs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "BV421" "FITC"  "PE"    "APC"  </code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The reason behind this is <code>walk()</code> is more behind the scenes, used under circumstances when you want something run, but don’t need the return. By contrast, returning things is the main focus of <code>map()</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Let’s see how <code>walk()</code> differs from its counterpart <code>map()</code></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a>Outputs <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>Fluorophores, <span class="at">.f=</span>MySecondFunctionPartB)</span>
+<span id="cb56-2"><a></a>Outputs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] "Unquestionably, the best fluorophore is BV421"
+
+[[2]]
+[1] "Unquestionably, the best fluorophore is FITC"
+
+[[3]]
+[1] "Unquestionably, the best fluorophore is PE"
+
+[[4]]
+[1] "Unquestionably, the best fluorophore is APC"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We will explore how these can be used more extensively in a bit.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="building-functions" class="slide level2">
+<h2>Building Functions</h2>
+<h3 id="background-1">Background</h3>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>With this bit of background on general function structure, and a brief introduction to iteration, lets try to write a function that might be conceivably useful for some of us who are still active at the lab-bench.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Our dataset for today is made up of cell count .fcs files. Our lab works <a href="https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2025.1628145/full">extensively</a> with cryopreserved cord blood mononuclear cells, which have large fractions of CD45- cells. Since our primary focus is on T cells, when resting or stimulating the cells we need to be able to calculate the concentration of CD45+ cells for each specimen vial following the thaw so that we can appropiately resuspend the vial to the correct resting concentration of R10 media.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>To do this, after thawing and the initial spin, I stain 5 uL of cells for for 7 minutes with a small fluorophore cocktail, consisting of CD45 (APC), CD19 (Pacific Blue) and CD14 (PE). After incubation, cells are resuspended in 500 uL (so a 1:100 dilution), before quickly acquiring on a a 4-laser Cytek Aurora, set to stop collecting after 5000 events are reached.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>If you remember back to <a href="../../course/03_InsideFCSFile/">Week 03</a>, we saw that within the keyword/description list a volume recorded measurement was stored. Since we have volume, if we are able to gate for CD45+ (using either <code>openCyto</code> or <code>flowGate</code>) and retrieve the cell counts, we can then solve for cell concentration (since C1V1=C2V2, etc.) This is then followed by multiplying for dilution (x100), multiplying by total volume, and tada! we have the information that is needed.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>After doing this all by hand-for-several years, one of the first things I did after finally having my “it-finally-clicks” moment in R was to automate this process to <a href="https://github.com/DavidRach/AlphaBeta/tree/main/LabNotebook">get back back reports</a> that look like this, shortening the overall experiment day</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/CellRestCounts_2025-07-31.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Since this all occurs at the level of a <a href="https://github.com/DavidRach/Luciernaga/blob/main/R/Wetlab_Concentration.R">function</a>, I think sequentially walking through this function creation would be a good bridging component for learning how to write your own functions. Granted, it may be too much, too quick, which is why this session is called “It’s Raining Functions!”, since it may ultimately viewed as a torrential downpour.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And with that, let’s brave the rain.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<p><img data-src="https://images2.minutemediacdn.com/image/upload/c_fill,w_720,ar_16:9,f_auto,q_auto,g_auto/shape/cover/sport/raining-monkeys-e3fa8001e4eb47433b1cc58e2017d2b8.png" style="width:75.0%"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="planning">Planning</h3>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>So based on our initial idea, we know that we will need to get our .fcs files into a GatingSet, which we will then be able to iterate through.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As we iterate through these files, we will need to retrieve the description/keyword for volume that was encoded by the instrument, as well as any other useful metadata.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And we will need to apply gates (either through openCyto or flowGate), that would allow us to retrieve the counts for various cell populations we might be wanting to retrieve concentration info for.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Let’s go ahead and tackle these in turn, re-using code that we have encountered over the last several weeks</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Getting started, as always, we will need to load any libraries we will be using extensively.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a><span class="fu">library</span>(flowWorkspace)</span>
+<span id="cb58-2"><a></a><span class="fu">library</span>(flowGate)</span>
+<span id="cb58-3"><a></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb58-4"><a></a><span class="fu">library</span>(ggcyto)</span>
+<span id="cb58-5"><a></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb58-6"><a></a><span class="fu">library</span>(purrr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And then we need to identify our fcs files</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="co"># StorageLocation &lt;- file.path("course", "09_Functions", "data") # Interactive path</span></span>
+<span id="cb59-2"><a></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co"># Quarto Rendering path</span></span>
+<span id="cb59-3"><a></a></span>
+<span id="cb59-4"><a></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".fcs"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Before proceeding to add them into a GatingSet</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a></a>MyCytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files, <span class="at">transformation=</span><span class="cn">FALSE</span>, <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>)</span>
+<span id="cb60-2"><a></a>MyGatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MyCytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>For this particular counting fluorophore panel, only 3 antibodies were used. Since the goal was to quickly acquire the .fcs files before passing off to R, the files were never unmixed, and are still in a raw. fcs format. So we will need to figure out the peak detectors for APC, PE, and Pacific Blue on a 4-laser Cytek Aurora.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a><span class="co"># remotes::install_github("DavidRach/Luciernaga")</span></span>
+<span id="cb61-2"><a></a></span>
+<span id="cb61-3"><a></a>Plots <span class="ot">&lt;-</span> Luciernaga<span class="sc">::</span><span class="fu">QC_ReferenceLibrary</span>(<span class="at">FluorNameContains=</span><span class="st">"APC$|PE$|Pacific Blue"</span>, </span>
+<span id="cb61-4"><a></a>    <span class="at">NumberDetectors=</span><span class="dv">54</span>, <span class="at">returnPlots=</span><span class="cn">TRUE</span>)[[<span class="dv">2</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a></a><span class="co"># install.packages("plotly")</span></span>
+<span id="cb62-2"><a></a>plotly<span class="sc">::</span><span class="fu">ggplotly</span>(Plots)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-7b22164d202cfa2f93bd" style="width:960px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-7b22164d202cfa2f93bd">{"x":{"data":[{"x":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54],"y":[0,0,0.00110091743119267,0.0118979357798166,0.0275,0.035200688073394597,0.0211009174311927,0.0036009174311927299,0,0,0,0,0,0,0,0,0.069300458715596397,0.57880160550458704,1,0.66220183486238504,0.33360091743119302,0.184397935779816,0.15319954128440399,0.035900229357798102,0.016800458715596302,0.0090022935779816605,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"text":["Detector: UV1<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: UV2<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: UV3<br />value: 0.0011009174<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: UV4<br />value: 0.0118979358<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: UV5<br />value: 0.0275000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: UV6<br />value: 0.0352006881<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: UV7<br />value: 0.0211009174<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: UV8<br />value: 0.0036009174<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: UV9<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: UV10<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: UV11<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: UV12<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: UV13<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: UV14<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: UV15<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: UV16<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V1<br />value: 0.0693004587<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V2<br />value: 0.5788016055<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V3<br />value: 1.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V4<br />value: 0.6622018349<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V5<br />value: 0.3336009174<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V6<br />value: 0.1843979358<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V7<br />value: 0.1531995413<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V8<br />value: 0.0359002294<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V9<br />value: 0.0168004587<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V10<br />value: 0.0090022936<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V11<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V12<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V13<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V14<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V15<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: V16<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: B1<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: B2<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: B3<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: B4<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: B5<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: B6<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: B7<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: B8<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: B9<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: B10<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: B11<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: B12<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: B13<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: B14<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: R1<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: R2<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: R3<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: R4<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: R5<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: R6<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: R7<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue","Detector: R8<br />value: 0.0000000000<br />Fluorophore: Pacific Blue<br />Fluorophore: Pacific Blue"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(248,118,109,1)","dash":"solid"},"hoveron":"points","name":"Pacific Blue","legendgroup":"Pacific Blue","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54],"y":[0,0.00019495412844028299,0.00019495412844028299,0.00039564220183496701,0.00039564220183496701,0.00059059633027524995,0,0.00314793577981654,0.13493119266055101,0.031473623853211098,0.0084575688073393902,0.0035378440366973202,0.0021616972477064302,0.0013761467889908999,0.00078555045871564499,0.00059059633027524995,0,0,0,0,0,0,0.0033428899082568199,0.42820527522935797,0.170143348623853,0.140636467889908,0.0340309633027523,0.013967889908256899,0.0092431192660550297,0.0047190366972477103,0.0027522935779817899,0.00098623853211010594,0.00078555045871564499,0.00078555045871564499,0.024392201834862501,1,0.419157110091743,0.27025802752293598,0.0969724770642202,0.059994266055045903,0.0533027522935779,0.022620412844036701,0.010424311926605499,0.0088532110091743606,0.0062958715596330697,0.0051146788990825698,0,0,0,0,0,0,0,0],"text":["Detector: UV1<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: UV2<br />value: 0.0001949541<br />Fluorophore: PE<br />Fluorophore: PE","Detector: UV3<br />value: 0.0001949541<br />Fluorophore: PE<br />Fluorophore: PE","Detector: UV4<br />value: 0.0003956422<br />Fluorophore: PE<br />Fluorophore: PE","Detector: UV5<br />value: 0.0003956422<br />Fluorophore: PE<br />Fluorophore: PE","Detector: UV6<br />value: 0.0005905963<br />Fluorophore: PE<br />Fluorophore: PE","Detector: UV7<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: UV8<br />value: 0.0031479358<br />Fluorophore: PE<br />Fluorophore: PE","Detector: UV9<br />value: 0.1349311927<br />Fluorophore: PE<br />Fluorophore: PE","Detector: UV10<br />value: 0.0314736239<br />Fluorophore: PE<br />Fluorophore: PE","Detector: UV11<br />value: 0.0084575688<br />Fluorophore: PE<br />Fluorophore: PE","Detector: UV12<br />value: 0.0035378440<br />Fluorophore: PE<br />Fluorophore: PE","Detector: UV13<br />value: 0.0021616972<br />Fluorophore: PE<br />Fluorophore: PE","Detector: UV14<br />value: 0.0013761468<br />Fluorophore: PE<br />Fluorophore: PE","Detector: UV15<br />value: 0.0007855505<br />Fluorophore: PE<br />Fluorophore: PE","Detector: UV16<br />value: 0.0005905963<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V1<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V2<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V3<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V4<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V5<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V6<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V7<br />value: 0.0033428899<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V8<br />value: 0.4282052752<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V9<br />value: 0.1701433486<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V10<br />value: 0.1406364679<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V11<br />value: 0.0340309633<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V12<br />value: 0.0139678899<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V13<br />value: 0.0092431193<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V14<br />value: 0.0047190367<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V15<br />value: 0.0027522936<br />Fluorophore: PE<br />Fluorophore: PE","Detector: V16<br />value: 0.0009862385<br />Fluorophore: PE<br />Fluorophore: PE","Detector: B1<br />value: 0.0007855505<br />Fluorophore: PE<br />Fluorophore: PE","Detector: B2<br />value: 0.0007855505<br />Fluorophore: PE<br />Fluorophore: PE","Detector: B3<br />value: 0.0243922018<br />Fluorophore: PE<br />Fluorophore: PE","Detector: B4<br />value: 1.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: B5<br />value: 0.4191571101<br />Fluorophore: PE<br />Fluorophore: PE","Detector: B6<br />value: 0.2702580275<br />Fluorophore: PE<br />Fluorophore: PE","Detector: B7<br />value: 0.0969724771<br />Fluorophore: PE<br />Fluorophore: PE","Detector: B8<br />value: 0.0599942661<br />Fluorophore: PE<br />Fluorophore: PE","Detector: B9<br />value: 0.0533027523<br />Fluorophore: PE<br />Fluorophore: PE","Detector: B10<br />value: 0.0226204128<br />Fluorophore: PE<br />Fluorophore: PE","Detector: B11<br />value: 0.0104243119<br />Fluorophore: PE<br />Fluorophore: PE","Detector: B12<br />value: 0.0088532110<br />Fluorophore: PE<br />Fluorophore: PE","Detector: B13<br />value: 0.0062958716<br />Fluorophore: PE<br />Fluorophore: PE","Detector: B14<br />value: 0.0051146789<br />Fluorophore: PE<br />Fluorophore: PE","Detector: R1<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: R2<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: R3<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: R4<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: R5<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: R6<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: R7<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE","Detector: R8<br />value: 0.0000000000<br />Fluorophore: PE<br />Fluorophore: PE"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(0,186,56,1)","dash":"solid"},"hoveron":"points","name":"PE","legendgroup":"PE","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54],"y":[0,0.000200688073394462,0.000200688073394462,0.00029816513761460301,0.00040137614678892298,0.00060206422018360705,0,0,0,0.00060206422018360705,0.071502293577981699,0.023199541284403599,0.018302752293578001,0.0208027522935781,0.0088016055045870793,0.0068979357798165698,0,0,0,0,0,0,0,0,0,0,0.197001146788991,0.063801605504587203,0.0563990825688074,0.051399082568807299,0.022201834862385399,0.010097477064220199,0,0,0,0,0,0,0.024598623853210998,0.0140022935779817,0.0072018348623853496,0.0050974770642202598,0.0040997706422019097,0.0025974770642201999,0.00150229357798171,0.00169724770642199,1,0.899002293577982,0.43830275229357801,0.36749999999999999,0.36319954128440401,0.19509747706422001,0.14630160550458701,0.076697247706422098],"text":["Detector: UV1<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: UV2<br />value: 0.0002006881<br />Fluorophore: APC<br />Fluorophore: APC","Detector: UV3<br />value: 0.0002006881<br />Fluorophore: APC<br />Fluorophore: APC","Detector: UV4<br />value: 0.0002981651<br />Fluorophore: APC<br />Fluorophore: APC","Detector: UV5<br />value: 0.0004013761<br />Fluorophore: APC<br />Fluorophore: APC","Detector: UV6<br />value: 0.0006020642<br />Fluorophore: APC<br />Fluorophore: APC","Detector: UV7<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: UV8<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: UV9<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: UV10<br />value: 0.0006020642<br />Fluorophore: APC<br />Fluorophore: APC","Detector: UV11<br />value: 0.0715022936<br />Fluorophore: APC<br />Fluorophore: APC","Detector: UV12<br />value: 0.0231995413<br />Fluorophore: APC<br />Fluorophore: APC","Detector: UV13<br />value: 0.0183027523<br />Fluorophore: APC<br />Fluorophore: APC","Detector: UV14<br />value: 0.0208027523<br />Fluorophore: APC<br />Fluorophore: APC","Detector: UV15<br />value: 0.0088016055<br />Fluorophore: APC<br />Fluorophore: APC","Detector: UV16<br />value: 0.0068979358<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V1<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V2<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V3<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V4<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V5<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V6<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V7<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V8<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V9<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V10<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V11<br />value: 0.1970011468<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V12<br />value: 0.0638016055<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V13<br />value: 0.0563990826<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V14<br />value: 0.0513990826<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V15<br />value: 0.0222018349<br />Fluorophore: APC<br />Fluorophore: APC","Detector: V16<br />value: 0.0100974771<br />Fluorophore: APC<br />Fluorophore: APC","Detector: B1<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: B2<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: B3<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: B4<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: B5<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: B6<br />value: 0.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: B7<br />value: 0.0245986239<br />Fluorophore: APC<br />Fluorophore: APC","Detector: B8<br />value: 0.0140022936<br />Fluorophore: APC<br />Fluorophore: APC","Detector: B9<br />value: 0.0072018349<br />Fluorophore: APC<br />Fluorophore: APC","Detector: B10<br />value: 0.0050974771<br />Fluorophore: APC<br />Fluorophore: APC","Detector: B11<br />value: 0.0040997706<br />Fluorophore: APC<br />Fluorophore: APC","Detector: B12<br />value: 0.0025974771<br />Fluorophore: APC<br />Fluorophore: APC","Detector: B13<br />value: 0.0015022936<br />Fluorophore: APC<br />Fluorophore: APC","Detector: B14<br />value: 0.0016972477<br />Fluorophore: APC<br />Fluorophore: APC","Detector: R1<br />value: 1.0000000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: R2<br />value: 0.8990022936<br />Fluorophore: APC<br />Fluorophore: APC","Detector: R3<br />value: 0.4383027523<br />Fluorophore: APC<br />Fluorophore: APC","Detector: R4<br />value: 0.3675000000<br />Fluorophore: APC<br />Fluorophore: APC","Detector: R5<br />value: 0.3631995413<br />Fluorophore: APC<br />Fluorophore: APC","Detector: R6<br />value: 0.1950974771<br />Fluorophore: APC<br />Fluorophore: APC","Detector: R7<br />value: 0.1463016055<br />Fluorophore: APC<br />Fluorophore: APC","Detector: R8<br />value: 0.0766972477<br />Fluorophore: APC<br />Fluorophore: APC"],"type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(97,156,255,1)","dash":"solid"},"hoveron":"points","name":"APC","legendgroup":"APC","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[0.40000000000000002,54.600000000000001],"y":[1,1],"text":"yintercept: 1","type":"scatter","mode":"lines","line":{"width":1.8897637795275593,"color":"rgba(255,0,0,1)","dash":"dash"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":23.305936073059364,"r":7.3059360730593621,"b":20.321041510908721,"l":44.964715649647161},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,54.600000000000001],"tickmode":"array","ticktext":["UV1","UV6","UV11","UV16","V5","V10","V15","B4","B9","B14","R5"],"tickvals":[1,6,11,16,21,26,31,36,41,46,51],"categoryorder":"array","categoryarray":["UV1","UV6","UV11","UV16","V5","V10","V15","B4","B9","B14","R5"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":7.9701120797011216},"tickangle":-45,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.050000000000000003,1.05],"tickmode":"array","ticktext":["0.00","0.25","0.50","0.75","1.00"],"tickvals":[0,0.25,0.5,0.75,1],"categoryorder":"array","categoryarray":["0.00","0.25","0.50","0.75","1.00"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.6529680365296811,"tickwidth":0.66417600664176002,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":{"text":"Normalized Value","font":{"color":"rgba(0,0,0,1)","family":"","size":10.62681610626816}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":"rgba(255,255,255,1)","line":{"color":"rgba(51,51,51,1)","width":0.66417600664176002,"linetype":"solid"},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.8897637795275593,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"Fluorophore","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"53cc57e5f1b6":{"x":{},"y":{},"colour":{},"type":"scatter"},"53cc1be339e9":{"yintercept":{}}},"cur_data":"53cc57e5f1b6","visdat":{"53cc57e5f1b6":["function (y) ","x"],"53cc1be339e9":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>So the equivalent raw detectors we should be paying attention to are going to be V3 (CD19+), B4 (CD45+), and R1 (CD14+)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Since scale can vary dramatically for individual fluorophores, we might as well and go ahead and transform those three detectors while we are here.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a>MainDetectorsOnly <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"V3-A"</span>, <span class="st">"B4-A"</span>, <span class="st">"R1-A"</span>)</span>
+<span id="cb63-2"><a></a></span>
+<span id="cb63-3"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb63-4"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">2</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
+<span id="cb63-5"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(MainDetectorsOnly, Biexponential)</span>
+<span id="cb63-6"><a></a><span class="fu">transform</span>(MyGatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>A GatingSet with 9 samples</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And a quick-plot check to make sure the transformation looks reasonable enough</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a><span class="fu">ggcyto</span>(MyGatingSet[[<span class="dv">1</span>]], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb65-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"V3-A"</span>, <span class="at">y=</span><span class="st">"R1-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="slides_files/figure-revealjs/unnamed-chunk-32-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a></a><span class="fu">ggcyto</span>(MyGatingSet[[<span class="dv">1</span>]], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb66-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"V3-A"</span>, <span class="at">y=</span><span class="st">"B4-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="slides_files/figure-revealjs/unnamed-chunk-33-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a><span class="fu">ggcyto</span>(MyGatingSet[[<span class="dv">1</span>]], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb67-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"R1-A"</span>, <span class="at">y=</span><span class="st">"B4-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="slides_files/figure-revealjs/unnamed-chunk-34-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>With that done, let’s <a href="../../course/08_WaysToGate/index.html">add some gates</a> to separate out CD45+ cells, and below those cells identify CD14+ (mainly monocytes), CD19+ (B cells), and CD14-CD19- (mostly T cells and NK cells for cord blood). My automated version uses <code>openCyto</code> with gate constraints to handle the variability, but for this example, lets reuse the <code>flowGate</code> approach using <code>tribble</code> function for quicker setup.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a></a>GatingTable <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(</span>
+<span id="cb68-2"><a></a>  <span class="sc">~</span>filterId,    <span class="sc">~</span>dims,                          <span class="sc">~</span>subset,           </span>
+<span id="cb68-3"><a></a>  <span class="st">"CD45"</span>,       <span class="fu">list</span>(<span class="st">"B4-A"</span>, <span class="st">"SSC-A"</span>),            <span class="st">"root"</span>,     </span>
+<span id="cb68-4"><a></a>  <span class="st">"CD19"</span>,       <span class="fu">list</span>(<span class="st">"V3-A"</span>, <span class="st">"SSC-A"</span>),            <span class="st">"CD45"</span>,   </span>
+<span id="cb68-5"><a></a>  <span class="st">"CD14"</span>,       <span class="fu">list</span>(<span class="st">"R1-A"</span>, <span class="st">"SSC-A"</span>),            <span class="st">"CD45"</span>, </span>
+<span id="cb68-6"><a></a>  <span class="st">"TandNKcells"</span>,  <span class="fu">list</span>(<span class="st">"V3-A"</span>, <span class="st">"SSC-A"</span>),            <span class="st">"CD45"</span>,</span>
+<span id="cb68-7"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a>flowGate<span class="sc">::</span><span class="fu">gs_apply_gating_strategy</span>(MyGatingSet, <span class="at">gating_strategy =</span> GatingTable)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And add a general CD45+ gate (i.e.&nbsp;those that I need actual concentration for)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<p><img data-src="images/00_CD45.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And add a general CD19+ gate (B cells)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<p><img data-src="images/01_CD19.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And add a general CD14+ (Monocytes)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<p><img data-src="images/02_CD14.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And add a general gate for likely T and NK cells</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<p><img data-src="images/03_TandNKprobs.png"></p>
+</div>
+</section>
+<section class="slide level2">
+
+</section>
+<section class="slide level2">
+
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Ending up with a GatingSet that looks like this.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a></a><span class="fu">plot</span>(MyGatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="slides_files/figure-revealjs/unnamed-chunk-39-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And with that done, let’s quickly check the gates using <code>ggcyto</code> <code>autoplot()</code> function, switching between specimen index values to double check.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a>ggcyto<span class="sc">::</span><span class="fu">autoplot</span>(MyGatingSet[[<span class="dv">6</span>]]) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><img data-src="slides_files/figure-revealjs/unnamed-chunk-40-1.png" width="960"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="building">Building</h3>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Alright, lets start by creating the first layer of our function</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a></a>CellConcentration <span class="ot">&lt;-</span> <span class="cf">function</span>(){</span>
+<span id="cb72-2"><a></a></span>
+<span id="cb72-3"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>At the moment, our function is literally nothing but a wrapper, but when we run the line of code, it is now present under the variables tab.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/04_Variables.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Lets start by considering what we want to do. We have each of our .fcs files currently contained within a GatingSet object. Ultimately, we want to be able to retrieve the cell concentration from each of these files.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>To do so, lets go ahead and plan that we will use the <code>map()</code> function to iterate our way through each specimen of the GatingSet object</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a></a><span class="fu">pData</span>(MyGatingSet)<span class="sc">$</span>name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "CellCounts4L_AB_04-INF124-7-00_01.fcs"
+[2] "CellCounts4L_AB_04-INF149-4-00_01.fcs"
+[3] "CellCounts4L_AB_04-INF169-6-00_01.fcs"
+[4] "CellCounts4L_AB_05-INF019-0-00_01.fcs"
+[5] "CellCounts4L_AB_05-INF032-5-00_01.fcs"
+[6] "CellCounts4L_AB_05-INF180-9-00_01.fcs"
+[7] "CellCounts4L_AB_06-INF155-1-00_01.fcs"
+[8] "CellCounts4L_AB_06-INF158-4-00_01.fcs"
+[9] "CellCounts4L_AB_06-INF159-5-00_01.fcs"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Since when we iterate with <code>map()</code> we need to specify a .x argument, let’s go ahead and set that as our argument within the ().</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a></a>CellConcentration <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb75-2"><a></a></span>
+<span id="cb75-3"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And to make our lives a little easier, we should provide some function documentation as we go, so that future us several months from now can remember what under-caffenaited us today did. In R, this typically is done via what is known as a <a href="https://roxygen2.r-lib.org/">roxygen2 skeleton</a>, which looks like this.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a></a><span class="co">#' This function will figure out the cell concentration</span></span>
+<span id="cb76-2"><a></a><span class="co">#'  for a given gated population in an .fcs file</span></span>
+<span id="cb76-3"><a></a><span class="co">#'</span></span>
+<span id="cb76-4"><a></a><span class="co">#' @param x A GatingSet object (typically iterated in)</span></span>
+<span id="cb76-5"><a></a><span class="co">#' </span></span>
+<span id="cb76-6"><a></a>CellConcentration <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb76-7"><a></a></span>
+<span id="cb76-8"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In a Roxygen skeleton, we use a modified comment (#’) format to identify this as documentation. The start is a generic description for our function. The @ param is used to list the individual argument, and a short description of what it does.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Alright, with that bit of documentation done so that we can contextualize what we did later, let’s go back and think mechanics. We will be passing our function through <code>map()</code>, so our line of code that we will run will look something like this</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>MyGatingSet, <span class="at">.f=</span>CellConcentration)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As map is triggered, we will basically be indexing our way through MyGatingSet, similar to if we ran the lines of code like this</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a>MyGatingSet[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sample:  CellCounts4L_AB_04-INF124-7-00_01.fcs 
+GatingHierarchy with  5  gates</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a>MyGatingSet[[<span class="dv">2</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Sample:  CellCounts4L_AB_04-INF149-4-00_01.fcs 
+GatingHierarchy with  5  gates</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Let’s go ahead and add something inside our function so we can get a readout of what is happening inside the function. Let’s use our old-friend <code>class()</code> to confirm what is being passed in via <code>map()</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a></a><span class="co">#' This function will figure out the cell concentration</span></span>
+<span id="cb82-2"><a></a><span class="co">#'  for a given gated population in an .fcs file</span></span>
+<span id="cb82-3"><a></a><span class="co">#'</span></span>
+<span id="cb82-4"><a></a><span class="co">#' @param x A GatingSet object (typically iterated in)</span></span>
+<span id="cb82-5"><a></a><span class="co">#' </span></span>
+<span id="cb82-6"><a></a>CellConcentration <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb82-7"><a></a>    <span class="fu">class</span>(x)</span>
+<span id="cb82-8"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>MyGatingSet, <span class="at">.f=</span>CellConcentration)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] "GatingHierarchy"
+attr(,"package")
+[1] "flowWorkspace"
+
+[[2]]
+[1] "GatingHierarchy"
+attr(,"package")
+[1] "flowWorkspace"
+
+[[3]]
+[1] "GatingHierarchy"
+attr(,"package")
+[1] "flowWorkspace"
+
+[[4]]
+[1] "GatingHierarchy"
+attr(,"package")
+[1] "flowWorkspace"
+
+[[5]]
+[1] "GatingHierarchy"
+attr(,"package")
+[1] "flowWorkspace"
+
+[[6]]
+[1] "GatingHierarchy"
+attr(,"package")
+[1] "flowWorkspace"
+
+[[7]]
+[1] "GatingHierarchy"
+attr(,"package")
+[1] "flowWorkspace"
+
+[[8]]
+[1] "GatingHierarchy"
+attr(,"package")
+[1] "flowWorkspace"
+
+[[9]]
+[1] "GatingHierarchy"
+attr(,"package")
+[1] "flowWorkspace"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>So passing through map, we are ending up with invidual “GatingHierarchy” (GatingSet = 1).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>So with a GatingHierarchy object inside, let’s turn to seeing what <code>flowWorkspace</code> functions we can use to get our desired outputs out of the description/keyword list.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a></a><span class="co">#' This function will figure out the cell concentration</span></span>
+<span id="cb85-2"><a></a><span class="co">#'  for a given gated population in an .fcs file</span></span>
+<span id="cb85-3"><a></a><span class="co">#'</span></span>
+<span id="cb85-4"><a></a><span class="co">#' @param x A GatingSet object (typically iterated in)</span></span>
+<span id="cb85-5"><a></a><span class="co">#' </span></span>
+<span id="cb85-6"><a></a>CellConcentration <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb85-7"><a></a>    <span class="fu">keyword</span>(x)</span>
+<span id="cb85-8"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Let’s also set <code>map()</code> to only target the first specimen in MyGatingSet for now</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a>KeywordList <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>MyGatingSet[<span class="dv">1</span>], <span class="at">.f=</span>CellConcentration)</span>
+<span id="cb86-2"><a></a><span class="fu">head</span>(KeywordList[[<span class="dv">1</span>]], <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$FCSversion
+[1] "3.0999999"
+
+$`$BEGINDATA`
+[1] "15152"
+
+$`$ENDDATA`
+[1] "8436079"
+
+$`$BEGINANALYSIS`
+[1] "0"
+
+$`$ENDANALYSIS`
+[1] "0"
+
+$`$BEGINSTEXT`
+[1] "0"
+
+$`$ENDSTEXT`
+[1] "0"
+
+$`$MODE`
+[1] "L"
+
+$`$BYTEORD`
+[1] "1,2,3,4"
+
+$`$DATATYPE`
+[1] "F"
+
+$`$PAR`
+[1] "61"
+
+$`$TOT`
+[1] "34512"
+
+$`$NEXTDATA`
+[1] "0"
+
+$`$TIMESTEP`
+[1] "0.0001"
+
+$`$DATE`
+[1] "30-Jul-2025"
+
+$`$BTIM`
+[1] "13:48:10.76"
+
+$`$ETIM`
+[1] "13:48:37.88"
+
+$`$OP`
+[1] "David Rach"
+
+$`$INST`
+[1] "UMBC"
+
+$`$CYT`
+[1] "Aurora"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Alright, so we have access to the internal .fcs file keywords, similar to what we saw during <a href="../../course/03_InsideFCSFile/index.html">Week 03</a>. We can check through the full list and see what might be useful for us for this targeted problem, and within the function isolate them to their own respective variables for subsequent use.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a></a><span class="co">#' This function will figure out the cell concentration</span></span>
+<span id="cb88-2"><a></a><span class="co">#'  for a given gated population in an .fcs file</span></span>
+<span id="cb88-3"><a></a><span class="co">#'</span></span>
+<span id="cb88-4"><a></a><span class="co">#' @param x A GatingSet object (typically iterated in)</span></span>
+<span id="cb88-5"><a></a><span class="co">#' </span></span>
+<span id="cb88-6"><a></a>CellConcentration <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb88-7"><a></a>    Volume <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$VOL</span><span class="st">`</span></span>
+<span id="cb88-8"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>MyGatingSet[<span class="dv">1</span>], <span class="at">.f=</span>CellConcentration)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] "30.99"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As you can see, since we have changed the internal code within the function, we are now getting back the value recorded for acquired volume when our function is run.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a></a><span class="co">#' This function will figure out the cell concentration</span></span>
+<span id="cb91-2"><a></a><span class="co">#'  for a given gated population in an .fcs file</span></span>
+<span id="cb91-3"><a></a><span class="co">#'</span></span>
+<span id="cb91-4"><a></a><span class="co">#' @param x A GatingSet object (typically iterated in)</span></span>
+<span id="cb91-5"><a></a><span class="co">#' </span></span>
+<span id="cb91-6"><a></a>CellConcentration <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb91-7"><a></a>    Date <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$DATE</span><span class="st">`</span> <span class="co"># Day-Month-Year</span></span>
+<span id="cb91-8"><a></a>    InstrumentSerial <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$CYTSN</span><span class="st">`</span></span>
+<span id="cb91-9"><a></a>    TotalFileEvents <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$TOT</span><span class="st">`</span></span>
+<span id="cb91-10"><a></a>    Specimen <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span>GUID</span>
+<span id="cb91-11"><a></a>    StartTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$BTIM</span><span class="st">`</span></span>
+<span id="cb91-12"><a></a>    EndTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$ETIM</span><span class="st">`</span></span>
+<span id="cb91-13"><a></a>    Volume <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$VOL</span><span class="st">`</span></span>
+<span id="cb91-14"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>MyGatingSet[<span class="dv">1</span>], <span class="at">.f=</span>CellConcentration)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] "30.99"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>You will notice however that despite finding all these other keywords, we are only getting back the volume as an output. The reason for this is a function returns by default the last object created within it. We can change this by setting a <code>return()</code> value equal to something else.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a></a><span class="co">#' This function will figure out the cell concentration</span></span>
+<span id="cb94-2"><a></a><span class="co">#'  for a given gated population in an .fcs file</span></span>
+<span id="cb94-3"><a></a><span class="co">#'</span></span>
+<span id="cb94-4"><a></a><span class="co">#' @param x A GatingSet object (typically iterated in)</span></span>
+<span id="cb94-5"><a></a><span class="co">#' </span></span>
+<span id="cb94-6"><a></a>CellConcentration <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb94-7"><a></a>    Date <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$DATE</span><span class="st">`</span> <span class="co"># Day-Month-Year</span></span>
+<span id="cb94-8"><a></a>    InstrumentSerial <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$CYTSN</span><span class="st">`</span></span>
+<span id="cb94-9"><a></a>    TotalFileEvents <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$TOT</span><span class="st">`</span></span>
+<span id="cb94-10"><a></a>    Specimen <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span>GUID</span>
+<span id="cb94-11"><a></a>    StartTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$BTIM</span><span class="st">`</span></span>
+<span id="cb94-12"><a></a>    EndTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$ETIM</span><span class="st">`</span></span>
+<span id="cb94-13"><a></a>    Volume <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$VOL</span><span class="st">`</span></span>
+<span id="cb94-14"><a></a></span>
+<span id="cb94-15"><a></a>    <span class="fu">return</span>(InstrumentSerial)</span>
+<span id="cb94-16"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>MyGatingSet[<span class="dv">1</span>], <span class="at">.f=</span>CellConcentration)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] "V0333"</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In this case, we are just retrieving individual bits and pieces. Ideally, we will want to cobble these together into a “data.frame” row or column so that we get everything back in a single go, and have a dataset that can then be used for tidyverse filtering, plotting, etc.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>One thing to notice,there is a Total Events (TOT) keyword.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a></a><span class="co">#' This function will figure out the cell concentration</span></span>
+<span id="cb97-2"><a></a><span class="co">#'  for a given gated population in an .fcs file</span></span>
+<span id="cb97-3"><a></a><span class="co">#'</span></span>
+<span id="cb97-4"><a></a><span class="co">#' @param x A GatingSet object (typically iterated in)</span></span>
+<span id="cb97-5"><a></a><span class="co">#' </span></span>
+<span id="cb97-6"><a></a>CellConcentration <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb97-7"><a></a>    Date <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$DATE</span><span class="st">`</span> <span class="co"># Day-Month-Year</span></span>
+<span id="cb97-8"><a></a>    InstrumentSerial <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$CYTSN</span><span class="st">`</span></span>
+<span id="cb97-9"><a></a>    TotalFileEvents <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$TOT</span><span class="st">`</span></span>
+<span id="cb97-10"><a></a>    Specimen <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span>GUID</span>
+<span id="cb97-11"><a></a>    StartTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$BTIM</span><span class="st">`</span></span>
+<span id="cb97-12"><a></a>    EndTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$ETIM</span><span class="st">`</span></span>
+<span id="cb97-13"><a></a>    Volume <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$VOL</span><span class="st">`</span></span>
+<span id="cb97-14"><a></a></span>
+<span id="cb97-15"><a></a>    <span class="fu">return</span>(TotalFileEvents)</span>
+<span id="cb97-16"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>MyGatingSet[<span class="dv">1</span>], <span class="at">.f=</span>CellConcentration)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] "34512"</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>This however corresponds to every event in the .fcs file, including doublets, debris, and miscellaneous cell populations, nothing specific to our individually drawn gates.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>What we can do instead, is use a <code>flowWorkspace</code> function we learned about during <a href="../../course/05_GatingSets/index.html">Week 05</a>, namely the <code>gs_pop_get_data()</code> function.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a></a>MySubset <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(MyGatingSet[[<span class="dv">1</span>]], <span class="st">"root"</span>)</span>
+<span id="cb100-2"><a></a><span class="fu">nrow</span>(MySubset)[[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 34512</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The main purpose for <code>gs_pop_get_data()</code> is to reach through the pointer and retrieve the data associated with a particular gate. We can then assess this subsetted data using our regular R functions.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>You may have noticed the subset argument. We can switch it out for the respective gate names to retrieve the counts for cells present within each.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a></a>TheSubset <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(MyGatingSet[<span class="dv">1</span>], <span class="st">"CD45"</span>)</span>
+<span id="cb102-2"><a></a><span class="fu">nrow</span>(TheSubset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`CellCounts4L_AB_04-INF124-7-00_01.fcs`
+[1] 2787</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a></a>TheSubset <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(MyGatingSet[<span class="dv">1</span>], <span class="st">"CD14"</span>)</span>
+<span id="cb104-2"><a></a><span class="fu">nrow</span>(TheSubset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`CellCounts4L_AB_04-INF124-7-00_01.fcs`
+[1] 699</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a></a>TheSubset <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(MyGatingSet[<span class="dv">1</span>], <span class="st">"CD19"</span>)</span>
+<span id="cb106-2"><a></a><span class="fu">nrow</span>(TheSubset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`CellCounts4L_AB_04-INF124-7-00_01.fcs`
+[1] 532</code></pre>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a></a>TheSubset <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(MyGatingSet[<span class="dv">1</span>], <span class="st">"TandNKcells"</span>)</span>
+<span id="cb108-2"><a></a><span class="fu">nrow</span>(TheSubset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`CellCounts4L_AB_04-INF124-7-00_01.fcs`
+[1] 1344</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As you can see, we can access the counts for the cells found within the respective gate by providing the gate name as the second argument. Let’s modify our function, to add subset argument</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a></a><span class="co">#' This function will figure out the cell concentration</span></span>
+<span id="cb110-2"><a></a><span class="co">#'  for a given gated population in an .fcs file</span></span>
+<span id="cb110-3"><a></a><span class="co">#'</span></span>
+<span id="cb110-4"><a></a><span class="co">#' @param x A GatingSet object (typically iterated in)</span></span>
+<span id="cb110-5"><a></a><span class="co">#' @param subset The gate from which to retrieve cell counts from</span></span>
+<span id="cb110-6"><a></a><span class="co">#' </span></span>
+<span id="cb110-7"><a></a>CellConcentration <span class="ot">&lt;-</span> <span class="cf">function</span>(x, subset){</span>
+<span id="cb110-8"><a></a>    Date <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$DATE</span><span class="st">`</span> <span class="co"># Day-Month-Year</span></span>
+<span id="cb110-9"><a></a>    InstrumentSerial <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$CYTSN</span><span class="st">`</span></span>
+<span id="cb110-10"><a></a>    TotalFileEvents <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$TOT</span><span class="st">`</span></span>
+<span id="cb110-11"><a></a>    Specimen <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span>GUID</span>
+<span id="cb110-12"><a></a>    StartTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$BTIM</span><span class="st">`</span></span>
+<span id="cb110-13"><a></a>    EndTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$ETIM</span><span class="st">`</span></span>
+<span id="cb110-14"><a></a>    Volume <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$VOL</span><span class="st">`</span></span>
+<span id="cb110-15"><a></a></span>
+<span id="cb110-16"><a></a>    EventsInTheGate <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(x, subset)</span>
+<span id="cb110-17"><a></a>    Cells <span class="ot">&lt;-</span> <span class="fu">nrow</span>(EventsInTheGate)</span>
+<span id="cb110-18"><a></a></span>
+<span id="cb110-19"><a></a>    <span class="fu">return</span>(Cells)</span>
+<span id="cb110-20"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>MyGatingSet[<span class="dv">1</span>], <span class="at">.f=</span>CellConcentration, <span class="at">subset=</span><span class="st">"CD45"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[[1]]$`CellCounts4L_AB_04-INF124-7-00_01.fcs`
+[1] 2787</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Alright, we have now found all the bits and pieces we will likely need to estimate cell concentration. Let’s start by making sure that Volume is switched over to numeric (as keywords can often be stored as character values)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a></a><span class="co">#' This function will figure out the cell concentration</span></span>
+<span id="cb113-2"><a></a><span class="co">#'  for a given gated population in an .fcs file</span></span>
+<span id="cb113-3"><a></a><span class="co">#'</span></span>
+<span id="cb113-4"><a></a><span class="co">#' @param x A GatingSet object (typically iterated in)</span></span>
+<span id="cb113-5"><a></a><span class="co">#' @param subset The gate from which to retrieve cell counts from</span></span>
+<span id="cb113-6"><a></a><span class="co">#' </span></span>
+<span id="cb113-7"><a></a>CellConcentration <span class="ot">&lt;-</span> <span class="cf">function</span>(x, subset){</span>
+<span id="cb113-8"><a></a>    Date <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$DATE</span><span class="st">`</span> <span class="co"># Day-Month-Year</span></span>
+<span id="cb113-9"><a></a>    InstrumentSerial <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$CYTSN</span><span class="st">`</span></span>
+<span id="cb113-10"><a></a>    TotalFileEvents <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$TOT</span><span class="st">`</span></span>
+<span id="cb113-11"><a></a>    Specimen <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span>GUID</span>
+<span id="cb113-12"><a></a>    StartTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$BTIM</span><span class="st">`</span></span>
+<span id="cb113-13"><a></a>    EndTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$ETIM</span><span class="st">`</span></span>
+<span id="cb113-14"><a></a></span>
+<span id="cb113-15"><a></a>    Volume <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$VOL</span><span class="st">`</span></span>
+<span id="cb113-16"><a></a>    Volume <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(Volume)</span>
+<span id="cb113-17"><a></a></span>
+<span id="cb113-18"><a></a>    EventsInTheGate <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(x, subset)</span>
+<span id="cb113-19"><a></a>    Cells <span class="ot">&lt;-</span> <span class="fu">nrow</span>(EventsInTheGate)</span>
+<span id="cb113-20"><a></a></span>
+<span id="cb113-21"><a></a>    <span class="fu">return</span>(Cells)</span>
+<span id="cb113-22"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Next, remembering our C1V1 = C2V2, we can set up the formula</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a></a><span class="co">#' This function will figure out the cell concentration</span></span>
+<span id="cb114-2"><a></a><span class="co">#'  for a given gated population in an .fcs file</span></span>
+<span id="cb114-3"><a></a><span class="co">#'</span></span>
+<span id="cb114-4"><a></a><span class="co">#' @param x A GatingSet object (typically iterated in)</span></span>
+<span id="cb114-5"><a></a><span class="co">#' @param subset The gate from which to retrieve cell counts from</span></span>
+<span id="cb114-6"><a></a><span class="co">#' </span></span>
+<span id="cb114-7"><a></a>CellConcentration <span class="ot">&lt;-</span> <span class="cf">function</span>(x, subset){</span>
+<span id="cb114-8"><a></a>    Date <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$DATE</span><span class="st">`</span> <span class="co"># Day-Month-Year</span></span>
+<span id="cb114-9"><a></a>    InstrumentSerial <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$CYTSN</span><span class="st">`</span></span>
+<span id="cb114-10"><a></a>    TotalFileEvents <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$TOT</span><span class="st">`</span></span>
+<span id="cb114-11"><a></a>    Specimen <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span>GUID</span>
+<span id="cb114-12"><a></a>    StartTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$BTIM</span><span class="st">`</span></span>
+<span id="cb114-13"><a></a>    EndTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$ETIM</span><span class="st">`</span></span>
+<span id="cb114-14"><a></a></span>
+<span id="cb114-15"><a></a>    Volume <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$VOL</span><span class="st">`</span></span>
+<span id="cb114-16"><a></a>    Volume <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(Volume)</span>
+<span id="cb114-17"><a></a></span>
+<span id="cb114-18"><a></a>    EventsInTheGate <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(x, subset)</span>
+<span id="cb114-19"><a></a>    Cells <span class="ot">&lt;-</span> <span class="fu">nrow</span>(EventsInTheGate)[[<span class="dv">1</span>]] <span class="co">#[[1]] since the output is in a list</span></span>
+<span id="cb114-20"><a></a></span>
+<span id="cb114-21"><a></a>    Concentration <span class="ot">&lt;-</span> (Cells<span class="sc">*</span><span class="dv">1000</span>)<span class="sc">/</span>Volume</span>
+<span id="cb114-22"><a></a></span>
+<span id="cb114-23"><a></a>    <span class="fu">return</span>(Concentration)</span>
+<span id="cb114-24"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And let’s check across our specimens:</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>MyGatingSet, <span class="at">.f=</span>CellConcentration, <span class="at">subset=</span><span class="st">"CD19"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 17166.83
+
+[[2]]
+[1] 10410.6
+
+[[3]]
+[1] 6653.684
+
+[[4]]
+[1] 14538.89
+
+[[5]]
+[1] 7865.535
+
+[[6]]
+[1] 13439.64
+
+[[7]]
+[1] 16709.76
+
+[[8]]
+[1] 12720.61
+
+[[9]]
+[1] 4170.708</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In the case for our counting tubes, after staining they were diluted 1:100. So we need to add a dilution multiplier to the above. We can set that as our third argument.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a></a><span class="co">#' This function will figure out the cell concentration</span></span>
+<span id="cb117-2"><a></a><span class="co">#'  for a given gated population in an .fcs file</span></span>
+<span id="cb117-3"><a></a><span class="co">#'</span></span>
+<span id="cb117-4"><a></a><span class="co">#' @param x A GatingSet object (typically iterated in)</span></span>
+<span id="cb117-5"><a></a><span class="co">#' @param subset The gate from which to retrieve cell counts from</span></span>
+<span id="cb117-6"><a></a><span class="co">#' @param dilutionMultiplier Multiplies the estimated concentration</span></span>
+<span id="cb117-7"><a></a><span class="co">#'  to bring correct digits. </span></span>
+<span id="cb117-8"><a></a><span class="co">#' </span></span>
+<span id="cb117-9"><a></a>CellConcentration <span class="ot">&lt;-</span> <span class="cf">function</span>(x, subset, dilutionMultiplier){</span>
+<span id="cb117-10"><a></a>    Date <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$DATE</span><span class="st">`</span> <span class="co"># Day-Month-Year</span></span>
+<span id="cb117-11"><a></a>    InstrumentSerial <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$CYTSN</span><span class="st">`</span></span>
+<span id="cb117-12"><a></a>    TotalFileEvents <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$TOT</span><span class="st">`</span></span>
+<span id="cb117-13"><a></a>    Specimen <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span>GUID</span>
+<span id="cb117-14"><a></a>    StartTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$BTIM</span><span class="st">`</span></span>
+<span id="cb117-15"><a></a>    EndTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$ETIM</span><span class="st">`</span></span>
+<span id="cb117-16"><a></a></span>
+<span id="cb117-17"><a></a>    Volume <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$VOL</span><span class="st">`</span></span>
+<span id="cb117-18"><a></a>    Volume <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(Volume)</span>
+<span id="cb117-19"><a></a></span>
+<span id="cb117-20"><a></a>    EventsInTheGate <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(x, subset)</span>
+<span id="cb117-21"><a></a>    Cells <span class="ot">&lt;-</span> <span class="fu">nrow</span>(EventsInTheGate)[[<span class="dv">1</span>]] <span class="co">#[[1]] since the output is in a list</span></span>
+<span id="cb117-22"><a></a></span>
+<span id="cb117-23"><a></a>    Concentration <span class="ot">&lt;-</span> (Cells<span class="sc">*</span><span class="dv">1000</span>)<span class="sc">/</span>Volume</span>
+<span id="cb117-24"><a></a>    Concentration <span class="ot">&lt;-</span> Concentration<span class="sc">*</span>dilutionMultiplier</span>
+<span id="cb117-25"><a></a></span>
+<span id="cb117-26"><a></a>    <span class="fu">return</span>(Concentration)</span>
+<span id="cb117-27"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>MyGatingSet, <span class="at">.f=</span>CellConcentration, <span class="at">subset=</span><span class="st">"CD19"</span>, <span class="at">dilutionMultiplier=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 1716683
+
+[[2]]
+[1] 1041060
+
+[[3]]
+[1] 665368.4
+
+[[4]]
+[1] 1453889
+
+[[5]]
+[1] 786553.5
+
+[[6]]
+[1] 1343964
+
+[[7]]
+[1] 1670976
+
+[[8]]
+[1] 1272061
+
+[[9]]
+[1] 417070.8</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>With this calculated, we can now proceed to data tidying to make sure everything important gets returned back to us as an individual row.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a></a><span class="co">#' This function will figure out the cell concentration</span></span>
+<span id="cb120-2"><a></a><span class="co">#'  for a given gated population in an .fcs file</span></span>
+<span id="cb120-3"><a></a><span class="co">#'</span></span>
+<span id="cb120-4"><a></a><span class="co">#' @param x A GatingSet object (typically iterated in)</span></span>
+<span id="cb120-5"><a></a><span class="co">#' @param subset The gate from which to retrieve cell counts from</span></span>
+<span id="cb120-6"><a></a><span class="co">#' @param dilutionMultiplier Multiplies the estimated concentration</span></span>
+<span id="cb120-7"><a></a><span class="co">#'  to bring correct digits. </span></span>
+<span id="cb120-8"><a></a><span class="co">#' </span></span>
+<span id="cb120-9"><a></a>CellConcentration <span class="ot">&lt;-</span> <span class="cf">function</span>(x, subset, dilutionMultiplier){</span>
+<span id="cb120-10"><a></a>    Date <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$DATE</span><span class="st">`</span> <span class="co"># Day-Month-Year</span></span>
+<span id="cb120-11"><a></a>    InstrumentSerial <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$CYTSN</span><span class="st">`</span></span>
+<span id="cb120-12"><a></a>    TotalFileEvents <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$TOT</span><span class="st">`</span></span>
+<span id="cb120-13"><a></a>    Specimen <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span>GUID</span>
+<span id="cb120-14"><a></a>    StartTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$BTIM</span><span class="st">`</span></span>
+<span id="cb120-15"><a></a>    EndTime <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$ETIM</span><span class="st">`</span></span>
+<span id="cb120-16"><a></a></span>
+<span id="cb120-17"><a></a>    Volume <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x)<span class="sc">$</span><span class="st">`</span><span class="at">$VOL</span><span class="st">`</span></span>
+<span id="cb120-18"><a></a>    Volume <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(Volume)</span>
+<span id="cb120-19"><a></a></span>
+<span id="cb120-20"><a></a>    EventsInTheGate <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(x, subset)</span>
+<span id="cb120-21"><a></a>    Cells <span class="ot">&lt;-</span> <span class="fu">nrow</span>(EventsInTheGate)[[<span class="dv">1</span>]] <span class="co">#[[1]] since the output is in a list</span></span>
+<span id="cb120-22"><a></a></span>
+<span id="cb120-23"><a></a>    Concentration <span class="ot">&lt;-</span> (Cells<span class="sc">*</span><span class="dv">1000</span>)<span class="sc">/</span>Volume</span>
+<span id="cb120-24"><a></a>    Concentration <span class="ot">&lt;-</span> Concentration<span class="sc">*</span>dilutionMultiplier</span>
+<span id="cb120-25"><a></a></span>
+<span id="cb120-26"><a></a>    Data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb120-27"><a></a>        <span class="at">Date=</span>Date,</span>
+<span id="cb120-28"><a></a>        <span class="at">InstrumentSerial=</span>InstrumentSerial,</span>
+<span id="cb120-29"><a></a>        <span class="at">Specimen=</span>Specimen,</span>
+<span id="cb120-30"><a></a>        <span class="at">StartTime=</span>StartTime,</span>
+<span id="cb120-31"><a></a>        <span class="at">EndTime=</span>EndTime,</span>
+<span id="cb120-32"><a></a>        <span class="at">Volume=</span>Volume, </span>
+<span id="cb120-33"><a></a>        <span class="at">Cells=</span>Cells,</span>
+<span id="cb120-34"><a></a>        <span class="at">Concentration=</span>Concentration</span>
+<span id="cb120-35"><a></a>        )</span>
+<span id="cb120-36"><a></a></span>
+<span id="cb120-37"><a></a>    <span class="fu">return</span>(Data)</span>
+<span id="cb120-38"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>MyGatingSet[<span class="dv">1</span>], <span class="at">.f=</span>CellConcentration, <span class="at">subset=</span><span class="st">"CD19"</span>, <span class="at">dilutionMultiplier=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+         Date InstrumentSerial                              Specimen
+1 30-Jul-2025            V0333 CellCounts4L_AB_04-INF124-7-00_01.fcs
+    StartTime     EndTime Volume Cells Concentration
+1 13:48:10.76 13:48:37.88  30.99   532       1716683</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And we can use the <code>dplyr</code> package <code>bind_rows()</code> to assemble all our outputs for the individual .fcs files</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a></a>Dataset <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>MyGatingSet,</span>
+<span id="cb123-2"><a></a> <span class="at">.f=</span>CellConcentration, <span class="at">subset=</span><span class="st">"CD19"</span>, </span>
+<span id="cb123-3"><a></a> <span class="at">dilutionMultiplier=</span><span class="dv">100</span>) <span class="sc">|&gt;</span> <span class="fu">bind_rows</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a></a>Dataset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Date InstrumentSerial                              Specimen
+1 30-Jul-2025            V0333 CellCounts4L_AB_04-INF124-7-00_01.fcs
+2 30-Jul-2025            V0333 CellCounts4L_AB_04-INF149-4-00_01.fcs
+3 30-Jul-2025            V0333 CellCounts4L_AB_04-INF169-6-00_01.fcs
+4 04-Aug-2025            V0333 CellCounts4L_AB_05-INF019-0-00_01.fcs
+5 04-Aug-2025            V0333 CellCounts4L_AB_05-INF032-5-00_01.fcs
+6 04-Aug-2025            V0333 CellCounts4L_AB_05-INF180-9-00_01.fcs
+7 06-Aug-2025            V0333 CellCounts4L_AB_06-INF155-1-00_01.fcs
+8 06-Aug-2025            V0333 CellCounts4L_AB_06-INF158-4-00_01.fcs
+9 06-Aug-2025            V0333 CellCounts4L_AB_06-INF159-5-00_01.fcs
+    StartTime     EndTime Volume Cells Concentration
+1 13:48:10.76 13:48:37.88  30.99   532     1716682.8
+2 13:33:43.49 13:34:09.95  30.93   322     1041060.5
+3 13:40:42.92 13:41:10.01  30.81   205      665368.4
+4 13:41:23.34 13:41:50.51  30.47   443     1453889.1
+5 13:35:13.99 13:35:41.15  30.64   241      786553.5
+6 13:48:19.41 13:48:46.83  30.73   413     1343963.6
+7 13:45:36.08 13:46:03.30  30.94   517     1670976.1
+8 13:39:27.95 13:39:54.12  30.03   382     1272061.3
+9 13:52:09.56 13:52:36.75  30.93   129      417070.8</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And now with our dataset complete, we can save it out for later use.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a></a><span class="co"># StorageLocation &lt;- file.path("data") #Within Working Directory</span></span>
+<span id="cb126-2"><a></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"C:"</span>, <span class="st">"User"</span>, <span class="st">"FulanoDeTal"</span>, <span class="st">"Desktop"</span>) <span class="co">#Elsewhere on your computer, customize</span></span>
+<span id="cb126-3"><a></a>StorageLocationAndName <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, <span class="st">"CellConcentrationsForTodaysExperiment.csv"</span>)</span>
+<span id="cb126-4"><a></a><span class="fu">write.csv</span>(Dataset, StorageLocationAndName, <span class="at">row.names=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="discussion" class="title-slide slide level1 center">
+<h1>Discussion</h1>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In this session, we survived the downpour that is creating functions in R. We looked at both relatively simple examples (to get an idea of the general syntax) as well as step-by-step built out the cell concentration to get a better fundamental understanding of how some of these more targeted applications take various inputs and arguments, run code using these inputs, and then return us a specified output. We also ventured into iteration and how the purrr package can help us in this regard.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>I would like to re-emphasize that this material <strong>is a lot</strong>, and that feeling like you will need to revisit this topic is to be expected. When I first encountered a for-loop, I didn’t know what to do with it. By the time I had figured it out, I couldn’t envision how to write a function or iterate through a vector. Figuring out how to do so takes time, and often arises more out of targeted need. You want to do something for your cytometry pipeline, but are tired of copying and pasting with minor changes, you end up generalizing it into a function.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>I also highly recommend looking at the additional resources, because in the end, learning about the concepts from different perspectives is always helpful, since every instructors focus will differ.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Fortunately, now that we have encountered functions and iteration, we will gradually see more examples in context of focused application as we head into the next section. We will start focusing on acquiring some of the toolsets we need for high-dimensional and unsupervised analysis, starting next time with how to downsample events from individual .fcs files, concatenate them together, and write them to a new .fcs file that won’t be immediately corrupt on import into your favorite commercial software.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/TakeAway.png" class="r-stretch"></section>
+<section class="slide level2">
+
+</section></section>
+<section id="additional-resources" class="title-slide slide level1 center">
+<h1>Additional Resources</h1>
+<p><a href="https://youtu.be/3uK1OzA7CTs?si=XPXoI_ipo7d8P1Hv">Riffomonas Project: A tutorial for writing functions in R</a></p>
+<p><a href="https://r4ds.hadley.nz/functions.html">R for Data Science: Functions</a></p>
+<p><a href="https://youtu.be/U7ynho78-vA?si=oJo72HclMdpaW12P">Riffomonas Project: Repeat an R function with the tidyverse, purrr and furrr</a></p>
+<p><a href="http://adv-r.had.co.nz/Functions.html">Advanced R: Functions</a></p>
+</section>
+
+<section>
+<section id="take-home-problems" class="title-slide slide level1 center">
+<h1>Take-home Problems</h1>
+<div title="Problem 1">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Problem 1</strong></p>
+</div>
+<div class="callout-content">
+<p>Modify one of the simpler functions (SecondFunction or similar), provide your own argument names, and modify the <code>message()</code>, <code>paste0</code> or <code>print()</code> functions to print a text style output. Generate a small vector of values, and iterate through your vector using one of the approaches we used.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div title="Problem 2">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Problem 2</strong></p>
+</div>
+<div class="callout-content">
+<p>Using the initial framework for the CellConcentration function, retrieve several other keywords that are of interest, and incorporate them into the returned data.frame row.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div title="Problem 3">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Problem 3</strong></p>
+</div>
+<div class="callout-content">
+<p>For CellConcentration, we retrieved both start and end time. Look up information on <code>lubridate</code> package, convert these times to a time-style format, and from acquired volume derrive uL/min at which each .fcs file was acquired. Did this vary at all across days?</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/TakeAway.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img data-src="https://www.gnu.org/graphics/agplv3-with-text-162x68.png" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img data-src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" alt="CC BY-SA 4.0"></a></p>
+</div>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
