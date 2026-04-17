@@ -1,0 +1,7 @@
+alias,pop,parent,dims,gating_method,gating_args,collapseDataForGating,groupBy,preprocessing_method,preprocessing_args
+singlets,+,root,"FSC-A,FSC-H",singletGate,,FALSE,NA,NA,
+lymphocytes,+,singlets,"FSC-A, SSC-A",flowClust,"K=2, target=c(2e6, 5e5)",FALSE,NA,NA,
+live,-,lymphocytes,Zombie NIR-A,gate_mindensity,"gate_range=c(1e4,2e4)",FALSE,NA,NA,
+Tcells,+,live,Spark Blue 550-A,gate_mindensity,,FALSE,NA,NA,
+CD4,+,Tcells,CD4,gate_mindensity,,FALSE,NA,NA,
+CD8,+,Tcells,CD8,gate_mindensity,,FALSE,NA,NA,
