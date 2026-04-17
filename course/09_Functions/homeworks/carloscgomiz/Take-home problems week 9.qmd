@@ -1,0 +1,180 @@
+---
+title: "Homework week 9"
+author: "Carlos Cuño"
+date: 04-17-2026
+format: html
+---
+
+
+## Problem 1
+### Modify one of the simpler functions (SecondFunction or similar), provide your own argument names, and modify the message(), paste0 or print() functions to print a text style output. Generate a small vector of values, and iterate through your vector using one of the approaches we used.
+
+```{r}
+#Importing libraries
+library(flowWorkspace)
+library(purrr)
+```
+
+I start by creating the function and seeing that it works with the default values. I also added the roxygen2 skeleton, which was actually quite cool to learn because it seems that it's the first step to create the documentation for a function/package.
+```{r}
+#' This function compares two given fluorophores
+#' 
+#' @param Fluorophore A character object containing a good fluorophore choice
+#' @param WorseFluorophore A character object containing a bad fluorophore choice
+#' 
+MyOwnFunction <- function(Fluorophore = "RB613", WorseFluorophore = "PerCP-Cy5.5"){ #My own opinion was added as default values for both arguments
+    output <- paste0("Without a doubt, ", Fluorophore, " is a better option than ", WorseFluorophore)
+    print(output)
+}
+MyOwnFunction()
+```
+
+Good, now we just need to create the vector and iterate the function through it
+```{r}
+good.fluorophore.list <- c("BUV805","BV711", "PE", "RB613")
+map(good.fluorophore.list, MyOwnFunction)
+```
+
+It works, but now I wonder: can I iterate the function through a vector that corresponds to the second argument of the function?
+```{r}
+bad.fluorophore.list <- c("BUV395", "FITC", "PE-Cy7", "APC-Cy7")
+map(bad.fluorophore.list, MyOwnFunction(WorseFluorophore = bad.fluorophore.list))
+```
+
+I came up with this solution. It passes the list to the second arguments and returns the desired output, but then returns a list of NULL values, so there is probably a better way to do this.
+
+## Problem 2
+### Using the initial framework for the CellConcentration function, retrieve several other keywords that are of interest, and incorporate them into the returned data.frame row.
+
+I first import a GatingSet from my week 8 homework:
+```{r}
+#gs.location <- file.path("Cytometry Carlos", "09_Functions", "homeworks", "carloscgomiz", "Manual Gating set.gs")
+gs.location <- file.path("Manual Gating set.gs")
+gs <- load_gs(gs.location)
+plot(gs)
+```
+
+Next, I want to see the list of keywords in these files to decide which of them can be of interest. To do that, we extract all keywords from a sample and then create a vector with all the keyword names:
+```{r}
+keywords.list <- keyword(gs[[1]])
+keywords <- names(keywords.list)
+```
+
+Now, I will create a function that saves all the data regarding cytometer manipulation: who acquired the sample, when, where and how:
+```{r}
+ExtractKeywords <- function(x){
+    Sample <- keyword(x)$`$FIL`
+    Cytometer <- keyword(x)$`$CYT`
+    CytometerSN <- keyword(x)$`$CYTSN`
+    Operator <- keyword(x)$`$OP`
+    BeginTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+    Volume <- keyword(x)$`$VOL`
+    FlowRate <- keyword(x)$`$FLOWRATE`
+
+    dataframe <- data.frame(
+        Sample=Sample,
+        Cytometer=Cytometer,
+        CytometerSN =CytometerSN,
+        Operator=Operator,
+        BeginTime=BeginTime,
+        EndTime=EndTime,
+        Volume=Volume,
+        FlowRate=FlowRate
+    )
+    return(dataframe)
+}
+```
+
+Does the function work on a single .fcs file?
+```{r}
+ExtractKeywords(gs[[1]])
+```
+
+Yes! Finally, I'll try to iterate it through both .fcs samples:
+
+```{r}
+map(gs, ExtractKeywords)
+```
+
+Good. Finally, I extract these keywords to a dataframe:
+
+```{r}
+DataFrame <- map(gs, ExtractKeywords) |> dplyr::bind_rows()
+```
+
+## Problem 3
+### For CellConcentration, we retrieved both start and end time. Look up information on lubridate package, convert these times to a time-style format, and from acquired volume derrive uL/min at which each .fcs file was acquired. Did this vary at all across days?
+In this case, I will import the GatingSet and a summarized version of the function from the course:
+
+```{r}
+#course.gs <- load_gs(file.path("Cytometry Carlos", "09_Functions", "data", "TheGatingSet.gs"))
+course.gs <- load_gs("TheGatingSet.gs")
+
+SummarizedFunction <- function(x){
+    Date <- keyword(x)$`$DATE` # Day-Month-Year
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+
+    Volume <- keyword(x)$`$VOL`
+    Volume <- as.numeric(Volume)
+
+    Data <- data.frame(
+        Date=Date,
+        InstrumentSerial=InstrumentSerial,
+        Specimen=Specimen,
+        StartTime=StartTime,
+        EndTime=EndTime,
+        Volume=Volume
+        )
+
+    return(Data)
+}
+```
+
+Now I generate the dataframe:
+
+```{r}
+DataFrame <- map(course.gs, SummarizedFunction) |> dplyr::bind_rows()
+class(DataFrame$StartTime)
+class(DataFrame$EndTime)
+```
+
+The times are in HH:MM:SS format, but stored as characters. Let's load the lubridate package and see what I can do:
+
+```{r}
+library(lubridate)
+?lubridate::hms #This function might do it
+DataFrame$StartTime = hms(DataFrame$StartTime)
+DataFrame$EndTime = hms(DataFrame$EndTime)
+class(DataFrame$StartTime)
+class(DataFrame$EndTime)
+```
+
+Now they have been transformed to "Period" class. Can I now substract one from the other?
+```{r}
+DataFrame = DataFrame |>
+    dplyr::mutate(RunTime = EndTime - StartTime)
+DataFrame$RunTime
+```
+
+Yes! It has given me the elapsed time for each sample. However, I would like to transform it into numeric values in order to facilitate the calculation:
+
+```{r}
+DataFrame$RunTime = as.numeric(DataFrame$RunTime)
+```
+
+Good. Finally, I'll calculate the flow rate in uL/min (creating a small function![not necessary but it's good to practice]):
+
+```{r}
+flowrate <- function(volume, time){
+ flowrate = volume * 60/time
+ return(flowrate)
+}
+
+DataFrame = DataFrame |> dplyr::mutate(FlowRate = flowrate(volume=Volume, time = RunTime))
+DataFrame$FlowRate
+```
