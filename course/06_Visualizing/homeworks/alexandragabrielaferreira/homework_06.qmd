@@ -1,0 +1,560 @@
+---
+title: "Homework week 06"
+author: "Gabriela Ferreira"
+date: 2026/04/18
+format: html
+toc: true
+toc-depth: 4
+---
+
+# Problem 1
+
+"In this session, we created beeswarm-style boxplot to display our T-cell frequencies on the y-axis, and timepoint on the x-axis. Using the concepts covered this week, swap out “timepoint” for the “Condition” variable. Adjust other layer arguments accordingly until you can return a similar plot at the end of the class. Finally, figure out how to switch around the order the Condition values are displayed on the x-axis."
+
+
+## Solution
+
+### Setup:
+
+Get folder path for dataset, activate libraries necessary, get full paths for .fcs files, read .csv file with information and check the structure of the dataset.
+
+Check information on column value types and switch anything that needs to be switched: dates for date type of variable, transform numeric values that are categorical in nature in factor type of data. 
+
+
+```{r}
+#| eval: FALSE
+
+# get wd
+getwd()
+# activate libraries I will be using:
+library(ggplot2)
+library(flowCore)
+library(dplyr)
+library(CytoML)
+library(monochromeR)
+library(ggbeeswarm)
+library(lubridate)
+
+# get full paths for folder and files
+folder_path = file.path("data")
+fcs_files = list.files(folder_path, pattern = ".fcs", full.names = TRUE)
+
+fcs_files
+
+# get the full path for the csv file:
+csv_file = list.files(folder_path, pattern = ".csv", full.names = TRUE)
+csv_file
+
+# import the csv to an object and checking its structure:
+data = read.csv(csv_file, check.names = FALSE)
+head (data, 3)
+str(data)
+class(data)
+
+# check columns that have characters
+data |> select(where(is.character)) |> head(6) |> str()
+
+#  checks columns that contain numericals:
+data |> select(where(is.numeric)) |> head(6) |> str()
+
+# overwrites "Date" as date type values from the lubridate package
+data |> pull(Date) |> sort() |> unique()
+data$Date = ymd(data$Date)
+str(data[,1:5])
+
+# CD4+ T cells frequency out of CD45
+
+data = data |> mutate(Tcell_frequency = round(Tcells_count/CD45_count*100, 2))
+str(data)
+
+data$Tcell_frequency
+
+# Get stimulation categories:
+stimulation_cat = unique(data$Condition)
+
+stimulation_cat
+```
+
+### monochromeR -> optional
+
+I'm trying to incorporate colour palettes in my plots by using monochromeR to generate a colour palette based on Sakura blooms. 
+I picked two colours from a random internet image using color picker and blended to get 3 different colours. I will try to attribute 1 colour to each condition. I also created a darker purples palette to identify female and male datapoints based on different colours.
+
+Also trying to do this without listing all of the conditions and see if it works -> this didn't work. But listing the "condition" = sakura_palette[1], worked fine!
+
+This part was inspired by the talk by "Level Up Your Plots with Cara Thompson".
+
+```{r}
+#| eval: FALSE
+
+library(monochromeR)
+
+sakura_palette = generate_palette(
+    "#8f5c75", blend_colour="#778ebb",
+    n_colours = 3,
+    view_palette = TRUE,
+    view_labels = TRUE
+)
+
+darker_purples = generate_palette(
+    sakura_palette[2], modification = "go_darker",
+    n_colours = 2,
+    view_palette = TRUE,
+    view_labels = TRUE
+)
+```
+
+Here are the colour palettes.
+
+sakura bloom inspired palette:
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/sakura_palette.png)
+
+darker purples palette:
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/darker_purples.png)
+
+
+After doing all of these, let's do some plots using ggplot2:
+
+```{r}
+#| eval: FALSE
+
+# attribute colours to female and male:
+shape_sex = c("Female" = 22, "Male" = 21)
+fill_sex = c("Female" = darker_purples[1], "Male" = darker_purples[2])
+
+# attribute colours to conditions:
+stimulation_colours = list("Ctrl" = sakura_palette[1], "PPD" = sakura_palette[2], "SEB" = sakura_palette[3])
+
+# initialize the plot by using ggplot(dataset inside)
+plot = ggplot(data) + 
+    aes(x=Condition, y=Tcell_frequency) + #chose aesthetics, meaning the things to plot.
+    geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) + #this provides the geometry we want, size for said geometry and how we want our datapoints in beeswarm to look like. always finish with + to add on layers
+    scale_shape_manual(values=shape_sex) +
+    scale_fill_manual(values=fill_sex) +
+    coord_cartesian(ylim=c(0,100)) +
+    theme_classic()
+plot
+
+```
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem1_plot_1.png)
+
+Unfortunately, when I tried to colour by condition the boxplot disappears:
+
+```{r}
+#| eval: FALSE
+
+unwanted_plot = ggplot(data) + 
+    aes(x=Condition, 
+    y=Tcell_frequency, 
+    colour=Condition) + #chose aesthetics, meaning the things to plot.
+    geom_boxplot() + 
+    geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) + #this provides the geometry we want, size for said geometry and how we want our datapoints in beeswarm to look like. always finish with + to add on layers
+    scale_shape_manual(values=shape_sex) +
+    scale_fill_manual(values=fill_sex) +
+    coord_cartesian(ylim=c(0,100)) +
+    scale_colour_manual(values=stimulation_colours)
+    theme_classic()
+unwanted_plot
+```
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem1_plot_2.png)
+
+Let's research a bit on the internet. 
+On the webpage for ggplot2 explaining the geom_boxplot() arguments, I found the following:
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem1_troubleshoot.PNG)
+
+Let's test:
+
+```{r}
+#| eval: FALSE
+
+test_plot = ggplot(data) + 
+    aes(x=Condition, 
+    y=Tcell_frequency, 
+    colour=Condition) + #chose aesthetics, meaning the things to plot.
+    geom_boxplot(colour = "black", linewidth=0.2) + 
+    geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) + #this provides the geometry we want, size for said geometry and how we want our datapoints in beeswarm to look like. always finish with + to add on layers
+    scale_shape_manual(values=shape_sex) +
+    scale_fill_manual(values=fill_sex) +
+    coord_cartesian(ylim=c(0,100)) +
+    scale_colour_manual(values=stimulation_colours) +
+    theme_classic()
+test_plot
+```
+Managed to fix the disappearing box:
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem1_plot_3.png)
+
+## Solution 2 - change order of condition
+
+Switch the order of the conditions.
+
+Let's say I want to show control condition last and SEB first. We can use the filter function to create a new dataset with the rows in the order we want them -> wrong solution
+
+```{r}
+#| eval: FALSE
+
+treatment_condition = c("SEB", "PPD", "Ctrl")
+reordered_data = data |> filter (Condition %in% treatment_condition)
+
+str(reordered_data)
+
+head(reordered_data, 10)
+```
+
+With the first code, I just filtered all the rows as long as they match any of the conditions. Not what I wanted.
+
+Internet searching lead me to the arrange() function from dplyr package. Let's test:
+
+```{r}
+#| eval: FALSE
+
+reordered_data_2 = data |> arrange(desc(Condition))
+str(reordered_data_2)
+
+column_conditions = reordered_data_2 |> pull(Condition)
+column_conditions
+unique(column_conditions)
+```
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem1_troubleshoot_2.PNG)
+
+Using the arrange function to sort by descending order Condition. Let's plot!
+
+Then I saw somewhere (maybe reddit?) that sort or arrange don't have an impact on ggplot2. 
+
+Let's see if turning Condition to a factor helps us use reorder later:
+
+```{r}
+#| eval: FALSE
+
+# turning conditions into a factor
+reordered_data_2 = data
+reordered_data_2$Condition = factor(reordered_data_2$Condition)
+str(reordered_data_2[,1:5])
+
+reordered_data_2 = reordered_data_2 |> arrange(desc(Condition))
+str(reordered_data_2[,1:5])
+
+reordered_data_2 = reordered_data_2 |> mutate(Condition=factor(Condition, levels=Condition))
+str(reordered_data_2[,1:5])
+```
+
+
+The solution above also didn't work!
+
+Using the library forcats:
+1. first turn "condition" into a factor using factor()
+2. mutate the column condition based on a fct_reorder() from the forcats library to reorder it based on descending values for condition. 
+
+Explanation: as we factorialized Condition now Ctrl = 1, PPD = 2 and SEB = 3. When we reorder it based on descending values, SEB comes first, PPD remains in second and Ctrl is last. This structure is now passed to ggplot2. 
+
+```{r}
+#| eval: FALSE
+
+# install.packages("forcats")
+library(forcats)
+
+reordered_data_2 = data
+reordered_data_2$Condition = factor(reordered_data_2$Condition)
+str(reordered_data_2[,1:5])
+
+reordered_data_2 = reordered_data_2 |> mutate(Condition = fct_reorder(Condition, desc(Condition)))
+str(reordered_data_2[,1:5])
+```
+
+
+```{r}
+#| eval: FALSE
+
+# attribute colours to female and male:
+
+shape_sex = c("Female" = 22, "Male" = 21)
+fill_sex = c("Female" = darker_purples[1], "Male" = darker_purples[2])
+
+#attribute colours to conditions:
+stimulation_colours = list("Ctrl" = sakura_palette[1], "PPD" = sakura_palette[2], "SEB" = sakura_palette[3])
+
+plot_2 = ggplot(reordered_data_2) + 
+    aes(x=Condition, y=Tcell_frequency, colour=Condition) + #chose aesthetics, meaning the things to plot, any color by group should be included here so it's always kept.
+    geom_boxplot(colour="black", linewidth=0.2) + 
+    geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) + #this provides the geometry we want, size for said geometry and how we want our datapoints in beeswarm to look like. always finish with + to add on layers
+    scale_shape_manual(values=shape_sex) +
+    scale_fill_manual(values=fill_sex) +
+    coord_cartesian(ylim=c(0,100)) +
+    scale_colour_manual(values=stimulation_colours) +
+    theme_classic()
+plot_2
+```
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem1_plot_4.png)
+
+So now we have a plot with reversed conditions.
+
+One can also use this to reorder based on other values like median of value of T cell frequency for example.
+
+# Problem 2
+
+"Circle back to the CytoML-ggcyto flowplot, and modify it until happy with the visual appearance. You may use any resource on the internet to assist, but you must document your steps so that we can also repeat them."
+
+
+## Solution
+
+### Setup
+```{r}
+#| eval: FALSE
+
+library(ggcyto)
+library(CytoML)
+
+# get the wsp file:
+
+FlowJoWsp = list.files(path = folder_path, pattern = ".wsp", full = TRUE) #gets the full path to wsp file
+
+ws = open_flowjo_xml(FlowJoWsp) #opens the wsp file 
+
+#convert wsp file to a gating set
+gs =  flowjo_to_gatingset(ws=ws, name=1, path = folder_path, additional.keys = "GROUPNAME") 
+gs
+
+# converts the wsp file in a gating set
+browseVignettes("CytoML") #browses the vignette for CytoML
+
+# plot using ggcyto with no extra things CD4 vs CD8
+
+flow_plot =  ggcyto(gs[6], subset="Tcells", aes(x="CD8", y="CD4")) + geom_hex(bins=100)
+flow_plot
+```
+
+This is the original plot that ggcyto produces
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem2_plot_1.png)
+
+
+1. remove grid lines:
+
+```{r}
+#| eval: FALSE
+flow_plot =  ggcyto(gs[6], subset="Tcells", aes(x="CD8", y="CD4")) + 
+    geom_hex(bins=100) +
+    theme_bw() +
+    theme(
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank()
+    )
+flow_plot
+
+```
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem2_plot_2.png)
+
+2. change name of axis titles using the labs() function
+
+```{r}
+#| eval: FALSE
+ 
+flow_plot = flow_plot + labs(x="CD8", y ="CD4", title = "Gated in T cells")
+
+flow_plot
+```
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem2_plot_3.png)
+
+3. Remove the legend by using theme() system settings
+
+```{r}
+#| eval: FALSE
+ 
+flow_plot = flow_plot + theme(legend.position = "none")
+
+flow_plot
+```
+
+plot with no legend:
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem2_plot_4.png)
+
+4. apply a different colour using scale_fill_gradient():
+
+I guess trans argument is transformation using the colours given for low expression and high  expression. 
+
+More info on [scale_fill_gradients](https://ggplot2.tidyverse.org/reference/scale_gradient.html#arguments)
+
+
+
+
+```{r}
+#| eval: FALSE
+ 
+flow_plot = flow_plot + theme(legend.position = "none") +
+    scale_fill_gradient(trans="sqrt", low=sakura_palette[1], high=sakura_palette[2])
+
+flow_plot
+```
+
+Applying a different colour gradient: 
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem2_plot_5.png)
+
+
+# Problem 3
+
+"In Mismatched Assumptions, we saw two examples of a histogram/density overlay showing the distribution of a variable on the x-axis. Similar to what we did during class to show values according to a different data column, try to modify the plot to show data on the basis of group (whether condition, ptype, infant_sex, etc.) similar to what you can see on the introductory figure for week 4" - an histogram with different groups being plotted and includes transparency (alpha values). 
+
+
+## Solution
+
+How to plot data in histogram form?
+
+Let's do this with the datatable from problem 1.
+
+Let's select Condition, ptype, sex, CD4 Frequency, CD8 frequency, T cells frequency, Vd2+ and Va7.2+ columns for a new dataset:
+
+```{r}
+#| eval: FALSE
+
+# folder location:
+folder_path = file.path("data")
+folder_path
+# get the full path for the csv file:
+csv_file = list.files(folder_path, pattern = ".csv", full.names = TRUE)
+csv_file
+
+# import the csv to an object and checking its structure:
+data = read.csv(csv_file, check.names = FALSE)
+head (data, 3)
+str(data)
+class(data)
+
+# creating a Tcell_frequency column:
+data_1 = data |> mutate(Tcell_frequency = round(Tcells_count/CD45_count*100, 2))
+str(data)
+
+
+# subseting the data I want 
+subset_data = data_1 |> select(Condition, ptype, infant_sex, Tcell_frequency, "CD8+", "CD4+", "Vd2+", "Va7.2+")
+head(subset_data, 6)
+```
+
+
+Transforming frequencies in percentages:
+
+```{r}
+#| eval: FALSE
+
+# check columns that have characters
+subset_data |> select(where(is.character)) |> head(6) |> str()
+
+#  checks columns that contain numericals:
+subset_data |> select(where(is.numeric)) |> head(6) |> str()
+
+subset_data = subset_data |> mutate(CD4_freq='CD4+'*100)
+```
+
+
+I'm getting errors with the mutate() function when I have columns with symbols so I will change any column names with "+" to "pos":
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem3_error_mutate.PNG)
+
+And when I do this:
+
+```{r}
+#| eval: FALSE
+subset_data = subset_data |> mutate(CD4_freq='CD4+')
+
+subset_data$CD4_freq
+```
+
+This happens:
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem3_mutate_not_working.PNG)
+
+So I will change the name of any columns with "+" symbol on them.
+
+```{r}
+#| eval: FALSE
+
+# changing column names:
+subset_data = subset_data |> rename(CD4pos="CD4+", CD8pos="CD8+", Vd2pos="Vd2+", Va7_2pos="Va7.2+")
+```
+
+Changing frequencies to percentages by multiplying columns by 100, rounding to 3:
+
+
+```{r}
+#| eval: FALSE
+
+# multiplying values by 100
+subset_data = subset_data |> mutate(CD4pos = round(CD4pos*100,2), CD8pos=round(CD8pos*100,2), Vd2pos=round(Vd2pos*100,2), Va7_2pos=round(Va7_2pos*100,2))
+
+head(subset_data, 6)
+```
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem3_transformed_data.PNG)
+
+Now the data is properly transformed and selected let's continue with turning condition, ptype and infant_sex to factors:
+
+
+```{r}
+#| eval: False
+
+subset_data$Condition = factor(subset_data$Condition)
+subset_data$ptype=factor(subset_data$ptype)
+subset_data$infant_sex=factor(subset_data$infant_sex)
+
+str(subset_data)
+```
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem3_factors.PNG)
+
+I can see that all columns were turned to factors with either 3 or 2 levels.
+
+I can also see that all my variables for different markers are numeric.
+
+Colour "condition" based on Sakura pallete:
+
+```{r}
+#| eval: FALSE
+
+
+#attribute colours to conditions:
+Condition_colours = c("Ctrl" = sakura_palette[1], "PPD" = sakura_palette[2], "SEB" = sakura_palette[3])
+Condition_colours
+
+#attribute colours to ptype:
+unique(subset_data$ptype)
+ptype_colours = list("HEU-hi" = sakura_palette[1], "HEU-lo" = sakura_palette[2], "HU" = sakura_palette[3])
+
+#attribute colours to infant_sex:
+infant_colours = list("Female" = darker_purples[1], "Male" = darker_purples[2])
+
+ggplot(subset_data) + aes(x=CD4pos, colour=Condition, fill=Condition) + 
+    geom_density(alpha=0.4) + 
+    scale_fill_manual(values=Condition_colours) + 
+    scale_color_manual(values = Condition_colours) +
+    facet_grid(infant_sex ~ Condition) +
+    theme(
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+    )
+```
+
+A density plot for CD4 frequency across the different stimulation conditions and separated by sex:
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem3_ggplot_density_1.png)
+
+
+```{r}
+#| eval: FALSE
+ggplot(subset_data) + aes(x=Va7_2pos, colour=Condition, fill=Condition) + 
+    geom_density(alpha=0.4) + 
+    scale_fill_manual(values=Condition_colours) + 
+    scale_color_manual(values = Condition_colours) +
+    theme_bw()
+```
+
+A density plot showing Va7.2+ cells separated by condition:
+
+![](/course/06_Visualizing/homeworks/alexandragabrielaferreira/images/problem3_ggplot_density_2.png)
