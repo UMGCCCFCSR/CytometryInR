@@ -1,0 +1,724 @@
+---
+title: "Homework week 08"
+author: "Alexandra Gabriela Ferreira"
+date: 2026/04/18
+format:
+  html:
+    code-fold: true
+    code-summary: "Show the code"
+toc: true
+toc-depth: 4
+---
+
+# Problem 1
+
+"Using flowGate, go ahead and create your own series of gates for either our data or your own for any cell populations that might interest you. Once done, save the GatingSet, and then successfully reload it. Add another gate, but intentionally misdraw it. Then proceed to visualize, identify and correct it, before saving again."
+
+## Solution step by step
+
+1. activate the libraries
+2. get directory
+3. read full path for fcs files
+4. load fcs files into a cytoset
+5. create a gating set from the cytoset
+6. get the fluorophores into a variable (colnames followed by str_detect to exclude scatters and time)
+7. apply a transformation:
+  i) attribute the transformation function to an object
+  ii) use transformerList() to apply the transformation  from the step prior to the fluorophores only from step 6.
+  iii) apply transform() to pass the list of transformations created in the step prior.
+8. use gs_gate_interactive(gs = gatingsetobject, filterID= "name of the gate", sample = 1, dims = list("parameter 1", "parameter 2"), subset="parent gate") to draw 1 gate 
+
+**OR**
+
+9. use a tibble to provide a sequential gating strategy
+  * is it possible to create this outside of R environment, using a notepad or spreadsheet software?
+10. save gating set
+12. reload gating set
+13. draw the wrong gate
+14. visualize it using autoplot for one of the samples (as realistically there's when I'd notice it)
+15. redraw *hint* use argument regate = TRUE in the gs_gate_interactive()
+16. check the new gate was applied properly 
+17. save correct gating set.
+
+
+## Results
+
+```{r}
+#| eval: FALSE
+# libraries:
+library(flowWorkspace)
+library(ggplot2)
+library(ggcyto)
+library(stringr)
+library(flowGate)
+
+# directory
+getwd()
+
+# get location for the files and full path for the .fcs files
+storage_location = file.path("data")
+fcsfiles_path = list.files(storage_location, pattern = ".fcs", full.names = TRUE)
+fcsfiles_path #confirming the paths are here
+
+
+# create a cytoset with the fcs files:
+cytoset = load_cytoset_from_fcs(fcsfiles_path, truncate_max_range = FALSE, transformation = FALSE)
+
+#create gating set:
+gatingset = GatingSet(cytoset)
+gatingset #gating set created
+
+# get the fluorophore parameters:
+
+parameters = colnames(gatingset)
+fluorophore_parameters = parameters[!str_detect(parameters, "FSC|SSC|Time")]
+fluorophore_parameters
+
+# get the markers names as well:
+marker_fluorophores = markernames(gatingset)
+marker_fluorophores
+
+# apply optimized bioexponential transformation:
+bioexponential = flowjo_biexp_trans(channelRange=4096, maxValue=262144, pos=4.5, neg=2, widthBasis=-500)
+biexp_transform = transformerList(fluorophore_parameters, bioexponential)
+transform(gatingset, biexp_transform)
+```
+
+### Cell gate
+
+I will draw a polygon gate for a "Cell" gate to exclude debris:
+
+```{r}
+#| eval: FALSE
+
+# draw a "cell" gate
+gs_gate_interactive(gs=gatingset, filterId="cells", sample=1,
+dims=list("FSC-A", "SSC-A"), subset="root")
+
+# check that it applied to all specimens:
+plot(gatingset)
+gs_pop_get_count_fast(gatingset)
+
+# or ggcyto
+ggcyto(gatingset[1], subset="root",
+ aes(x="FSC-A", y="SSC-A")) + geom_hex(bins=100) + geom_gate("cells") + theme_bw()
+```
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem1_manualgate_cells.png)
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem1_manualgate1.PNG)
+
+
+I will draw the singlets gates using another polygon: 
+
+```{r}
+#| eval: FALSE
+
+# draw a "cell" gate
+gs_gate_interactive(gs=gatingset, filterId="singlets", sample=1,
+dims=list("FSC-A", "FSC-H"), subset="cells")
+
+# check that it applied to all specimens:
+plot(gatingset)
+gs_pop_get_count_fast(gatingset)
+
+# or ggcyto
+ggcyto(gatingset[1], subset="root",
+ aes(x="FSC-A", y="FSC-H")) + geom_hex(bins=100) + geom_gate("singlets") + theme_bw()
+```
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem1_manualgate_singlets.png)
+
+I don't like how it was drawn, so I will correct it later!
+
+Let's design a sequential gating strategy.
+For a set like this, this would be my strategy:
+cells > singlets > 
+live (FSC-A, Viability) > Lin neg CD45pos (CD45, Dump) > Tcells (CD3, SSC-A) > CD4pos vs CD8pos vs DN (CD4, CD8)
+in CD4pos > Tregs (CD25pos FoxP3pos) vs FoxP3neg 
+
+```{r}
+#| eval: FALSE
+
+# activate tibble
+library (tibble)
+
+# create a tibble:
+gating_table = tribble(
+  ~filterId,    ~dims,                          ~subset,      
+  "Live",     list("FSC-A", "Viability"),          "singlets",      
+  "CD45pos",       list("CD45", "Dump"),   "Live",  
+  "Tcells",     list("CD3", "SSC-A"),              "CD45pos",     
+  "CD4pos",       list("CD8", "CD4"),               "Tcells",   
+  "CD8pos",       list("CD8", "CD4"),               "Tcells",   
+  "DN",         list("CD8", "CD4"),                "Tcells",
+  "Tregs",      list("CD25", "FoxP3"),             "CD4pos",
+  "FoxP3neg",   list("CD25", "FoxP3"),             "CD4pos",
+)
+
+gating_table
+str(gating_table) # checking that everything is ok
+
+#apply gating strategy to the gatingset
+gs_apply_gating_strategy(gatingset, gating_strategy = gating_table)
+
+autoplot(gatingset[[1]]) + theme_bw()
+autoplot(gatingset[[4]])
+
+ggcyto(gatingset[1], subset="CD4pos",
+ aes(x="CD25", y="FoxP3")) + geom_hex(bins=100) + geom_gate(c("Tregs", "FoxP3neg")) + theme_bw()
+```
+
+Here are the results for the gating strategy:
+Full strategy but it's not very visible:
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem1_manualgate_gatingstrategy.png)
+
+an example of a badly drawn FoxP3+ gate:
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem1_manualgate_foxp3.png)
+
+Saving gating set for future use:
+
+```{r}
+#| eval: FALSE
+# create a file location and name for the file
+gsfile_location_name = file.path(storage_location, "problem1_manualgate.gs")
+
+#saving gs file:
+save_gs(gatingset, gsfile_location_name)
+
+
+#to load it back on:
+
+## set file path:
+directory = file.path("data")
+files_in_directory = list.files(directory, pattern = ".gs", full.names = FALSE)
+files_in_directory #check the names of the files inside directory
+
+gsfile_location_name = file.path(directory, "problem1_manualgate.gs")
+
+problem1_gatingset = load_gs(gsfile_location_name)
+
+plot(problem1_gatingset)
+gs_pop_get_count_fast(problem1_gatingset)
+```
+
+After reloading the gatingset I can see that the gates are there:
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem1_manualgate_reloaded.png)
+
+And the get_count_fast() also retrieves the counts.
+
+If I do gs_pop_get_count_fast(problem1_gatingset) == gs_pop_get_count_fast(gatingset) I see that the result is a similar table with all values TRUE
+
+using the autoplot() I noticed I didn't like how I drew singlets and the foxP3 pos gate let's redo those:
+
+```{r}
+#| eval: FALSE
+
+# regate singlets:
+gs_gate_interactive(gs=problem1_gatingset, filterId="singlets", sample=1,
+dims=list("FSC-A", "FSC-H"), subset="cells", regate = TRUE)
+
+plot(problem1_gatingset)
+
+# regate Tregs
+gs_gate_interactive(gs=problem1_gatingset, filterId="Tregs", sample=1,
+dims=list("CD25", "FoxP3"), subset="CD4pos", regate = TRUE)
+```
+
+I noticed that when I regated singlets the rest of the gates after singlets disappeared, I'm guessing it's a feature? 
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem1_manualgate_regate.png)
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem1_manualgate_error.PNG)
+
+So when a mistake happens it's better to fix it right away.
+
+Anyway, after fixing the problematic plots I would save gatingset as corrected gating set:
+
+```{r}
+#| eval: FALSE
+# create a file location and name for the file
+gsfile_location_name = file.path(storage_location, "problem1_manualgate_corrected.gs")
+
+#saving gs file:
+save_gs(problem1_gatingset, gsfile_location_name)
+
+```
+And I can see the .gs file was created in my directory:
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem1_manualgate_saved.PNG)
+
+
+# Problem 2
+
+"Go ahead and create your own openCyto gate template, extending to whatever cell target population of interest. Visualize the differences, and ensure that the gates are correctly applied for everyone. Set gate_constraint arguments as needed until everything is just right."
+
+## Solution step by step
+
+1. activate the libraries
+2. get or set directory
+3. read full path for fcs files
+4. load fcs files into a cytoset
+5. create a gating set from the cytoset
+6. get the fluorophores into a variable (colnames followed by str_detect to exclude scatters and time)
+7. apply a transformation:
+  i) attribute the transformation function to an object
+  ii) use transformerList() to apply the transformation  from the step prior to the fluorophores only from step 6.
+  iii) apply transform() to pass the list of transformations created in the step prior.
+8. visualize some of the plots with ggcyto() for some parameters from which I'd like to plot to see what type of gate would make sense and try to get idea for gating_args
+  i) I will create this .csv file outside of R and read it into R environment using fread()
+9. load the gatingTemplate into R
+10. apply gating template to an object *hint* use gatingTemplate()
+11. apply gating template to the gatingset *hint* gt_gating()
+12. visualize gates using autoplot().
+13. correct any gates by changing values gating_args as needed.
+14. save the gating set for the next problem.
+
+
+
+```{r}
+#| eval: FALSE
+
+# activate the libraries
+library(dplyr)
+library(ggplot2)
+library(ggcyto)
+library(flowWorkspace)
+library(openCyto)
+library(stringr)
+library(data.table)
+
+# get directoruy, store location path and files:
+getwd()
+storage_location = file.path("data")
+fcs_files = list.files (storage_location, pattern=".fcs", full.names=TRUE)
+fcs_files
+
+# create a cytoset with the fcs files:
+cytoset = load_cytoset_from_fcs(fcs_files, truncate_max_range = FALSE, transformation = FALSE)
+
+#create gating set:
+gatingset = GatingSet(cytoset)
+gatingset #gating set created
+
+# get the fluorophore parameters:
+
+parameters = colnames(gatingset)
+fluorophore_parameters = parameters[!str_detect(parameters, "FSC|SSC|Time")]
+fluorophore_parameters
+
+# get the markers names as well:
+marker_fluorophores = markernames(gatingset)
+marker_fluorophores
+
+# apply optimized bioexponential transformation:
+bioexponential = flowjo_biexp_trans(channelRange=4096, maxValue=262144, pos=4.5, neg=2, widthBasis=-500)
+biexp_transform = transformerList(fluorophore_parameters, bioexponential)
+transform(gatingset, biexp_transform)
+```
+Gating strategy:
+
+cells (flowClust) > singlets (singletGate) > live (flowClust)> CD45+ (gate_mindensity)> Dump- (gate_mindensity)> Tcells (gate_mindensity) > CD4 (flowClust) > CD62L (gate_mindensity) 
+Tcells > CD8 (flowClust)
+
+```{r}
+#| eval: FALSE
+
+# check CD4 vs CD8 
+ggcyto(gatingset[2], subset="root",
+ aes(x="CD4", y="CD8")) + geom_hex(bins=100) + theme_bw()
+```
+
+flowClust takes 2 gating_args, the target for CD4 should be c(3.5e4, 2e4); CD8 should be c(2e4, 3.75e4)
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem2_ggcyto_plo1.png)
+
+
+
+```{r}
+#| eval: FALSE
+
+# check cells FSC-A vs SSC-A 
+ggcyto(gatingset[2], subset="root",
+ aes(x="FSC-A", y="SSC-A")) + geom_hex(bins=100) + theme_bw()
+```
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem2_ggcyto_plot2.png)
+
+Basing myself on this plot I think target for Cells will be c(16e5, 6.25e5)
+
+```{r}
+#| eval: FALSE
+
+# check live vs FSC-A 
+ggcyto(gatingset[2], subset="root",
+ aes(x="FSC-A", y="Viability")) + geom_hex(bins=100) + theme_bw()
+```
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem2_ggcyto_plot3.png)
+
+In this case I would use target as c(16e5, 2.25e4)
+
+Let's create the gatingset and bring it to the R environment. I will not provide gate_ranges to gate_mindensity as I want to see if the results are good enough without my input.
+
+```{r}
+#| eval: FALSE
+
+# find .csv files in data foldeR:
+gating_template = list.files(storage_location, pattern = ".csv", full.names = TRUE)
+gating_template
+
+example = read.csv(gating_template[2], check.names = FALSE)
+example
+```
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem2_testingGatefile.PNG)
+
+This looks similar to the practice file. 
+
+```{r}
+#| eval: FALSE
+
+# read csv file
+test_gates = fread(gating_template[2])
+
+# passing the full table to gatingTemplate()
+full_template = gatingTemplate(test_gates)
+
+# check structure and class for the object created with gatingTemplate
+full_template
+str(full_template)
+class(full_template)
+
+# gating using gt_gating()
+gt_gating(full_template, gatingset)
+
+# visualize the automated gates:
+
+autoplot(gatingset[[1]]) + theme_bw()
+autoplot(gatingset[[2]]) + theme_bw()
+autoplot(gatingset[[3]]) + theme_bw()
+autoplot(gatingset[[4]]) + theme_bw()
+autoplot(gatingset[[5]]) + theme_bw()
+autoplot(gatingset[[6]]) + theme_bw()
+```
+
+I got an error:
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem2_automatedgate_error.PNG)
+
+Visualizing one of the samples, I can see that the error might have happened in the automated gating for dump negative, I think I will have to change to a flowClust method c(2.2e4, 6.2e5)
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem2_autoplot_1.png)
+
+I am also curious to what could happen if I change the value for K.
+
+```{r}
+#| eval: FALSE
+
+
+ggcyto(gatingset[2], subset="root",
+ aes(x="Dump", y="SSC-A")) + geom_hex(bins=100) + theme_bw()
+```
+
+Reset gating set and apply new testingGates:
+
+```{r}
+#| eval: FALSE
+# create a cytoset with the fcs files:
+cytoset = load_cytoset_from_fcs(fcs_files, truncate_max_range = FALSE, transformation = FALSE)
+#create gating set:
+gatingset = GatingSet(cytoset)
+gatingset #gating set created
+# get the fluorophore parameters:
+parameters = colnames(gatingset)
+fluorophore_parameters = parameters[!str_detect(parameters, "FSC|SSC|Time")]
+fluorophore_parameters
+# get the markers names as well:
+marker_fluorophores = markernames(gatingset)
+marker_fluorophores
+# apply optimized bioexponential transformation:
+bioexponential = flowjo_biexp_trans(channelRange=4096, maxValue=262144, pos=4.5, neg=2, widthBasis=-500)
+biexp_transform = transformerList(fluorophore_parameters, bioexponential)
+transform(gatingset, biexp_transform)
+```
+
+Apply new gating template:
+
+```{r}
+#| eval: FALSE
+
+# find .csv files in data foldeR:
+gating_template = list.files(storage_location, pattern = ".csv", full.names = TRUE)
+gating_template
+# read csv file
+test_gates = fread(gating_template[2])
+
+# passing the full table to gatingTemplate()
+full_template = gatingTemplate(test_gates)
+
+# check structure and class for the object created with gatingTemplate
+full_template
+str(full_template)
+class(full_template)
+
+# gating using gt_gating()
+gt_gating(full_template, gatingset)
+
+# visualize the automated gates:
+
+autoplot(gatingset[[1]]) + theme_bw()
+autoplot(gatingset[[2]]) + theme_bw()
+#autoplot(gatingset[[3]]) + theme_bw()
+#autoplot(gatingset[[4]]) + theme_bw()
+#autoplot(gatingset[[5]]) + theme_bw()
+#autoplot(gatingset[[6]]) + theme_bw()
+```
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem2_autoplot_2.png)
+
+Got another error, I will remove the dump channel from my gating strategy.  I think the events in this file do not justify having this gate so I will remove it and correct my gating template accordingly.
+
+I also noticed that with K=4, the gate for cells decreased. I will try to decrease this values for K=1.
+
+
+Let's try again (after resetting gatingset):
+
+```{r}
+#| eval: FALSE
+# find .csv files in data foldeR:
+gating_template = list.files(storage_location, pattern = ".csv", full.names = TRUE)
+gating_template
+# read csv file
+test_gates = fread(gating_template[2])
+
+# passing the full table to gatingTemplate()
+full_template = gatingTemplate(test_gates)
+
+# check structure and class for the object created with gatingTemplate
+full_template
+str(full_template)
+class(full_template)
+
+# gating using gt_gating()
+gt_gating(full_template, gatingset)
+
+# visualize the automated gates:
+
+autoplot(gatingset[[1]]) + theme_bw()
+autoplot(gatingset[[2]]) + theme_bw()
+#autoplot(gatingset[[3]]) + theme_bw()
+#autoplot(gatingset[[4]]) + theme_bw()
+#autoplot(gatingset[[5]]) + theme_bw()
+#autoplot(gatingset[[6]]) + theme_bw()
+```
+
+After removing the dump gate from the template, the function did everything until the end:
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem2_automatedgate_done.PNG)
+
+
+Regarding the gating strategy:
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem2_autoplot_3.png)
+
+I notice that the Cells gate is much better than the original, including way more cells now than before (83.3% vs 95.5%)
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem2_autoplot_4.png)
+
+Same for another sample. 
+
+The viability gate also includes more Live events (Zombie NIR negative events).
+
+**take-away** from changing K in flowClust is that:
+
+1. increasing K will tighten the cluster
+2. decreasing K will increase the cluster
+
+The final plot CD4 vs CD8 is terrible. Somehow two gates just merged into one.
+
+```{r}
+#| eval: FALSE
+
+ggcyto(gatingset[3], subset="Tcells",
+ aes(x="CD4", y="CD8")) + geom_hex(bins=100) + geom_gate("CD8pos") + theme_bw()
+```
+
+I think this gate is quite funny, definetly unintended results from what I set it up. 
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem2_ggcyto_plot4.png)
+
+I will remove this atrocity from the gating template and do a gate_mindensity like a normal person. 
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem2_autoplot_5.png)
+
+Everything is looking ok except CD62L.
+Checking where my gate_range values should be:
+
+```{r}
+#| eval: FALSE
+
+ggcyto(gatingset[4], subset="CD4pos",
+ aes(x="CD62L", y="SSC-A")) + geom_hex(bins=100) + theme_bw()
+```
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem2_ggcyto_plot5.png)
+
+
+## Final autoplots:
+
+Control sample:
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem2_autoplot_Cntrl.png)
+
+
+SEB sample:
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem2_autoplot_SEB.png)
+
+## Final thoughts:
+
+I think autogating is great for those black and white populationsm, where there is clear definition for neg and pos populations. 
+
+And even then, when I tried using flowClust in a CD4 vs CD8 it couldn't do it properly and resulted in a terrible merge of both populations. I'm thinking that's most likely due to the fact flowClust is not suitable for this kind of separation and just overides whatever was drawn first or adds to the 1st gate it created. 
+
+openCyto has more gating methods that would probably be more suitable for this endeavour. Maybe a quadGate.tmix would work (I'll explore this later.)
+
+Code for saving the gatingset and opening it later:
+
+```{r}
+#| eval: FALSE
+# create a file location and name for the file
+gsfile_location_name = file.path(storage_location, "problem2_automatedgate.gs")
+
+#saving gs file:
+save_gs(gatingset, gsfile_location_name)
+```
+
+# Problem 3
+
+"Re-run your openCyto template, but then add a few additional flowGate on to to extend it further. Save the gating set, close out of positron, and successfully reload."
+
+## Solution
+1. activate the libraries needed.
+2. get or set directory
+3. load gs file from problem 2. 
+4. add a manual gate using the flowGate library related functions.
+5. save the gating set. 
+6. reload it after closing positron.
+7. check the gates inside the gatinset and visualize the plots!
+
+
+## Results
+
+
+```{r}
+#| eval: FALSE
+# libraries:
+library(flowWorkspace)
+library(ggplot2)
+library(ggcyto)
+library(flowGate)
+library(openCyto)
+library(dplyr)
+
+# directory
+getwd()
+
+#get gs files:
+storage_location = file.path("data")
+gsfiles_path = list.files(storage_location, pattern=".gs", full.names=TRUE)
+gsfiles_path
+
+#load gs file:
+problem2_gs = load_gs(gsfiles_path[6])
+
+# check if it looks the same as before:
+plot(problem2_gs)
+stats = gs_pop_get_count_fast(problem2_gs)
+stats
+```
+
+Successfully reloading gs allowed me to recover the full gating strategy from gating set saved in problem 2:
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem3_reload_gs.png)
+
+Let's correct the CD62L gate manually and confirm the gate is applied to the full gating set:
+
+```{r}
+#| eval: FALSE
+
+# regate CD62Lpos population to correct it using a SEB sample:
+gs_gate_interactive(gs=problem2_gs, filterId="CD62Lpos", sample=6,
+dims=list("CD62L", "SSC-A"), subset="CD4pos", regate=TRUE)
+
+# confirming gate is good for control and SEB samples:
+autoplot(problem2_gs[[1]]) + theme_bw()
+autoplot(problem2_gs[[2]]) + theme_bw()
+
+# or with ggcyto:
+
+## SEB sample
+ggcyto(problem2_gs[4], subset="CD4pos",
+ aes(x="CD62L", y="SSC-A")) + geom_hex(bins=100) + geom_gate("CD62Lpos")theme_bw()
+
+## SEB sample
+ggcyto(problem2_gs[4], subset="CD4pos",
+ aes(x="CD62L", y="SSC-A")) + geom_hex(bins=100) + geom_gate("CD62Lpos") + theme_bw()
+
+## Cntrl sample:
+ggcyto(problem2_gs[3], subset="CD4pos",
+ aes(x="CD62L", y="SSC-A")) + geom_hex(bins=100) + geom_gate("CD62Lpos") + theme_bw()
+
+plot(problem2_gs)
+gs_pop_get_count_fast(problem2_gs) |> filter(Population %in% "/Cells/Singlets/Live/CD45pos/Tcells/CD4pos/CD62Lpos")
+```
+
+Autoplot for Cntrl sample:
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem3_autoplot_cntrl.png)
+
+
+Autoplot for SEB sample:
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem3_autoplot_SEB.png)
+
+
+ggcyto examples for CD62L vs SSC-A:
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem3_ggcyto_Cntrl.png)
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem3_ggcyto_SEB.png)
+
+
+stats from the gating set:
+
+![](/course/08_WaysToGate/homeworks/alexandragabrielaferreira/images/problem3_gscountsfast.PNG)
+
+Saving this last correction as a problem2_corrected version of the original problem2:
+
+```{r}
+#| eval: FALSE
+# create a file location and name for the file
+gsfile_location_name = file.path(storage_location, "problem2_corrected.gs")
+
+#saving gs file:
+save_gs(problem2_gs, gsfile_location_name)
+
+# to reload it:
+storage_location = file.path("data")
+gsfiles_path = list.files(storage_location, pattern=".gs", full.names=TRUE)
+gsfiles_path
+
+#load gs file:
+problem2_corrected = load_gs(gsfiles_path[7])
+
+# check if it looks the same as before:
+plot(problem2_corrected)
+autoplot(problem2_corrected[[2]]) + theme_bw()
+```
+
+From this exercise I successfully reloaded a gating set saved on the day before from problem 2 and manually regated a problematic gate generated from the autogating strategy I did in problem 2.
