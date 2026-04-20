@@ -1,0 +1,331 @@
+---
+title: "test"
+author: "JCSA"
+date: "2026-04-19"
+output: html_document
+---
+
+##### load packages
+
+```{r}
+#| warning: false
+
+library(flowWorkspace)
+library(ggcyto)
+library(dplyr)
+library(stringr)
+library(BiocStyle)
+library(BiocManager)
+library(PeacoQC)
+library(here)
+library(patchwork)
+
+```
+
+```{r, eval = FALSE}
+#here::here()
+```
+
+```{r, eval=FALSE}
+knitr::knit_exit()
+```
+
+#### **loading** data
+
+```{r}
+
+# StorageLocation <- file.path("course", "07_Transformations", "data") # When interactively writing the code
+
+StorageLocation <- file.path("../../data") #When Quarto/Markdown Rendering
+
+fcs_files <- list.files(StorageLocation, ".fcs", full.names=TRUE)
+SFC_files <- fcs_files[stringr::str_detect(fcs_files, "2025")]
+MC_files <- fcs_files[stringr::str_detect(fcs_files, "G1_2")]
+
+print(fcs_files)
+
+```
+
+```{r}
+### Create a gatingset object
+
+SFC_cytoset <- flowWorkspace::load_cytoset_from_fcs(SFC_files, truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset) # makes a GatingSet from a cytoset
+
+SFC_GatingSet # has 6 samples
+
+pData(SFC_GatingSet) # at this point only has the names of the files, however we can extract more data from the names if required or create new info to add
+
+# create metadata
+Metadata <- pData(SFC_GatingSet)
+str(Metadata)
+#View(Metadata)
+
+Testing <- Metadata |> mutate(Condition = name)
+
+### get names using gsub()
+Intermediate <- sub(".*_", "", Testing$Condition)
+sub(".fcs", "", Intermediate)
+
+# using stringr
+str_extract(Testing$Condition, "[^_]+(?=\\.fcs$)")
+
+#### creating a column in metadata
+TwoExtraColumns <- Metadata |> 
+  mutate(Condition = name)|> 
+  mutate(Condition=str_extract(Condition, "[^_]+(?=\\.fcs$)")) |> 
+  mutate(Specimen=str_extract(name, "INF\\d{3}")) |> 
+  select(Condition, Specimen)
+
+##### update metadata
+UpdatedMetadata <- cbind(Metadata, TwoExtraColumns)
+
+#### overwrite the old metadata
+pData(SFC_GatingSet) <- UpdatedMetadata
+
+#### the the current annotation we could subset from metadata:
+SEB_GatingSet <- subset(SFC_GatingSet, Condition %in% "SEB")
+pData(SEB_GatingSet)
+
+###### check column names
+colnames(SFC_GatingSet)
+
+# however, if you want to see the markers that correspond to each fluorophore
+markernames(SFC_GatingSet)
+
+```
+
+## create transformations
+
+```{r}
+#| label: create transformations
+
+Logicle  <- logicle_trans()
+Biexponential <- flowjo_biexp_trans()
+Asinh <- flowjo_fasinh_trans()
+
+#### apply transformation only in fluorophores (select only)
+SFC_Parameters <- colnames(SFC_GatingSet)
+
+FluorophoresOnly <- SFC_Parameters[
+  !stringr::str_detect(SFC_Parameters, "FSC|SSC|Time", ) ### only removing time
+]
+
+### apply tranformation in selected fluorophores
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+
+### apply transformation to the gatingSet
+transform(SFC_GatingSet, MyBiexTransform)
+
+```
+
+```{r}
+### plot without arguments definition 
+ggcyto(SFC_GatingSet[6], subset = "root", aes(x = "BUV805-A", y = "BV650-A")) +
+  geom_hex(bins = 100) #### looks weird.. not a real doube positive
+
+
+```
+
+```{r}
+##### changing parameters ---
+SFC_cytoset <- load_cytoset_from_fcs(
+  SFC_files,
+  truncate_max_range = FALSE,
+  transformation = FALSE
+)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(
+  channelRange = 4096,
+  maxValue = 262144,
+  pos = 4.5,
+  neg = 0,
+  widthBasis = -1000 #### I changed this from -10 to -1000
+) # one conclusion of this is that maxValue, widthBasis, pos and neg are kind of related
+
+
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+##### plot again
+ggcyto(SFC_GatingSet[6], subset = "root", aes(x = "BUV805-A", y = "BV650-A")) +
+  geom_hex(bins = 100) 
+
+```
+
+##### application of transformations for Mass cytometry CyTOF ----
+
+```{r}
+
+MC_files
+MC_cytoset <- load_cytoset_from_fcs(
+  MC_files,
+  truncate_max_range = FALSE,
+  transformation = FALSE
+)
+MC_GatingSet <- GatingSet(MC_cytoset)
+
+markernames(MC_GatingSet)
+
+#### plotting raw ---
+
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+
+#### selecting parameters excludung barcodes or beads
+MC_Parameters <- markernames(MC_GatingSet)
+MC_MarkersInterest <- MC_Parameters[!str_detect("Barcode|Beads", MC_Parameters)]
+
+InterestingMetalsOnly <- names(MC_MarkersInterest)
+
+### transform ---
+Asinh <- flowjo_fasinh_trans()
+MyAsinhTransform <- transformerList(InterestingMetalsOnly, Asinh)
+
+#### plot again ---
+ggcyto(MC_GatingSet[1], subset = "root", aes(x = "Nd145Di", y = "Nd146Di")) +
+  geom_hex(bins = 100)
+
+####### play with settings ----
+MC_cytoset <- load_cytoset_from_fcs(MC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+MC_GatingSet <- GatingSet(MC_cytoset)
+Asinh <- flowjo_fasinh_trans(m = 4, t = 12000, a = 0.7, length = 256)
+MyAsinhTransform <- transformerList(InterestingMetalsOnly, Asinh)
+transform(MC_GatingSet, MyAsinhTransform)
+
+##### plot again#2 ----
+ggcyto(MC_GatingSet[1], subset = "root", aes(x = "Nd145Di", y = "Nd146Di")) +
+  geom_hex(bins = 100)
+
+####### play with settings ----
+MC_cytoset <- load_cytoset_from_fcs(
+  MC_files,
+  truncate_max_range = FALSE,
+  transformation = FALSE
+)
+MC_GatingSet <- GatingSet(MC_cytoset)
+Asinh <- flowjo_fasinh_trans(m = 4, t = 12000, a = 0.7, length = 256)
+MyAsinhTransform <- transformerList(InterestingMetalsOnly, Asinh)
+transform(MC_GatingSet, MyAsinhTransform)
+
+##### plot again#2 ----
+ggcyto(MC_GatingSet[1], subset = "root", aes(x = "Nd145Di", y = "Nd146Di")) +
+  geom_hex(bins = 100)
+```
+
+### Homework ------
+
+#### Problem #1
+
+We had not selected FSC and SSC parameters in this attempt, as they are normally displayed in the linear scale. Include them in the list of fluorophores to be transformed, and see how this impacts the visualization (imitating what could accidentally happen in practice if they were left in)
+
+This is the plot without transformation
+
+```{r}
+ggcyto(SFC_GatingSet[6], subset = "root", aes(x = "FSC-A", y = "SSC-A")) +
+  geom_hex(bins = 100) #### 
+
+```
+
+Now I will remove FSC-A and SSC-A
+
+```{r}
+FluorophoresOnly_B <- SFC_Parameters[
+  !stringr::str_detect(SFC_Parameters, "Time", ) ### only removing time
+]
+
+### apply tranformation in selected fluorophores
+MyBiexTransform_B <- transformerList(FluorophoresOnly_B, Biexponential)
+
+### apply transformation to the gatingSet
+transform(SFC_GatingSet, MyBiexTransform_B)
+
+ggcyto(SFC_GatingSet[6], subset = "root", aes(x = "FSC-A", y = "SSC-A")) +
+  geom_hex(bins = 100)
+
+```
+
+*Conclusion:* **I only saw differences in the scale numbers, but nothing happened with the "shape" of the morphology**
+
+#### Problem #2
+
+For the SFC data, I showed the setup for both Logicle and Biexponential, but didn’t have time to dive into the Logicle transformation. Select a couple markers of interest for the SFC data, visualize and screenshot the before, and then attempt to customize the biexponential arguments to best visualize the underlying data, and then repeat for Logicle. Take screenshots of both and compare/contrast the difference.
+
+```{r}
+
+Logicle  <- logicle_trans()
+
+### apply tranformation in selected fluorophores
+MyLogicleTransform <- transformerList(FluorophoresOnly, Logicle)
+
+### apply transformation to the gatingSet
+transform(SFC_GatingSet, MyLogicleTransform)
+
+### plot without arguments definition 
+ggcyto(SFC_GatingSet[6], subset = "root", aes(x = "BUV805-A", y = "BV650-A")) +
+  geom_hex(bins = 100) #### looks 
+
+### plot without arguments definition
+ggcyto(SFC_GatingSet[6], subset = "root", aes(x = "PE-Cy5-A", y = "BV650-A")) +
+  geom_hex(bins = 100) #### looks 
+
+
+```
+
+Conclusion: The logicle transformation looks good without compressing any of the fluorescences and discriminating between positivive and negative populations for the markers I tested
+
+#### Problem #3
+
+#There are to asinh style transformations provided by the flowWorkspace package. Using the mass cytometry data, select two metal markers of interest, visualize each, customize the arguments until you have properly visualized the underlying populations, and see if you can spot any major differences between the methods.
+
+```{r}
+####### play with settings ----
+MC_cytoset <- load_cytoset_from_fcs(
+  MC_files,
+  truncate_max_range = FALSE,
+  transformation = FALSE
+)
+
+MC_GatingSet <- GatingSet(MC_cytoset)
+
+##### Try modifying the values in tranformation ---
+
+#arguments 
+# T = numeric the maximum value of input data
+# M = numeric the full width of the transformed display in asymptotic decades
+# A = numeric Additional negative range to be included in the display in asymptotic decades
+# inverse	whether to return the inverse function
+
+# Ver1
+Asinh_B <- asinhtGml2_trans()
+MyAsinhTransformB <- transformerList(InterestingMetalsOnly, Asinh_B)
+transform(MC_GatingSet, MyAsinhTransformB)
+ggcyto(MC_GatingSet[1], subset = "root", aes(x = "Nd145Di", y = "Nd146Di")) +
+  geom_hex(bins = 100)
+
+# Ver2
+Asinh_B1 <- asinhtGml2_trans(equal.space = TRUE)
+MyAsinhTransformB1 <- transformerList(InterestingMetalsOnly, Asinh_B1)
+transform(MC_GatingSet, MyAsinhTransformB1)
+ggcyto(MC_GatingSet[1], subset = "root", aes(x = "Nd145Di", y = "Nd146Di")) +
+  geom_hex(bins = 100)
+
+# Ver3
+Asinh_B2 <- asinhtGml2_trans(equal.space = TRUE, T = 262144, M = 4.5, A = 0.5)
+MyAsinhTransformB2 <- transformerList(InterestingMetalsOnly, Asinh_B2)
+transform(MC_GatingSet, MyAsinhTransformB2)
+ggcyto(MC_GatingSet[1], subset = "root", aes(x = "Nd145Di", y = "Nd146Di")) +
+  geom_hex(bins = 100)
+
+# Ver4
+Asinh_B3 <- asinhtGml2_trans(equal.space = TRUE, T = 262144, M = 4.5, A = 0.5)
+MyAsinhTransformB3 <- transformerList(InterestingMetalsOnly, Asinh_B3)
+transform(MC_GatingSet, MyAsinhTransformB3)
+ggcyto(MC_GatingSet[1], subset = "root", aes(x = "Nd145Di", y = "Nd146Di")) +
+  geom_hex(bins = 100)
+
+```
+
+The `asinh_Gml2()` transformation did not work, but the `asinhtGml2_trans()` did work!
+

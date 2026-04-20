@@ -1,0 +1,116 @@
+---
+title: "homework week 01"
+author: "Alexandra Gabriela Ferreira"
+date: 2026-02-08
+format: html
+toc: TRUE
+toc-expand: true
+---
+
+# Problem 1
+
+"We installed PeacoQC during this session, but we didn’t have time to explore what functions are present within the package. Using what you have learned about accessing documentation, figure out and list what functions it contains"
+
+### Solution
+
+```{r}
+#| eval: False
+
+#I activate the library with the following: 
+library(PeacoQC)
+
+#The following line calls a package help page on the side bar
+?PeacoQC 
+
+#Alternatively,one can use the following line of code to list all the functions inside PeacoQ:
+ls("package:PeacoQC") 
+```
+
+These are the functions PeacoQC imports when downloading the package
+Screenshot of the help page:
+
+![](/course/01_InstallingRPackages/homeworks/alexandragabrielaferreira/images/PeacoQC%20functions.PNG)
+
+
+Screenshot of the ls function output:
+![](/course/01_InstallingRPackages/homeworks/alexandragabrielaferreira/images/lsFunctionOutput.PNG)
+
+# Problem 2
+
+"Take a closer look at the list of Bioconductor cytometry packages. Report back on how many there are currently in Bioconductor, the author/maintainer with the most contributed cytometry R packages, and a couple packages that you would be interested in exploring more in-depth later in the course."
+
+### Solution
+There seems to be 69 packages on bioconductor related to flowcytometry. Mike Jiang is the author/maintainer of 10, 3 of which in collaboration with Greg Finak. 
+Observation: I looked at this info manually by going to the website and using the filters. However there seems to be an automated way of doing this but I didn't try it. 
+
+
+# Problem 3
+
+"There is another way to install R packages, using the newer pak package. Positron uses this when installing suggested dependencies.
+
+After learning more about it via the documentation and it’s pkgdown website, I would like you to attempt to install the following three R packages using this newer method: “broom”, “cytoMEM”, “DillonHammill/CytoExploreR”.
+
+Take screenshots, and in a new quarto markdown document, describe how the installation process differed from what you saw for install.packages(), install() and install_github()."
+
+### Solution
+
+```{r}
+#| eval: False
+
+?pak #this outputs a "no documentation for pak in specified packages and libraries"
+
+#install pak from CRAN
+install.packages("pak")
+#after successful package installation, activate library:
+library(pak)
+#search for info on pak
+?pak
+```
+
+screenshot of pak info page:
+
+![](/course/01_InstallingRPackages/homeworks/alexandragabrielaferreira/images/HowToUsePak.PNG)
+
+Installing packages from CRAN, Bioconductor and github using pak
+```{r}
+#| eval: False
+
+#installing a CRAN package:
+pak::pkg_install("broom")
+
+#installing a bioconductor package:
+pak::pkg_install("cytoMEM")
+
+pak::pkg_install("DillonHammill/CytoExploreR")
+pak::pkg_install("EmbedSOM") #EmbedSOM was was removed from CRAN repo
+pak::pkg_install("superheat")
+```
+
+
+Screenshot of installing broom from CRAN:
+
+![](/course/01_InstallingRPackages/homeworks/alexandragabrielaferreira/images/installbroom.PNG)
+
+Screenshot of installing cytoMEM from bioconductor:
+
+![](/course/01_InstallingRPackages/homeworks/alexandragabrielaferreira/images/installCytoMEM.PNG)
+
+Screenshot of failed installation of cytoExploreR from github:
+
+![](/course/01_InstallingRPackages/homeworks/alexandragabrielaferreira/images/ERROR_InstallCytoExploreR.PNG)
+
+Screenshot of EmbedSOM removal from CRAN:
+
+![](/course/01_InstallingRPackages/homeworks/alexandragabrielaferreira/images/embedSOMremovedfromCRAN.PNG)
+
+Screenshot of installing superheat from CRAN:
+
+![](/course/01_InstallingRPackages/homeworks/alexandragabrielaferreira/images/installSuperHeat.PNG)
+
+### Conclusion of problem 3
+
+In this last problem it seems like:
+    pak function allows one to use one single line of code to install packages from CRAN, Bioconductor, github and URL
+    pak also shows the process of installing the package requested and checks for other packages necessary
+    pak installs the other packages as well
+    In the end, pak shows which packages were installed, their versions and size
