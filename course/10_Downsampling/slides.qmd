@@ -2,9 +2,16 @@
 title: "10 - Downsampling and Concatenation"
 author: "David Rach"
 date: 04-28-2026
-format: html
-toc: true
-toc-depth: 5
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    incremental: true
+page-layout: full
+execute:
+  echo: true
+  warning: false
+  message: true
 ---
 
 ![](/images/WebsiteBanner.png)
@@ -23,27 +30,69 @@ For screen-shot slides, click [here](/course/10_Downsampling/slides.qmd)
 
 # Background
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Welcome to the tenth week of Cytometry in R! This is the official start of the "Cytometry Core" section, which means we are one-third of the way through the course! 
+:::
+:::
 
+::: {.fragment}
+::: {.callout-tip title="."}
 In the first section "Introduction to R", we were primarily focused on building a solid foundation of R skills, while introducing the basic infrastructure components of working with flow cytometry files using the various Bioconductor packages. Consequently, a lot of the previous lessons revolved around providing solved code examples, and then walking through what they did line-by-line. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 While this remains especially helpful for those starting off (which is vast majority of course participants), in every R journey, there is a point where we start going beyond copying-and-pasting code, and instead begin attempting to write our own code based on contextual understanding of where we are at, and what we are trying to do, relying on modifying code snippets that we remember previously encountering, repurposing them toward accomplish our new goal. 
+:::
+:::
 
 [](https://t4.ftcdn.net/jpg/00/93/06/73/360_F_93067340_B0chaFQUm96v6GmLhUIrGV6rEv40JqmL.jpg)
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 This gradual transition in approach is what I call **"bulding a coding mindset"**. With time and practice, you will notice going from verbalizing broad "I am going to do task XYZ" goals, towards approaching the problem more from the lense of "first break this overall task I want to accomplish into a series of steps, and complete these smaller goals in turn by applying previous knowledge and targeted google searches to fill in the gaps as I go."
+:::
+:::
 
 [](https://activecollab.com/upload/blog/681/How-to-break-down-tasks-into-manageable-pieces-featured-image.png)
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 While this may seem daunting when applied to coding, for those of us coming from the lab-bench, it's analogous to that point where instead of needing to constantly refer back to our printed lab protocol for each and every of the (countless) staining/wash steps, we instead started remembering the sequence of events in context of what was occuring for the cells in our tube/plate, gradually decreasing the need to refer back to the protocol. 
+:::
+:::
 
+::: {.fragment}
 ![](images/LabNotebook.png)
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 With this in mind, my goal of this section is **not** to immediately shove you all off the deep-end of the pool only to watch you drown. Rather, we will continue building on the foundation you have been assembling, while providing additional supervised space to attempt your own ideas that may or not work. So the lesson formats will gradually shift to accomodate this move towards greater coding independence over the next 10 sessions. 
+:::
+:::
 
 [](https://www.explainxkcd.com/wiki/images/3/30/deep_end.png)
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 For the next couple weeks, we will start off by building out some of the toolsets that will be very much needed for the [high-dimensional](/Schedule.qmd#dimensionality-visualization) and [unsupervised analysis](/Schedule.qmd#clustering-algorithms) weeks. Continuing from where we left off last time with [functions](/course/09_Functions/index.qmd), we will cobble together various concepts we have previously encountered with the goal of being able downsample our .fcs files to a desired number (or percentage) of cells for a given cell population. Once this has been accomplished, we will explore how to concatenate these downsampled files together, before saving them to new .fcs files (while hopefully updating the metadata correctly so that commercial software can visualize them correctly).
+:::
+:::
+
+---
 
 # Walk Through
 
@@ -57,23 +106,55 @@ After [setting up](/course/00_Git/index.qmd#new-folder-from-template) a "Week10"
 If you encounter issues syncing due to the Take-Home Problem merge conflict, see this [walkthrough](https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/). The updated homework submission protocol can be found [here](https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/UpdatedPullRequest)
 :::
 
+---
+
 ## Why Downsample?
 
+::: {.fragment}
+::: {.callout-tip title="."}
 There are various reasons why we might want to downsample (subset our .fcs files to a certain number or percentage of cells), especially in context of unsupervised analysis. 
+:::
+:::
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Traditionally, one of the main ones is limited computational resources. Rapid Access Memory (RAM) was often in limited quantity, especially compared to the size of .fcs files. When working with a large dataset, downsampling allowed for more equal representation across all acquired files to be accounted for in the subsequent analysis phase, without maxing out the available RAM and triggering the software to crash out due to lack of memory. This is particularly the case for some unsupervised clustering and dimensionality reduction algorithms, that are trying to differentiate how similar or different all the cells within the analysis are from each other. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Separately, some statistical analysis methods primarily rely on counts.  Unlike frequency, which partially standardizes the comparison by leveraging against the parent gate, methods that rely on counts for their statistic may be similarly assisted when a defined number of cells at a designated gate are utilized. 
+:::
+:::
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Regardless of reason, we will need to figure out a few logistics when implementing a down-sampling strategy in R. We will first figure out the process using a single specimen, leveraging what we learned within the [GatingSet](/course/05_GatingSets/index.qmd) lesson to be able to specify our gate of interest, and then leverage the resulting code to implement a function that can be used to iterate through all the files within the gating set. 
+:::
+:::
+
+---
 
 ## Setup 
 
 ### Load .fcs files
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Before we can downsample, we will need to have our .fcs files brought into R. We consequently repeat the loading in process that we have been seeing fairly regularly throughout the first section. This week, we will be working with some "larger" spectral .fcs files (since we will need to downsample). We are still limited by GitHub's cap on max file size (5 MB), so if you want to use your own data, please feel free to substitute in the file path to your own .fcs files storage location. 
+:::
+:::
 
+---
+
+::: {.fragment}
 ```{r}
+#| warning: FALSE
+#| message: FALSE
+
 library(flowWorkspace)
 library(flowGate)
 library(dplyr)
@@ -81,6 +162,11 @@ library(ggplot2)
 library(purrr)
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 #StorageLocation <- file.path("course", "10_Downsampling", "data") # Interacting directly 
 StorageLocation <- file.path("data") #For Quarto Rendering
@@ -97,10 +183,19 @@ MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
 transform(SFC_GatingSet, MyBiexTransform)
 ```
 
+:::
+
+---
+
 ### Gate
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Once our data is in a GatingSet, we can add some general gates for the subsets using the `flowGate` [package](/course/08_WaysToGate/index.qmd#manual---flowgate)
+:::
+:::
 
+::: {.fragment}
 ```{r}
 GatingTable <- tibble::tribble(
   ~filterId,    ~dims,                          ~subset,      
@@ -113,20 +208,39 @@ GatingTable <- tibble::tribble(
 )
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 #| eval: FALSE
 flowGate::gs_apply_gating_strategy(SFC_GatingSet, gating_strategy = GatingTable)
 ```
 
+:::
+
+---
+
 ![](images/00_Singlets.png)
+
+---
 
 ![](images/00_Live.png)
 
+---
+
 ![](images/00_CD4.png)
+
+---
 
 ![](images/00_CD8.png)
 
+---
+
 ![](images/00_DN.png)
+
+---
 
 ```{r}
 #| include: FALSE
@@ -153,39 +267,95 @@ GatingSetStorageLocation <- file.path(StorageLocation, "SFCGatingSet.gs")
 SFC_GatingSet <- load_gs(GatingSetStorageLocation)
 ```
 
+---
+
+::: {.fragment}
 ```{r}
 plot(SFC_GatingSet)
 ```
 
+:::
+
+---
+
 ### Retrieving Counts
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Let's quickly check to see what specimens we will be working with for this dataset. 
+:::
+:::
+
+::: {.fragment}
 ```{r}
 pData(SFC_GatingSet)
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 We have so far gated for the three main T cell populations in cord blood (CD4+, CD8+ and Double-Negative (CD4-CD8-)). Considering that in cord blood mononuclear cells, the abundance of these subsets may vary a bit by donor, we want to make sure we downsample a number of cells that will result in each individual specimen providing a relatively similar contribution of cells to the final .fcs file we end up creating. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 To get better context before diving in, lets go ahead and retrieve, then plot the statistics data for our gates so that we have an idea of what we are working with (and get some additional `dplyr` and `ggplot2` practice in, as it has been a while since [Week 4](/course/04_IntroToTidyverse/index.qmd) and [Week 06](/course/06_Visualizing/index.qmd)). 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 Data <- gs_pop_get_count_fast(SFC_GatingSet)
 ```
 
-Looking at our retrieved data, the gate names are showing up as full file.paths. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Looking at our retrieved data, the gate names are showing up as full file.paths. 
+:::
+:::
+
+::: {.fragment}
 ```{r}
 Data$Population
 ```
 
-Let's abbreviate them for simplicity using the `basename()` function. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's abbreviate them for simplicity using the `basename()` function. 
+:::
+:::
+
+::: {.fragment}
 ```{r}
 Data$Population <- basename(Data$Population)
 Data
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 With this bit of cleanup done, lets plot them  with `ggplot2`
+:::
+:::
+
+::: {.fragment}
 
 ```{r}
 Plot <- ggplot(Data, aes(x = Population, y = Count, color = name)) +
@@ -204,38 +374,103 @@ Plot <- ggplot(Data, aes(x = Population, y = Count, color = name)) +
     panel.grid.major.x = element_blank(),
     panel.grid.minor = element_blank()
   )
+```
 
+:::
+
+---
+
+::: {.fragment}
+```{r}
 Plot
 ```
 
-As we have encountered on a couple of the prior sessions, we can use the `plotly` package `ggplotly()` function to convert our static ggplot2 plots into interactive ones, which are useful in this context. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we have encountered on a couple of the prior sessions, we can use the `plotly` package `ggplotly()` function to convert our static ggplot2 plots into interactive ones, which are useful in this context. 
+:::
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 plotly::ggplotly(Plot)
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Looking at our gated T cell populations across specimens, we can see that in general, while each specimen has similar number of live T cells, there is a little more variability when it comes to the individual T cell subsets. We will revisit this later on as we build out the function logic. 
+:::
+:::
+
+---
 
 ## Building Downsample
 
 ### Broad Idea Sketch
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Now that we have our dataset pre-requisites assembled within our local environment, lets start by planning out what we will need in order to assemble a downsampling function, at least in terms of inputs and what it will ideally return as outputs.
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 We are going to be starting off with our gated GatingSet, and similar to what we did during [Week 09](/course/09_Functions/index.qmd) with the `CellConcentration()` function, iterate through the individual GatingHierarchies using the `purrr` packages `map()` function. 
+:::
+:::
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Once an individual .fcs file ends up within our new function, we will need to extract out the [exprs](/course/03_InsideFCSFile/index.qmd) data (where measurements for individual cells are stored). From this original data, we will need to downsample (i.e. subset) a designated number of cells which correspond to individual rows (while also accounting for several possible exceptions we might encounter). 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 This modified exprs data then needs to be returned to the .fcs file, maintaining the rest of the parameter and description metadata intact so that it remains recognizable as a standard .fcs file. We would also want to be able to export out the .fcs file with modified name parameters so that we can distinguish the downsampled version from the original .fcs file, to avoid accidentally overwriting our original. 
+:::
+:::
 
+::: {.fragment}
+::: {.callout-tip title="."}
 So, visualizing ahead, at the end of the iteration, we would end up with three new .fcs files, containing our target number of downsampled cells originating for our respective gate of interest. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 With this rough sketch worked out, lets dive in. 
+:::
+:::
+
+---
 
 ### Initial Skeleton
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Getting started, lets go ahead and establish our initial function, as well as add elements of the `roxygen2` skeleton for documentation. We will provide our first argument as "x", which will serve as our standin for the individual .fcs file being iterated in via `purrr`. 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -247,19 +482,46 @@ Downsampling <- function(x){
 }
 ```
 
-When function building, highlighting and running (via Ctrl/Command + Enter) individual arguments being provided to the function can be helpful as you are writing it. These variables end up being created as objects in your environment (appearing under the variables tab in the right-secondary side-bar), and are available for use in troubleshooting and debugging. Here is an example of how highlight lines within the function that you want to run/troubleshoot would appear as. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When function building, highlighting and running (via Ctrl/Command + Enter) individual arguments being provided to the function can be helpful as you are writing it. These variables end up being created as objects in your environment (appearing under the variables tab in the right-secondary side-bar), and are available for use in troubleshooting and debugging. Here is an example of how highlight lines within the function that you want to run/troubleshoot would appear as. 
+:::
+:::
+
+::: {.fragment}
 ![](images/Troubleshooting.png)
 
-Remembering back to last week, we remember that when we iterate a GatingSet object, we end up with a GatingHierarchy containing a single .fcs file, similar to if we had used [[]] on the GatingSet. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Remembering back to last week, we remember that when we iterate a GatingSet object, we end up with a GatingHierarchy containing a single .fcs file, similar to if we had used [[]] on the GatingSet. 
+:::
+:::
+
+::: {.fragment}
 ```{r}
 x <- SFC_GatingSet[[1]]
 x
 ```
 
-If we were to run the above code-chunk (resulting in "x" appearing in our created variables tab), by clicking on the class line in the chunk below, running Ctrl/Command + Enter would be the equivalent of having entered the same line of code in your console
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we were to run the above code-chunk (resulting in "x" appearing in our created variables tab), by clicking on the class line in the chunk below, running Ctrl/Command + Enter would be the equivalent of having entered the same line of code in your console
+:::
+:::
+
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -271,19 +533,45 @@ Downsampling <- function(x){
 }
 ```
 
+:::
+
+::: {.fragment}
 ![](images/01_Class.png)
 
-We can confirm that the object we are using for troubleshooting (x) is returning the same value as if we were iterating with `purrr` by setting the iteration to thefirst object (i.e. [1]) in our GatingSet, and make sure that both approaches are returning a GatingHierarchy. If they are discrepant (one returning a GatingSet or a list), then we likely missed a set of [] somewhere. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can confirm that the object we are using for troubleshooting (x) is returning the same value as if we were iterating with `purrr` by setting the iteration to thefirst object (i.e. [1]) in our GatingSet, and make sure that both approaches are returning a GatingHierarchy. If they are discrepant (one returning a GatingSet or a list), then we likely missed a set of [] somewhere. 
+:::
+:::
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet[1], .f=Downsampling)
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 In this case, both are returning the same class of object, so we have correctly set up our function and outside argument standins correctly. Lets proceed to modify our the internals. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 From the entire .fcs file, we will need to subset out the underlying data corresponding to our gated population of interest. This is similar to the code we used [last time](/course/09_Functions/index.qmd) for CellConcentration, so we can quickly relocate that code from the respective lesson, then copy-and-paste it into our new function within the {}. 
+:::
+:::
 
-
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -295,8 +583,17 @@ Downsampling <- function(x){
 }
 ```
 
-One thing to remember, the code within the function is only able to see variables that we pass in to it, which is done via arguments (that are present within the "()" ). So to get `gs_pop_get_data()` to run successfully, we will need to add "subset" as `Downsampling`'s second argument, or we will not be able to isolate the data associated for our respective gate. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+One thing to remember, the code within the function is only able to see variables that we pass in to it, which is done via arguments (that are present within the "()" ). So to get `gs_pop_get_data()` to run successfully, we will need to add "subset" as `Downsampling`'s second argument, or we will not be able to isolate the data associated for our respective gate. 
+:::
+:::
+
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -309,20 +606,47 @@ Downsampling <- function(x, subset){
 }
 ```
 
-Having made a change to the function, we need to re-run the code-block above, so that the changes we have made to our function are reflected within our environment. Once this code-block has been rerun, if we check under the variables tab we can see the information detailed for our function has changed. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having made a change to the function, we need to re-run the code-block above, so that the changes we have made to our function are reflected within our environment. Once this code-block has been rerun, if we check under the variables tab we can see the information detailed for our function has changed. 
+:::
+:::
+
+::: {.fragment}
 ![](images/02_VariablesUpdated.png)
 
-Likewise, if we run our function using our actual arguments, we can see that the returned object has now changed from returning the `class()` output we had as a placeholder to the returned 'cytoset' object from `gs_pop_get_data()`
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Likewise, if we run our function using our actual arguments, we can see that the returned object has now changed from returning the `class()` output we had as a placeholder to the returned 'cytoset' object from `gs_pop_get_data()`
+:::
+:::
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet[1], subset="Tcells", .f=Downsampling)
 ```
 
+:::
+
+---
+
 ### Accessing exprs
 
+::: {.fragment}
+::: {.callout-tip title="."}
 With our function building underway, `gs_pop_get_data()` returns to us a "cytoset object" of length 1. Remembering back during [Week 03](/course/03_InsideFCSFile/index.qmd), we were able to use `exprs()` on a flowFrame object to retrieve the underlying MFI measurement data that we are interested in. Let's try running it in this context and see if this will similarly work. 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -336,15 +660,36 @@ Downsampling <- function(x, subset){
 }
 ```
 
+:::
+
+---
+
+
+::: {.fragment}
 ```{r}
 #| error: TRUE
 map(.x=SFC_GatingSet[1], subset="Tcells", .f=Downsampling)
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Judging by the error message, the `exprs()` function has no idea what do with a 'cytoset' object. With a little (or quite a lot) of investigation within the `exprs` help file and the [flowWorkspace](https://www.bioconductor.org/packages/release/bioc/vignettes/flowWorkspace/inst/doc/flowWorkspace-Introduction.html) vignette, we see that the expected object being passed to the function is a mismatch for class, i.e. we are a level too high up in the hierarchy. Rather than passing a cytoset, we need to be at cytoframe level (individual object rather than a set) to successfully retrieve the exprs-associated data.
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Fortunately, dropping down to an individual unit is similar to other list style objects, requiring us to modify the code by placing [[1]] next to our cytoset variable inside the function (EventsInTheGate). After updating the function (and re-running it), we can pass our data and check the output
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -358,15 +703,33 @@ Downsampling <- function(x, subset){
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 Data <- map(.x=SFC_GatingSet[1], subset="Tcells", .f=Downsampling)
 head(Data[[1]], 3)
 ```
 
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Success, we have successfully retrieved the underlying data for T cells! (finally!)
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 But let's quickly do a sanity check, and make sure that the numbers we are retrieving make sense. We can do this by adding `summary()` function to summarize the distribution for each of our MeasurementData columns. 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -381,16 +744,42 @@ Downsampling <- function(x, subset){
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet[1], subset="Tcells", .f=Downsampling)
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Looking at the distribution of the values for individual fluorophores, everything seems rather suspiciously in the same linear-style range to each other than what we would normally anticipate for spectral flow cytometry data. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 We recall back to [Week 07](/course/07_Transformations/index.qmd) that unlike many commerical softwares, transformations in R are applied directly to the underlying values. When we ran `gs_pop_get_data`, we did not specify that this transformation should be reversed, so we ended up retrieving the transformed data values. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 We can correct this by setting the "inverse.transform" argument to "TRUE" within `gs_pop_get_data()`. After re-running the function, we get back
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -405,22 +794,63 @@ Downsampling <- function(x, subset){
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet[1], subset="Tcells", .f=Downsampling)
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 These results are more in-line with the usual value spread we would typically associate with unmixed spectral flow cytometry data for our respective fluorophores. So a win for paying attention.  But what impact would it have had if we had retained the transformed values? 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 It would likely depend on what you are trying to do. If you plan to remain in R for your data analysis, then keeping these values transformed might make sense for a downstream analysis. Vice versa, if you are exporting out the data as new .fcs files, it is likely you or someone else might want to open them in commercial software. And instead of getting back something that looks like this for a downsampled CD4+ T cell population
+:::
+:::
 
+---
+
+::: {.fragment}
 ![](images/TransformationReversed.png)
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 You will end up getting back a visual that looks like this
+:::
+:::
 
+---
+
+::: {.fragment}
 ![](images/TransformationRetained.png)
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Since the commercial software applies scaling/transformation on top of the existing values (which were previously transformed in R). Consequently, lets go ahead and set 'inverse.transform' as `Downsampling()`'s third argument, but set the default equal to TRUE, since the main use case for today is ability to export out as .fcs files. 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -439,15 +869,30 @@ Downsampling <- function(x, subset, inverse.transform=TRUE){
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet[1], subset="Tcells", .f=Downsampling)
 ```
 
+:::
+
+---
 
 ### Subsetting
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Now that `Downsampling()` is returning the correct underlying MFI measurement data for our gate of interest, let's start setting up the code to take the existing number of rows and downsample them to match a desired number of cells. A useful place to pick up at is confirming what type of object we are working with by adding `class()` back in on our last named object inside the function. 
+:::
+:::
 
+---
+
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -466,12 +911,26 @@ Downsampling <- function(x, subset, inverse.transform=TRUE){
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet[1], subset="Tcells", .f=Downsampling)
 ```
 
-While matrices are also rectangular in shape, they are often not as easy to manipulate compared to "data.frame" or "tibble" objects. Let's go ahead and convert our matrix into a data.frame using `as.data.frame()`. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+While matrices are also rectangular in shape, they are often not as easy to manipulate compared to "data.frame" or "tibble" objects. Let's go ahead and convert our matrix into a data.frame using `as.data.frame()`. 
+:::
+:::
+
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -491,12 +950,26 @@ Downsampling <- function(x, subset, inverse.transform=TRUE){
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet[1], subset="Tcells", .f=Downsampling)
 ```
 
-Having a 'data.frame' object returned, lets switch out our current `class()` readout for `nrow()`, so that we can see how many cells we are working with before setting up the downsample code.
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having a 'data.frame' object returned, lets switch out our current `class()` readout for `nrow()`, so that we can see how many cells we are working with before setting up the downsample code.
+:::
+:::
+
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -516,14 +989,34 @@ Downsampling <- function(x, subset, inverse.transform=TRUE){
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet[1], subset="Tcells", .f=Downsampling)
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 When we downsample from our existing data.frame, we would want to be able to retrieve out a specific number of cells (corresponding to individual rows) for a given specimen. These would ideally be selected randomly (and without replacement) so the return we get back would ideally be representative of what we would had seen for the original specimen.
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Fortunately, `dplyr`'s `slice_sample()` function is set up to do this for us, so we can set up its line of code within `Downsampling()`. In this case, we are passing `slice_sample()` our data.frame, an outside argument (DownsampleCount), and setting the replace argument to FALSE to accomplish this. 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -548,12 +1041,26 @@ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount){
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet[1], subset="Tcells", .f=Downsampling, DownsampleCount=1000)
 ```
 
-Seing as we have now downsampled to our target number of cells, let's switch from using `nrow()` for `return()`, so that our returned object is the actual MFI values. To keep things orderly for the website, lets temporarily switch our "DownsampleCount" argument to 10.
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Seing as we have now downsampled to our target number of cells, let's switch from using `nrow()` for `return()`, so that our returned object is the actual MFI values. To keep things orderly for the website, lets temporarily switch our "DownsampleCount" argument to 10.
+:::
+:::
+
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -578,25 +1085,60 @@ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount){
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet[1], subset="Tcells", .f=Downsampling, DownsampleCount=10)
 ```
 
+:::
+
+---
+
 ### Alternate Scenario 1
 
+::: {.fragment}
+::: {.callout-tip title="."}
 All-in-all, our `Downsampling()` function appears to be in working order. Before moving on to figuring how to convert the data.frame into an .fcs, lets consider a couple things. 
+:::
+:::
 
+::: {.fragment}
+::: {.callout-tip title="."}
 As we saw, for our dataset, the counts were fairly similar across the board for our 'Tcells' gate. 
+:::
+:::
 
+---
+
+::: {.fragment}
 ```{r}
 plotly::ggplotly(Plot)
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 But what would happen in a scenario where we provided a downsample count that was greater than the number of cells present in the specimen? 
 Would that work? Or would we get back an error? 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Lets check with the CD8+ gate, using a count of 2500 (which would not be enough for INF179). Lets also switch back our function readout within the function to `nrow()` for an easier visual summary check. 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -621,22 +1163,58 @@ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount){
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet, subset="CD8+", .f=Downsampling, DownsampleCount=2500)
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Based on the returns, it appears the default behavior for `slice_sample()` in this scenario where not enough cells are present is just to return all cells that are currently present. Which is good, so one potential worry off our list. 
+:::
+:::
+
+---
 
 ### Alternate Scenario 2
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Alternatively, what if we wanted to retrieve a certain percentage of cells from within a gate for each individual specimen, rather than a fixed count? 
+:::
+:::
 
+::: {.fragment}
+::: {.callout-tip title="."}
 While we could write this as an entirely separate function, the smarter way (reusing existing code) would be to set up a [conditional](/course/02_FilePaths/index.qmd).
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 One way to implement this using our existing arguments would be, if our 'DownsampleCount' argument is less than 1, this would correspond to the desired downsampling proportion that we would to subsample for the respective gated cell population. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 So in practice, we would modify the function as follows, and **update the documentation**, as it is not an immediately obvious practice. 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -671,32 +1249,82 @@ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount){
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 # 0.1 or 10% of each .fcs file
 
 map(.x=SFC_GatingSet, subset="CD8+", .f=Downsampling, DownsampleCount=0.1)
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 And with that, the beating heart of our `Downsampling` function has now been properly set up.
+:::
+:::
+
+---
 
 ### returnType
 
+::: {.fragment}
+::: {.callout-tip title="."}
 We should probably start figuring out what object format we want our `Downsampling()` function to be returning.
+:::
+:::
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Having generated a subsetted-exprs-matrix, we could reinsert it into the .fcs file, and write it out to a specific folder. This would allow us to access it for subsequent use later on. We would still however need to make a few additional adjustments to the .fcs file metadata, so that we properly document the changes that have been made (so we don't end up confusing these downsampled files with the original ones). 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Alternately, after downsampling, we may just want to return out outputs directly to R for continued analysis. In this scenario, we might want back the data as a 'data.frame' object (which wouldn't have any associated metadata) or as a 'flowFrame' or 'cytoframe' object (which would have corresponding metadata). 
+:::
+:::
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Let's start with the main goal, our downsampled output as an .fcs file, and then add conditionals to allow for the return the other two options.
+:::
+:::
+
+---
 
 ### Creating new .fcs files
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Remembering back to [Week 03](/course/03_InsideFCSFile/index.qmd), .fcs files in R are made up of **3 slots** in the S4 object, **'exprs'** (which we have been manipulating today), **'parameters'** (containing general fluorophore/marker panel info), and **'description/keyword'** (all the other metadata). 
+:::
+:::
 
+::: {.fragment}
+::: {.callout-tip title="."}
 So far, we have not changed anything in terms of the number of columns, so we shouldn't need to make any changes to parameters (yey!). But we would need to swap out the existing exprs matrix (corresponding to that of the original .fcs file) for our downsampled one. Similarly, good reproducibility practice means we should update the appropiate keywords so that the generated .fcs files are not the originals. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Lets continue by converting our 'data.frame' object back to the original 'matrix' type object, using the `as.matrix()` function. 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -732,12 +1360,26 @@ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount){
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet, subset="CD8+", .f=Downsampling, DownsampleCount=2500)
 ```
 
-As mentioned, we will need to break out and copy the pieces from the original .fcs file into the new .fcs. The easiest way to gain access to all this information is to switch over from a cytoframe (working via a pointer) to a flowFrame (loaded into RAM). This will allow us access to the `flowCore` helper functions (`parameters()`, `exprs()`, and `keyword()`) to access the corresponding slots. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As mentioned, we will need to break out and copy the pieces from the original .fcs file into the new .fcs. The easiest way to gain access to all this information is to switch over from a cytoframe (working via a pointer) to a flowFrame (loaded into RAM). This will allow us access to the `flowCore` helper functions (`parameters()`, `exprs()`, and `keyword()`) to access the corresponding slots. 
+:::
+:::
+
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -777,14 +1419,34 @@ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount){
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet[1], subset="CD8+", .f=Downsampling, DownsampleCount=2500)
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Seeing as we now have access to the 'flowFrame' contents, we can now cobble together our "DownsampledMatrix" (corresponding to the new 'exprs' slot) with the contents of the original 'description' and 'parameters' slots.
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 With all the components gathered, creating a new .fcs file is as simple as handing them off to the `new()` function. 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -826,18 +1488,44 @@ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount){
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet[1], subset="CD8+", .f=Downsampling, DownsampleCount=2500)
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 We are now able to get back a standard flowFrame object. Looking at the readout output, we see that it automatically updated to reflect the new number of downsampled cells, while retaining the metadata from the original .fcs file. 
+:::
+:::
+
+---
 
 ### Updating keywords
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Before calling it good, and saving this flowFrame as an .fccs, lets back up a couple lines and update a few important keywords within the 'description' slot, so that we can tell our "downsampled in R" .fcs file apart from the original .fcs file. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 A simpler way of doing this is setting up another argument (which we will designate as 'addon'), that will append a character value between the specimens corresponding tubename and the ending .fcs. For this particular instrument manufacturer, changing the "GUID" keyword for this .fcs file makes sense (although the equivalent keyword may vary depending on other platforms).
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -887,16 +1575,36 @@ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount,
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet[1], subset="CD8+", .f=Downsampling, DownsampleCount=2500, addon="CD8")
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 From the readout, we can see that we are now able to distinguish our file from the original based on atleast this single keyword.
+:::
+:::
+
+---
 
 ### Export as .fcs
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Lets work in how to export the 'flowFrame' out as a .fcs file, ideally to a designated storage location. Since our now updated GUID keyword already contains ".fcs" at the end, we don't need to add anything else to the new file name in order to specify the file type. We will just need to add 'StorageLocation' as another `Downsampling()` argument (updating the documentation accordingly), and then do some adjustments internally to generate a full `file.path()`. 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -950,15 +1658,35 @@ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount,
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet[1], subset="CD8+", .f=Downsampling, DownsampleCount=2500, addon="CD8",
  StorageLocation="/home/JohnDoe/Desktop")
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 As we have encountered previously, if no value is provided to an argument, it returns back as an error. Consequently, adding a default option would make sense in this case. We can use the `getwd()` function to identify the file.path to the current working directory, which will be used as the standin in case we don't end up specifying a 'StorageLocation' file.path. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 By setting the default argument value for 'StorageLocation' equal to NULL (i.e. nothing), we can use an 'if' conditional in combination with `is.null()` to handle this situation when encountered. 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -1015,12 +1743,26 @@ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount,
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 map(.x=SFC_GatingSet[1], subset="CD8+", .f=Downsampling, DownsampleCount=2500, addon="CD8")
 ```
 
-Having the full file path and corresponding new name now specified within `Downsampling()`, we are now ready to write our first new .fcs file. This is accomplished through the `flowCore` packages `write.FCS()` function, which we will add in at the end of our function. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having the full file path and corresponding new name now specified within `Downsampling()`, we are now ready to write our first new .fcs file. This is accomplished through the `flowCore` packages `write.FCS()` function, which we will add in at the end of our function. 
+:::
+:::
+
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -1078,6 +1820,11 @@ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount,
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 #| eval: FALSE
 
@@ -1086,16 +1833,38 @@ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount,
 map(.x=SFC_GatingSet[1], subset="CD8+", .f=Downsampling, DownsampleCount=2500, addon="CD8")
 ```
 
+:::
+
+---
+
 ![](images/03_NewFCS.png)
 
-We have now returned our .fcs file. For a quick sanity check (and so that my collaborators don't track me down later in the day reporting odd scaling issue), lets double check it opens correctly using [Floreada.io](/course/00_Floreada/index.qmd) or other flow software. 
+---
 
+::: {.fragment}
+::: {.callout-tip title="."}
+We have now returned our .fcs file. For a quick sanity check (and so that my collaborators don't track me down later in the day reporting odd scaling issue), lets double check it opens correctly using [Floreada.io](/course/00_Floreada/index.qmd) or other flow software. 
+:::
+:::
+
+---
+
+::: {.fragment}
 ![](images/04_FloreadaOpenable.png)
+
+:::
+
+---
 
 ### Alternate Export Options
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Now that we can export as a '.fcs' file, lets wrap up by providing the option to instead return either the 'data.frame' or the 'flowFrame' object (if we wished to continue working with them in R). We can do set up within `Downsampling()` a new argument (returnType) and a couple branching conditional statements with 'if' and 'ifelse' to designate the different outcomes for different provided argument values. 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -1161,18 +1930,38 @@ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount,
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 Data <- map(.x=SFC_GatingSet[1], subset="CD8+", .f=Downsampling, DownsampleCount=2500, addon="CD8",
   returnType="data.frame")
 head(Data[[1]], 3)
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 And there we go, `Downsampling()` now has the functionality to return objects in different formats, depending on what our use case may be.
+:::
+:::
+
+---
 
 ### Dependencies
 
+::: {.fragment}
+::: {.callout-tip title="."}
 One important thing before proceeding, `Downsampling` currently works because we called `library()` on all the packages needed to run the various functions we were using inside of it. If we were to close Positron and reopen, if we forgot to run one of these libraries (let's say `dplyr`), we would get the following style error
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #| eval: FALSE
 
@@ -1181,14 +1970,37 @@ Data <- map(.x=SFC_GatingSet[1], subset="CD8+", .f=Downsampling, DownsampleCount
 head(Data[[1]], 3)
 ```
 
+:::
+
+---
+
 ![](images/05_MissingDependency.png)
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Since `dplyr` is not attached to our local environment, when `slice_sample()` is encountered within the function, and not defined elsewhere, we get an error returned. While we could remember to load all our various R packages at the start to avoid this issue, this opens another can of worms, as many R packages have functions with identical names, which results in the last package called masking those with identical names before it. This can often cause functions to fail, so less than ideal. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 There are two ways around this. Later on in the course, we will see how to use the @importFrom tag within a Roxygen2 skeleton, alongside the `devtools` package `load_all()` function to specify function-level dependencies from the get-go. However, since a couple additional setup steps are needed, for now, we will default to updating our functions to use the "packageName :: function name" option, with the '::' telling R to use the function from that package regardless if it is currently attached to the local environment or not. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 In our case, I will go ahead and add the @importFrom tags (syntax is package name, followed by functions being imported from it) within the roxygen skeleton, and then within the function do the equivalent second option using '::'
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #' This function downsamples from a designated gate to our desired number
 #' of cells, returning as a new .fcs file
@@ -1258,67 +2070,165 @@ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount,
 }
 ```
 
+:::
+
+---
+
+::: {.fragment}
 ```{r}
 purrr::map(.x=SFC_GatingSet[1], subset="CD8+", .f=Downsampling, DownsampleCount=2500, addon="CD8",
   returnType="flowFrame")
 ```
 
-Now, with the `flowWorkspace`, `flowCore`, `Biobase` and `dplyr` dependencies specied within the function, `Downsample` runs without issues regardless of whether the packages are attached to our local environment. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Now, with the `flowWorkspace`, `flowCore`, `Biobase` and `dplyr` dependencies specied within the function, `Downsample` runs without issues regardless of whether the packages are attached to our local environment. 
+:::
+:::
+
+::: {.fragment}
 ![](images/06_WhoNeedsDependencies.png)
+
+:::
+
+---
 
 ### At last
 
+::: {.fragment}
+::: {.callout-tip title="."}
 We can now remove the indexing ([1]) from SFC_GatingSet that we used throughout the building process, and proceed to downsample our entire GatingSet based on our parameters of interests. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 For example, returning 2500 CD4+ T cells as .fcs files (to **my** desktop file.path)
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #| eval: FALSE
 purrr::walk(.x=SFC_GatingSet, subset="CD4+", .f=Downsampling, DownsampleCount=2500, addon="CD4",
   returnType="fcs", StorageLocation="/home/david/Desktop")
 ```
 
-Or 10% of all T cells (to **my** desktop file.path)
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Or 10% of all T cells (to **my** desktop file.path)
+:::
+:::
+
+::: {.fragment}
 ```{r}
 #| eval: FALSE
 purrr::walk(.x=SFC_GatingSet, subset="Tcells", .f=Downsampling, DownsampleCount=0.1, addon="_Tcells",
   returnType="fcs", StorageLocation="/home/david/Desktop")
 ```
 
+:::
+
+---
+
 ## Export
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Now that we have fully assembled `Downsampling()`, there is actually another useful use case when it comes to its ability to export out as fully-compatible .fcs files. If instead of providing a downsample number, we provided an implausibly high number (lets say 10,000,000) we would basically directly export out the entire gated cell population of interest as its own .fcs file.
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 This can be quite useful, as you can set up your cleanup gates and major cell population gates (double checking to make sure they are applied correctly), and then export out your actual cell populations of interest as smaller .fcs files for future analysis. That way, if you are implementing hybrid workflows with large spectral flow cytometry files relying on commercial software (similar to the Flow-Jo/CytoML example from [Week 05](/course/05_GatingSets/index.qmd#cytoml)), you do not crash your RAM just trying to open the workspace. 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #| eval: FALSE
 AllDNs <- purrr::map(.x=SFC_GatingSet, subset="Tcells", .f=Downsampling, DownsampleCount=10000000, addon="DN_All",
   returnType="fcs", StorageLocation="/home/david/Desktop")
 ```
 
+:::
+
+---
+
 ## Concatenate
 
 ### Nested Functions
 
+::: {.fragment}
+::: {.callout-tip title="."}
 So far, we have continued the process of learning how to write our own functions to carry out useful tasks, culminating in creating our `Downsampling` function. While downsampling itself can be useful in certain situations, it is often used as part of a workflow where the downsampled outputs are combined together into a single .fcs file (concatenation) for use in unsupervised workflows (like dimensionality visualization). 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Unlike `Downsampling()`, which works within an individual .fcs files at a time, if we were to build out a `Concatenate()` function, we would need to first retrieve the downsampled returns from every .fcs file via iteration, then combine them together, before outputting them as a new .fcs file. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 The tricky part is that in practice, often when we `Concatenate`, we want to add in keywords to be able to tell the cells coming from the individual contributors of the concatenated file apart after the fact. For .fcs files, these keywords end up becoming additional columns in the 'exprs' matrix, which causes the need to not only modify exprs, but also parameters and description slots rather extensively before we can create the new .fcs file. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 However, I promised to not drown you in your first forray to the deep-end of the pool, so there will be no more function building in this session. I will provide the out code for `Concatenate()` and its various nested helper functions below, and instead focus on how to use it for actual implementation within our workflows for the rest of the time we have left. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 If, however, you are not burnt out on function building and want to optionally read through the equivalent `Concatenate` walk-through, follow the link [here](/course/10_Downsampling/concatenate.qmd).
+:::
+:::
+
+---
 
 ### Concatenate Code
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Briefly as far as explainers go, `Concatenate` needs to iterate through various .fcs files to retrieve the `Downsampling` outputs, as well as extract corresponding metadata for each iterated .fcs file. These get added in as new columns, with the cascading changes ending up applied to 'exprs', 'parameters', and 'keyword' slots, before being outputted as our return object type of choice. Because of all these moving parts, `Concatenate` is an example of a nested function, with several smaller helper functions that are called to help carry out the individual tasks. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 To see the `Concatenate` and associated helper functions, click the code-show arrow below. To skip the code and start using them, run the "Run Cell" option to get them to appear correctly in your local environment. 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #| code-fold: TRUE
 
@@ -1530,17 +2440,35 @@ Concatenate <- function(gs, subset, inverse.transform=TRUE, DownsampleCount,
 }
 ```
 
+:::
+
+---
+
 ### Update Metadata
 
+::: {.fragment}
+::: {.callout-tip title="."}
 With `Concatenate` and it's helpers now active as functions within your local environment, we can now focus on the workflow needed to run these on our GatingSet. The way `Concatenate` was [set up](/course/10_Downsampling/concatenate.qmd), additional keywords can be added in by retrieving the corresponding columns from the 'GatingSet' metatada (which is visible via `pData()`). 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 CurrentMetadata <- pData(SFC_GatingSet)
 CurrentMetadata
 ```
 
-As you can see, in our current GatingSet, it's just the standard name column. To edit the GatingSet metadata, we can repeat the steps used back during [Week 07](/course/07_Transformations/index.qmd#updating-metadata) to merge in additional metadata that is stored for the respective specimens in a .csv file (located in our case within the Week 10 data folder). 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As you can see, in our current GatingSet, it's just the standard name column. To edit the GatingSet metadata, we can repeat the steps used back during [Week 07](/course/07_Transformations/index.qmd#updating-metadata) to merge in additional metadata that is stored for the respective specimens in a .csv file (located in our case within the Week 10 data folder). 
+:::
+:::
+
+::: {.fragment}
 ```{r}
 TheCSV <- list.files(StorageLocation, pattern=".csv", full.names=TRUE)
 AdditionalMetadata <- read.csv(TheCSV, check.names=FALSE)
@@ -1548,8 +2476,17 @@ colnames(CurrentMetadata)
 colnames(AdditionalMetadata)
 ```
 
-Seeing as both our data.frames have a column in common (and the names present are equivalent for both), we can use `dplyr` packages `left_join()` function to combine both data.frames together them. Once this is accomplished, we can then assign this back to our GatingSet. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Seeing as both our data.frames have a column in common (and the names present are equivalent for both), we can use `dplyr` packages `left_join()` function to combine both data.frames together them. Once this is accomplished, we can then assign this back to our GatingSet. 
+:::
+:::
+
+::: {.fragment}
 ```{r}
 UpdatedMetadata <- left_join(CurrentMetadata, AdditionalMetadata, by="name")
 rownames(UpdatedMetadata) <- UpdatedMetadata$name
@@ -1557,12 +2494,27 @@ pData(SFC_GatingSet) <- UpdatedMetadata
 pData(SFC_GatingSet)
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Our metadata is now assembled, and we can provide the columns we want to add in as keywords to `Concatenate()`'s 'desiredCols' argument in the form of a vector (ex. desiredCols=c("name", "condition", "infant_sex", "HEU_status")) 
+:::
+:::
+
+---
 
 ### Concatenate
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Now that we have our functions, updated metadata, and our assembled GatingSet object, we can concatenate together gates of interest. In the example below, we are downsampling for 2000 CD4+ T cells, appending four keyword columns, and having R return the values as a flowFrame. 
+:::
+:::
 
+::: {.fragment}
 ```{r}
 #| eval: FALSE
 Concatenate(gs=SFC_GatingSet, subset="CD4+", addon="CD4", DownsampleCount=2000,
@@ -1570,39 +2522,100 @@ Concatenate(gs=SFC_GatingSet, subset="CD4+", addon="CD4", DownsampleCount=2000,
   filename="ConcatenatedCD4")
 ```
 
-And just as easily, we can modify returnType to return as an .fcs file
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And just as easily, we can modify returnType to return as an .fcs file
+:::
+:::
+
+::: {.fragment}
 ```{r}
 #| eval: FALSE
 Concatenate(gs=SFC_GatingSet, subset="CD4+", addon="CD4", DownsampleCount=2000,
   desiredCols=c("name", "condition", "infant_sex", "HEU_status"), returnType="fcs")
 ```
 
+:::
+
+
+::: {.fragment}
 ![](images/07_ConcatenatedReturn.png)
 
-Which, as always, for sanity check when working with your own functions, its always best to double check everything stored correctly and opens as you will anticipate. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Which, as always, for sanity check when working with your own functions, its always best to double check everything stored correctly and opens as you will anticipate. 
+:::
+:::
+
+---
+
+::: {.fragment}
 ![](images/08_KeywordsByCD4.png)
 
-Likewise, similar to what we encountered with Downsampling, if we provide an improbably high-number for 'DownsampleCount', we just end up combining all our cells of interest for a given cell population, from each individual, together into a single file. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Likewise, similar to what we encountered with Downsampling, if we provide an improbably high-number for 'DownsampleCount', we just end up combining all our cells of interest for a given cell population, from each individual, together into a single file. 
+:::
+:::
+
+::: {.fragment}
 ```{r}
 Concatenate(gs=SFC_GatingSet, subset="CD8+", addon="CD8", DownsampleCount=10000000,
   desiredCols=c("name", "condition", "infant_sex", "HEU_status"), returnType="flowframe")
 ```
 
+:::
+
+---
+
 ## R
 
+::: {.fragment}
+::: {.callout-tip title="."}
 Over the course of today, we created two large functions, `Downsampling()` and `Concatenate()`, plus several helper functions. While currently active in our environment, what if we want to use them for a different project on another day? What would be the best way to make them available. 
+:::
+:::
 
+::: {.fragment}
+::: {.callout-tip title="."}
 One approach to handling this issue I frequently encounter is placing your own functions within individual code blocks at the beginning of your .qmd file, so that they get activated in your local environment from the start of the process. However, if the functions are lengthy, this ends up occupying substantial portion of the document, which is less than ideal. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 The approach we will be using for the next several weeks of the course is to place the completed functions in their own respective .R files files, all kept together in their own R folder within our working directory. For today's functions, this would looks like this
+:::
+:::
 
+::: {.fragment}
 ![](images/09_RFolder.png)
 
-Subsequently, when we need to load all these functions into our local environment, all we need to do is provide the file paths to `walk` alongside `source()` in order to activate all the .R files, making the functions they contain within available to us. 
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Subsequently, when we need to load all these functions into our local environment, all we need to do is provide the file paths to `walk` alongside `source()` in order to activate all the .R files, making the functions they contain within available to us. 
+:::
+:::
+
+::: {.fragment}
 ```{r}
 #| eval: FALSE
 
@@ -1612,21 +2625,61 @@ MyFunctions <- list.files(RFolder, full.names=TRUE)
 purrr::walk(.x=MyFunctions, .f=source)
 ```
 
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 To load all these functions to our active environment, for the next several sessions, we would only need to use the `source()` function providing the path to the folder. This in turn will load in all the function .R files we have created, making their contents available to us in R for subsequent use. We will explore how this approach can be useful in context over the next several weeks. 
+:::
+:::
+
+::: {.fragment}
 
 ![](images/10_SourceViaWalk.png)
 
+:::
+
+---
+
 # Discussion
 
+::: {.fragment}
+::: {.callout-tip title="."}
 In this session, we picked up where we left off on [Week 09](/course/09_Functions/index.qmd) and continued to gain additional experience with building useful functions, primarily in context of working through the assembly of our `Downsampling()` function, which we used successfully to both downsample and export particular cell types of interest out of our GatingSet objects. This in turn enabled the creation of a nested function `Concatenate()`, which provides us the ability to combine these outputs into a single .fcs, with the option of adding additional metadata columns. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 Beyond the "building coding mindsets" and "function creation practice" aspects, these tools sets will prove quite useful when we start encountering more of the [high-dimensional](/Schedule.qmd#dimensionality-visualization) and [unsupervised analysis](/Schedule.qmd#clustering-algorithms) content, both in terms of generating the right outputs needed to pass to these algorithms, but also that many of the steps we did today directly translate to the process of pipeline assembly. Which makes sense, as systematically working your way through a problem, converting outputs to inputs for the next function, is essentially what a pipeline does. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 One thing to note for `Concatenate`, today, we only combined files together that were all acquired on the same day, and unmixed at the same time. Especially when it comes to Spectral Flow Cytometry experiments, things can vary a bit across experiment days, which when sufficiently different enough can result in batch effects for downstream unsupervised analytical algorithms. Consequently, when we get to the [normalization](/Schedule.qmd#normalization-batch-effect-or-real-biology) week, we will need to modify our workflow to account for these adjustments before we concatenate everything together. 
+:::
+:::
 
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
 On the docket for next time, we will start to see where R gets its reputation as a statistical powerhouse, as we learn how to tidy our GatingSet gate counts appropiately so that they can be used for statistical significance testing. In the process, we learn how to pipe these outputs directly to `ggplot` plots for use in publication figures, as well as assemble pdfs and to allow for rapid screening. If all goes well, the days of copying and paste-ing columns from an excel file over to your subscription-based statistical analysis software may soon be a distant memory. 
+:::
+:::
+
+---
 
 ![](images/TakeAway.jpg)
+
+---
 
 # Additional Resources
 
@@ -1636,19 +2689,31 @@ On the docket for next time, we will start to see where R gets its reputation as
 
 [TBD]()
 
+---
+
 # Take-home Problems
 
 :::{.callout-tip title="Problem 1"}
 TBD
 :::
 
+---
+
 :::{.callout-tip title="Problem 2"}
 TBD
 :::
 
+---
+
 :::{.callout-tip title="Problem 3"}
 TBD 
 :::
+
+---
+
+![](images/TakeAway.jpg)
+
+---
 
 ::: {style="text-align: right;"}
 [![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
