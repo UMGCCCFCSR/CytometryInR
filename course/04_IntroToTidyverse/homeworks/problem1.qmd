@@ -1,0 +1,107 @@
+```{r}
+
+#Problem 1. Taking a dataset (either todays or one of your own), work through the column-operating functions (select(), rename(), and relocate()). Once this is done, filter() by conditions from two separate columns, arrange in an order that makes sense, and export this “tidy” data as a .csv file.
+
+filepath <- file.path("data","Dataset.csv")
+filepath
+
+Data <- read.csv(file=filepath, check.names=FALSE)
+
+colnames(Data)
+
+library(dplyr)
+
+#Select function
+
+Subset <- Data |> select(bid, Condition, Tcells_count, lymphocytes_count, CD45_count, `CD4+`, `CD8+`)
+head(Subset, 3)
+
+#Rename function
+
+colnames(Subset)
+ 
+SubsetRenamed <- Subset |> rename(specimen=bid,CD4_positive=`CD4+`,CD8_positive=`CD8+`)
+colnames(SubsetRenamed)
+
+#Relocate function
+
+ReorderedSubset <- SubsetRenamed |> relocate(CD45_count, .before=Tcells_count) 
+colnames(ReorderedSubset)
+
+#Filter results of SEB or PPD condition with CD4+ < 0.6. First
+
+SEB.PPD.Condition <- ReorderedSubset |> filter(Condition %in% c("PPD", "SEB"))
+SEB.PPD.Condition
+
+Lymphopenia <- SEB.PPD.Condition |> filter(CD4_positive <= 0.6 )
+Lymphopenia
+
+#Save dataset
+
+NewName <- paste0("DataSetProblem1W4", ".csv")
+StorageLocation <- file.path("data", NewName)
+StorageLocation
+
+write.csv(Lymphopenia, StorageLocation, row.names=FALSE)
+
+```
+```{r}
+
+#Problem2. We used the mutate() function to create new columns, but it can also be used to modify existing ones. Various numeric columns are showing way to many significant digits. As was shown, use round() to round all these proportion columns, but use mutate to overwrite the existing column. Export this as it’s own .csv file.
+
+#Round the columns of CD4_positive and CD8_positive
+filepath <- file.path("data","Dataset.csv")
+filepath
+
+Data <- read.csv(file=filepath, check.names=FALSE)
+
+library(dplyr)
+
+#Select function
+
+Subset <- Data |> select(bid, Condition, Tcells_count, lymphocytes_count, CD45_count, `CD4+`, `CD8+`)
+
+#Rename function
+ 
+SubsetRenamed <- Subset |> rename(specimen=bid,CD4_positive=`CD4+`,CD8_positive=`CD8+`)
+colnames(SubsetRenamed)
+
+
+SubsetRounded <- SubsetRenamed |> mutate(
+  CD4_positive = round(CD4_positive,2),
+  CD8_positive = round(CD8_positive,2)
+  )
+
+head(SubsetRounded,3)
+
+NewName <- paste0("DataSetProblem2W4", ".csv")
+StorageLocation <- file.path("data", NewName)
+StorageLocation
+
+write.csv(SubsetRounded, StorageLocation, row.names=FALSE)
+
+```
+
+```{r}
+#problem 3. We can also use mutate() to combine columns. For our dataset, “bid”, “timepoint”, “Condition” are separate columns that originally were all part of the filename for the individual .fcs file. Try to figure out a way to combine them back together using paste0(), and save the new column as “filename”. Once this is done, pull() the contents of this column, and using try to determine whether there were any duplicates (think innovative ways of using !, length() and unique())
+
+filepath <- file.path("data","Dataset.csv")
+filepath
+
+Data <- read.csv(file=filepath, check.names=FALSE)
+
+colnames(Data)
+
+library(dplyr)
+
+DataFilename <- Data |> mutate( 
+filename = paste0(bid,timepoint,Condition))
+head(DataFilename,3)
+
+filenames <- DataFilename |> pull(filename)
+head(filenames,3)
+
+filenames |> length()
+
+length(filenames) == length(unique(filenames))
+```
