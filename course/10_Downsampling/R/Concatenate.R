@@ -122,7 +122,7 @@ Concatenate <- function(gs, subset, inverse.transform=TRUE, DownsampleCount,
   Metadata <- flowCore::pData(gs)
   DesiredMetadata <- Metadata |> dplyr::select(tidyselect::all_of(desiredCols))
 
-  dataFrameList <- purrr::map(.x=SFC_GatingSet, subset=subset, .f=Downsampling,
+  dataFrameList <- purrr::map(.x=gs, subset=subset, .f=Downsampling,
    DownsampleCount=DownsampleCount, addon=addon, returnType="data.frame",
   inverse.transform=inverse.transform, StorageLocation=StorageLocation)
 
