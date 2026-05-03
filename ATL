@@ -1,0 +1,102 @@
+#Problem 1: Within a subfolder in data you will also find an unmixed .fcs file (2025_07_26…). 
+#Using what learned to day, investigate it, and see if you can catalog the main differences that occured to the keyword,
+ parameters and exprs.
+#problem 2: Today’s files were for spectral .fcs files from a Cytek Aurora within a subfolder in data you will also find a conventional flow cytometry file (2025-10_22…). Similarly, explore and see if you find any major differences (beyond the different detector or fluorophore names which will vary based on antibody panel used, etc)
+problem 3: if you have access to commercial software, take one of the .fcs files and try to see if you can see similar internal information from within the software. For those without commercial access, try the equivalent process using Floreada.io.
+
+#problem 1:
+# this is spectral data
+FCSFileLocation <- file.path ("C:/Users/al2271/OneDrive - University of Cambridge/Documents/Anjana/Knowledge/R/Week-3/03_InsideFCSFile/data/AdditionalFCSFiles")
+FCSFiles <- list.files(FCSFileLocation, pattern=".fcs", full.names=FALSE)
+FCSFiles <- list.files(FCSFileLocation, pattern=".fcs", full.names=TRUE)
+
+library(flowCore)
+ControlFile <-FCSFiles[2]
+
+read.FCS(filename=ControlFile,transformation = FALSE, truncate_max_range = FALSE)
+flowFrame object '2025_07_26_AB_02_NY068_02_Ctrl.fcs'
+with 100 cells and 43 observables:
+               name      desc     range  minRange    maxRange
+$P1            Time        NA    516839         0     506.501
+$P2           SSC-W        NA   4194304         0 4194303.000
+$P3           SSC-H        NA   4194304         0 4194303.000
+$P4           SSC-A        NA   4194304         0 4194303.000
+$P5           FSC-W        NA   4194304         0 4194303.000
+...             ...       ...       ...       ...         ...
+$P39     APC-R700-A    CD107a   4194304      -111     4192506
+$P40   Zombie NIR-A Viability   4194304      -111     4192506
+$P41 APC-Fire 750-A      CD27   4194304      -111     4192506
+$P42 APC-Fire 810-A      CCR7   4194304      -111     4192506
+$P43           AF-A        NA   4194304      -111     4194303
+472 keywords are stored in the 'description' slot
+flowFrame <- read.FCS(filename=FCSFiles[2], transformation = FALSE, truncate_max_range = FALSE)
+#to extract the matrix of the flowframe/fcs file
+MFI_Matrix <- flowFrame@exprs
+# or also doing function <- exprs(flowFrame)
+ColumnNames <- colnames(MFI_Matrix)
+unname(ColumnNames) # in here we have area, witdh and high.
+MFI_Matrix[1,] # to see the values of the first cell, row
+MFI_Matrix[,1] # to se the values of the first colum for all cells  ( time)
+MFI_Matrix[1,2]
+
+# for parameters
+ParameterData <- flowFrame@parameters@data@
+colnames(ParameterData)
+[1] "name"     "desc"     "range"    "minRange" "maxRange"
+Description <- ParameterData$desc
+description_alt <- flowFrame@parameters@data@desc 
+#wont work because data is a data.frame, not an S4 object so just use @ in S4 objects
+DescriptionList <- flowFrame@description
+#to see just 10 first rows
+head(DescriptionList, 10)
+#or also use
+DescriptionList[1:10]
+# to see the full list number of a list
+length(DescriptionList)
+[1] 472
+subset<- DescriptionList[c("$CYT", "$DATE", "CREATOR", "FCSversion", "TUBENAME")]
+
+# ?what it change when you do transformation
+#?what are the default tranformations
+
+#Problem 2
+# in conventional data
+FCSFileLocationCon <- file.path ("C:/Users/al2271/OneDrive - University of Cambridge/Documents/Anjana/Knowledge/R/Week-3/03_InsideFCSFile/data/AdditionalFCSFiles")
+FCSFilesCon <- list.files(FCSFileLocation, pattern=".fcs", full.names=TRUE)
+FCSFilesCon[1] # is our file of interest
+# also you can specify a part of the file name to get just this one, like Contrad
+FCSFilesCon1 <- list.files(
+  FCSFileLocation,
+  pattern = "Contrad.*\\.fcs$",
+  full.names = TRUE)
+library(flowCore)
+read.FCS(filename=FCSFilesCon1,transformation = FALSE, truncate_max_range = FALSE) 
+#flowFrame  with 1852 cells and 33 observables
+FlowFrameCon <-read.FCS(filename=FCSFilesCon1,transformation = FALSE, truncate_max_range = FALSE) 
+str(FlowFrameCon)
+Formal class 'flowFrame' [package "flowCore"] with 3 slots
+
+# this also is S4 class, but has just 3 slots ?
+#exprs
+#parameters
+#description
+#for expres, is the matrix so
+MatrixConv <-FlowFrameCon@exprs
+# there is 1852 cells and 33 colums/parameters
+MatrixConv [1,] #to see values of the first colum
+MatrixConv [,1] # to see values of the first row
+MatrixConv [3,4] # FSC-W  22695 colum and row. 
+
+# parameters, same varMetadata, data, dimLables and clasVersion
+ParameterDataCon1 <- FlowFrameCon@parameters@dimLabels
+#just rownames and columnames
+ParameterDataCon2 <- FlowFrameCon@parameters@varMetadata
+#description, for all metadata parameters
+DescriptionListConv <- FlowFrameCon@description
+length(DescriptionListConv)
+[1] 330
+#so to see just a chunch of data
+DescriptionListConv[50:200]
+
+problem 3: from my own data
+# to be added to the folder and do it.
