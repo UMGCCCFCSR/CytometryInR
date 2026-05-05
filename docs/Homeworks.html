@@ -231,6 +231,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
   <ul class="collapse">
   <li><a href="#community-attempts-8" id="toc-community-attempts-8" class="nav-link" data-scroll-target="#community-attempts-8">Community Attempts</a></li>
   </ul></li>
+  <li><a href="#week-10---downsampling-and-concatenation" id="toc-week-10---downsampling-and-concatenation" class="nav-link" data-scroll-target="#week-10---downsampling-and-concatenation">Week 10 - Downsampling and Concatenation</a></li>
+  <li><a href="#week-11---data-for-statistics" id="toc-week-11---data-for-statistics" class="nav-link" data-scroll-target="#week-11---data-for-statistics">Week 11 - Data for Statistics</a></li>
   </ul>
 </nav>
     </div>
@@ -712,9 +714,101 @@ Problem 3
 <h2 class="anchored" data-anchor-id="community-attempts-8">Community Attempts</h2>
 <p>Click <a href="https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+09%22">here</a> to see previous community attempts at answering these optional take-home problems.</p>
 <p>Stay tuned for our <a href="">walk-through</a> answers on Course section completion.</p>
-
-
 </section>
+</section>
+<section id="week-10---downsampling-and-concatenation" class="level1">
+<h1>Week 10 - Downsampling and Concatenation</h1>
+<p><img src="./course/10_Downsampling/images/TakeAway.jpg" class="img-fluid"></p>
+<p>Redirect to <a href="./course/10_Downsampling/index.html">Week 10</a> content.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Problem 1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Load a dataset into R, gate it however you like, and then export out a population of interest as their own .fcs files. Open them in either Floreada.io or the commercial software of your choice, and take a screenshot of how they look by two markers of interest.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Problem 2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the example for <code>Downsampling()</code> we only changed one keyword (GUID), after substituting in our desired addon right before the .fcs. Since keyword use might vary by manufacturer, create a couple additional arguments for <code>Downsampling()</code> that allow you to change out the values for some additional keywords.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 3">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Problem 3
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Trickier - After concatenating out an .fcs file for a cell subset of your choice, reload it back into R, extract out both the exprs matrix, and the description list. Using the keywords that got added, figure out a way using dplyr to revert the numeric keys (denoted by “_key”) in the exprs matrix back to their original character values as recorded in the keywords.</p>
+</div>
+</div>
+<p>Click <a href="https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+10%22">here</a> to see previous community attempts at answering these optional take-home problems.</p>
+<p>Stay tuned for our <a href="">walk-through</a> answers on Course section completion.</p>
+</section>
+<section id="week-11---data-for-statistics" class="level1">
+<h1>Week 11 - Data for Statistics</h1>
+<p><img src="./course/09_Functions/images/TakeAway.png" class="img-fluid"></p>
+<p>Redirect to <a href="./course/11_DataForStats/index.html">Week 11</a> content.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Problem 1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Implement additional <code>openCyto</code> gates, and validate that they are being placed correctly using <code>Utility_GatingPlot()</code>. Update the gate_range arguments until satisfied. Then, add new gates, and run the resulting dataset through <code>CombinedFlow()</code>, screenshotting any values that return with p-values that upon visualizing the data also look reasonable (not driven by a single-outlier).</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Problem 2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In our ggbeeswarm boxplot, currently we are seeing the proportion on the y-axis. Figure out how to modify the <code>StatPlotsForFlow()</code> function to instead display the axis as a percentage, and then using additional function arguments and conditions, set the function up to allow you to switch between as desired. Also, externalize size and cex to modify your beeswarm boxplots in an easier fashion!</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 3">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Problem 3
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Some “typical” immunology workflows run a “normality” test before implementing a corresponding downstream test based on the result (Your friendly-neighbourhood statistician may have some strong thoughts on this field practice). Regardless of your position on this approach, see if you can modify our <code>StatsFromFlow()</code> function, using additional arguments conditional statements, to incorporate in a shapiro-wilks or <code>fBasics</code> package Omnibus K2 test first, and based on the outputs proceed downstream to either the parametric or non-parametric options</p>
+</div>
+</div>
+<p>Click <a href="https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+11%22">here</a> to see previous community attempts at answering these optional take-home problems.</p>
+<p>Stay tuned for our <a href="">walk-through</a> answers on Course section completion.</p>
+
+
 </section>
 
 </main> <!-- /main -->

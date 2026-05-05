@@ -339,6 +339,12 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
  <span class="menu-text">10 - Downsampling and Concatenation</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/11_DataForStats/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">11 - Data for Statistics</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -587,7 +593,7 @@ attr(,"package")
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(flowSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Formal class 'flowSet' [package "flowCore"] with 2 slots
-  ..@ frames   :&lt;environment: 0x55e40faf24d8&gt; 
+  ..@ frames   :&lt;environment: 0x55d4c379ed08&gt; 
   ..@ phenoData:Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
   .. .. ..@ varMetadata      :'data.frame': 1 obs. of  1 variable:
   .. .. .. ..$ labelDescription: chr "Name"
@@ -648,7 +654,7 @@ Reminder
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mem_used</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>147.01 MB</code></pre>
+<pre><code>159.78 MB</code></pre>
 </div>
 </div>
 <p>Ultimately, how many .fcs files you are able to read in and interact with before running out of available RAM memory space will be dictated by your individual computers hardware configuration. There are various ways you can check programmatically how much RAM your computer has available, although the specific functions will vary depending on your computers operating system, since they often involve system-level code outside R. Using the <code>ps</code> R package’s <code>ps_system_memory()</code> function is one of the easier ways for Windows users.</p>
@@ -679,7 +685,7 @@ Reminder
 </div>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">"Free GB "</span>, <span class="fu">round</span>(Memory<span class="sc">$</span>free <span class="sc">/</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">3</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Free GB 52.2</code></pre>
+<pre><code>Free GB 52.84</code></pre>
 </div>
 </div>
 </section>
@@ -791,7 +797,7 @@ attr(,"package")
 <div class="cell-output cell-output-stdout">
 <pre><code>Formal class 'cytoset' [package "flowWorkspace"] with 3 slots
   ..@ pointer  :&lt;externalptr&gt; 
-  ..@ frames   :&lt;environment: 0x55e41a975860&gt; 
+  ..@ frames   :&lt;environment: 0x55d4c612afe0&gt; 
   ..@ phenoData:Formal class 'AnnotatedDataFrame' [package "Biobase"] with 4 slots
   .. .. ..@ varMetadata      :'data.frame': 0 obs. of  1 variable:
   .. .. .. ..$ labelDescription: chr(0) 
@@ -841,7 +847,7 @@ attr(,"package")
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>ConvertedToCytoframe <span class="ot">&lt;-</span> <span class="fu">flowFrame_to_cytoframe</span>(flowFrame)</span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>ConvertedToCytoframe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>cytoframe object 'file849d245ef5d5'
+<pre><code>cytoframe object 'file2f6e4fde117a'
 with 10000 cells and 43 observables:
                name      desc       range  minRange    maxRange
 $P1            Time        NA     878.809         0     878.809
@@ -1069,7 +1075,7 @@ attr(,"package")
 <span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  0.487   0.004   0.491 </code></pre>
+  0.460   0.008   0.467 </code></pre>
 </div>
 </div>
 <p>Alternatively, if we install the <code>bench</code> package, we can use the <code>mark</code> function to evaluate how long it takes on average across numerous iterations.</p>
@@ -1086,7 +1092,7 @@ attr(,"package")
 <pre><code># A tibble: 1 × 6
   expression                             min median `itr/sec` mem_alloc `gc/sec`
   &lt;bch:expr&gt;                           &lt;bch&gt; &lt;bch:&gt;     &lt;dbl&gt; &lt;bch:byt&gt;    &lt;dbl&gt;
-1 Test &lt;- flowjo_to_gatingset(ws = ws… 483ms  488ms      2.04    13.3KB        0</code></pre>
+1 Test &lt;- flowjo_to_gatingset(ws = ws… 459ms  463ms      2.15    13.3KB        0</code></pre>
 </div>
 </div>
 </section>
@@ -1236,13 +1242,13 @@ Important
 <div class="cell">
 <div class="sourceCode cell-code" id="cb121"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a href="#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"ggplot2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] '4.0.2'</code></pre>
+<pre><code>[1] '4.0.3'</code></pre>
 </div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"ggcyto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] '1.39.3'</code></pre>
+<pre><code>[1] '1.39.4'</code></pre>
 </div>
 </div>
 <p>If you were able to retrieve the following package versions (or greater”) for <code>ggplot2</code> and <code>ggcyto</code>, you should be all set and can skip the subsequent reinstallation steps.</p>

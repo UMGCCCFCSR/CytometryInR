@@ -266,4 +266,49 @@ Click [here](https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+
 
 Stay tuned for our [walk-through]() answers on Course section completion. 
 
+# Week 10 - Downsampling and Concatenation
+
+![](/course/10_Downsampling/images/TakeAway.jpg)
+
+Redirect to [Week 10](course/10_Downsampling/index.qmd) content. 
+
+
+:::{.callout-tip title="Problem 1"}
+Load a dataset into R, gate it however you like, and then export out a population of interest as their own .fcs files. Open them in either Floreada.io or the commercial software of your choice, and take a screenshot of how they look by two markers of interest. 
+:::
+
+:::{.callout-tip title="Problem 2"}
+In the example for `Downsampling()` we only changed one keyword (GUID), after substituting in our desired addon right before the .fcs. Since keyword use might vary by manufacturer, create a couple additional arguments for `Downsampling()` that allow you to change out the values for some additional keywords.
+:::
+
+:::{.callout-tip title="Problem 3"}
+Trickier - After concatenating out an .fcs file for a cell subset of your choice, reload it back into R, extract out both the exprs matrix, and the description list. Using the keywords that got added, figure out a way using dplyr to revert the numeric keys (denoted by "_key") in the exprs matrix back to their original character values as recorded in the keywords. 
+:::
+
+Click [here](https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+10%22) to see previous community attempts at answering these optional take-home problems.
+
+Stay tuned for our [walk-through]() answers on Course section completion. 
+
+# Week 11 - Data for Statistics
+
+![](/course/09_Functions/images/TakeAway.png)
+
+Redirect to [Week 11](course/11_DataForStats/index.qmd) content. 
+
+:::{.callout-tip title="Problem 1"}
+Implement additional `openCyto` gates, and validate that they are being placed correctly using `Utility_GatingPlot()`. Update the gate_range arguments until satisfied. Then, add new gates, and run the resulting dataset through `CombinedFlow()`, screenshotting any values that return with p-values that upon visualizing the data also look reasonable (not driven by a single-outlier). 
+:::
+
+:::{.callout-tip title="Problem 2"}
+In our ggbeeswarm boxplot, currently we are seeing the proportion on the y-axis. Figure out how to modify the `StatPlotsForFlow()` function to instead display the axis as a percentage, and then using additional function arguments and conditions, set the function up to allow you to switch between as desired. Also, externalize size and cex to modify your beeswarm boxplots in an easier fashion!
+:::
+
+:::{.callout-tip title="Problem 3"}
+Some "typical" immunology workflows run a "normality" test before implementing a corresponding downstream test based on the result (Your friendly-neighbourhood statistician may have some strong thoughts on this field practice).  Regardless of your position on this approach, see if you can modify our `StatsFromFlow()` function, using additional arguments conditional statements, to incorporate in a shapiro-wilks or `fBasics` package Omnibus K2 test first, and based on the outputs proceed downstream to either the parametric or non-parametric options
+:::
+
+Click [here](https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+11%22) to see previous community attempts at answering these optional take-home problems.
+
+Stay tuned for our [walk-through]() answers on Course section completion. 
+
 
