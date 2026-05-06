@@ -15,7 +15,7 @@ toc-depth: 5
 
 For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
 
-For screen-shot slides, click [here](/course/03_InsideFCSFile/slides.qmd)
+For screen-shot slides, click [here](/course/11_DataForStats/slides.qmd)
 
 <br>
 
@@ -210,7 +210,7 @@ When setting `openCyto` gate_range constraints, this can help evaluate whether t
 
 #### RidgePlots
 
-Another visualization we can attempt when determining "gate_range" arguments is the []`Utility_RidgePlots()`](https://github.com/DavidRach/Luciernaga/blob/main/R/Utility_RidgePlots.R), which can quickly return ridge style plots, which can also be filled in based on the metadata columns. 
+Another visualization we can attempt when determining "gate_range" arguments is the [`Utility_RidgePlots()`](https://github.com/DavidRach/Luciernaga/blob/main/R/Utility_RidgePlots.R), which can quickly return ridge style plots, which can also be filled in based on the metadata columns. 
 
 ```{r}
 # pData(SFC_GatingSet)
@@ -286,6 +286,8 @@ Lets start by loading in the package
 # install.packages("tidyr") #CRAN
 library(tidyr)
 ```
+
+Next, we provide the column whose values will become the new colum names to "name_from", and the column which will become the new column values to "values_from". And we are set to execute the pivot.
 
 ```{r}
 Data <- Data |> pivot_wider(names_from=Population, values_from = Frequency)
