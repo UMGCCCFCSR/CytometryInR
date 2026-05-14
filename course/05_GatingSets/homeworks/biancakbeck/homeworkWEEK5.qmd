@@ -1,0 +1,63 @@
+Problem 1
+Using what you learned last week in Introduction to Tidyverse, for the imported GatingSet, retrieve the data.frame from cell counts per gate and attempt to mutate a new column showing percent of the parent gate. Remember, this is intentionally tricky at this point, we will go over how to efficiently do this in a few weeks
+
+
+```{r}
+Folder <- file.path("course", "05_GatingSets", "data")
+FlowJoWsp <- list.files(path = Folder, pattern = ".wsp", full = TRUE)
+FlowJoWsp
+ThisWorkspace <- FlowJoWsp[stringr::str_detect(FlowJoWsp, "Opened")]
+ThisWorkspace
+
+ws <- open_flowjo_xml(ThisWorkspace)
+ws
+
+gs <- flowjo_to_gatingset(ws=ws, name=1, path = Folder, additional.keys="GROUPNAME")
+gs
+
+Data <- gs_pop_get_count_fast(gs)
+head(Data, 5)
+
+library(dplyr)
+
+Data_PercentParent <- Data |>  mutate(PercentParent = round((Count / ParentCount) * 100, 2) )
+
+head(Data_PercentParent, 5)
+```
+
+Problem 2
+As we saw, CytoML can be finicky when names are repeated, or .fcs files are not present. Try removing a couple of the .fcs files from the data folder, and re-run the code. Document what kind of errors result.
+
+```{r}
+#I just put another path without .fcs files to see what happens
+library(CytoML)
+Folder1 <- file.path("course", "05_GatingSets")
+NoFCS <- list.files(path = Folder1, pattern = ".fcs", full = TRUE)
+NoFCS
+#character(0)
+```
+
+Problem 3
+For ggcyto, attempt to generate plots to visualize TNFa and IFNg for the various cell populations, across both Ctrl and SEB samples. In the process, change the bins argument until you end up with a resolution that you would be happy with for your own plots, and write it down.
+
+```{r}
+library(ggplot2)
+library(ggcyto)
+ggcyto(gs[1], subset="CD8+", aes(x="IFNg", y="TNFa")) + geom_hex(bins=100)
+sampleNames(gs)
+
+#CD8+
+
+#ctrl
+ggcyto( gs[1:3],  subset = "CD8+",  aes(x = "IFNg", y = "TNFa")) +  geom_hex(bins = 80)
+#seb
+ggcyto( gs[4:6],  subset = "CD8+",  aes(x = "IFNg", y = "TNFa")) +  geom_hex(bins = 80)
+
+#CD4+
+
+#ctrl
+ggcyto( gs[1:3],  subset = "CD4+",  aes(x = "IFNg", y = "TNFa")) +  geom_hex(bins = 80)
+#seb
+ggcyto( gs[4:6],  subset = "CD4+",  aes(x = "IFNg", y = "TNFa")) +  geom_hex(bins = 80)
+#I like the bins in 80
+```

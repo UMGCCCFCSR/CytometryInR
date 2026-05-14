@@ -1,0 +1,86 @@
+Problem 1
+Taking a dataset (either todays or one of your own), work through the column-operating functions (select(), rename(), and relocate()). Once this is done, filter() by conditions from two separate columns, arrange in an order that makes sense, and export this “tidy” data as a .csv file.
+
+```{r}
+#opening
+getwd()
+FilePath<- file.path("course", "04_IntroToTidyverse", "homeworks", "biancakbeck", "PAC_46_48.csv")
+list.files(FilePath)
+Data <- read.csv2(FilePath, check.names=FALSE)
+
+#reading
+class(Data)
+colnames(Data)
+rownames(Data)
+head(Data, 3)
+View(Data)
+str(Data)
+
+library(dplyr)
+#select
+Cells <- select(Data, "#Cells")
+Cells
+
+#relocate
+Subset <- Data |> select("Name", "#Cells")
+head(Subset, 3)
+Data |> relocate(Depth, .after="#Cells") |> head(3)
+
+#filter
+P46 <- Data |>  filter(grepl("PBMC_046", Name))
+
+head(P46)
+
+#rename
+RenamedP46 <- P46 |> rename( Cells = '#Cells')
+colnames(RenamedP46)
+
+#saving
+DataP46 <- paste0("RenamedP46", ".csv")
+StorageLocation <- file.path("course", "04_IntroToTidyverse", "homeworks", "biancakbeck", DataP46)
+StorageLocation
+write.csv(RenamedP46, StorageLocation, row.names=FALSE)
+
+```
+
+Problem 2
+We used the mutate() function to create new columns, but it can also be used to modify existing ones. Various numeric columns are showing way to many significant digits. As was shown, use round() to round all these proportion columns, but use mutate to overwrite the existing column. Export this as it’s own .csv file.
+
+```{r}
+library(dplyr)
+P46_Rounded <- RenamedP46 |> mutate(Statistic = round(Statistic, 1))
+P46_Rounded
+head(P46_Rounded)
+
+P46_Rounded_csv <- paste0("P46_Rounded", ".csv")
+StorageLocation <- file.path("course", "04_IntroToTidyverse", "homeworks", "biancakbeck", P46_Rounded_csv)
+StorageLocation
+write.csv(P46_Rounded_csv, StorageLocation, row.names=FALSE)
+```
+
+Problem 3
+We can also use mutate() to combine columns. For our dataset, “bid”, “timepoint”, “Condition” are separate columns that originally were all part of the filename for the individual .fcs file. Try to figure out a way to combine them back together using paste0(), and save the new column as “filename”. Once this is done, pull() the contents of this column, and using try to determine whether there were any duplicates (think innovative ways of using !, length() and unique())
+
+```{r}
+library(dplyr)
+
+# load dataset
+Dataset <- read.csv(  "C:/Users/biihb/Documents/Cytometry_R/CytometryInR/course/04_IntroToTidyverse/data/Dataset.csv")
+
+Dataset_FileNames <- Dataset |>  mutate(    filename = paste0(bid, "_", timepoint, "_", Condition, ".fcs") )
+
+head(Dataset_FileNames)
+
+filenames <- Dataset_FileNames |>  pull(filename)
+filenames
+
+length(filenames)
+
+length(unique(filenames))
+
+# TRUE = existem duplicatas
+# FALSE = não existem duplicatas
+duplicates_exist <- !(  length(filenames) == length(unique(filenames)))
+
+duplicates_exist
+```

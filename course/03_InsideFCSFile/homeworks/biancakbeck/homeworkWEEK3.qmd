@@ -1,0 +1,43 @@
+Problem 1
+Today’s walkthrough focused on a raw spectral flow cytometry file. Within a subfolder in data you will also find an unmixed .fcs file (2025_07_26…). Using what learned to day, investigate it, and see if you can catalog the main differences that occured to the keyword, parameters and exprs. Did any keywords get added, changed, deleted entirely? etc.
+
+```{r}
+library(flowCore)
+getwd()
+
+FilesPath <- file.path("course/03_InsideFCSFile/data/AdditionalFCSFiles")
+FilesPath
+
+raw_fcs <- list.files( FilesPath , pattern = ".fcs", full.names= TRUE)
+raw_fcs
+unmixed_fcs <- list.files(FilesPath , pattern= "2025_07_26",  full.names= TRUE)
+unmixed_fcs
+#here I alredy notice some differences in range and in the names 
+
+raw_ff <- read.FCS( raw_fcs[1],  transformation = FALSE,  truncate_max_range = FALSE)
+raw_ff
+unmixed_ff <- read.FCS( unmixed_fcs [1],  transformation = FALSE,  truncate_max_range = FALSE)
+unmixed_ff
+
+raw_keywords <- keyword(raw_ff)
+raw_keywords
+unmixed_keywords <- keyword(unmixed_ff)
+unmixed_keywords
+#I might have done something wrong here because it was too many keywords and it was difficult to notice the differences 
+
+exprs(raw_ff)
+exprs(unmixed_ff)
+#here it looks like the unmixed values are more similiar betwen themselves
+
+parameters(raw_ff)
+parameters(unmixed_ff)
+#And here I found that the raw one has lass rows than the unmixed, so some rows were deleted in the unmixed one.
+
+```
+
+Problem 3
+If you have access to commercial software, take one of the .fcs files and try to see if you can see similar internal information from within the software. For those without commercial access, try the equivalent process using Floreada.io.
+
+```{r}
+#I explored the .fcs file using FlowJo and was able to visualize similar internal information that was accessible in R. The software displayed different parameter names, fluorophore assignments, detector information, and metadata associated with acquisition and compensation and different cell count, a print screen of it is in this folder.
+```
