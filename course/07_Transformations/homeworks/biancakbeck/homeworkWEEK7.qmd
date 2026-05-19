@@ -1,0 +1,111 @@
+Problem 1
+We had not selected FSC and SSC parameters in this attempt, as they are normally displayed in the linear scale. Include them in the list of fluorophores to be transformed, and see how this impacts the visualization (imitating what could accidentally happen in practice if they were left in)
+
+```{r}
+library(flowWorkspace)
+library(ggcyto)
+library(dplyr)
+library(stringr)
+
+StorageLocation <- file.path("course", "07_Transformations", "data") 
+
+fcs_files <- list.files(StorageLocation, "2025.*\\.fcs$", full.names=TRUE)
+fcs_files
+
+fcs_cytoset <- load_cytoset_from_fcs(fcs_files, truncate_max_range = FALSE, transformation = FALSE)
+fcs_GatingSet <- GatingSet(fcs_cytoset)
+fcs_GatingSet
+
+ggcyto(fcs_GatingSet[6], subset="root",
+ aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+
+colnames(fcs_GatingSet)
+
+Parameters <- colnames(fcs_GatingSet)
+Parameters
+
+Biexponential <- flowjo_biexp_trans()
+str(Biexponential)
+
+MyBiexTransform <- transformerList(Parameters, Biexponential)
+MyBiexTransform
+
+
+cytoset <- load_cytoset_from_fcs(fcs_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+fcs_GatingSet <- GatingSet(cytoset)
+Biexponential <- flowjo_biexp_trans(channelRange=2060, maxValue=262144,
+     pos=3, neg=0, widthBasis=-1000)
+MyBiexTransform <- transformerList(Parameters, Biexponential)
+transform(fcs_GatingSet, MyBiexTransform)
+ggcyto(fcs_GatingSet[6], subset="root",
+ aes(x="FSC-A", y="SSC-A")) + geom_hex(bins=100)
+ #I intentionally included FSC and SSC parameters in the biexponential transformation list, even though these parameters are normally visualized on a linear scale. After transformation, I expected the FSC/SSC plots to be distorted and compressed compared to the original visualization but I actually did not got that, the plot FSC-A X SSC-A and FSC-H X SSC-H looks ok even when I change the numbers in channelRange, maxValue, pos, neg, and widthBasis
+```
+
+Problem 2
+For the SFC data, I showed the setup for both Logicle and Biexponential, but didn’t have time to dive into the Logicle transformation. Select a couple markers of interest for the SFC data, visualize and screenshot the before, and then attempt to customize the biexponential arguments to best visualize the underlying data, and then repeat for Logicle. Take screenshots of both and compare/contrast the difference.
+
+```{r}
+Logicle <- logicle_trans()
+str(Logicle)
+
+ggcyto(fcs_GatingSet[6], subset="root",
+ aes(x="IFNg", y="TNFa")) + geom_hex(bins=100)
+
+ 
+cytoset <- load_cytoset_from_fcs(fcs_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+fcs_GatingSet <- GatingSet(cytoset)
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=130144,
+     pos=3, neg=0, widthBasis=-10)
+MyBiexTransform <- transformerList(Parameters, Biexponential)
+transform(fcs_GatingSet, MyBiexTransform)
+ggcyto(fcs_GatingSet[6], subset="root",
+aes(x="IFNg", y="TNFa")) + geom_hex(bins=100)
+#I got a nice plot mainly changing in the pos value
+```
+
+Problem 3
+There are to asinh style transformations provided by the flowWorkspace package. Using the mass cytometry data, select two metal markers of interest, visualize each, customize the arguments until you have properly visualized the underlying populations, and see if you can spot any major differences between the methods.
+
+
+```{r}
+MC_files <- list.files(StorageLocation, "G1_2", full.names=TRUE)
+MC_files
+MC_cytoset <- load_cytoset_from_fcs(MC_files, truncate_max_range = FALSE, transformation = FALSE)
+MC_GatingSet <- GatingSet(MC_cytoset)
+MC_GatingSet
+
+colnames(MC_GatingSet)
+vectors <- colnames(MC_GatingSet)
+
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+
+
+# flowjo_fasinh_trans
+Asinh <- flowjo_fasinh_trans()
+str(Asinh)
+
+MC_cytoset <- load_cytoset_from_fcs(MC_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+MC_GatingSet <- GatingSet(MC_cytoset)
+Asinh <- flowjo_fasinh_trans(m = 4, t = 12000, a = 0.7, length = 256)
+MyAsinhTransform <- transformerList(vectors, Asinh)
+transform(MC_GatingSet, MyAsinhTransform)
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+
+#asinhtGml2_trans
+?asinhtGml2_trans()
+AsinhGML <- asinhtGml2_trans( n = 10)
+str(AsinhGML)
+MyAsinhGMLTransform <- transformerList( vectors, AsinhGML)
+AsinhGML_GS <- transform( MC_GatingSet, MyAsinhGMLTransform)
+ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+
+# it looks like asinhtGml2_trans() has just one variable (n), but to be honest, I prefered flowjo_fasinh_trans() because the variables are closer to flowjo_biexp_trans that we worked more in class
+
+```

@@ -1,0 +1,70 @@
+Problem 1
+Plug in an external hard-drive or USB into your computer. Manually, create a folder within called “TargetFolder”. Try to programmatically specify the file path to identify the folders and files present on your external drive. Then, try to copy your .fcs files from their current folder on your desktop to the TargetFolder on your drive using R. Remember, just copy, no deletion, you need to walk before you can run :D
+
+```{r}
+getwd()
+FolderLocation <- "D:/TargetFolder"
+FolderLocation
+list.files(FolderLocation)
+files_fcs <- list.files("D:/TargetFolder", pattern=".fcs", full.names=TRUE,recursive=FALSE)
+files_fcs
+
+Desktop <- "c:/Users/biihb/desktop"
+list.files(Desktop)
+file.copy(from=files_fcs , to=Desktop)
+
+```
+
+Problem 2
+In this session, we used list.files() with the “full.names argument” set to TRUE, as well as the basename() function to identify specific files. But what if you wanted a particular directory. Run list.files() with “full.names argument” and “recursive” argument set to TRUE, and then search online to find an R function that would retrieve the “” individual directory folders.
+
+```{r}
+all_items <- list.files(
+  path = "D:/TargetFolder",
+  full.names = TRUE,
+  recursive = TRUE
+)
+
+all_items
+
+list.dirs()
+all_dirs <- list.dirs(
+  path = "D:/TargetFolder",
+  full.names = TRUE,
+  recursive = TRUE
+)
+
+all_dirs
+#After using list.files() with full.names = TRUE and recursive = TRUE, I searched for a function that specifically retrieves directories instead of files. I found that the list.dirs() function in base R can be used to return only folder paths. This function supports recursive searching and full path retrieval similarly to list.files()
+```
+
+Problem 3
+R packages often come with internal datasets, that are typically used for use in the help documentation examples. These can be accessed through the use of the system.file() function. See an example below.
+
+system.file("extdata", package = "FlowSOM")
+
+Using what we have learned about file.path navigation, search your way down the file.directory of the FlowSOM and flowWorkspace packages, and identify any .fcs files that are present for use in the documentation.
+
+```{r}
+library(flowWorkspace)
+library(FlowSOM)
+system.file("extdata", package = "FlowSOM")
+FlowSOM_path <- system.file("extdata", package = "FlowSOM")
+
+FlowSOM_path
+list.files(
+  FlowSOM_path,
+  pattern = "\\.fcs$",
+  full.names = TRUE,
+  recursive = TRUE
+)
+#I found 1 archive : [1] "C:/Users/biihb/AppData/Local/R/win-library/4.5/FlowSOM/extdata/68983.fcs"
+
+system.file("extdata", package = "flowWorkspace")
+flowWorkspace_path <- system.file("extdata", package = "flowWorkspace")
+flowWorkspace_path
+
+list.files(flowWorkspace_path, pattern = ".fcs", full.names = TRUE, recursive = TRUE)
+
+#I did not find any
+```
