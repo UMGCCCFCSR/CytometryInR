@@ -1,0 +1,298 @@
+Problem 1
+Using flowGate, go ahead and create your own series of gates for either our data or your own for any cell populations that might interest you. Once done, save the GatingSet, and then successfully reload it. Add another gate, but intentionally misdraw it. Then proceed to visualize, identify and correct it, before saving again.
+
+If you do plan to switch over to R for gating long-term, these skillsets will be essential, as you will need to be confident in your ability to adjust your gates as needed.
+
+```{r}
+PATH_TO_PAC_46_48_fcs <-  file.path("course", "08_WaysToGate", "homeworks", "biancakbeck")
+PATH_TO_PAC_46_48_fcs
+
+PAC_46_48_fcs <- list.files(PATH_TO_PAC_46_48_fcs, pattern = ".fcs", full.names = TRUE)
+PAC_46_48_fcs
+library(flowCore)
+
+swab_46_f <- PAC_46_48_fcs[2]
+swab_46_f
+
+read.FCS(filename = swab_46_f, transformation = FALSE, truncate_max_range = FALSE)
+
+flowFrame <- read.FCS(filename=swab_46_f, transformation = FALSE, truncate_max_range = FALSE)
+
+
+MFI_Matrix <- flowFrame@exprs
+MFI_Matrix_Alternate <- exprs(flowFrame)
+head(MFI_Matrix, 5)
+ColumnNames <- colnames(MFI_Matrix)
+ColumnNames
+str(ColumnNames)
+class(ColumnNames)
+unname(ColumnNames)
+
+#renaming the columns
+colnames(MFI_Matrix )
+colnames(MFI_Matrix)[5]
+colnames(MFI_Matrix)[5] <- "SpikePositive"
+colnames(MFI_Matrix)[6] <- "CD27Positive"
+colnames(MFI_Matrix)[7] <- "IgMPositive"
+colnames(MFI_Matrix)[8] <- "DUMP"
+colnames(MFI_Matrix)[9] <- "CD19Positive"
+colnames(MFI_Matrix)[10] <- "LIVE"
+colnames(MFI_Matrix)[11] <- "CD138Positive"
+
+colnames(MFI_Matrix)[13] <- "CD38Positive"
+
+colnames(MFI_Matrix)[15] <- "IgAPositive"
+colnames(MFI_Matrix)[16] <- "IgDPositive"
+colnames(MFI_Matrix )
+
+#ws
+flowset <- read.flowSet(files = PAC_46_48_fcs , truncate_max_range = FALSE, transformation = FALSE)
+flowset
+
+library(flowWorkspace)
+cytoframe <- load_cytoframe_from_fcs(PAC_46_48_fcs[2], truncate_max_range = FALSE, transformation = FALSE)
+
+cytoframe
+
+SwabFiles_F <- PAC_46_48_fcs[stringr::str_detect(PAC_46_48_fcs, "Fenotipagem_SWAB")]
+SwabFiles_F
+
+SFC_cytoset <- load_cytoset_from_fcs(SwabFiles_F, truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+SFC_GatingSet
+pData(SFC_GatingSet)
+
+
+
+SFC_cytoset <- load_cytoset_from_fcs(SwabFiles_F, truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+SFC_GatingSet
+pData(SFC_GatingSet)
+
+Metadata <- pData(SFC_GatingSet)
+str(Metadata)
+
+#plotting
+ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="FSC-A", y="SSC-A")) + geom_hex(bins=100)
+ str(SFC_GatingSet[1])
+#para ver se ja tem transformações
+gh_get_transformations(SFC_GatingSet[1])
+colnames(SFC_GatingSet)
+markernames(SFC_GatingSet)
+
+
+#all
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="FSC-A", y="SSC-A")) + geom_hex(bins=100)
+
+#singlets
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="FSC-A", y= "FSC-H")) + geom_hex(bins=100)
+
+#live
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="SSC-A", y= "BV510-A")) + geom_hex(bins=100)
+
+#B cells
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="BV421-A", y= "APC-Cy7-A")) + geom_hex(bins=100)
+
+#Memory and Plasm
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="BV421-A", y= "APC-A")) + geom_hex(bins=100)
+
+#IgD-
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="PE-Cy7-A", y= "SSC-A")) + geom_hex(bins=100)
+
+#isotype
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="PE-A", y= "A680-A")) + geom_hex(bins=100)
+
+ #s+
+  ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="Alexa Fluor 488-A", y= "BV421-A")) + geom_hex(bins=100)
+
+#to star transforming
+
+  gh_get_transformations(SFC_GatingSet[[1]])
+
+ Logicle <- logicle_trans()
+str(Logicle)
+
+Biexponential <- flowjo_biexp_trans()
+str(Biexponential)
+
+Asinh <- flowjo_fasinh_trans()
+str(Asinh)
+
+#to take only the fluorophores
+SFC_Parameters <- colnames(SFC_GatingSet)
+SFC_Parameters
+FluorophoresOnly <- SFC_Parameters[!stringr::str_detect(SFC_Parameters, "FSC|SSC|Time")]
+FluorophoresOnly
+
+#transformer list
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+MyBiexTransform
+
+#just to check and take the number of channel range, max value, pos, neg and widthbasis
+str(MyBiexTransform[1:3])
+str(MyBiexTransform$`APC-A`)
+
+#taking out of my ram memory, making a gating set, in the function flowjo_biexp_trans putting the numbers that i got from str() function, this numbers that i will change to transform my data, and combining those with the transformer list that we want and reaplying to the gating set
+ SFC_cytoset <- load_cytoset_from_fcs(PAC_46_48_fcs,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(
+  channelRange = 4096,
+  maxValue = 262144,
+  pos = 3.8,
+  neg = 0.5,
+  widthBasis = -10)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+#B cells
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="APC-Cy7-A", y= "BV421-A")) + geom_hex(bins=100)
+
+#gating
+library(remotes)
+library(pak)
+library(flowWorkspace)
+library(ggplot2)
+library(ggcyto)
+library(openCyto)
+library(flowGate)
+library(flowCore)
+
+colnames(SFC_GatingSet)
+
+GatingTable <- tibble::tribble(
+  ~filterId,   ~dims,                         ~subset,
+
+  "cells",     list("FSC-A", "SSC-A"),       "root",
+
+  "singlets",  list("FSC-A", "FSC-H"),       "cells",
+
+  "live",      list("SSC-A", "BV510-A"),     "singlets",
+
+  "Bcells",    list("BV421-A", "APC-Cy7-A"), "live",
+
+  "Memory",    list("BV421-A", "APC-A"),     "Bcells",
+
+  "Plasma",    list("BV421-A", "APC-A"),     "Bcells"
+)
+GatingTable
+SFC_cytoset <- load_cytoset_from_fcs(SwabFiles_F,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+
+SFC_Parameters <- colnames(SFC_GatingSet)
+FluorophoresOnly <- SFC_Parameters[!stringr::str_detect(SFC_Parameters, "FSC|SSC|Time")]
+
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=2, widthBasis=-500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+gs_apply_gating_strategy(SFC_GatingSet, gating_strategy = GatingTable)
+
+SavePath <- file.path(  "course",  "08_WaysToGate", "homeworks",  "biancakbeck",  "MyGatingSet")
+SavePath
+
+save_gs(  SFC_GatingSet,  path = SavePath)
+
+Reloaded_GS <- load_gs(  path = SavePath)
+Reloaded_GS
+
+#adding a wrong gate
+flowGate::gs_gate_interactive(gs=Reloaded_GS, filterId="Wrong_cells", sample=1,
+dims=list("PE-A", "APC-A"), subset="Bcells")
+
+ggcyto(  Reloaded_GS[1],  subset = "live",  aes(x = "PE-A", y = "APC-A")) +  geom_hex(bins = 100) +  geom_gate("Wrong_cells")
+
+#removing
+gs_pop_remove(  Reloaded_GS,  "Wrong_cells")
+
+#correcting
+CorrectGate <- flowGate::gs_gate_interactive(gs=Reloaded_GS, filterId="correctCells", sample=1,
+dims=list("PE-A", "APC-A"), subset="Bcells")
+ggcyto(  Reloaded_GS[1],  subset = "live",  aes(x = "PE-A", y = "APC-A")) +  geom_hex(bins = 100) +  geom_gate("correctCells")
+
+save_gs(  Reloaded_GS,  path = SavePath)
+
+#to me, it looks like i could not transform correctly, and then I cant see my cell populations clearly, I would love if you could help me with that
+```
+
+
+Problem 2
+Go ahead and create your own openCyto gate template, extending to whatever cell target population of interest. Visualize the differences, and ensure that the gates are correctly applied for everyone. Set gate_constaint arguments as needed until everything is just right.
+
+If you do plan to switch over to R for gating long-term, these skillsets will be essential, as you will need to be confident in your ability to adjust your gates as needed.
+
+```{r}
+library(openCyto)
+
+GateTemplate <- tibble::tribble(
+~alias, ~pop, ~parent, ~dims, ~gating_method, ~gating_args, ~collapseDataForGating, ~groupBy, ~preprocessing_method, ~preprocessing_args, ~pp_res,
+
+"problem2_cells", "+", "root", "FSC-A,SSC-A", "flowClust.2d", NA, FALSE, NA, NA, NA, NA,
+
+"problem2_singlets", "+", "problem2_cells", "FSC-A,FSC-H", "singletGate", NA, FALSE, NA, NA, NA, NA,
+
+"problem2_live", "-", "problem2_singlets", "BV510-A", "mindensity", "gate_range=c(0,3000)", FALSE, NA, NA, NA, NA,
+
+"problem2_Bcells", "+", "problem2_live", "BV421-A,APC-Cy7-A", "flowClust.2d", "K=2", FALSE, NA, NA, NA, NA
+)
+
+TemplatePath <- file.path("course", "08_WaysToGate", "homeworks", "biancakbeck", "MyOpenCytoTemplate.csv")
+
+write.csv(GateTemplate, TemplatePath, row.names = FALSE)
+
+gt <- gatingTemplate(TemplatePath)
+
+gt_gating(gt, SFC_GatingSet)
+
+ggcyto(SFC_GatingSet, aes(x="FSC-A", y="SSC-A")) +
+geom_hex(bins=100) +
+geom_gate("problem2_cells")
+
+ggcyto(SFC_GatingSet, subset="problem2_cells", aes(x="FSC-A", y="FSC-H")) +
+geom_hex(bins=100) +
+geom_gate("problem2_singlets")
+
+ggcyto(SFC_GatingSet, subset="problem2_singlets", aes(x="BV510-A")) +
+geom_density() +
+geom_gate("problem2_live")
+
+ggcyto(SFC_GatingSet, subset="problem2_live", aes(x="BV421-A", y="APC-Cy7-A")) +
+geom_hex(bins=100) +
+geom_gate("problem2_Bcells")
+facet_wrap(~name)
+
+#I needed alot of AI help on this one
+
+```
+
+
+Problem 3
+Re-run your openCyto template, but then add a few additional flowGate on to to extend it further. Save the gating set, close out of positron, and successfully reload.
+
+
+```{r}
+flowGate::gs_gate_interactive(gs = SFC_GatingSet, filterId =  "problem3_IgApositive", sample = 1, dims = list("PE-A", "SSC-A"),subset = "problem2_Bcells")
+
+ggcyto(SFC_GatingSet, subset="problem2_Bcells", aes(x="PE-A", y="SSC-A")) +geom_hex(bins=100) + geom_gate("problem3_IgApositive")
+
+SavePath <- file.path("course","08_WaysToGate","homeworks","biancakbeck","Problem3_GatingSet")
+
+save_gs(SFC_GatingSet, path = SavePath)
+
+Reloaded_GS <- load_gs(path = SavePath)
+gs_get_pop_paths(Reloaded_GS)
+ggcyto(Reloaded_GS, subset="problem2_Bcells", aes(x="PE-A", y="SSC-A")) +geom_hex(bins=100) +
+geom_gate("problem3_IgApositive")
+```
