@@ -1,0 +1,214 @@
+---
+title: "Homework week 09"
+author: "Alexandra Gabriela Ferreira"
+date:   2026/05/23
+format: html
+toc: true
+toc-depth: 4
+---
+
+
+# Problem 1
+
+"Modify one of the simpler functions (SecondFunction or similar), provide your own argument names, and modify the `message()`, `paste0` or `print()` functions to print a text style output. Generate a small vector of values, and iterate through your vector using one of the approaches we used."
+
+
+### Solution
+
+```{r}
+#| eval: FALSE
+
+best_instrument = function(best_instrument){
+
+    Message = paste0("The best instrument is a(n) ", best_instrument, "!")
+    Message
+}
+```
+
+#### creating the vector
+
+```{r}
+#| eval: FALSE
+instruments = 
+    c("Flow Cytometer", "Fluorescence Microscope", "Automated Cell Counter", "pH meter", "Illumina miSeq")
+
+instruments
+```
+
+Let's try this:
+
+```{r}
+#| eval: FALSE
+output = map(.x=instruments, .f = best_instrument)
+output
+```
+
+The result:
+
+![](/course/09_Functions/homeworks/alexandragabrielaferreira/images/problem1_output.PNG)
+
+
+
+# Problem 2
+
+"Using the initial framework for the CellConcentration function, retrieve several other keywords that are of interest, and incorporate them into the returned data.frame row."
+
+
+### Solution
+
+*Note* it is assumed that until this point I:
+
+1. activated necessary libraries;
+2. loaded necessary `.fcs` files:
+    i) got storage location path;
+    ii) got full path names for the files;
+3. Added files to a GatingSet:
+    i) loaded files to a cytoset 1st;
+    ii) loaded cytoset into a gatingset;
+4. Applied a transformation to the gatingset:
+    i) attributed the desired transformation to an object;
+    ii) got the parameters list from the gatingset (`colnames()`); 
+    iii) used `transformerList()` to apply the transformation object to the parameters being transformed;
+5. *optional for this exercise* created gates.
+
+
+```{r}
+#| eval: FALSE
+
+
+#'        this function will retrieve important keywords
+#'        for a given gated population in an .fcs file
+#' 
+#' @param x A gatingset object (typically iterated in)
+
+#' this function will figure out the cell concentration
+#' for a given gated population in an .fcs file
+#' 
+#' @param x A gatingset object (typically iterated in)
+#' @param subset The gate from which to retrieve cell counts from
+#' @param dilution_factor takes the initial dilution factor 
+
+cell_concentration = function(x, subset, dilution_factor){
+    Date = keyword(x)$`$DATE` # Day-Month-Year
+    InstrumentSerial = keyword(x)$`$CYTSN` 
+    TotalFileEvents = keyword(x)$`$TOT`
+    Specimen = keyword(x)$GUID
+    StartTime = keyword(x)$`$BTIM`
+    EndTime = keyword(x)$`$ETIM`
+    
+    treshold = keyword(x)$THRESHOLD
+    
+    Volume = keyword(x)$`$VOL`
+    Volume = as.numeric(Volume)
+
+    EventsInTheGate = gs_pop_get_data(x, subset)
+    Cells = nrow(EventsInTheGate)[[1]] #[[1]] since the output is in a list
+
+    Concentration = (Cells*1000)/Volume
+    Concentration = Concentration*dilution_factor
+
+    Data = data.frame(
+        Date=Date,
+        InstrumentSerial=InstrumentSerial,
+        Specimen=Specimen,
+        StartTime=StartTime,
+        EndTime=EndTime,
+        Volume=Volume, 
+        Cells=Cells,
+        Concentration=Concentration,
+        Treshold=treshold
+        )
+    return(Data)
+}
+
+dataset = map(.x=my_gatingset, .f=cell_concentration, subset ="CD19", dilution_factor = 100) |> bind_rows()
+
+dataset
+```
+
+This is what the new data set looks like.
+
+
+![](/course/09_Functions/homeworks/alexandragabrielaferreira/images/problem2_output.PNG)
+
+# Problem 3
+
+"For CellConcentration, we retrieved both start and end time. Look up information on lubridate package, convert these times to a time-style format, and from acquired volume derive uL/min at which each .fcs file was acquired. Did this vary at all across days?"
+
+
+### Solution
+
+I will use the dataset from problem 2 to solve this problem.
+I will first activate the lubridate library and check its documentation.
+
+```{r}
+#| eval: FALSE
+library(lubridate)
+?lubridate
+```
+
+From the documentation I see there's a function called: `hms()` that transforms a character or numeric vector into a period object with specified hours, minutes and seconds. 
+
+We can change StartTime and EndTime columns to be transformed into this kind of objects.
+
+Let's see first what kind of objects are inside these columns:
+
+```{r}
+#| eval: FALSE
+str(dataset)
+```
+
+![](/course/09_Functions/homeworks/alexandragabrielaferreira/images/problem3_classobject.PNG)
+
+we can see from the printscreen that EndTime and StartTime are character objects.
+
+let's change these columns to an appropriate class of objects.
+creating a new dataset, changing the columns, and checking if the changes are applied:
+
+```{r}
+#| eval: FALSE
+dataset_test = dataset |> mutate(StartTime = as.duration(hms(StartTime)), EndTime = as.duration(hms(EndTime)))
+dataset_test
+
+str(dataset_test)
+```
+
+I changed the object type for start time and end time columns from characters to period objects followed by the actual time in seconds with `as.duration()`
+
+![](/course/09_Functions/homeworks/alexandragabrielaferreira/images/problem3_classobject_changed.PNG)´
+
+![](/course/09_Functions/homeworks/alexandragabrielaferreira/images/problem3_totaltime.PNG)
+
+So now, I want to return how much time elapsed between start time and end time. Lubridate has 2 functions:
+1. `interval()` which creates an interval object with the specified start and end dates/times..
+2. `as.duration()` will provide the exact duration in the interval created with `interval()`
+so taking the dataset_test we created we will add the duration in seconds for each run.
+
+```{r}
+#| eval: FALSE
+
+dataset_test = dataset_test |> mutate(Time_elapsed = as.duration(interval(StartTime, EndTime)))
+
+dataset_test
+```
+
+![](/course/09_Functions/homeworks/alexandragabrielaferreira/images/problem3_time_elapsed.PNG)
+
+
+To calculate uL/min  I just create a new column with:
+
+$$speed_acquisition = (Volume/Time_elapsed)*60$$
+
+
+```{r}
+#| eval: FALSE
+
+dataset_test = dataset_test |> mutate(Speed_acquisition = (Volume/as.numeric(Time_elapsed)*60))
+
+dataset_test
+```
+
+
+![](/course/09_Functions/homeworks/alexandragabrielaferreira/images/problem3_speed_acquisition.PNG)
+
+I calculated the speed of acquisition in uL/min and we see that it was not the same everyday.
