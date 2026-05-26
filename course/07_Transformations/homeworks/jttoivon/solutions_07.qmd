@@ -1,0 +1,546 @@
+---
+title: Solutions for week07
+author: Jarkko Toivonen
+date: "`r Sys.Date()`"
+format: 
+    html:
+        df-print: kable
+        embed-resources: true
+toc: true
+toc-depth: 5
+---
+
+```{r}
+library(flowWorkspace)
+library(ggcyto)
+library(tidyverse)
+library(patchwork)   # for combining plots
+library(glue)
+```
+
+Helper functions.
+
+```{r}
+# Extracts ith flowframe from a gatingset
+extract_flowframe_from_gating_set <- function(gs, i=1) {
+    gs %>% 
+        gs_cyto_data() %>%            # convert to cytoset
+        get_cytoframe_from_cs(i) %>%  # extract ith frame
+        cytoframe_to_flowFrame()      # convert to flowframe
+}
+```
+
+```{r}
+# Gets ranges of variables of a flowframe
+get_ranges <- function(ff) {
+    helper <- function(name) {
+        v <- ff@exprs[, name]
+        data.frame(min = min(v), max = max(v))
+    }
+    df <- parameters(ff)@data %>% select(name, desc) %>% mutate(tmp = map(name, helper)) %>% unnest(tmp)
+    df
+}
+```
+
+## Problem 1
+
+> We had not selected FSC and SSC parameters in this attempt, as they are normally displayed in the linear scale. Include them in the list of fluorophores to be transformed, and see how this impacts the visualization (imitating what could accidentally happen in practice if they were left in)
+
+```{r}
+files <- list.files("data", ".fcs", full.names = TRUE)
+fcs_files <- files[str_detect(files, "INF")]
+fcs_files
+```
+
+
+
+Function get_fcs_gatingset() is used to form independent copies of the gating set.
+
+```{r}
+get_fcs_gatingset <- function(fcs_files) {
+    cs <- flowWorkspace::load_cytoset_from_fcs(fcs_files, transformation = NULL, truncate_max_range = FALSE)
+    gs <- GatingSet(cs)
+    gs
+}
+```
+
+```{r}
+gs <- get_fcs_gatingset(fcs_files)
+```
+
+
+```{r}
+ff <- extract_flowframe_from_gating_set(gs, 1)
+```
+
+
+Original plot.
+
+```{r}
+g <- ggcyto(gs[1], subset="root",
+     aes(x="FSC-A", y="SSC-A")) + geom_hex(bins=100)
+g
+```
+
+A helper function that shows the original data and the transformation.
+
+```{r}
+# Flowframe ff contains the original data
+# gs is passed for the transform
+show_variable <- function(ff, gs, variable) {
+    tmp <- get_ranges(ff) %>% filter(name == variable)
+    f <- gh_get_transformations(gs[[1]])[[variable]]
+    if (is.null(f)) f <- identity
+    print(f)
+    #f <- Biexponential$transform
+    df <- tibble(x = seq(tmp$min, tmp$max, length.out = 100),
+        y = f(x))
+    #df2 <- tibble(x = seq(-tmp$max, tmp$max, length.out = 1000),
+    #y = Biexponential$transform(x))
+    h1 <- ggplot(ff, aes(x = .data[[variable]])) + geom_density(fill = "blue", alpha= 0.5)
+    h2 <- df %>% ggplot(aes(x, y)) + geom_line() + labs(x = variable, y = "Transformed")
+    h1 / h2
+}
+
+```
+
+Another helper function. Shows the transformation all the way till -10.
+
+```{r}
+show_transformation <- function(ff, gs, variable) {
+    tmp <- get_ranges(ff) %>% filter(name == variable)
+    f <- gh_get_transformations(gs[[1]])[[variable]]
+    if (is.null(f)) f <- identity
+    print(f)
+    df <- tibble(x = seq(-10, tmp$max, length.out = 1000),
+        y = f(x))
+    h2 <- df %>% ggplot(aes(x, y)) + geom_line() + labs(x = variable, y = "Transformed")
+    h2
+}
+```
+
+
+Here no transform is done.
+
+```{r}
+show_variable(ff, gs, "FSC-A")
+```
+
+Sanity check for some other variable that this really works.
+
+```{r}
+show_variable(ff, gs, "BUV805-A")
+```
+
+Define the variables to be transformed.
+
+
+```{r}
+# cols <- colnames(gs)
+# scatter_names <- cols[str_detect(cols, "FSC|SSC")] # Too many
+scatter_names <- c("SSC-A", "FSC-A", "BUV805-A")
+```
+
+```{r}
+get_ranges(ff) %>% filter(name %in% scatter_names)
+```
+
+Create the transform object.
+
+```{r}
+Biexponential <- flowjo_biexp_trans()
+str(Biexponential)
+```
+
+```{r}
+MyBiexTransform <- transformerList(scatter_names, Biexponential)
+MyBiexTransform
+```
+
+Reload the gating set with a new name.
+
+```{r}
+gs2 <- get_fcs_gatingset(fcs_files)
+```
+
+Do the transform.
+
+```{r}
+transform(gs2, MyBiexTransform)
+```
+
+```{r}
+g2 <- ggcyto(gs2[1], subset="root",
+     aes(x="FSC-A", y="SSC-A")) + geom_hex(bins=100)
+g2
+```
+
+Values of FSC-A are so large that the transform is nearly linear
+in that range.
+
+```{r}
+show_variable(ff, gs2, "FSC-A")
+```
+
+
+```{r}
+show_variable(ff, gs2, "BUV805-A")
+```
+
+```{r}
+show_transformation(ff, gs2, "BUV805-A")
+```
+
+
+
+```{r}
+MyBiexTransform3 <- transformerList(scatter_names, 
+  flowjo_biexp_trans(channelRange = 4096, maxValue = 262144*20, pos = 6.5, 
+    neg = 0, widthBasis = -100000))
+```
+
+```{r}
+gs3 <- get_fcs_gatingset(fcs_files)
+transform(gs3, MyBiexTransform3)
+```
+
+
+
+```{r}
+g3 <- ggcyto(gs3[1], subset="root",
+     aes(x="FSC-A", y="SSC-A")) + geom_hex(bins=100)
+g3
+```
+
+```{r}
+show_variable(ff, gs3, "FSC-A")
+```
+
+```{r}
+show_transformation(ff, gs3, "FSC-A")
+```
+
+```{r}
+show_variable(ff, gs3, "BUV805-A")
+```
+
+```{r}
+show_transformation(ff, gs3, "BUV805-A")
+```
+
+Combine the plots using patchwork package.
+
+```{r}
+#| eval: false
+# Does not work like this!
+g + g2
+```
+
+Let's try another way.
+
+```{r}
+as.ggplot(g + labs(subtitle = "original")) + 
+    as.ggplot(g2 + labs(subtitle = "basically linear")) + 
+    as.ggplot(g3 + labs(subtitle = "a bit non-linear"))
+```
+
+The range of FSC-A is completely different than that of BUV805-A, hence
+the transformation looks nearly linear.
+
+## Problem 2
+
+> For the SFC data, I showed the setup for both Logicle and Biexponential, but didn’t have time to dive into the Logicle transformation. Select a couple markers of interest for the SFC data, visualize and screenshot the before, and then attempt to customize the biexponential arguments to best visualize the underlying data, and then repeat for Logicle. Take screenshots of both and compare/contrast the difference.
+
+```{r}
+gs <- get_fcs_gatingset(fcs_files)
+```
+
+
+
+Get the intensity ranges for each marker.
+
+```{r}
+ff <- extract_flowframe_from_gating_set(gs, 1)
+get_ranges(ff) %>% arrange(min) %>% head()
+```
+
+Choose variable with large range, including negatives and zero.
+
+```{r}
+#interesting_markers <- c("CD62L", "CCR6")   # bad choice of markers
+interesting_markers <- c("APC-A", "BV570-A") # these have more negative values
+interesting_markers
+```
+
+```{r}
+make_fcs_plot <- function(gatingset) {
+    ggcyto(gatingset, 
+            subset="root",
+            aes( x = .data[[interesting_markers[1]]], y = .data[[interesting_markers[2]]])
+        ) + 
+        geom_hex(bins=100)
+}
+```
+
+```{r}
+p1 <- make_fcs_plot(gs[1])
+p1
+```
+
+### Biexponential
+
+```{r}
+helper_fcs_biexponential <- function(channelRange, maxValue,
+     pos, neg, widthBasis) {
+    gatingset <- get_fcs_gatingset(fcs_files)
+    label <- glue("channelRange = {channelRange}, maxValue = {maxValue}\n pos = {pos}, neg = {neg}, widthBasis = {widthBasis}")
+    Biexponential <- flowjo_biexp_trans(channelRange=channelRange, maxValue=maxValue,
+     pos=pos, neg=neg, widthBasis=widthBasis)
+    MyBiexponentialTransform <- transformerList(interesting_markers, Biexponential)
+    transform(gatingset, MyBiexponentialTransform)
+    make_fcs_plot(gatingset[1]) +
+        annotate("text", x=I(0.5), y=I(0.9), label = label, size=7)
+}
+```
+
+
+
+```{r}
+p2 <- helper_fcs_biexponential(channelRange=4096*2, maxValue=262144, pos=4.5, neg=2, widthBasis=-1000)
+p2
+```
+
+```{r}
+p3 <- helper_fcs_biexponential(channelRange=4096*2, maxValue=262144, pos=4.5, neg=2, widthBasis=-10)
+p3
+```
+
+```{r}
+p3b <- helper_fcs_biexponential(channelRange=4096*2, maxValue=262144, pos=4.5, neg=4, widthBasis=-10)
+p3b
+```
+
+```{r}
+p4 <- helper_fcs_biexponential(channelRange=4096*2, maxValue=262144, pos=4.5, neg=2, widthBasis=-100)
+p4
+```
+
+```{r}
+p5 <- helper_fcs_biexponential(channelRange=4096*2, maxValue=262144, pos=4.5, neg=2, widthBasis=-1)
+p5
+```
+
+```{r}
+as.ggplot(p1 + labs(subtitle = "original")) + as.ggplot(p3b + labs(subtitle = "transformed"))
+```
+
+### Logicle
+
+```{r}
+helper_fcs_logicle <- function(w, t, m) {
+    gatingset <- get_fcs_gatingset(fcs_files)
+    label <- glue("w = {w}, t = {t}\n m = {m}")
+    Logicle <- logicle_trans(w = w, t = t, m = m)
+    MyLogicleTransform <- transformerList(interesting_markers, Logicle)
+    transform(gatingset, MyLogicleTransform)
+    make_fcs_plot(gatingset[1]) +
+        annotate("text", x=I(0.5), y=I(0.9), label = label, size=7)
+}
+```
+
+```{r}
+r2 <- helper_fcs_logicle(w = 0.5, t = 262144, m = 4.5)
+r2
+```
+
+The file says that maxrange is 4194303, should I use that instead?
+
+```{r}
+r3 <- helper_fcs_logicle(w = 0.5, t = 2**22, m = 8)
+r3
+```
+
+```{r}
+as.ggplot(p1 + labs(subtitle = "original")) + as.ggplot(r3 + labs(subtitle = "transformed"))
+```
+
+## Problem 3
+
+> There are to asinh style transformations provided by the flowWorkspace package. Using the mass cytometry data, select two metal markers of interest, visualize each, customize the arguments until you have properly visualized the underlying populations, and see if you can spot any major differences between the methods.
+
+```{r}
+mc_files <- files[!str_detect(files, "INF")]
+mc_files
+```
+
+```{r}
+#interesting_metals <- c("Eu151Di", "Yb171Di")
+interesting_metals <- c("Eu151Di", "Tb159Di")
+
+interesting_metals
+```
+
+```{r}
+make_mc_plot <- function(gatingset) {
+    ggcyto(gatingset, 
+            subset="root",
+            aes( x = .data[[interesting_metals[1]]], y = .data[[interesting_metals[2]]])
+        ) + 
+        geom_hex(bins=100)
+}
+```
+
+```{r}
+get_mc_gatingset <- function(mc_files) {
+    mc_cytoset <- load_cytoset_from_fcs(mc_files,
+        truncate_max_range = FALSE, transformation = FALSE)
+    mc_gatingset <- GatingSet(mc_cytoset)
+    mc_gatingset
+}
+```
+
+```{r}
+mc_gatingset <- get_mc_gatingset(mc_files)
+mc_gatingset[1]
+```
+
+
+
+```{r}
+Asinh <- flowjo_fasinh_trans()
+Asinh
+AsinhGML <- asinhtGml2_trans()
+AsinhGML
+```
+
+flowjo_fasinh(m = 4, t = 12000, a = 0.7, length = 256)
+
+m	numeric the full width of the transformed display in asymptotic decades
+t	numeric the maximum value of input data
+a	numeric Additional negative range to be included in the display in asymptotic decades
+length	numeric the maximum value of transformed data
+
+asinh_Gml2(T = 262144, M = 4.5, A = 0, inverse = FALSE)
+
+
+T	numeric the maximum value of input data
+M	numeric the full width of the transformed display in asymptotic decades
+A	numeric Additional negative range to be included in the display in asymptotic decades
+inverse	whether to return the inverse function
+
+**Same parameters with the exception of length.**
+
+"It is simply a special form of flowjo_fasinh with length set to 1 and different default values for parameters t,m,a."
+
+
+
+Untransformed data.
+
+```{r}
+make_mc_plot(mc_gatingset[1])
+```
+
+```{r}
+ff3 <- extract_flowframe_from_gating_set(mc_gatingset, 1)
+get_ranges(ff3) %>% arrange(min) %>% head()
+```
+
+```{r}
+ggplot(ff3, aes(x = Eu151Di)) + geom_density(fill = "blue", alpha= 0.5)
+```
+
+All the intensities are non-negative.
+
+```{r}
+get_ranges(ff3) %>% filter(name %in% interesting_metals)
+```
+
+```{r}
+markernames(mc_gatingset)[interesting_metals]
+```
+
+Now they both have similar range
+
+### flowjo_fasinh_trans
+
+Helper function for the first transform.
+
+```{r}
+helper1 <- function(m, t, a, length) {
+    mc_gatingset <- get_mc_gatingset(mc_files)
+    label <- glue("m = {m}, t = {t}, a = {a}, length = {length}")
+    Asinh <- flowjo_fasinh_trans(m = m, t = t, a = a, length = length)
+    MyAsinhTransform <- transformerList(interesting_metals, Asinh)
+    transform(mc_gatingset, MyAsinhTransform)
+    make_mc_plot(mc_gatingset[1]) +
+        annotate("text", x=I(0.5), y=I(0.9), label = label, size=7)
+}
+```
+
+
+```{r}
+helper1(m = 4, t = 12000, a = 1, length = 512)
+```
+
+
+
+```{r}
+helper1(m = 5, t = 12000, a = 1, length = 512)
+```
+
+```{r}
+helper1(m = 4, t = 12000, a = 1, length = 512*8)
+```
+
+```{r}
+helper1(m = 5, t = 12000, a = 1, length = 512*8)
+```
+
+```{r}
+g <- helper1(m = 5, t = 12000*2, a = 2, length = 512*8)
+```
+
+```{r}
+helper1(m = 5, t = 8000, a = 0.7, length = 1000000)
+```
+
+### asinhtGml2_trans
+
+Helper function for the second transform.
+
+```{r}
+helper2 <- function(M, T, A) {
+    mc_gatingset <- get_mc_gatingset(mc_files)
+    label <- glue("M = {M}, T = {T}, A = {A}")
+    Asinh <- asinhtGml2_trans(M = M, T = T, A = A)
+    MyAsinhTransform <- transformerList(interesting_metals, Asinh)
+    transform(mc_gatingset, MyAsinhTransform)
+    make_mc_plot(mc_gatingset[1]) +
+        annotate("text", x=I(0.5), y=I(0.9), label = label, size=7)
+}
+```
+
+```{r}
+helper2(M = 5, T = 2*4000, A = -5.1)
+```
+
+It seems hard to adjust the parameters of the tranform, when data is transformed
+instead of axes.
+
+Maybe this is the best:
+
+```{r}
+g
+```
+
+```{r}
+helper4 <- function(ff, name) {
+    v <- ff@exprs[, name]
+    sprintf("%i/%i values (%.2f%%) of %s are exactly zero\n", 
+      sum(v==0), length(v), mean(v==0)*100, name) %>% cat()
+}
+walk(interesting_metals, \(name) helper4(ff3, name))
+```
+
+The values of the metals are often exactly zero, so it is not possible to
+get rid of the mass on the borders.
