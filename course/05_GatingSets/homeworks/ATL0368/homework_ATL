@@ -1,0 +1,245 @@
+#Problem 1
+#for the imported GatingSet retrive the data.frame
+#for cell count per gate
+#attempt to mutte a new colum showing the percentatge of parent gate
+
+#Problem 2
+#CytoML. remove a couple of fcs files of the folder an 
+#rerun the code
+#document which error you get with the manimg
+
+#problem 3
+#ggcyto. try to play and visualize differnt subcell sets
+#TNFa vs IFNg
+#for both control and seb samples
+
+
+#1
+ getwd()
+[1] "C:/Users/al2271/OneDrive - University of Cambridge/Documents/Anjana/Knowledge/R/Week-5"
+#open all packages needed
+library(flowCore)
+library(flowWorkspace)
+library(dplyr)
+library(CytoML)
+g
+Folder <- file.path("C:/Users/anjan/Downloads/R course/week-5/05_GatingSets/data")#home
+folder1 <- file.path("05_GatingSets", "data") # uni
+#now for reading the flowjow and do a gatingset
+# ws = A flowjo_workspace to be parsed
+ws <- open_flowjo_xml(
+  file.path("05_GatingSets",
+            "data",
+            "FlowJoWSP_OpenedCopy.wsp"))
+folder <- file.path("05_GatingSets", "data")
+GatingSetHomeworks <- flowjo_to_gatingset(ws=ws, name=1, path = folder1, additional.keys="GROUPNAME") 
+#now if you open it does have pointer and tranformation
+DataHomeworks <- gs_pop_get_count_fast(GatingSetHomeworks)
+str(DataHomeworks)
+#Classes ‘data.table’ and 'data.frame':	114 obs. of  5 variables:
+# and when you open you can see names, populations, parents, count, parent count.
+
+CellCount <- DataHomeworks@Count
+#does not work @ is for S4 objects, but DataHomeworks is a data.frame / data.table
+# so use $ instead
+#for counts
+CellCount <- DataHomeworks$Count
+#for gates
+Populations <- DataHomewroks$Parent
+#for parent count
+ParentCount <- DataHomeworks$ParentCount
+
+#now  add a new colum which will show the proprotion
+
+DataHomeworks <- DataHomeworks |>
+  mutate(Percent_of_parent = ifelse(ParentCount > 0,
+                                    Count / ParentCount * 100))
+#ifelse() is just guarding against nonsense values.
+#simpler version
+DataHomeworks <- DataHomeworks |>
+  mutate(Percent_of_parent = Count / ParentCount * 100)
+# so now we added another colum
+#when opening datahomworks it added 5 to 6 colums. 
+# to have just 2 decimals
+DataHomeworks <- DataHomeworks |>
+  mutate(Percent_of_parent = round(Count / ParentCount * 100, 2))
+#but some cases the decimals rare higher than 2 like 0.3700
+#to see just 2 decimals
+
+DataHomeworks <- DataHomeworks |>
+  mutate(Percent_of_parent = round(Count / ParentCount * 100, 2))
+# now save this as exel sheet or fcs file
+write.csv(DataHomeworks,
+          file = file.path(folder1, "DataHomeworks.csv"),
+          row.names = FALSE)
+#for FCS file
+library(flowCore)
+numeric_data <- DataHomeworks |>
+  dplyr::select(where(is.numeric))    
+ff <- flowFrame(as.matrix(numeric_data))      
+write.FCS(ff, filename = file.path(folder1, "DataHomeworks.fcs"))
+#to look more into this one. you need to create a dataframe, for the matrix?
+
+#problem 3
+#ggcyto. try to play and visualize differnt subcell sets
+#TNFa vs IFNg
+#for both control and seb samples
+
+library(ggplot2)
+library(ggcyto)
+# first location
+folder <- file.path("05_GatingSets", "data")
+#then files
+fcs_files <- list.files(folder, pattern=".fcs", full.names=TRUE)
+[1] "05_GatingSets/data/2025_07_26_AB_02_INF052_00_Ctrl.fcs" "05_GatingSets/data/2025_07_26_AB_02_INF052_00_SEB.fcs" 
+[3] "05_GatingSets/data/2025_07_26_AB_02_INF100_00_Ctrl.fcs" "05_GatingSets/data/2025_07_26_AB_02_INF100_00_SEB.fcs" 
+[5] "05_GatingSets/data/2025_07_26_AB_02_INF179_00_Ctrl.fcs" "05_GatingSets/data/2025_07_26_AB_02_INF179_00_SEB.fcs" 
+[7] "05_GatingSets/data/DataHomeworks.fcs"
+#then we need 2 separated one just for Ctrl and one just for SEB
+Ctrl_files <- c(1,3,5)
+SEB files <-   c(2,4,6)
+ws <- open_flowjo_xml(
+  file.path("05_GatingSets",
+            "data",
+            "FlowJoWSP_OpenedCopy.wsp"))
+gs <- flowjo_to_gatingset(ws=ws, name=1, path = folder, additional.keys="GROUPNAME")
+# give tree
+plot(gs)
+#give the print out of the populations
+gs_get_pop_paths(gs)
+#[1] "root"                                              "/Scatter"                                          "/Scatter/Singlets"                                
+# [4] "/Scatter/Singlets/Live"                            "/Scatter/Singlets/Live/Tcells"                     "/Scatter/Singlets/Live/Tcells/CD4+"               
+# [7] "/Scatter/Singlets/Live/Tcells/CD4+/TNFa+IFNg+"     "/Scatter/Singlets/Live/Tcells/CD4+/TNFa+IFNg-"     "/Scatter/Singlets/Live/Tcells/CD4+/TNFa-IFNg+"    
+#[10] "/Scatter/Singlets/Live/Tcells/CD4+/TNFa-IFNg-"     "/Scatter/Singlets/Live/Tcells/CD4-CD8-"            "/Scatter/Singlets/Live/Tcells/CD4-CD8-/TNFa+IFNg+"
+#[13] "/Scatter/Singlets/Live/Tcells/CD4-CD8-/TNFa+IFNg-" "/Scatter/Singlets/Live/Tcells/CD4-CD8-/TNFa-IFNg+" "/Scatter/Singlets/Live/Tcells/CD4-CD8-/TNFa-IFNg-"
+#[16] "/Scatter/Singlets/Live/Tcells/CD8+"                "/Scatter/Singlets/Live/Tcells/CD8+/TNFa+IFNg+"     "/Scatter/Singlets/Live/Tcells/CD8+/TNFa+IFNg-"    
+#[19] "/Scatter/Singlets/Live/Tcells/CD8+/TNFa-IFNg+"     "/Scatter/Singlets/Live/Tcells/CD8+/TNFa-IFNg-"
+
+# to see which sample is which
+Sample_names <- sampleNames(gs)
+Sample_names
+"00_Ctrl.fcs_INF052" "00_Ctrl.fcs_INF100" "00_Ctrl.fcs_INF179" "00_SEB.fcs_INF052"  "00_SEB.fcs_INF100"  "00_SEB.fcs_INF179"  
+
+# first TNFa vs IFNg in controls
+# smples gs[1], gs[3], gs[5]
+
+ggcyto(gs[1],
+       subset = "/Scatter/Singlets/Live/Tcells/CD4+",
+       aes(x = `TNFa-A`, y = `IFNg-A`)) +
+  geom_hex(bins = 100)
+#not allows this name
+colnames(gs[[1]])
+ [1] "Time"                   "SSC-W"                  "SSC-H"                  "SSC-A"                  "FSC-W"                 
+ [6] "FSC-H"                  "FSC-A"                  "SSC-B-W"                "SSC-B-H"                "SSC-B-A"               
+[11] "Comp-BUV395-A"          "Comp-BUV563-A"          "Comp-BUV615-A"          "Comp-BUV661-A"          "Comp-BUV737-A"         
+[16] "Comp-BUV805-A"          "Comp-Pacific Blue-A"    "Comp-BV480-A"           "Comp-BV570-A"           "Comp-BV605-A"          
+[21] "Comp-BV650-A"           "Comp-BV711-A"           "Comp-BV750-A"           "Comp-BV786-A"           "Comp-Alexa Fluor 488-A"
+[26] "Comp-Spark Blue 550-A"  "Comp-Spark Blue 574-A"  "Comp-RB613-A"           "Comp-RB705-A"           "Comp-RB780-A"          
+[31] "Comp-PE-A"              "Comp-PE-Dazzle594-A"    "Comp-PE-Cy5-A"          "Comp-PE-Fire 700-A"     "Comp-PE-Fire 744-A"    
+[36] "Comp-PE-Vio770-A"       "Comp-APC-A"             "Comp-Alexa Fluor 647-A" "Comp-APC-R700-A"        "Comp-Zombie NIR-A"     
+[41] "Comp-APC-Fire 750-A"    "Comp-APC-Fire 810-A"    "Comp-AF-A"              "BUV805-A"               "BV650-A"               
+[46] "BV750-A"                "PE-Dazzle594-A"         "Spark Blue 550-A"       "Spark Blue 574-A"       "Zombie NIR-A"   
+ markernames(gs[[1]])
+       Comp-BUV395-A          Comp-BUV563-A          Comp-BUV615-A          Comp-BUV661-A          Comp-BUV737-A          Comp-BUV805-A 
+               "CD62L"                 "CD69"                 "CCR4"                  "Vd2"                 "CD38"                  "CD4" 
+   Comp-Pacific Blue-A           Comp-BV480-A           Comp-BV570-A           Comp-BV605-A           Comp-BV650-A           Comp-BV711-A 
+                "Dump"                "CD161"                 "CD16"               "CD45RA"                  "CD8"                "Va7.2" 
+          Comp-BV750-A           Comp-BV786-A Comp-Alexa Fluor 488-A  Comp-Spark Blue 550-A  Comp-Spark Blue 574-A           Comp-RB613-A 
+                "IFNg"                 "CCR6"                "FoxP3"                  "CD3"                 "CD45"                  "PD1" 
+          Comp-RB705-A           Comp-RB780-A              Comp-PE-A    Comp-PE-Dazzle594-A          Comp-PE-Cy5-A     Comp-PE-Fire 700-A 
+                "CD26"                "CXCR5"                 "ICOS"                 "TNFa"                "CXCR3"                "CD127" 
+    Comp-PE-Fire 744-A       Comp-PE-Vio770-A             Comp-APC-A Comp-Alexa Fluor 647-A        Comp-APC-R700-A      Comp-Zombie NIR-A 
+                "CD25"               "HLA-DR"                 "CD39"                 "IL-2"               "CD107a"            "Viability" 
+   Comp-APC-Fire 750-A    Comp-APC-Fire 810-A 
+                "CD27"                 "CCR7"
+#so instead
+ggcyto(
+  gs[1],
+  subset = "/Scatter/Singlets/Live/Tcells/CD4+",
+  aes(x = `Comp-PE-Dazzle594-A`,
+      y = `Comp-BV750-A`)) +
+  geom_hex(bins = 100)
+
+#or also I found you can do this way
+ggcyto(gs[1],
+       subset = "CD4+",
+       aes(x = `TNFa`,
+           y = `IFNg`)) +
+  geom_hex(bins = 100)
+
+#and for  CD8
+ggcyto(gs[1],
+       subset = "CD8+",
+       aes(x = `TNFa`,
+           y = `IFNg`)) +
+  geom_hex(bins = 100)
+
+#sample [3]
+ggcyto(gs[3],
+       subset = "CD4+",
+       aes(x = `TNFa`,
+           y = `IFNg`)) +
+  geom_hex(bins = 100)
+
+ggcyto(gs[3],
+       subset = "CD8+",
+       aes(x = `TNFa`,
+           y = `IFNg`)) +
+  geom_hex(bins = 100)
+
+#sample [5]
+ggcyto(gs[5],
+       subset = "CD4+",
+       aes(x = `TNFa`,
+           y = `IFNg`)) +
+  geom_hex(bins = 100)
+
+ggcyto(gs[5],
+       subset = "CD8+",
+       aes(x = `TNFa`,
+           y = `IFNg`)) +
+  geom_hex(bins = 100)
+#now for SEB samples
+#sample [2]
+ggcyto(gs[2],
+       subset = "CD4+",
+       aes(x = `TNFa`,
+           y = `IFNg`)) +
+  geom_hex(bins = 100)
+
+ggcyto(gs[2],
+       subset = "CD8+",
+       aes(x = `TNFa`,
+           y = `IFNg`)) +
+  geom_hex(bins = 100)
+
+sample [4]
+ggcyto(gs[4],
+       subset = "CD4+",
+       aes(x = `TNFa`,
+           y = `IFNg`)) +
+  geom_hex(bins = 100)
+
+ggcyto(gs[4],
+       subset = "CD8+",
+       aes(x = `TNFa`,
+           y = `IFNg`)) +
+  geom_hex(bins = 100)
+
+sample [6]
+
+ggcyto(gs[6],
+       subset = "CD4+",
+       aes(x = `TNFa`,
+           y = `IFNg`)) +
+  geom_hex(bins = 100)
+
+ggcyto(gs[6],
+       subset = "CD8+",
+       aes(x = `TNFa`,
+           y = `IFNg`)) +
+  geom_hex(bins = 100)
+
+git add .
+git commit -m "end of homeworks"
+git push
