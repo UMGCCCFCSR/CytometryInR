@@ -27,6 +27,33 @@ Problem 2
 Using the initial framework for the CellConcentration function, retrieve several other keywords that are of interest, and incorporate them into the returned data.frame row.
 
 ```{r}
+library(flowWorkspace)
+library(flowGate)
+library(ggplot2)
+library(ggcyto)
+library(dplyr)
+library(purrr)
+StorageLocation <- file.path("course", "09_Functions", "data") # Interactive path
+fcs_files <- list.files(StorageLocation, pattern=".fcs", full.names=TRUE)
+MyCytoset <- load_cytoset_from_fcs(fcs_files, transformation=FALSE, truncate_max_range=FALSE)
+MyGatingSet <- GatingSet(MyCytoset)
+
+GatingTable <- tibble::tribble(
+  ~filterId,    ~dims,                          ~subset,           
+  "CD45",       list("B4-A", "SSC-A"),            "root",     
+  "CD19",       list("V3-A", "SSC-A"),            "CD45",   
+  "CD14",       list("R1-A", "SSC-A"),            "CD45", 
+  "TandNKcells",  list("V3-A", "SSC-A"),            "CD45",
+)
+flowGate::gs_apply_gating_strategy(MyGatingSet, gating_strategy = GatingTable)
+GatingSetStorageLocation <- file.path(StorageLocation, "TheGatingSet.gs")
+
+save_gs(MyGatingSet, GatingSetStorageLocation)
+
+GatingSetStorageLocation <- file.path(StorageLocation, "TheGatingSet.gs")
+
+MyGatingSet <- load_gs(GatingSetStorageLocation)
+
 CellConcentration <- function(x, subset, dilutionMultiplier){
 
     Date <- keyword(x)$`$DATE`
@@ -61,6 +88,7 @@ CellConcentration <- function(x, subset, dilutionMultiplier){
     return(Data)
 }
 purrr::map(  .x=MyGatingSet[1],  .f=CellConcentration,  subset="CD19", dilutionMultiplier=100)
+
 ```
 ''
 Problem 3
@@ -85,14 +113,14 @@ CellConcentration <- function(x, subset, dilutionMultiplier){
     Volume <- keyword(x)$`$VOL`
     Volume <- as.numeric(Volume)
 
-    # converting time
+     # converting time
     StartTime_hms <- hms(StartTime)
     EndTime_hms <- hms(EndTime)
 
     # difference
-    AcquisitionTime <- as.numeric(
-      difftime(EndTime_hms, StartTime_hms, units = "mins")
-    )
+    AcquisitionTime <- as.numeric(EndTime_hms - StartTime_hms) # Just seconds
+AcquisitionTime <- AcquisitionTime / 60 # Convert To minutes
+FlowRate <- Volume / AcquisitionTime
 
     # uL/min
     FlowRate <- Volume / AcquisitionTime
@@ -127,4 +155,6 @@ Results <- bind_rows(Results)
 Results
 
 #The acquisition flow rate was highly consistent across acquisition days, remaining around 67–69 uL/min with only minor variation between files but some of them are negative and I don´t understand why
+
+#After your answers, got it corrected! Thank you
 ```

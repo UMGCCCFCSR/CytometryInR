@@ -1,0 +1,361 @@
+# Take-home Problems
+
+"Problem 1"
+Load a dataset into R, gate it however you like, and then export out a population of interest as their own .fcs files. Open them in either Floreada.io or the commercial software of your choice, and take a screenshot of how they look by two markers of interest. 
+
+```{r}
+PATH_TO_PAC_47fcs <-  file.path("course", "10_Downsampling", "homeworks", "biancakbeck")
+PATH_TO_PAC_47fcs
+
+PAC_47fcs <- list.files(PATH_TO_PAC_47fcs, pattern = ".fcs", full.names = TRUE)
+PAC_47fcs
+library(flowCore)
+
+swab_47_f <- PAC_47fcs[1]
+swab_47_f
+
+read.FCS(filename = swab_47_f, transformation = FALSE, truncate_max_range = FALSE)
+
+flowFrame <- read.FCS(filename=swab_47_f, transformation = FALSE, truncate_max_range = FALSE)
+
+
+MFI_Matrix <- flowFrame@exprs
+MFI_Matrix_Alternate <- exprs(flowFrame)
+head(MFI_Matrix, 5)
+ColumnNames <- colnames(MFI_Matrix)
+ColumnNames
+str(ColumnNames)
+class(ColumnNames)
+unname(ColumnNames)
+
+#renaming the columns
+colnames(MFI_Matrix )
+colnames(MFI_Matrix)[5]
+colnames(MFI_Matrix)[5] <- "SpikePositive"
+colnames(MFI_Matrix)[6] <- "CD27Positive"
+colnames(MFI_Matrix)[7] <- "IgMPositive"
+colnames(MFI_Matrix)[8] <- "DUMP"
+colnames(MFI_Matrix)[9] <- "CD19Positive"
+colnames(MFI_Matrix)[10] <- "LIVE"
+colnames(MFI_Matrix)[11] <- "CD138Positive"
+
+colnames(MFI_Matrix)[13] <- "CD38Positive"
+
+colnames(MFI_Matrix)[15] <- "IgAPositive"
+colnames(MFI_Matrix)[16] <- "IgDPositive"
+colnames(MFI_Matrix )
+
+#ws
+flowset <- read.flowSet(files = PAC_47fcs , truncate_max_range = FALSE, transformation = FALSE)
+flowset
+
+library(flowWorkspace)
+cytoframe <- load_cytoframe_from_fcs(PAC_47fcs[1], truncate_max_range = FALSE, transformation = FALSE)
+
+cytoframe
+
+SwabFiles_F <- PAC_47fcs[stringr::str_detect(PAC_47fcs, "Fenotipagem_SWAB")]
+SwabFiles_F
+
+SFC_cytoset <- load_cytoset_from_fcs(SwabFiles_F, truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+SFC_GatingSet
+pData(SFC_GatingSet)
+
+
+
+SFC_cytoset <- load_cytoset_from_fcs(SwabFiles_F, truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+SFC_GatingSet
+pData(SFC_GatingSet)
+
+Metadata <- pData(SFC_GatingSet)
+str(Metadata)
+
+library(ggcyto)
+
+#plotting
+ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="FSC-A", y="SSC-A")) + geom_hex(bins=100)
+ str(SFC_GatingSet[1])
+#para ver se ja tem transformações
+gh_get_transformations(SFC_GatingSet[1])
+colnames(SFC_GatingSet)
+markernames(SFC_GatingSet)
+
+
+#all
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="FSC-A", y="SSC-A")) + geom_hex(bins=100)
+
+#singlets
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="FSC-A", y= "FSC-H")) + geom_hex(bins=100)
+
+#live
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="SSC-A", y= "BV510-A")) + geom_hex(bins=100)
+
+#B cells
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="BV421-A", y= "APC-Cy7-A")) + geom_hex(bins=100)
+
+#Memory and Plasm
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="BV421-A", y= "APC-A")) + geom_hex(bins=100)
+
+#IgD-
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="PE-Cy7-A", y= "SSC-A")) + geom_hex(bins=100)
+
+#isotype
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="PE-A", y= "A680-A")) + geom_hex(bins=100)
+
+ #s+
+  ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="Alexa Fluor 488-A", y= "BV421-A")) + geom_hex(bins=100)
+
+#to star transforming
+
+  gh_get_transformations(SFC_GatingSet[[1]])
+
+ Logicle <- logicle_trans()
+str(Logicle)
+
+Biexponential <- flowjo_biexp_trans()
+str(Biexponential)
+
+Asinh <- flowjo_fasinh_trans()
+str(Asinh)
+
+#to take only the fluorophores
+SFC_Parameters <- colnames(SFC_GatingSet)
+SFC_Parameters
+FluorophoresOnly <- SFC_Parameters[!stringr::str_detect(SFC_Parameters, "FSC|SSC|Time")]
+FluorophoresOnly
+
+#transformer list
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+MyBiexTransform
+
+#just to check and take the number of channel range, max value, pos, neg and widthbasis
+str(MyBiexTransform[1:3])
+str(MyBiexTransform$`APC-A`)
+
+#taking out of my ram memory, making a gating set, in the function flowjo_biexp_trans putting the numbers that i got from str() function, this numbers that i will change to transform my data, and combining those with the transformer list that we want and reaplying to the gating set
+ SFC_cytoset <- load_cytoset_from_fcs(PAC_47fcs,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+Biexponential <- flowjo_biexp_trans(
+  channelRange = 4096,
+  maxValue = 262144,
+  pos = 3.8,
+  neg = 0.5,
+  widthBasis = -10)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+#B cells
+ ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="APC-Cy7-A", y= "BV421-A")) + geom_hex(bins=100)
+
+#gating
+library(remotes)
+library(pak)
+library(flowWorkspace)
+library(ggplot2)
+library(openCyto)
+library(flowGate)
+library(flowCore)
+
+colnames(SFC_GatingSet)
+
+GatingTable <- tibble::tribble(
+  ~filterId,   ~dims,                         ~subset,
+
+  "cells",     list("FSC-A", "SSC-A"),       "root",
+
+  "singlets",  list("FSC-A", "FSC-H"),       "cells",
+
+  "live",      list("SSC-A", "BV510-A"),     "singlets",
+
+  "Bcells",    list("BV421-A", "APC-Cy7-A"), "live",
+
+  "Memory",    list("BV421-A", "APC-A"),     "Bcells",
+
+  "Plasma",    list("BV421-A", "APC-A"),     "Bcells"
+)
+GatingTable
+SFC_cytoset <- load_cytoset_from_fcs(SwabFiles_F,
+ truncate_max_range = FALSE, transformation = FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+
+SFC_Parameters <- colnames(SFC_GatingSet)
+FluorophoresOnly <- SFC_Parameters[!stringr::str_detect(SFC_Parameters, "FSC|SSC|Time")]
+
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=2, widthBasis=-500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+gs_apply_gating_strategy(SFC_GatingSet, gating_strategy = GatingTable)
+
+library(dplyr)
+#' This function downsamples from a designated gate to our desired number
+#' of cells, returning as a new .fcs file
+#' 
+#' @param x A GatingSet object, typically iterated in.
+#' @param subset The gate from which to retrieve cell counts from 
+#' @param inverse.transform Whether to revert values back to their
+#' original untransformed values before export as an .fcs file, default
+#' is set to TRUE
+#' @param DownsampleCount The desired number of cells to downsample from
+#' each gated population. If value is less than 1, subsets out the 
+#' equivalent proportion from that specimen
+#' @param addon An additional character value to add before .fcs in the GUID
+#' keyword to tell the downsampled file apart from the original. 
+#' @param StorageLocation A file.path to the folder you want to store the new downsampled
+#' fcs file to. Default NULL results in .fcs file being stored in current working directory
+#'  
+#' 
+ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount,
+  addon, StorageLocation=NULL, returnType="fcs"){
+  EventsInTheGate <- gs_pop_get_data(x, subset,
+   inverse.transform=inverse.transform)
+  MeasurementData <- exprs(EventsInTheGate[[1]])
+  MeasurementDataFramed <- as.data.frame(MeasurementData, check.names = FALSE)
+
+  if (DownsampleCount < 1) {
+      Count <- nrow(EventsInTheGate) # Original Count
+      Count <- as.numeric(Count) #Sanity Check on Value Type
+      Count <- Count*DownsampleCount # Target Cells
+      Count <- round(Count, 0)
+      DownsampleCount <- Count # Over-writting DownsampleCount used for downsampling
+    }
+
+  Downsampled_DataFrame <- slice_sample(MeasurementDataFramed, n = DownsampleCount, replace = FALSE)
+
+  DownsampledMatrix <- as.matrix(Downsampled_DataFrame)
+
+  flowFrame <- EventsInTheGate[[1, returnType = "flowFrame"]]
+  OriginalParameters <- parameters(flowFrame)
+  OriginalDescription <- keyword(flowFrame)
+
+  OriginalName <- OriginalDescription$`GUID`
+  UpdatedName <- paste0("_", addon, ".fcs")
+  UpdatedGUID <- sub(".fcs", UpdatedName, OriginalName) #Swtiching out .fcs for Updated Name via the sub function
+  OriginalDescription$`GUID` <- UpdatedGUID
+
+  NewFCS <- new("flowFrame", exprs=DownsampledMatrix, parameters=OriginalParameters, description=OriginalDescription)
+
+  if (is.null(StorageLocation)){StorageLocation <- getwd()}
+
+  StoreFCSFileHere <- file.path(StorageLocation, UpdatedGUID)
+  write.FCS(NewFCS, filename = StoreFCSFileHere, delimiter="#")
+
+  return(StoreFCSFileHere)
+}
+
+library(purrr)
+
+purrr::walk(.x=SFC_GatingSet, subset="cells", .f=Downsampling, DownsampleCount=2500, addon="cells",
+  returnType="fcs", StorageLocation="course/10_Downsampling/homeworks/biancakbeck")
+
+  #just made a screenshot and saved in the folder as screenshot1
+```
+
+
+Problem 2
+In the example for `Downsampling()` we only changed one keyword (GUID), after substituting in our desired addon right before the .fcs. Since keyword use might vary by manufacturer, create a couple additional arguments for `Downsampling()` that allow you to change out the values for some additional keywords.
+
+```{r}
+#' This function downsamples from a designated gate to our desired number
+#' of cells, returning as a new .fcs file
+#' 
+#' @param x A GatingSet object, typically iterated in.
+#' @param subset The gate from which to retrieve cell counts from 
+#' @param inverse.transform Whether to revert values back to their
+#' original untransformed values before export as an .fcs file, default
+#' is set to TRUE
+#' @param DownsampleCount The desired number of cells to downsample from
+#' each gated population. If value is less than 1, subsets out the 
+#' equivalent proportion from that specimen
+#' @param addon An additional character value to add before .fcs in the GUID
+#' keyword to tell the downsampled file apart from the original. 
+#' @param StorageLocation A file.path to the folder you want to store the new downsampled
+#' fcs file to. Default NULL results in .fcs file being stored in current working directory
+#'  
+#' 
+ Downsampling <- function(x, subset, inverse.transform=TRUE, DownsampleCount,
+  addon, StorageLocation=NULL, returnType="fcs", NewTubeName = NULL){
+  EventsInTheGate <- gs_pop_get_data(x, subset,
+   inverse.transform=inverse.transform)
+  MeasurementData <- exprs(EventsInTheGate[[1]])
+  MeasurementDataFramed <- as.data.frame(MeasurementData, check.names = FALSE)
+
+  if (DownsampleCount < 1) {
+      Count <- nrow(EventsInTheGate) # Original Count
+      Count <- as.numeric(Count) #Sanity Check on Value Type
+      Count <- Count*DownsampleCount # Target Cells
+      Count <- round(Count, 0)
+      DownsampleCount <- Count # Over-writting DownsampleCount used for downsampling
+    }
+
+  Downsampled_DataFrame <- slice_sample(MeasurementDataFramed, n = DownsampleCount, replace = FALSE)
+
+  DownsampledMatrix <- as.matrix(Downsampled_DataFrame)
+
+  flowFrame <- EventsInTheGate[[1, returnType = "flowFrame"]]
+  OriginalParameters <- parameters(flowFrame)
+  OriginalDescription <- keyword(flowFrame)
+
+  OriginalName <- OriginalDescription$`GUID`
+  UpdatedName <- paste0("_", addon, ".fcs")
+  UpdatedGUID <- sub(".fcs", UpdatedName, OriginalName) #Swtiching out .fcs for Updated Name via the sub function
+  OriginalDescription$`GUID` <- UpdatedGUID
+  if(!is.null(NewTubeName)){
+  OriginalDescription$`$TUBENAME` <- NewTubeName
+}
+
+  NewFCS <- new("flowFrame", exprs=DownsampledMatrix, parameters=OriginalParameters, description=OriginalDescription)
+
+  if (is.null(StorageLocation)){StorageLocation <- getwd()}
+
+  StoreFCSFileHere <- file.path(StorageLocation, UpdatedGUID)
+  write.FCS(NewFCS, filename = StoreFCSFileHere, delimiter="#")
+
+  return(StoreFCSFileHere)
+}
+
+purrr::walk(.x=SFC_GatingSet, subset="cells", .f=Downsampling, DownsampleCount=2500, addon="cells",
+  returnType="fcs", NewTubeName = "Downsampled", StorageLocation="course/10_Downsampling/homeworks/biancakbeck")
+
+#cheking if it worked
+  NewFile <- read.FCS(
+  "course/10_Downsampling/homeworks/biancakbeck/Fenotipagem_SWAB_047_cells.fcs",
+  transformation = FALSE
+)
+
+keyword(NewFile)$`$TUBENAME`
+```
+
+Problem 3"
+Trickier - After concatenating out an .fcs file for a cell subset of your choice, reload it back into R, extract out both the exprs matrix, and the description list. Using the keywords that got added, figure out a way using dplyr to revert the numeric keys (denoted by "_key") in the exprs matrix back to their original character values as recorded in the keywords. 
+
+
+```{r}
+ConcatFCS <- read.FCS(  "course/10_Downsampling/homeworks/biancakbeck/Fenotipagem_SWAB_047_cells.fcs",  transformation = FALSE,  truncate_max_range = FALSE)
+
+ExprsMatrix <- exprs(ConcatFCS)
+ExprsMatrix
+ExprsDF <- as.data.frame(ExprsMatrix,  check.names = FALSE)
+ExprsDF
+Keywords <- keyword(ConcatFCS)
+Keywords
+names(Keywords)[stringr::str_detect(  names(Keywords),
+  "_key")]
+names(keyword(ConcatFCS))
+
+#None of the keywords ended with _key, I don't understand. If I had done this with the course data, would it have worked?
+```
