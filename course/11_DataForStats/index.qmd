@@ -50,7 +50,7 @@ As we do [every week](/course/02_FilePaths/index.qmd), on GitHub, [sync](/course
 
 For YouTube walkthrough of this process, click [here](https://www.youtube.com/live/Zfctacqpe90?si=a7Ad61kj6_UDNkGw&t=32)
 
-After [setting up](/course/00_Git/index.qmd#new-folder-from-template) a "Week10" project folder, copy over the contents of "course/10_Downsampling/data" to that folder. This will hopefully prevent merge issues next week when attempting to pull in new course material. Once you have your new project folder organized, remember to [commit](/course/00_Git/index.qmd#push) and push your changes to GitHub to maintain remote version control. 
+After [setting up](/course/00_Git/index.qmd#new-folder-from-template) a "Week11" project folder, copy over the contents of "course/11_DataForStats/data" to that folder. This will hopefully prevent merge issues next week when attempting to pull in new course material. Once you have your new project folder organized, remember to [commit](/course/00_Git/index.qmd#push) and push your changes to GitHub to maintain remote version control. 
 
 If you encounter issues syncing due to the Take-Home Problem merge conflict, see this [walkthrough](https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/). The updated homework submission protocol can be found [here](https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/UpdatedPullRequest)
 :::
@@ -92,8 +92,6 @@ OutputFolder <- file.path("data") # For Quarto Rendering
 
 fcs_files <- list.files(StorageLocation, pattern=".fcs", full.names=TRUE)
 
-SFC_cytoset <- load_cytoset_from_fcs(fcs_files, truncate_max_range=FALSE, transformation=FALSE)
-SFC_GatingSet <- GatingSet(SFC_cytoset)
 SFC_cytoset <- load_cytoset_from_fcs(fcs_files, truncate_max_range=FALSE, transformation=FALSE)
 SFC_GatingSet <- GatingSet(SFC_cytoset)
 ```
