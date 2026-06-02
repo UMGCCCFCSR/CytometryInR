@@ -1,0 +1,76 @@
+Problem 1
+In this session, we created beeswarm-style boxplot to display our T-cell frequencies on the y-axis, and timepoint on the x-axis. Using the concepts covered this week, swap out “timepoint” for the “Condition” variable. Adjust other layer arguments accordingly until you can return a similar plot at the end of the class. Finally, figure out how to switch around the order the Condition values are displayed on the x-axis.
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(ggbeeswarm)
+
+StorageLocation <- file.path("course", "06_Visualizing", "data") 
+
+TheCSV <- list.files(StorageLocation, pattern=".csv", full.names=TRUE)
+Data <- read.csv(TheCSV, check.names=FALSE)
+
+head(Data, 3)
+shape_sex <- c("Female" = 22, "Male" = 21)
+fill_sex <- c("Female" = "white", "Male" = "black")
+Data <- Data |> 
+    mutate(TcellProportion=Tcells_count/CD45_count) |>
+    mutate(TcellFrequency=TcellProportion *100) |>
+    mutate(TcellFrequency=round(TcellFrequency, 1))
+
+Data$timepoint <- factor(Data$timepoint)
+
+ggplot(Data) + aes(x=Condition, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) +
+theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text.x = element_text(angle=45, hjust=1, size = 12),
+    axis.text.y = element_text(size=12))
+   
+```
+
+
+Problem 2
+Circle back to the CytoML-ggcyto flowplot, and modify it until happy with the visual appearance. You may use any resource on the internet to assist, but you must document your steps so that we can also repeat them.
+
+```{r}
+ggplot(Data) + aes(x=Condition, y=TcellFrequency) +
+     geom_boxplot() + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) +
+theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    axis.text.x = element_text(angle=45, hjust=1, size = 12),
+    axis.text.y = element_text(size=12)) +theme_classic()
+#I just made the background white adding theme_classic(), I tryed to make each bar a different colour but I could not, I just know how to change the dot colors. 
+
+  
+```
+
+
+
+Problem 3
+In Mismatched Assumptions, we saw two examples of a histogram/density overlay showing the distribution of a variable on the x-axis. Similar to what we did during class to show values according to a different data column, try to modify the plot to show data on the basis of group (whether condition, ptype, infant_sex, etc.) similar to what you can see here
+
+
+```{r}
+ggplot(Data) + aes(x=TcellFrequency) + geom_histogram() 
+
+#condition
+ggplot(Data) +  aes(x = TcellFrequency, fill = Condition ) + geom_histogram(alpha = 0.5,  position = "identity",  bins = 30 )
+
+#ptype
+ggplot(Data) +  aes(x = TcellFrequency, fill = ptype ) + geom_histogram(alpha = 0.5,  position = "identity",  bins = 30 )+ facet_wrap(~ infant_sex)
+
+#infant_sex
+ggplot(Data) +  aes(x = TcellFrequency, fill = infant_sex ) + geom_histogram(alpha = 0.5,  position = "identity",  bins = 30 )
+
+#ptype and sex
+ggplot(Data) +  aes(x = TcellFrequency, fill = ptype ) + geom_histogram(alpha = 0.5,  position = "identity",  bins = 30 )+ facet_wrap(~ infant_sex)
+
+#condition and sex
+ggplot(Data) +  aes(x = TcellFrequency, fill = Condition ) + geom_histogram(alpha = 0.5,  position = "identity",  bins = 30 )+facet_wrap(~ infant_sex)
+```

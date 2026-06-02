@@ -1,0 +1,160 @@
+Problem 1
+Modify one of the simpler functions (SecondFunction or similar), provide your own argument names, and modify the message(), paste0 or print() functions to print a text style output. Generate a small vector of values, and iterate through your vector using one of the approaches we used.
+
+```{r}
+Bianca <- function(name, age){
+
+  text <- paste0("Hi ", name, "! You are ", age, " years old.")
+
+  print(text)
+
+}
+
+names <- c("Ana", "Carlos", "Julia", "Pedro")
+ages <- c(22, 30, 25, 28)
+
+for(i in 1:length(names)){
+
+  Bianca(
+    name = names[i],
+    age = ages[i]
+  )
+}
+Bianca(name=names, age=ages)
+```
+
+Problem 2
+Using the initial framework for the CellConcentration function, retrieve several other keywords that are of interest, and incorporate them into the returned data.frame row.
+
+```{r}
+library(flowWorkspace)
+library(flowGate)
+library(ggplot2)
+library(ggcyto)
+library(dplyr)
+library(purrr)
+StorageLocation <- file.path("course", "09_Functions", "data") # Interactive path
+fcs_files <- list.files(StorageLocation, pattern=".fcs", full.names=TRUE)
+MyCytoset <- load_cytoset_from_fcs(fcs_files, transformation=FALSE, truncate_max_range=FALSE)
+MyGatingSet <- GatingSet(MyCytoset)
+
+GatingTable <- tibble::tribble(
+  ~filterId,    ~dims,                          ~subset,           
+  "CD45",       list("B4-A", "SSC-A"),            "root",     
+  "CD19",       list("V3-A", "SSC-A"),            "CD45",   
+  "CD14",       list("R1-A", "SSC-A"),            "CD45", 
+  "TandNKcells",  list("V3-A", "SSC-A"),            "CD45",
+)
+flowGate::gs_apply_gating_strategy(MyGatingSet, gating_strategy = GatingTable)
+GatingSetStorageLocation <- file.path(StorageLocation, "TheGatingSet.gs")
+
+save_gs(MyGatingSet, GatingSetStorageLocation)
+
+GatingSetStorageLocation <- file.path(StorageLocation, "TheGatingSet.gs")
+
+MyGatingSet <- load_gs(GatingSetStorageLocation)
+
+CellConcentration <- function(x, subset, dilutionMultiplier){
+
+    Date <- keyword(x)$`$DATE`
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    Operator <- keyword(x)$`$OP`
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+
+    Volume <- keyword(x)$`$VOL`
+    Volume <- as.numeric(Volume)
+
+    EventsInTheGate <- gs_pop_get_data(x, subset)
+    Cells <- nrow(EventsInTheGate)[[1]]
+
+    Concentration <- (Cells*1000)/Volume
+    Concentration <- Concentration*dilutionMultiplier
+
+    Data <- data.frame(
+        Date=Date,
+        InstrumentSerial=InstrumentSerial,
+        Specimen=Specimen,
+        Operator=Operator,
+        StartTime=StartTime,
+        EndTime=EndTime,
+        Volume=Volume, 
+        Cells=Cells,
+        Concentration=Concentration
+    )
+
+    return(Data)
+}
+purrr::map(  .x=MyGatingSet[1],  .f=CellConcentration,  subset="CD19", dilutionMultiplier=100)
+
+```
+''
+Problem 3
+For CellConcentration, we retrieved both start and end time. Look up information on lubridate package, convert these times to a time-style format, and from acquired volume derrive uL/min at which each .fcs file was acquired. Did this vary at all across days?
+
+
+```{r}
+library(lubridate)
+library(dplyr)
+
+CellConcentration <- function(x, subset, dilutionMultiplier){
+
+    Date <- keyword(x)$`$DATE`
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    Operator <- keyword(x)$`$OP`
+
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+
+    Volume <- keyword(x)$`$VOL`
+    Volume <- as.numeric(Volume)
+
+     # converting time
+    StartTime_hms <- hms(StartTime)
+    EndTime_hms <- hms(EndTime)
+
+    # difference
+    AcquisitionTime <- as.numeric(EndTime_hms - StartTime_hms) # Just seconds
+AcquisitionTime <- AcquisitionTime / 60 # Convert To minutes
+FlowRate <- Volume / AcquisitionTime
+
+    # uL/min
+    FlowRate <- Volume / AcquisitionTime
+
+    EventsInTheGate <- gs_pop_get_data(x, subset)
+    Cells <- nrow(EventsInTheGate)[[1]]
+
+    Concentration <- (Cells * 1000) / Volume
+    Concentration <- Concentration * dilutionMultiplier
+
+    Data <- data.frame(
+        Date = Date,
+        InstrumentSerial = InstrumentSerial,
+        Operator = Operator,
+        Specimen = Specimen,
+        StartTime = StartTime,
+        EndTime = EndTime,
+        AcquisitionTime_Min = AcquisitionTime,
+        Volume_uL = Volume,
+        FlowRate_uL_min = FlowRate,
+        Cells = Cells,
+        Concentration = Concentration
+    )
+
+    return(Data)
+}
+
+Results <- purrr::map(  .x = MyGatingSet,  .f = CellConcentration,  subset = "CD19",
+  dilutionMultiplier = 100)
+
+Results <- bind_rows(Results)
+Results
+
+#The acquisition flow rate was highly consistent across acquisition days, remaining around 67–69 uL/min with only minor variation between files but some of them are negative and I don´t understand why
+
+#After your answers, got it corrected! Thank you
+```
