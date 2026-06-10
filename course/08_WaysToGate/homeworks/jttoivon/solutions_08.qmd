@@ -1,0 +1,355 @@
+---
+title: Solutions for week08
+author: Jarkko Toivonen
+date: "`r Sys.Date()`"
+format: 
+    html:
+        df-print: kable
+        embed-resources: true
+toc: true
+toc-depth: 5
+---
+
+
+```{r}
+packageVersion("ggplot2")
+packageVersion("ggcyto")
+packageVersion("openCyto")
+packageVersion("flowGate")
+```
+
+
+```{r setup}
+library(flowWorkspace)
+library(ggplot2)
+library(ggcyto)
+library(flowGate)
+library(openCyto)
+library(tidyverse)
+
+# If we are rendering the document, don't run code that requires interaction,
+# but instead only used saved result or things that can be computed without interaction.
+render <- isTRUE(getOption('knitr.in.progress')) 
+data_path <- "data"
+```
+
+# Problem 1
+
+> Using `flowGate`, go ahead and create your own series of gates for either our data or your own for any cell populations that might interest you. Once done, save the GatingSet, and then successfully reload it. Add another gate, but intentionally misdraw it. Then proceed to visualize, identify and correct it, before saving again. 
+
+> If you do plan to switch over to R for gating long-term, these skillsets will be essential, as you will need to be confident in your ability to adjust your gates as needed. 
+
+```{r}
+StorageLocation <- file.path("data") # Quarto Render
+
+fcs_files <- list.files(StorageLocation, pattern=".fcs", full.names=TRUE)
+fcs_files
+```
+
+```{r}
+prepare_gatingset <- function() {
+    SFC_cytoset <- load_cytoset_from_fcs(fcs_files,
+    truncate_max_range = FALSE, transformation = FALSE)
+    SFC_GatingSet <- GatingSet(SFC_cytoset)
+    #Transform the data.
+    SFC_Parameters <- colnames(SFC_GatingSet)
+    FluorophoresOnly <- SFC_Parameters[!stringr::str_detect(SFC_Parameters, "FSC|SSC|Time")]
+
+    Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+        pos=4.5, neg=2, widthBasis=-500)
+    MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+    transform(SFC_GatingSet, MyBiexTransform)
+    SFC_GatingSet
+}
+SFC_GatingSet <- prepare_gatingset()
+```
+
+Visualize the result.
+
+```{r}
+ggcyto(SFC_GatingSet[1], subset="root",
+ aes(x="BUV805-A", y="BV650-A")) + geom_hex(bins=100)
+```
+
+## Gate CD4+ cells
+
+Draw singlets.
+
+```{r}
+# ?gs_gate_interactive
+if (! render) {
+    flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="singlets", sample=1,
+dims=list("FSC-A", "FSC-H"), subset="root")
+}
+```
+
+Draw live cells.
+
+```{r}
+if (! render) {
+flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="live", sample=1,    dims=list("FSC-A", "Zombie NIR-A"), subset="singlets")
+}
+```
+
+Check the results.
+
+```{r}
+if (! render) {
+    gs_pop_get_count_fast(SFC_GatingSet) |> 
+    dplyr::filter(Population %in% "/singlets/live")
+}
+```
+
+Draw Tcells.
+
+```{r}
+if (! render) {
+    flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="Tcells", sample=1,
+        dims=list("Spark Blue 550-A", "Spark Blue 574-A"), subset="live")
+}
+```
+
+Check the results.
+
+```{r}
+if (! render) plot(SFC_GatingSet)
+```
+
+```{r}
+if (! render) { 
+    gs_pop_get_count_fast(SFC_GatingSet) |> 
+    dplyr::filter(Population %in% "/singlets/live/Tcells")
+}
+```
+
+Save the gating set.
+
+```{r}
+filename <- file.path(StorageLocation, "exercise1_gates.gs")
+if (! file.exists(filename) && ! render) {
+    save_gs(SFC_GatingSet, StorageLocationAndName)
+}
+```
+
+Reload it.
+
+```{r}
+SFC_GatingSet <- load_gs(filename)
+```
+
+```{r}
+if (! render) {
+    flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="CD4+", sample=1,
+dims=list("BV650-A", "BUV805-A"), subset="Tcells")
+}
+```
+
+Save the result.
+
+```{r}
+filename <- file.path(StorageLocation, "exercise1_gates_wrong.gs")
+if (! file.exists(filename) && ! render) {
+    save_gs(SFC_GatingSet, filename)
+}
+```
+
+
+```{r}
+SFC_GatingSet <- load_gs(filename)
+```
+
+Visualize the results.
+
+```{r}
+ggcyto::autoplot(SFC_GatingSet[[1]]) + theme_bw()
+```
+
+Oops, I instead drew CD8+. And why is there so much white space
+in the plots? Ok, in the lecture notes as well there's lots of empty
+space.
+
+Let's redraw.
+
+```{r}
+if (! render) {
+    flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="CD4+", sample=1,
+dims=list("BV650-A", "BUV805-A"), subset="Tcells", regate = TRUE)
+}
+```
+
+```{r}
+filename <- file.path(StorageLocation, "exercise1_gates_final.gs")
+if (! file.exists(filename) && ! render) {
+    save_gs(SFC_GatingSet, filename)
+}
+```
+
+```{r}
+SFC_GatingSet <- load_gs(filename)
+```
+
+```{r}
+plot(SFC_GatingSet)
+```
+
+```{r}
+ggcyto::autoplot(SFC_GatingSet[[1]]) + theme_bw()
+```
+
+Better.
+
+## Attempt to gate T regulatory cells.
+
+These markers are related to T regulatory cells:
+
+[Immunophenotyping](https://en.wikipedia.org/wiki/Cluster_of_differentiation#Immunophenotyping)
+
+T regulatory cell 	CD4, CD25, FOXP3 (a transcription factor)
+
+```{r}
+GatingTable <- tibble::tribble(
+  ~filterId,    ~dims,                          ~subset,      
+  "singlets",   list("FSC-A", "FSC-H"),          "root",      
+  "live",       list("FSC-A", "Zombie NIR-A"),   "singlets",  
+  #"Tcells",     list("CD3", "CD45"),              "live",     
+  "something",     list("CD4", "CD25"),              "live",     
+  "Tregulatory",       list("FOXP3"),               "something",   
+)
+GatingTable
+```
+
+Recreate the gating set:
+
+```{r}
+SFC_GatingSet <- prepare_gatingset()
+```
+
+
+```{r}
+if (! render) {
+    gs_apply_gating_strategy(SFC_GatingSet, gating_strategy = GatingTable)
+}
+```
+
+No pluses or minuses we marked for T regulatory cells in the Wikipedia page, so I don't know which population to select.
+
+
+
+```{r}
+T_regulatory_cells_filename <- file.path(StorageLocation, "exercise1_TRC.gs")
+if (! file.exists(T_regulatory_cells_filename) && ! render) {
+    save_gs(SFC_GatingSet, T_regulatory_cells_filename)
+}
+```
+
+```{r}
+if (render) SFC_GatingSet <- load_gs(T_regulatory_cells_filename)
+```
+
+```{r}
+plot(SFC_GatingSet)
+```
+
+```{r}
+ggcyto::autoplot(SFC_GatingSet[[1]]) + theme_bw()
+```
+
+Probably this is just rubbish instead of T regulatory cells.
+
+# Problem 2
+
+> Go ahead and create your own `openCyto` gate template, extending to whatever cell target population of interest. Visualize the differences, and ensure that the gates are correctly applied for everyone. Set gate_constaint arguments as needed until everything is just right. 
+
+> If you do plan to switch over to R for gating long-term, these skillsets will be essential, as you will need to be confident in your ability to adjust your gates as needed.
+
+I try to do here the same I did in Exercise 1 for T regulatory cells.
+
+```{r}
+filename <- file.path(data_path, "Gates_T_reg_cells.csv")
+# install.packages("data.table") # CRAN
+GatesToApply <- data.table::fread(filename)
+GatesToApply
+TheFullTemplate <- gatingTemplate(GatesToApply)
+TheFullTemplate
+```
+
+Form the GatingSet object.
+
+```{r}
+SFC_GatingSet <- prepare_gatingset()
+```
+
+Perform automatic gating.
+
+```{r}
+gt_gating(TheFullTemplate, SFC_GatingSet)
+```
+
+Visualize the results.
+
+```{r}
+ggcyto::autoplot(SFC_GatingSet[[1]]) + theme_bw()
+```
+
+```{r}
+ggcyto::autoplot(SFC_GatingSet[[2]]) + theme_bw()
+```
+
+# Problem 3
+
+> Re-run your `openCyto` template, but then add a few additional `flowGate` on to to extend it further. Save the gating set, close out of positron, and successfully reload. 
+
+```{r}
+SFC_GatingSet <- prepare_gatingset()
+gt_gating(TheFullTemplate, SFC_GatingSet)
+```
+
+```{r}
+plot(SFC_GatingSet)
+```
+
+Add one gate manually.
+
+```{r}
+if (! render)  {
+    flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="CD8+", sample=1,
+dims=list("CD8"), subset="FOXP3")
+}
+```
+
+```{r}
+if (! render) plot(SFC_GatingSet)
+```
+
+Add another gate manually.
+
+```{r}
+if (! render)  {
+    flowGate::gs_gate_interactive(gs=SFC_GatingSet, filterId="CD161+", sample=1,
+dims=list("CD161"), subset="CD8+")
+}
+```
+
+
+```{r}
+exercise3_filename <- file.path(StorageLocation, "exercise3.gs")
+if (! file.exists(exercise3_filename) && ! render) {
+    save_gs(SFC_GatingSet, exercise3_filename)
+}
+```
+
+
+```{r}
+if (render) SFC_GatingSet <- load_gs(exercise3_filename)
+```
+
+```{r}
+plot(SFC_GatingSet)
+```
+
+```{r}
+ggcyto::autoplot(SFC_GatingSet[[1]]) + theme_bw()
+```
+
+I got a few points. Maybe too many gates applied. Possibly no cells
+have this combination of markers.
