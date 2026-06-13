@@ -1,0 +1,277 @@
+---
+title: Solutions for week09
+author: Jarkko Toivonen
+date: today
+format: 
+    html:
+        df-print: kable
+        embed-resources: true
+toc: true
+toc-depth: 5
+---
+
+```{r}
+#| label: setup
+library(tibble)
+library(purrr)
+library(dplyr)
+library(stringr)
+library(ggcyto)
+```
+
+# Problem 1
+
+> Modify one of the simpler functions (SecondFunction or similar), provide your own argument names, and modify the message(), paste0 or print() functions to print a text style output. Generate a small vector of values, and iterate through your vector using one of the approaches we used.
+
+```{r}
+f <- function(name, level, max = 5) {
+  v <- c(rep(" ", max - level), rep("*", level))
+  prefix <- v |> paste(collapse = "")
+  suffix <- v |> rev() |> paste(collapse = "")
+  sprintf("%s %s %s", prefix, name, suffix)
+}
+1:3 |> map_chr(\(i) f("John", i)) %>% cat(sep = "\n")
+```
+
+# Problem 2
+
+> Using the initial framework for the CellConcentration function, retrieve several other keywords that are of interest, and incorporate them into the returned data.frame row.
+
+Read the files and create a gating set.
+
+```{r}
+#| label: Load data
+data_path <- file.path("data") # Quarto Rendering path
+
+fcs_files <- list.files(data_path, pattern=".fcs", full.names=TRUE)
+MyCytoset <- load_cytoset_from_fcs(fcs_files, transformation=FALSE, truncate_max_range=FALSE)
+MyGatingSet <- GatingSet(MyCytoset)
+```
+
+Check all the keywords.
+
+```{r}
+#| label: Keywords
+kws <- keyword(MyGatingSet[[1]])
+head(kws)
+```
+
+```{r}
+#| label: CellConcentration
+CellConcentration <- function(x){
+    kw <- keyword(x)
+    Date <- kw$`$DATE` # Day-Month-Year
+    InstrumentSerial <- kw$`$CYTSN`
+    Creator <- kw$CREATOR             # Added
+    TotalFileEvents <- kw$`$TOT`
+    Specimen <- kw$GUID
+    FCSversion <- kw$FCSversion       # Added
+    StartTime <- kw$`$BTIM`
+    EndTime <- kw$`$ETIM`
+    Volume <- kw$`$VOL`
+
+    # Count the number of lasers
+    Lasers <- names(kw) |> keep(\(x) str_detect(x, "LASER[0-9]+NAME")) %>% length()
+
+    res <- tibble(
+        Date = Date,
+        InstrumentSerial = InstrumentSerial,
+        Creator = Creator,
+        TotalFileEvents = TotalFileEvents,
+        Specimen = Specimen,
+        FCSversion = FCSversion,
+        StartTime = StartTime,
+        EndTime = EndTime,
+        Volume = Volume,
+        Lasers = Lasers
+    )
+    res
+}
+CellConcentration(MyGatingSet[[1]])
+```
+
+# Problem 3
+
+> For CellConcentration, we retrieved both start and end time. Look up information on lubridate package, convert these times to a time-style format, and from acquired volume derrive uL/min at which each .fcs file was acquired. Did this vary at all across days?
+
+Data File Standard for Flow Cytometry, Version FCS 3.1
+https://pmc.ncbi.nlm.nih.gov/articles/PMC2892967/
+
+> Sample Volume: A standardized way to communicate the sample volume
+has been introduced. The value of a new optional $VOL keywords
+is a floating point number expressing the sample volume in nanoliters.
+
+But based on the scale, about 30, it looks that the volume in the file could be 
+in microlitres (uL) instead!
+
+I will assume that the unit is microlitres.
+
+```{r}
+#| label: CellConcentration3
+#' This function will figure out the cell concentration
+#'  for a given gated population in an .fcs file
+#'
+#' @param x A GatingSet object (typically iterated in)
+#' @param subset The gate from which to retrieve cell counts from
+#' @param dilutionMultiplier Multiplies the estimated concentration
+#'  to bring correct digits. 
+#' 
+CellConcentration3 <- function(x, subset, dilutionMultiplier){
+    Date <- keyword(x)$`$DATE` # Day-Month-Year
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+
+    StartTime <- hms::as_hms(StartTime)
+    EndTime <- hms::as_hms(EndTime)
+    Duration <- EndTime - StartTime
+
+    Volume <- keyword(x)$`$VOL`
+    Volume <- as.numeric(Volume)    # In nanolitres or microlitres, maybe the latter
+
+    EventsInTheGate <- gs_pop_get_data(x, subset)
+    Cells <- nrow(EventsInTheGate)[[1]] # [[1]] since the output is in a list
+
+    Concentration <- (Cells*1000)/Volume   # Apparently this converts to cells per millilitres?
+    Concentration <- Concentration*dilutionMultiplier
+
+    CellsPerSecond <- Cells / as.numeric(Duration, unit = "secs")
+
+    Flow <- Volume / as.numeric(Duration, unit = "mins")  # microlitres per minute (uL/min)
+    FlowUnit <- "uL/min"
+
+    Data <- tibble(
+        Date=Date,
+        InstrumentSerial=InstrumentSerial,
+        Specimen=Specimen,
+        StartTime=StartTime,
+        EndTime=EndTime,
+        Duration = Duration,
+        Volume=Volume,    # In nanolitres or microlitres, maybe the latter
+        Cells=Cells,
+        Concentration=Concentration,
+        CellsPerSecond = CellsPerSecond,
+        Flow = Flow,
+        FlowUnit = FlowUnit
+        )
+
+    return(Data)
+}
+```
+
+
+The flow is of the diluted liquid.
+
+Transform the data.
+
+```{r}
+#| label: Transform data
+MainDetectorsOnly <- c("V3-A", "B4-A", "R1-A")
+
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=2, widthBasis=-500)
+MyBiexTransform <- transformerList(MainDetectorsOnly, Biexponential)
+transform(MyGatingSet, MyBiexTransform)
+```
+
+Gate it.
+
+```{r}
+#| label: Gate table
+GatingTable <- tibble::tribble(
+  ~filterId,    ~dims,                          ~subset,           
+  "CD45",       list("B4-A", "SSC-A"),            "root",     
+  "CD19",       list("V3-A", "SSC-A"),            "CD45",   
+  "CD14",       list("R1-A", "SSC-A"),            "CD45", 
+  "TandNKcells",  list("V3-A", "SSC-A"),            "CD45",
+)
+GatingTable
+```
+
+
+```{r}
+#| label: Create gates
+filename <- file.path(data_path, "gated.gs")
+if (! file.exists(filename)) {
+    flowGate::gs_apply_gating_strategy(MyGatingSet, gating_strategy = GatingTable)
+    save_gs(MyGatingSet, filename)
+} else {
+    MyGatingSet <- load_gs(filename)
+}
+```
+
+```{r}
+#| label: Show gate hierarchy
+plot(MyGatingSet)
+```
+
+```{r}
+#| label: Visualize gates
+ggcyto::autoplot(MyGatingSet[[6]]) + theme_bw()
+```
+
+
+
+
+```{r}
+#| label: Result table
+population <- "root"
+get_results_for_population <- function(gating_set, population) {
+    df <- gating_set |>
+        map(\(x) CellConcentration3(x, subset=population, dilutionMultiplier=100)) |>
+        bind_rows()
+    df
+}
+df <- get_results_for_population(MyGatingSet, population)
+df
+```
+
+
+```{r}
+#| label: Result plot of flow rate
+df %>% 
+    ggplot(aes(Specimen, Flow)) +
+    geom_point() +
+    lims(y = c(0, NA)) +
+    labs(x = "Specimen", y = "Flow rate [uL/min]",
+    title = "Flow rate", subtitle = "Root population") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+The flow rate is almost constant across specimen so the day doesn't affect it.
+
+Let's also check the population-wise cell rate, so that the creation of 
+gates is not totally wasted.
+
+
+```{r}
+populations <- gs_get_pop_paths(MyGatingSet)
+populations
+```
+
+Get results for all populations.
+
+```{r}
+#| label: Process all gates
+dfs <- populations |> 
+    set_names() |>     # Results in a named list, where the name is the same as the value
+    map(\(population) get_results_for_population(MyGatingSet, population))
+all <- bind_rows(dfs, .id = "population")   # The name of the list element goes to the population column
+all |> head()
+```
+
+```{r}
+#| label: Result plot of cell rate
+all %>% 
+    ggplot(aes(Specimen, CellsPerSecond, color = population, group = population)) +
+    geom_point() +
+    geom_line() +
+    lims(y = c(0, NA)) +
+    labs(x = "Specimen", y = "Cell rate [cells/s]",
+    title = "Flow rate", subtitle = "Root population") +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Hmm, the amount of rubbish seems to vary.
