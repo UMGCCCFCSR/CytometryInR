@@ -1,0 +1,584 @@
+Problem 1
+Implement additional `openCyto` gates, and validate that they are being placed correctly using `Utility_GatingPlot()`. Update the gate_range arguments until satisfied. Then, add new gates, and run the resulting dataset through `CombinedFlow()`, screenshotting any values that return with p-values that upon visualizing the data also look reasonable (not driven by a single-outlier). 
+
+
+```{r}
+library(flowWorkspace)
+library(dplyr)
+library(ggplot2)
+library(ggcyto)
+library(openCyto)
+library(purrr)
+library(tidyr)
+library(broom)
+library(patchwork)
+library(Luciernaga)
+
+
+RFolder <- file.path("course", "11_DataForStats", "R") 
+MyFunctions <- list.files(RFolder, full.names=TRUE)
+purrr::walk(.x=MyFunctions, .f=source)
+
+StorageLocation <- file.path("course", "11_DataForStats", "data")
+
+
+OutputFolder <- file.path("course", "11_DataForStats", "outputs")
+
+fcs_files <- list.files(StorageLocation, pattern=".fcs", full.names=TRUE)
+
+SFC_cytoset <- load_cytoset_from_fcs(fcs_files, 
+     truncate_max_range=FALSE, transformation=FALSE)
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+
+SFC_Parameters <- colnames(SFC_GatingSet)
+FluorophoresOnly <- SFC_Parameters[!stringr::str_detect(SFC_Parameters, "FSC|SSC|Time")]
+
+Biexponential <- flowjo_biexp_trans(channelRange=4096,
+ maxValue=262144, pos=4.5, neg=2, widthBasis=-750)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(SFC_GatingSet, MyBiexTransform)
+
+CurrentMetadata <- pData(SFC_GatingSet)
+CurrentMetadata <- CurrentMetadata |> mutate(specimen = name) |>
+     mutate(specimen = stringr::str_extract(specimen, "INF\\d+")) |>
+     mutate(specimen = stringr::str_replace(specimen, "INF0(\\d{3})", "INF\\1"))
+
+TheCSV <- list.files(StorageLocation, pattern="Metadata.csv", full.names=TRUE)
+AdditionalMetadata <- read.csv(TheCSV, check.names=FALSE)
+AdditionalMetadata <- AdditionalMetadata|>
+     mutate(specimen = stringr::str_replace(specimen, "INF0(\\d{3})", "INF\\1"))
+
+    UpdatedMetadata <- left_join(CurrentMetadata, 
+     AdditionalMetadata, by="specimen")
+rownames(UpdatedMetadata) <- UpdatedMetadata$name
+pData(SFC_GatingSet) <- UpdatedMetadata
+pData(SFC_GatingSet)
+
+
+OurGateTemplate <- list.files(StorageLocation,
+ pattern="GatesUnmixed.csv", full.names=TRUE)
+Example <- read.csv(OurGateTemplate, check.names=FALSE)
+
+
+GatesToApply <- data.table::fread(OurGateTemplate)
+
+TheFullTemplate <- gatingTemplate(GatesToApply)
+
+gt_gating(TheFullTemplate, SFC_GatingSet)
+
+library(Luciernaga)
+IndividualPlot <- Utility_GatingPlots(x=SFC_GatingSet[[1]],
+ sample.name = "GUID", removestrings = ".fcs", 
+ gtFile = GatesToApply,returnType="patchwork")
+ IndividualPlot
+
+
+Example |>   dplyr::filter(grepl("CD107", alias))
+gate_range=c(2000,3500)
+GatesToApply <- data.table::fread(OurGateTemplate)
+
+TheFullTemplate <- gatingTemplate(GatesToApply)
+
+SFC_cytoset <- load_cytoset_from_fcs(
+  fcs_files,
+  truncate_max_range = FALSE,
+  transformation = FALSE
+)
+
+SFC_GatingSet <- GatingSet(SFC_cytoset)
+
+transform(SFC_GatingSet, MyBiexTransform)
+gt_gating(TheFullTemplate, SFC_GatingSet)
+IndividualPlot <- Utility_GatingPlots(  x = SFC_GatingSet[[1]],  sample.name = "GUID",  removestrings = ".fcs",  gtFile = GatesToApply,
+  returnType = "patchwork")
+IndividualPlot
+
+gs_get_pop_paths(SFC_GatingSet)
+gs_pop_get_stats(SFC_GatingSet)
+sort(unique(GatesToApply$alias))
+
+```
+
+```{r}
+Data <- gs_pop_get_count_with_meta(SFC_GatingSet, "freq")
+
+head(Data)
+
+Data$Population <- basename(Data$Population)
+Data$Frequency <- round(Data$Frequency, 2)
+
+```
+
+```{r}
+
+#' This function runs the desired statistical test on a column of
+#' interest for a particular factor column, and then adds the results
+#' to a ggbeeswarm boxplot, returning a ggplot2 object. 
+#' 
+#' @param data The data.frame or tibble object containing our dataset
+#' @param theColumn The column containing our measurements of interest
+#' @param theFactor The column containing our metadata to compare by
+#' @param shape_palette R shape values given to scale_shape_manual,
+#' should match levels present in theFactor. For example...
+#' shape_sex <- c("Female" = 22, "Male" = 21)
+#' @param fill_palette R fill values given to scale_fill_manual, 
+#' should match levels present in theFactor. For example...
+#' fill_sex <- c("Female" = "white", "Male" = "black")
+#' @param parametric Whether to use "parametric" or "non-parametric" test
+#' @param alpha Default set to 0.05
+#' @param correction Method for FDR correction, default is "none"
+#' 
+#' 
+CombinedFlow <- function(data, theColumn, theFactor,
+     shape_palette, fill_palette, parametric="parametric",
+     alpha=0.05, correction="none"){
+
+     Stats <- StatsFromFlow(data=data, theColumn=theColumn,
+     theFactor=theFactor, parametric=parametric, alpha=alpha,
+     correction=correction)
+
+     Method <- Stats$method |> unique()
+     thePvalues <- Stats$p.value
+
+     if(any(thePvalues == "NaN")){
+           MoldedPvalue <- "n.s"
+          } else if (Method %in% c("Two Sample t-test",
+            "Wilcoxon rank sum test with continuity correction",
+            "Wilcoxon rank sum exact test")){
+            # These methods would only return a single p-value
+            MoldedPvalue <- pval_mold(thePvalues, alpha=alpha)
+          } else if (Method %in% c("One-Way Anova",
+           "Kruskal-Wallis rank sum test")){
+            # These methods would only return a single p-value
+            PresentPvalue <- thePvalues[!is.na(thePvalues)]
+            MoldedPvalue <- pval_mold(PresentPvalue, alpha=alpha)
+            } else if (Method %in% c("Pairwise t-test",
+             "Pairwise Wilcox test")) {
+            # These methods might return multiple p-values
+            MoldedPvalue <- purrr::map(.x=thePvalues, .f=pval_mold, alpha=alpha)
+            } else {
+            message("Method not recognized, returning n.s for p-value")
+            MoldedPvalue <- "n.s"
+            }
+
+     ActualValues <- which("n.s" != MoldedPvalue)
+     ShownPvalues <- MoldedPvalue[ActualValues]
+     ShownPvalues <- unlist(ShownPvalues)
+     ThePData <- data.frame(Index=ActualValues, ThePvalues=ShownPvalues)
+
+     PlotName <- theColumn
+
+     plot <- ggplot(data, aes(x =.data[[theFactor]], y = .data[[theColumn]])) +
+          geom_boxplot(show.legend = FALSE) +
+          ggbeeswarm::geom_beeswarm(show.legend = FALSE, aes(shape = .data[[theFactor]],
+               fill = .data[[theFactor]]), method = "center", side = 0,
+               priority = "density", cex = 3, size = 3, corral = "wrap",
+               corral.width = 3) + 
+          scale_shape_manual(values = shape_palette) +
+          scale_fill_manual(values = fill_palette) +
+          labs(title = PlotName, x = NULL, y = NULL) +
+          theme_bw() + 
+          theme(panel.grid.major = element_blank(),
+               panel.grid.minor = element_blank(),
+               plot.title = element_text(hjust = 0.5, size = 8)
+               )
+
+     SingleY <- max(data[[theColumn]])
+     SingleY <- SingleY*1.1 #For a little wiggle room
+
+     plot2 <- LineAddition(plot=plot, Method=Method, ThePData=ThePData,
+       SingleY=SingleY)
+
+     return(plot2)
+}
+
+StatsFromFlow <- function(data, theColumn, theFactor){
+     tidy(t.test(data[[theColumn]] ~ data[[theFactor]],
+      alternative = "two.sided", var.equal = TRUE))
+}
+
+
+```
+
+
+
+Problem 2
+In our ggbeeswarm boxplot, currently we are seeing the proportion on the y-axis. Figure out how to modify the `StatPlotsForFlow()` function to instead display the axis as a percentage, and then using additional function arguments and conditions, set the function up to allow you to switch between as desired. Also, externalize size and cex to modify your beeswarm boxplots in an easier fashion!
+
+```{r}
+Data <- gs_pop_get_count_with_meta(SFC_GatingSet, "freq")
+Data
+
+shape_sex <- c("Female" = 22, "Male" = 21)
+shape_ptype <- c("HU" = 22, "HEU-lo" = 21, "HEU-hi" = 21)
+
+fill_sex <- c("Female" = "white", "Male" = "black")
+fill_ptype <- c("HU" = "white", "HEU-lo" = "darkgray", "HEU-hi" = "black")
+
+#' Generate a beeswarm-boxplot for a given column by a factor column
+#' of interest
+#' 
+#' @param data The data.frame or tibble object containing our dataset
+#' @param theColumn The column containing our measurements of interest
+#' @param theFactor The column containing our metadata to compare by
+#' @param shape_palette R shape values given to scale_shape_manual,
+#' should match levels present in theFactor. For example...
+#' shape_sex <- c("Female" = 22, "Male" = 21)
+#' @param shape_fill R fill values given to scale_fill_manual, 
+#' should match levels present in theFactor. For example...
+#' fill_sex <- c("Female" = "white", "Male" = "black")
+#' 
+#' @importFrom gggplot2 ggplot aes geom_boxplot scale_shape_manual
+#' scale_fill_manual labs theme_bw theme element_blank()
+#' @importFrom ggbeeswarm geom_beeswarm element_text
+#' 
+#' 
+StatPlotsForFlow <- function(data, theColumn, theFactor,
+     shape_palette, fill_palette){
+
+     PlotName <- theColumn
+
+     plot <- ggplot(data, aes(x =.data[[theFactor]], y = .data[[theColumn]])) +
+          geom_boxplot(show.legend = FALSE) +
+          ggbeeswarm::geom_beeswarm(show.legend = FALSE, aes(shape = .data[[theFactor]],
+               fill = .data[[theFactor]]), method = "center", side = 0,
+               priority = "density", cex = 3, size = 3, corral = "wrap",
+               corral.width = 3) + 
+          scale_shape_manual(values = shape_palette) +
+          scale_fill_manual(values = fill_palette) +
+          labs(title = PlotName, x = NULL, y = NULL) +
+          theme_bw() + 
+          theme(panel.grid.major = element_blank(),
+               panel.grid.minor = element_blank(),
+               plot.title = element_text(hjust = 0.5, size = 8)
+               )
+     return(plot)
+}
+meta <- pData(SFC_GatingSet)
+CurrentMetadata
+head(UpdatedMetadata)
+rownames(UpdatedMetadata) <- UpdatedMetadata$name
+pData(SFC_GatingSet) <- UpdatedMetadata
+colnames(pData(SFC_GatingSet))
+
+Data <- gs_pop_get_count_with_meta(SFC_GatingSet, "freq")
+
+names(Data)
+Data |>
+    dplyr::filter(Population == "/singlets/lymphocytes/Tcells/Vd2-/CD4+") |>
+    nrow()
+CD4_data <- Data |>
+    dplyr::filter(
+        Population == "/singlets/lymphocytes/Tcells/Vd2-/CD4+"
+    )
+table(CD4_data$infant_sex, useNA = "always")
+StatPlotsForFlow(
+    data = CD4_data,
+    theColumn = "Frequency",
+    theFactor = "infant_sex",
+    shape_palette = shape_sex,
+    fill_palette = fill_sex
+)
+
+```
+
+```{r}
+StatPlotsForFlow <- function(
+    data,
+    theColumn,
+    theFactor,
+    shape_palette,
+    fill_palette,
+    y_as_percent = FALSE,
+    point_size = 3,
+    point_cex = 3
+){
+
+    PlotName <- theColumn
+
+    plot <- ggplot(
+        data,
+        aes(
+            x = .data[[theFactor]],
+            y = .data[[theColumn]]
+        )
+    ) +
+
+        geom_boxplot(show.legend = FALSE) +
+
+        ggbeeswarm::geom_beeswarm(
+            aes(
+                shape = .data[[theFactor]],
+                fill = .data[[theFactor]]
+            ),
+            show.legend = FALSE,
+            method = "center",
+            side = 0,
+            priority = "density",
+            cex = point_cex,
+            size = point_size,
+            corral = "wrap",
+            corral.width = 3
+        ) +
+
+        scale_shape_manual(values = shape_palette) +
+        scale_fill_manual(values = fill_palette) +
+
+        labs(
+            title = PlotName,
+            x = NULL,
+            y = NULL
+        ) +
+
+        theme_bw() +
+
+        theme(
+            panel.grid.major = element_blank(),
+            panel.grid.minor = element_blank(),
+            plot.title = element_text(
+                hjust = 0.5,
+                size = 8
+            )
+        )
+
+    if (y_as_percent) {
+
+        plot <- plot +
+            scale_y_continuous(
+                labels = scales::percent_format(
+                    accuracy = 1
+                )
+            )
+
+    }
+
+    return(plot)
+}
+
+StatPlotsForFlow(
+    data = CD4_data,
+    theColumn = "Frequency",
+    theFactor = "infant_sex",
+    shape_palette = shape_sex,
+    fill_palette = fill_sex
+)
+
+#%
+
+StatPlotsForFlow(
+    data = CD4_data,
+    theColumn = "Frequency",
+    theFactor = "infant_sex",
+    shape_palette = shape_sex,
+    fill_palette = fill_sex,
+    y_as_percent = TRUE
+)
+
+#changing the dots
+StatPlotsForFlow(
+    data = CD4_data,
+    theColumn = "Frequency",
+    theFactor = "infant_sex",
+    shape_palette = shape_sex,
+    fill_palette = fill_sex,
+    point_size = 5,
+    point_cex = 5
+)
+```
+
+Problem 3
+Some "typical" immunology workflows run a "normality" test before implementing a corresponding downstream test based on the result (Your friendly-neighbourhood statistician may have some strong thoughts on this field practice).  Regardless of your position on this approach, see if you can modify our `StatsFromFlow()` function, using additional arguments conditional statements, to incorporate in a shapiro-wilks or `fBasics` package Omnibus K2 test first, and based on the outputs proceed downstream to either the parametric or non-parametric options
+
+
+```{r}
+install.packages("fBasics")
+library(fBasics)
+
+StatsFromFlow <- function(
+    data,
+    theColumn,
+    theFactor,
+    parametric = "auto",
+    normality_test = "shapiro",
+    alpha = 0.05,
+    correction = "none"
+){
+
+    # N of groups
+    n_groups <- dplyr::n_distinct(data[[theFactor]])
+
+    # Remov NAs
+    Response <- data[[theColumn]]
+    Response <- Response[!is.na(Response)]
+
+    # -----------------------------
+    # normalit test
+    # -----------------------------
+
+    if(parametric == "auto"){
+
+        if(normality_test == "shapiro"){
+
+            NormalityP <- shapiro.test(Response)$p.value
+
+            message(
+                paste(
+                    "Shapiro-Wilk p =",
+                    round(NormalityP, 4)
+                )
+            )
+
+        } else if(normality_test == "omnibus"){
+
+            NormalityP <- fBasics::normalTest(Response)@test$p.value
+
+            message(
+                paste(
+                    "Omnibus K2 p =",
+                    round(NormalityP, 4)
+                )
+            )
+
+        } else {
+
+            stop(
+                "normality_test must be 'shapiro' or 'omnibus'"
+            )
+
+        }
+
+        if(NormalityP > alpha){
+
+            parametric <- "parametric"
+
+            message(
+                "Data appear normally distributed. Using parametric test."
+            )
+
+        } else {
+
+            parametric <- "non-parametric"
+
+            message(
+                "Data appear non-normal. Using non-parametric test."
+            )
+
+        }
+
+    }
+
+    # -----------------------------
+    # 2 GROUPS
+    # -----------------------------
+
+    if(n_groups == 2){
+
+        FormulaObj <- as.formula(
+            paste(theColumn, "~", theFactor)
+        )
+
+        if(parametric == "parametric"){
+
+            TestResult <- t.test(
+                FormulaObj,
+                data = data
+            )
+
+            Results <- data.frame(
+                method = "Two Sample t-test",
+                p.value = TestResult$p.value
+            )
+
+        } else {
+
+            TestResult <- wilcox.test(
+                FormulaObj,
+                data = data
+            )
+
+            Results <- data.frame(
+                method = "Wilcoxon rank sum test",
+                p.value = TestResult$p.value
+            )
+
+        }
+
+    }
+
+    # -----------------------------
+    # >2 GROUPS
+    # -----------------------------
+
+    if(n_groups > 2){
+
+        FormulaObj <- as.formula(
+            paste(theColumn, "~", theFactor)
+        )
+
+        if(parametric == "parametric"){
+
+            Fit <- aov(
+                FormulaObj,
+                data = data
+            )
+
+            Pvalue <- summary(Fit)[[1]][["Pr(>F)"]][1]
+
+            Results <- data.frame(
+                method = "One-Way Anova",
+                p.value = Pvalue
+            )
+
+        } else {
+
+            Fit <- kruskal.test(
+                FormulaObj,
+                data = data
+            )
+
+            Results <- data.frame(
+                method = "Kruskal-Wallis rank sum test",
+                p.value = Fit$p.value
+            )
+
+        }
+
+    }
+
+    return(Results)
+
+}
+
+StatsFromFlow(
+    data = CD4_data,
+    theColumn = "Frequency",
+    theFactor = "infant_sex",
+    parametric = "auto",
+    normality_test = "shapiro"
+)
+
+StatsFromFlow(
+    data = CD4_data,
+    theColumn = "Frequency",
+    theFactor = "infant_sex",
+    parametric = "auto",
+    normality_test = "omnibus"
+)
+
+StatsFromFlow(
+    data = CD4_data,
+    theColumn = "Frequency",
+    theFactor = "infant_sex",
+    parametric = "parametric"
+)
+
+StatsFromFlow(
+    data = CD4_data,
+    theColumn = "Frequency",
+    theFactor = "infant_sex",
+    parametric = "non-parametric"
+)
+
+#I confess that for this whole homework I had to use chatGPT, a little less in the first 2 problems and more for the third one.
+```
+
