@@ -1,0 +1,70 @@
+# Problem 1
+Taking a dataset (either todays or one of your own), work through the column-operating functions (select(), rename(), and relocate()). Once this is done, filter() by conditions from two separate columns, arrange in an order that makes sense, and export this “tidy” data as a .csv file.
+
+```{r}
+library(tidyverse)
+thefilepath <- file.path("data","Dataset.csv")
+thefilepath
+
+Data <- read.csv(file=thefilepath, check.names=FALSE)
+colnames(Data)
+
+Data |> select(ptype)
+Data 
+
+Data |> relocate(ptype, .before=bid) |> head(5)
+Renamed <- Subset |> rename(phenotype = `ptype`)
+colnames (Renamed)
+
+Renamed <- Subset |> rename(specimen = `bid`, CD4_Positive=`CD4+`)
+colnames(Renamed)
+
+Renamed |> filter(phenotype %in% "HEU-hi") |> head(10)
+
+TidyData <- Renamed |> filter(phenotype %in% "HEU-hi") |> filter(infant_sex %in% "Male")
+TidyData
+
+# arrange
+TidyData <- TidyData |> arrange(desc(CD45_count))
+TidyData
+
+tidy <- paste0("tidy", ".csv")
+StorageLocation <- file.path("data", tidy)
+StorageLocation
+tidy
+write.csv(TidyData, StorageLocation)
+```
+
+# Problem 2
+We used the mutate() function to create new columns, but it can also be used to modify existing ones. Various numeric columns are showing way to many significant digits. As was shown, use round() to round all these proportion columns, but use mutate to overwrite the existing column. Export this as it’s own .csv file.
+
+```{r}
+colnames(Data)
+Rounded <- Data |> mutate(CD45 = round(CD45,2)) |> mutate(NotMonocytes = round(NotMonocytes,2)) |> mutate(nonDebris = round(nonDebris,2)) |> mutate(lymphocytes = round(lymphocytes,2)) |> mutate(live = round(live,2)) |> mutate(`Dump+` = round(`Dump+`,2)) |> mutate(`Dump-` = round(`Dump-`,2)) |> mutate(Tcells = round(Tcells,2)) |> mutate(`Vd2+` = round(`Vd2+`,2)) |> mutate(`Vd2-`= round(`Vd2-`,2)) |> mutate(`Va7.2+` = round(`Va7.2+`,2)) |> mutate(`Va7.2-` = round(`Va7.2-`,2)) |> mutate(`CD4+`= round(`CD4+`,2)) |> mutate(`CD4-` = round(`CD4-`,2)) |> mutate(`CD8+`= round(`CD8+`,2)) |> mutate(`CD8-` = round(`CD8-`,2)) |> mutate(Monocytes = round(Monocytes,2)) |> mutate(Debris = round(Debris, 2))
+
+Rounded
+
+rounded <- paste0("rounded", ".csv")
+StorageLocation <- file.path("data", rounded)
+StorageLocation
+rounded
+write.csv(Rounded, StorageLocation)
+```
+
+# Problem 3
+We can also use mutate() to combine columns. For our dataset, “bid”, “timepoint”, “Condition” are separate columns that originally were all part of the filename for the individual .fcs file. Try to figure out a way to combine them back together using paste0(), and save the new column as “filename”. Once this is done, pull() the contents of this column, and using try to determine whether there were any duplicates (think innovative ways of using !, length() and unique())
+
+```{r}
+combined <- Data |> mutate(filename = paste(bid, timepoint, Condition))
+combined
+
+unique_filenames <- combined |>
+        dplyr::pull(filename) |>
+        unique()
+unique_filenames
+
+length(unique(unique_filenames)) < length(unique_filenames)
+any(duplicated(unique_filenames))
+unique_filenames[duplicated(unique_filenames)]
+
+```

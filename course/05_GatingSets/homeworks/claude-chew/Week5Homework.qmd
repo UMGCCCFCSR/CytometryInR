@@ -1,0 +1,129 @@
+# Problem 1
+Using what you learned last week in Introduction to Tidyverse, for the imported GatingSet, retrieve the data.frame from cell counts per gate and attempt to mutate a new column showing percent of the parent gate. Remember, this is intentionally tricky at this point, we will go over how to efficiently do this in a few weeks
+
+```{r}
+# Folder <- file.path("course", "05_GatingSets", "data")
+Folder <- file.path("data")
+fcs_files <- list.files(Folder, pattern=".fcs", full.names=TRUE)
+fcs_files
+fcs_files[1]
+library(flowCore)
+
+flowFrame <- read.FCS(filename=fcs_files[1], truncate_max_range = FALSE,
+ transformation = FALSE)
+flowFrame
+str(fcs_files)
+
+flowSet <- read.flowSet(files=fcs_files, truncate_max_range = FALSE,
+ transformation = FALSE)
+flowSet
+
+library(flowWorkspace)
+GatingSet1 <- GatingSet(flowSet)
+GatingSet1
+class(GatingSet1)
+
+library(CytoML)
+Folder
+FlowJoWsp <- list.files(path = Folder, pattern = ".wsp", full = TRUE)
+FlowJoWsp
+
+ThisWorkspace <- FlowJoWsp[stringr::str_detect(FlowJoWsp, "Opened")]
+ThisWorkspace
+
+ws <- open_flowjo_xml(ThisWorkspace)
+ws
+
+class(ws)
+gs <-flowjo_to_gatingset(ws=ws, name=1, path = Folder, additional.keys = "GROUPNAME")
+gs
+class(gs)
+
+Data <- gs_pop_get_count_fast(gs)
+library(dplyr)
+
+PerCentParentGate <- Data |> mutate(PerCentParent = (Count/ParentCount)*100)
+PerCentParentGate
+```
+
+![](images/Problem1.png)
+
+# Problem 2
+As we saw, CytoML can be finicky when names are repeated, or .fcs files are not present. Try removing a couple of the .fcs files from the data folder, and re-run the code. Document what kind of errors result.
+
+```{r}
+# CytoML before removing FCS files
+# library(CytoML)
+Folder
+FlowJoWsp <- list.files(path = Folder, pattern = ".wsp", full = TRUE)
+FlowJoWsp
+
+ThisWorkspace <- FlowJoWsp[stringr::str_detect(FlowJoWsp, "Opened")]
+ThisWorkspace
+
+ws <- open_flowjo_xml(ThisWorkspace)
+ws
+
+class(ws)
+gs <-flowjo_to_gatingset(ws=ws, name=1, path = Folder, additional.keys = "GROUPNAME")
+gs
+class(gs)
+
+# after removing 3 FCS files
+Folder
+FlowJoWsp <- list.files(path = Folder, pattern = ".wsp", full = TRUE)
+FlowJoWsp
+
+ThisWorkspace <- FlowJoWsp[stringr::str_detect(FlowJoWsp, "Opened")]
+ThisWorkspace
+
+ws <- open_flowjo_xml(ThisWorkspace)
+ws
+
+class(ws)
+gs <-flowjo_to_gatingset(ws=ws, path = Folder, additional.keys = "GROUPNAME")
+gs
+class(gs)
+```
+
+![](images/Problem2.png)
+
+# Problem 3
+For ggcyto, attempt to generate plots to visualize TNFa and IFNg for the various cell populations, across both Ctrl and SEB samples. In the process, change the bins argument until you end up with a resolution that you would be happy with for your own plots, and write it down.
+
+```{r}
+gs <-flowjo_to_gatingset(ws=ws, path = Folder, additional.keys = "GROUPNAME",
+ keywords=c("$DATE", "$CYT", "$FIL", "GROUPNAME"))
+gs
+plot(gs)
+gs_get_pop_paths(gs)
+pData(gs)$name <- sampleNames(gs)
+
+# Sanity check, figure out if TNFa and IFNg is actually named in FCS files
+
+fs_root <- gs_pop_get_data(gs, "root")
+
+sapply(sampleNames(fs_root), function(sn) {
+  cols <- colnames(exprs(fs_root[[sn]]))
+  c(
+    TNFa = "TNFa" %in% cols,
+    IFNg = "IFNg" %in% cols
+  )
+})
+colnames(exprs(gs_pop_get_data(gs, "root")[[1]]))
+
+#Plot using actual colnames
+
+library(ggplot2)
+library(ggcyto)
+
+ggcyto(gs, subset="CD4+", aes(x=`Comp-BV750-A`, y=`Comp-PE-Dazzle594-A`)) + geom_hex(bins=250) + facet_wrap(~name, drop = FALSE)
+
+ggcyto(gs, subset="CD4-CD8-", aes(x=`Comp-BV750-A`, y=`Comp-PE-Dazzle594-A`)) + geom_hex(bins=250) + facet_wrap(~name, drop = FALSE)
+
+ggcyto(gs, subset="CD8+", aes(x=`Comp-BV750-A`, y=`Comp-PE-Dazzle594-A`)) + geom_hex(bins=250) + facet_wrap(~name, drop = FALSE)
+```
+
+![](images/CD4-CD8-IFNgTNFa.png)
+![](images/CD4+IFNgTNFa.png)
+![](images/CD8+IFNgTNFa.png)
