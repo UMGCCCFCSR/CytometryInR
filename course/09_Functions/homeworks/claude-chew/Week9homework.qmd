@@ -1,0 +1,125 @@
+# Week9 Homework
+
+:::{.callout-tip title="Problem 1"}
+Modify one of the simpler functions (SecondFunction or similar), provide your own argument names, and modify the `message()`, `paste0` or `print()` functions to print a text style output. Generate a small vector of values, and iterate through your vector using one of the approaches we used.
+:::
+
+```{r}
+MySecondFunction <- function(FastestCytometer){
+    message("The Fastest Cytometer is the ", FastestCytometer)
+}
+
+MySecondFunction(FastestCytometer = "Attune")
+
+Cytometers <- c("Attune", "Aurora", "FACSDiscover", "ID7000", "Xenith")
+str(Cytometers)
+
+MySecondFunction(FastestCytometer = Cytometers[1])
+
+for (Name in Cytometers){
+    MySecondFunction(FastestCytometer=Name)
+}
+
+```
+
+
+:::{.callout-tip title="Problem 2"}
+Using the initial framework for the CellConcentration function, retrieve several other keywords that are of interest, and incorporate them into the returned data.frame row. 
+:::
+
+```{r}
+library(flowWorkspace)
+library(flowGate)
+library(ggplot2)
+library(ggcyto)
+library(dplyr)
+library(purrr)
+
+# StorageLocation <- file.path("course", "09_Functions", "data") # Interactive path
+StorageLocation <- file.path("data") # Quarto Rendering path
+
+fcs_files <- list.files(StorageLocation, pattern=".fcs", full.names=TRUE)
+
+MyCytoset <- load_cytoset_from_fcs(fcs_files, transformation=FALSE, truncate_max_range=FALSE)
+MyGatingSet <- GatingSet(MyCytoset)
+
+MainDetectorsOnly <- c("V3-A", "B4-A", "R1-A")
+
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=2, widthBasis=-500)
+MyBiexTransform <- transformerList(MainDetectorsOnly, Biexponential)
+transform(MyGatingSet, MyBiexTransform)
+
+ggcyto(MyGatingSet[[1]], subset="root",
+ aes(x="V3-A", y="R1-A")) + geom_hex(bins=100)
+
+ggcyto(MyGatingSet[[1]], subset="root",
+ aes(x="V3-A", y="B4-A")) + geom_hex(bins=100)
+
+ggcyto(MyGatingSet[[1]], subset="root",
+ aes(x="R1-A", y="B4-A")) + geom_hex(bins=100)
+
+GatingTable <- tibble::tribble(
+  ~filterId,    ~dims,                          ~subset,           
+  "CD45",       list("B4-A", "SSC-A"),            "root",     
+  "CD19",       list("V3-A", "SSC-A"),            "CD45",   
+  "CD14",       list("R1-A", "SSC-A"),            "CD45", 
+  "TandNKcells",  list("V3-A", "SSC-A"),            "CD45",
+)
+
+flowGate::gs_apply_gating_strategy(MyGatingSet, gating_strategy = GatingTable)
+plot(MyGatingSet)
+
+pData(MyGatingSet)$name
+
+purrr::map(.x=MyGatingSet, .f=CellConcentration)
+
+CellConcentration <- function(x){
+    keyword(x)
+}
+
+KeywordList <- purrr::map(.x=MyGatingSet[1], .f=CellConcentration)
+head(KeywordList[[1]],10000)
+
+CellConcentration <- function(x, subset, dilutionMultiplier){
+    Date <- keyword(x)$`$DATE` # Day-Month-Year
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+    CD45 Scaling <- keyword(x)$`$P43DISPLAY`
+    CD45 Gain Setting <- keyword(x)$`$P43V`
+    CD45 Bit Depth <- keyword(x)$`$P43B`
+
+    Volume <- keyword(x)$`$VOL`
+    Volume <- as.numeric(Volume)
+
+    EventsInTheGate <- gs_pop_get_data(x, subset)
+    Cells <- nrow(EventsInTheGate)[[1]] #[[1]] since the output is in a list
+
+    Concentration <- (Cells*1000)/Volume
+    Concentration <- Concentration*dilutionMultiplier
+
+    Data <- data.frame(
+        Date=Date,
+        InstrumentSerial=InstrumentSerial,
+        Specimen=Specimen,
+        StartTime=StartTime,
+        EndTime=EndTime,
+        Volume=Volume, 
+        Cells=Cells,
+        Concentration=Concentration
+        
+        )
+
+    return(Data)
+}
+
+
+```
+
+
+:::{.callout-tip title="Problem 3"}
+For CellConcentration, we retrieved both start and end time. Look up information on `lubridate` package, convert these times to a time-style format, and from acquired volume derrive uL/min at which each .fcs file was acquired. Did this vary at all across days?
+:::
