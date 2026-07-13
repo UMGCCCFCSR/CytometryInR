@@ -373,12 +373,41 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
- <span class="menu-text">Community</span></a>
+ <span class="menu-text">Spectral Flow Cytometry</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/SDY3080/ImmPort.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Retrieving ImmPort data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/SDY3080/SetUp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cleanup Gates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/SDY3080/SignatureMatrices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Signature Matrices</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">Community</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../../course/community/AutoSpectral/index.html" class="sidebar-item-text sidebar-link">
@@ -476,7 +505,13 @@ titled "The cytoframe and cytoset classes" in the package vignette:
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: BH</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered polygon_gate</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered span_gate</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'dplyr'</code></pre>
@@ -501,73 +536,73 @@ Attaching package: 'dplyr'</code></pre>
 
     intersect, setdiff, setequal, union</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, activate the <code>Downsampling()</code> function that was created as part of <a href="../../../course/10_Downsampling/index.html">Week 10</a> of the course.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>RFolder <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"course"</span>, <span class="st">"community"</span>, <span class="st">"TRU-OLS"</span>,  <span class="st">"R"</span>) <span class="co"># For Interactive</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># RFolder &lt;- file.path("R") # For Quarto Rendering</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>MyFunctions <span class="ot">&lt;-</span> <span class="fu">list.files</span>(RFolder, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>MyFunctions, <span class="at">.f=</span>source)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>RFolder <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"course"</span>, <span class="st">"community"</span>, <span class="st">"TRU-OLS"</span>,  <span class="st">"R"</span>) <span class="co"># For Interactive</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># RFolder &lt;- file.path("R") # For Quarto Rendering</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>MyFunctions <span class="ot">&lt;-</span> <span class="fu">list.files</span>(RFolder, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>MyFunctions, <span class="at">.f=</span>source)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>With this done, specify your input file.path and output file.paths</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#StorageLocation &lt;- file.path("course", "community", "TRU-OLS", "data")</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">#OutputLocation &lt;- file.path("course", "community", "TRU-OLS", "outputs")</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>OutputLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"outputs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#StorageLocation &lt;- file.path("course", "community", "TRU-OLS", "data")</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#OutputLocation &lt;- file.path("course", "community", "TRU-OLS", "outputs")</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>OutputLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"outputs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And proceed to load in the .fcs files to a GatingSet.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".fcs"</span>,</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a> <span class="at">full.names=</span><span class="cn">TRUE</span>, <span class="at">recursive=</span><span class="cn">TRUE</span>)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files,</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a> <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".fcs"</span>,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a> <span class="at">full.names=</span><span class="cn">TRUE</span>, <span class="at">recursive=</span><span class="cn">TRUE</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a> <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>As we will be working with raw .fcs files today, we do not need to transform. If we did need to, we would use the following code (modifying the arguments to match our own instrument settings).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>SFC_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(SFC_GatingSet)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>FluorophoresOnly <span class="ot">&lt;-</span> SFC_Parameters[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(SFC_Parameters, <span class="st">"FSC|SSC|Time"</span>)]</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">2</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">750</span>)</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>SFC_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(SFC_GatingSet)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>FluorophoresOnly <span class="ot">&lt;-</span> SFC_Parameters[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(SFC_Parameters, <span class="st">"FSC|SSC|Time"</span>)]</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">2</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">750</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next, we will create gates using the <code>flowGate</code> package, as covered during <a href="../../../course/08_WaysToGate/index.html#manual---flowgate">Week 08</a>, specifically via the iteration table.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>GatingTable <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>filterId,    <span class="sc">~</span>dims,                          <span class="sc">~</span>subset,      </span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"singlets"</span>,   <span class="fu">list</span>(<span class="st">"FSC-A"</span>, <span class="st">"FSC-H"</span>),          <span class="st">"root"</span>,  </span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"nonRBCs"</span>,     <span class="fu">list</span>(<span class="st">"SSC-A"</span>, <span class="st">"SSC-B-A"</span>),    <span class="st">"singlets"</span>,</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"scatter"</span>,    <span class="fu">list</span>(<span class="st">"FSC-A"</span>, <span class="st">"SSC-A"</span>),      <span class="st">"nonRBCs"</span>,  </span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>GatingTable <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>filterId,    <span class="sc">~</span>dims,                          <span class="sc">~</span>subset,      </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"singlets"</span>,   <span class="fu">list</span>(<span class="st">"FSC-A"</span>, <span class="st">"FSC-H"</span>),          <span class="st">"root"</span>,  </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"nonRBCs"</span>,     <span class="fu">list</span>(<span class="st">"SSC-A"</span>, <span class="st">"SSC-B-A"</span>),    <span class="st">"singlets"</span>,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"scatter"</span>,    <span class="fu">list</span>(<span class="st">"FSC-A"</span>, <span class="st">"SSC-A"</span>),      <span class="st">"nonRBCs"</span>,  </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We can then run the following line of code, and proceed to sequentially draw the gates via the ShinyApp</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>flowGate<span class="sc">::</span><span class="fu">gs_apply_gating_strategy</span>(SFC_GatingSet, <span class="at">gating_strategy =</span> GatingTable)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>flowGate<span class="sc">::</span><span class="fu">gs_apply_gating_strategy</span>(SFC_GatingSet, <span class="at">gating_strategy =</span> GatingTable)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="images/00_Singlets.png" class="img-fluid"></p>
 <p><img src="images/00_NonRBCs.png" class="img-fluid"></p>
 <p><img src="images/00_Scatter.png" class="img-fluid"></p>
 <p>Once the gates are drawn, we can quickly validate that the gate placements will suffice for what we are trying to accomplish today. We can use the <code>Utility_UnityPlots()</code> from the <code>Luciernaga</code> package to compare the same gate across all specimens</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Luciernaga)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>Plot <span class="ot">&lt;-</span> <span class="fu">Utility_UnityPlot</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"FSC-H"</span>,</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a> <span class="at">GatingSet=</span>SFC_GatingSet, <span class="at">sample.name=</span><span class="st">"GUID"</span>, <span class="at">bins=</span><span class="dv">70</span>,</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="st">".fcs"</span>, <span class="at">marginsubset=</span><span class="st">"root"</span>, <span class="at">gatesubset=</span><span class="st">"singlets"</span>, <span class="at">returntype=</span><span class="st">"patchwork"</span>, <span class="at">reference=</span><span class="cn">NULL</span>, <span class="at">clearance=</span><span class="fl">0.2</span>, <span class="at">gatelines=</span><span class="cn">FALSE</span>)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>Plot2 <span class="ot">&lt;-</span> <span class="fu">Utility_UnityPlot</span>(<span class="at">x=</span><span class="st">"SSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-B-A"</span>,</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a> <span class="at">GatingSet=</span>SFC_GatingSet, <span class="at">sample.name=</span><span class="st">"GUID"</span>, <span class="at">bins=</span><span class="dv">70</span>,</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="st">".fcs"</span>, <span class="at">marginsubset=</span><span class="st">"singlets"</span>, <span class="at">gatesubset=</span><span class="st">"nonRBCs"</span>, <span class="at">returntype=</span><span class="st">"patchwork"</span>, <span class="at">reference=</span><span class="cn">NULL</span>, <span class="at">clearance=</span><span class="fl">0.2</span>, <span class="at">gatelines=</span><span class="cn">FALSE</span>)</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>Plot3 <span class="ot">&lt;-</span> <span class="fu">Utility_UnityPlot</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-A"</span>,</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a> <span class="at">GatingSet=</span>SFC_GatingSet, <span class="at">sample.name=</span><span class="st">"GUID"</span>, <span class="at">bins=</span><span class="dv">70</span>,</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="st">".fcs"</span>, <span class="at">marginsubset=</span><span class="st">"singlets"</span>, <span class="at">gatesubset=</span><span class="st">"scatter"</span>, <span class="at">returntype=</span><span class="st">"patchwork"</span>, <span class="at">reference=</span><span class="cn">NULL</span>, <span class="at">clearance=</span><span class="fl">0.2</span>, <span class="at">gatelines=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Luciernaga)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>Plot <span class="ot">&lt;-</span> <span class="fu">Utility_UnityPlot</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"FSC-H"</span>,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a> <span class="at">GatingSet=</span>SFC_GatingSet, <span class="at">sample.name=</span><span class="st">"GUID"</span>, <span class="at">bins=</span><span class="dv">70</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="st">".fcs"</span>, <span class="at">marginsubset=</span><span class="st">"root"</span>, <span class="at">gatesubset=</span><span class="st">"singlets"</span>, <span class="at">returntype=</span><span class="st">"patchwork"</span>, <span class="at">reference=</span><span class="cn">NULL</span>, <span class="at">clearance=</span><span class="fl">0.2</span>, <span class="at">gatelines=</span><span class="cn">FALSE</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>Plot2 <span class="ot">&lt;-</span> <span class="fu">Utility_UnityPlot</span>(<span class="at">x=</span><span class="st">"SSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-B-A"</span>,</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a> <span class="at">GatingSet=</span>SFC_GatingSet, <span class="at">sample.name=</span><span class="st">"GUID"</span>, <span class="at">bins=</span><span class="dv">70</span>,</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="st">".fcs"</span>, <span class="at">marginsubset=</span><span class="st">"singlets"</span>, <span class="at">gatesubset=</span><span class="st">"nonRBCs"</span>, <span class="at">returntype=</span><span class="st">"patchwork"</span>, <span class="at">reference=</span><span class="cn">NULL</span>, <span class="at">clearance=</span><span class="fl">0.2</span>, <span class="at">gatelines=</span><span class="cn">FALSE</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>Plot3 <span class="ot">&lt;-</span> <span class="fu">Utility_UnityPlot</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-A"</span>,</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a> <span class="at">GatingSet=</span>SFC_GatingSet, <span class="at">sample.name=</span><span class="st">"GUID"</span>, <span class="at">bins=</span><span class="dv">70</span>,</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="st">".fcs"</span>, <span class="at">marginsubset=</span><span class="st">"singlets"</span>, <span class="at">gatesubset=</span><span class="st">"scatter"</span>, <span class="at">returntype=</span><span class="st">"patchwork"</span>, <span class="at">reference=</span><span class="cn">NULL</span>, <span class="at">clearance=</span><span class="fl">0.2</span>, <span class="at">gatelines=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="images/Singlets1.png" class="img-fluid"></p>
 <p><img src="images/Singlets2.png" class="img-fluid"></p>
@@ -577,16 +612,16 @@ Attaching package: 'dplyr'</code></pre>
 <p><img src="images/Scatter2.png" class="img-fluid"></p>
 <p>With the gates reasonably enough placed (except for the Full-Stained 1 specimen), lets proceed and see what we have for counts.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Counts <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_count_fast</span>(SFC_GatingSet, <span class="st">"count"</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>Counts<span class="sc">$</span>Population <span class="ot">&lt;-</span> <span class="fu">basename</span>(Counts<span class="sc">$</span>Population)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>Counts <span class="sc">|&gt;</span> <span class="fu">filter</span>(Population <span class="sc">%in%</span> <span class="st">"scatter"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Counts <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_count_fast</span>(SFC_GatingSet, <span class="st">"count"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>Counts<span class="sc">$</span>Population <span class="ot">&lt;-</span> <span class="fu">basename</span>(Counts<span class="sc">$</span>Population)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>Counts <span class="sc">|&gt;</span> <span class="fu">filter</span>(Population <span class="sc">%in%</span> <span class="st">"scatter"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="images/00_Counts.png" class="img-fluid"></p>
 <p>For a raw .fcs file from a 5-laser Cytek Aurora, downsampling to 17500 cells puts us just under the 5 MB limit. Seeing as we have enough cells, lets proceed to export out the downsampled .fcs files to our output folder.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"scatter"</span>, <span class="at">.f=</span>Downsampling,</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a> <span class="at">DownsampleCount=</span><span class="dv">17500</span>, <span class="at">addon=</span><span class="st">"scatter"</span>, <span class="at">returnType=</span><span class="st">"fcs"</span>,</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a> <span class="at">StorageLocation=</span>OutputLocation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"scatter"</span>, <span class="at">.f=</span>Downsampling,</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a> <span class="at">DownsampleCount=</span><span class="dv">17500</span>, <span class="at">addon=</span><span class="st">"scatter"</span>, <span class="at">returnType=</span><span class="st">"fcs"</span>,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a> <span class="at">StorageLocation=</span>OutputLocation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="proceeding" class="level1">

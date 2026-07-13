@@ -373,13 +373,42 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
- <span class="menu-text">Community</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Spectral Flow Cytometry</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/SDY3080/ImmPort.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Retrieving ImmPort data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/SDY3080/SetUp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cleanup Gates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/SDY3080/SignatureMatrices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Signature Matrices</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Community</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../../course/community/AutoSpectral/index.html" class="sidebar-item-text sidebar-link">
@@ -615,7 +644,13 @@ titled "The cytoframe and cytoset classes" in the package vignette:
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: BH</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered polygon_gate</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered span_gate</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'dplyr'</code></pre>
@@ -640,64 +675,64 @@ Attaching package: 'dplyr'</code></pre>
 
     intersect, setdiff, setequal, union</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(JuliaCall)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(JuliaCall)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Next off, specify the storage location of the .fcs files, and also the location of the folder you want any unmixed fcs files to be saved to.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#StorageLocation &lt;- file.path("course", "community", "TRU-OLS", "data")</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co">#OutputLocation &lt;- file.path("course", "community", "TRU-OLS", "outputs")</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>OutputLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"outputs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#StorageLocation &lt;- file.path("course", "community", "TRU-OLS", "data")</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">#OutputLocation &lt;- file.path("course", "community", "TRU-OLS", "outputs")</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>OutputLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"outputs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Proceed to load the identified .fcs files into a GatingSet object</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".fcs"</span>,</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a> <span class="at">full.names=</span><span class="cn">TRUE</span>, <span class="at">recursive=</span><span class="cn">TRUE</span>)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files,</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a> <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".fcs"</span>,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a> <span class="at">full.names=</span><span class="cn">TRUE</span>, <span class="at">recursive=</span><span class="cn">TRUE</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a> <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>As we will be working with raw .fcs files for the unmxing process, <strong>we do not need to transform</strong>, as we need signatures retrieved from the underlying data to appear in their normal shapes.</p>
 <p>I recommend then using <code>subset()</code> on the GatingSet, placing the single-color and unmixing controls into their own GatingSets, and repeating the process for the full-stained samples. This ensures we only retrieve signatures from the single-color controls, and that only the full-stained samples are unmixed.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pData(SFC_GatingSet)</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>FullStain_GS <span class="ot">&lt;-</span> <span class="fu">subset</span>(SFC_GatingSet, name <span class="sc">==</span> <span class="st">"Full-Stained2_scatter.fcs"</span>)</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>Unstained_GS <span class="ot">&lt;-</span> <span class="fu">subset</span>(SFC_GatingSet, name <span class="sc">==</span> <span class="st">"Unstained (Cells)_scatter.fcs"</span>)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>UnmixingControl_GS <span class="ot">&lt;-</span> <span class="fu">subset</span>(SFC_GatingSet, name <span class="sc">!=</span> <span class="st">"Full-Stained2_scatter.fcs"</span> <span class="sc">&amp;</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>   name <span class="sc">!=</span> <span class="st">"Unstained (Cells)_scatter.fcs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pData(SFC_GatingSet)</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>FullStain_GS <span class="ot">&lt;-</span> <span class="fu">subset</span>(SFC_GatingSet, name <span class="sc">==</span> <span class="st">"Full-Stained2_scatter.fcs"</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>Unstained_GS <span class="ot">&lt;-</span> <span class="fu">subset</span>(SFC_GatingSet, name <span class="sc">==</span> <span class="st">"Unstained (Cells)_scatter.fcs"</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>UnmixingControl_GS <span class="ot">&lt;-</span> <span class="fu">subset</span>(SFC_GatingSet, name <span class="sc">!=</span> <span class="st">"Full-Stained2_scatter.fcs"</span> <span class="sc">&amp;</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>   name <span class="sc">!=</span> <span class="st">"Unstained (Cells)_scatter.fcs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="signature-matrix" class="level2">
 <h2 class="anchored" data-anchor-id="signature-matrix">Signature Matrix</h2>
 <p>To facilitate this example, we will use the <code>Luciernaga_SingleColors()</code> function from the <code>Luciernaga</code> package to retrieve the signatures from our single-color controls. For more information, please see the <a href="https://davidrach.github.io/Luciernaga/articles/Unmixing.html#luciernaga_singlecolors">vignette</a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remotes::install_github("DavidRach/Luciernaga")</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Luciernaga)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the primary detectors</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>UnmixingPanel <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Fluorophore =</span> <span class="fu">c</span>(<span class="st">"BV510-A"</span>, <span class="st">"BV605-A"</span>, <span class="st">"Spark Blue 550-A"</span>, <span class="st">"7-AAD-A"</span>, <span class="st">"Alexa Fluor 700-A"</span>),</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Detector =</span> <span class="fu">c</span>(<span class="st">"V7-A"</span>, <span class="st">"V10-A"</span>, <span class="st">"B3-A"</span>, <span class="st">"YG4-A"</span>, <span class="st">"R4-A"</span>))</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Define what brightness percentiles to include</span></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>ThePanelCuts <span class="ot">&lt;-</span> UnmixingPanel <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>Detector) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">From=</span><span class="fl">0.8</span>) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">To=</span><span class="dv">1</span>)</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the signatures </span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>SCs <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>UnmixingControl_GS, <span class="at">.f=</span>Luciernaga_SingleColors, <span class="at">sample.name=</span><span class="st">"TUBENAME"</span>,</span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="fu">c</span>(<span class="st">".fcs"</span>, <span class="st">"PD_AD_"</span>), <span class="at">subset=</span><span class="st">"root"</span>, <span class="at">PanelCuts=</span>ThePanelCuts, <span class="at">stats=</span><span class="st">"median"</span>, <span class="at">Verbose=</span><span class="cn">FALSE</span>, </span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a> <span class="at">SignatureView=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">bind_rows</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remotes::install_github("DavidRach/Luciernaga")</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Luciernaga)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the primary detectors</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>UnmixingPanel <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Fluorophore =</span> <span class="fu">c</span>(<span class="st">"BV510-A"</span>, <span class="st">"BV605-A"</span>, <span class="st">"Spark Blue 550-A"</span>, <span class="st">"7-AAD-A"</span>, <span class="st">"Alexa Fluor 700-A"</span>),</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Detector =</span> <span class="fu">c</span>(<span class="st">"V7-A"</span>, <span class="st">"V10-A"</span>, <span class="st">"B3-A"</span>, <span class="st">"YG4-A"</span>, <span class="st">"R4-A"</span>))</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Define what brightness percentiles to include</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>ThePanelCuts <span class="ot">&lt;-</span> UnmixingPanel <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>Detector) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">From=</span><span class="fl">0.8</span>) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">To=</span><span class="dv">1</span>)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the signatures </span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>SCs <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>UnmixingControl_GS, <span class="at">.f=</span>Luciernaga_SingleColors, <span class="at">sample.name=</span><span class="st">"TUBENAME"</span>,</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="fu">c</span>(<span class="st">".fcs"</span>, <span class="st">"PD_AD_"</span>), <span class="at">subset=</span><span class="st">"root"</span>, <span class="at">PanelCuts=</span>ThePanelCuts, <span class="at">stats=</span><span class="st">"median"</span>, <span class="at">Verbose=</span><span class="cn">FALSE</span>, </span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a> <span class="at">SignatureView=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">bind_rows</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>SCs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>SCs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Fluorophore    Ligand     UV1-A     UV2-A    UV3-A    UV4-A     UV5-A
 1  Spark Blue 550       CD3 104.74154 188.68995 420.2939 594.9452  864.0328
@@ -763,11 +798,11 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 <p>Let’s also visualize the signatures against the reference signatures for the respective fluorophores to ensure that the retrieved signatures are appropiate.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>UnmixingControl_GS, <span class="at">.f=</span>Luciernaga_SingleColors, <span class="at">sample.name=</span><span class="st">"TUBENAME"</span>,</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="fu">c</span>(<span class="st">".fcs"</span>, <span class="st">"PD_AD_"</span>), <span class="at">subset=</span><span class="st">"root"</span>, <span class="at">PanelCuts=</span>ThePanelCuts, <span class="at">stats=</span><span class="st">"median"</span>, <span class="at">Verbose=</span><span class="cn">FALSE</span>, <span class="at">SignatureView=</span><span class="cn">TRUE</span>, <span class="at">returntype=</span><span class="st">"plots"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>UnmixingControl_GS, <span class="at">.f=</span>Luciernaga_SingleColors, <span class="at">sample.name=</span><span class="st">"TUBENAME"</span>,</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="fu">c</span>(<span class="st">".fcs"</span>, <span class="st">"PD_AD_"</span>), <span class="at">subset=</span><span class="st">"root"</span>, <span class="at">PanelCuts=</span>ThePanelCuts, <span class="at">stats=</span><span class="st">"median"</span>, <span class="at">Verbose=</span><span class="cn">FALSE</span>, <span class="at">SignatureView=</span><span class="cn">TRUE</span>, <span class="at">returntype=</span><span class="st">"plots"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>plots</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>plots</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -829,10 +864,10 @@ Attaching package: 'dplyr'</code></pre>
 <h2 class="anchored" data-anchor-id="ols-unmixing-via-luciernaga">OLS-Unmixing via Luciernaga</h2>
 <p>Since we may be interested in comparing how TRU-OLS unmixing differs compared to regular OLS unmixing (and since we have already generated the needed inputs), lets proceed to unmix via <code>Luciernaga</code> and generate an .fcs file to our designated outputs folder for later.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>TheSampleName <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"TUBENAME"</span>)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>UnmixSuccess <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>FullStain_GS, <span class="at">.f=</span>Luciernaga_Unmix,</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a> <span class="at">controlData=</span>SCs, <span class="at">sample.name=</span>TheSampleName, <span class="at">addon=</span><span class="st">"_Luciernaga_Unmixed"</span>, <span class="at">subset=</span><span class="st">"root"</span>, <span class="at">removestrings=</span><span class="st">"fcs"</span>, <span class="at">outpath=</span>OutputLocation, <span class="at">PanelPath=</span>UnmixingPanel, <span class="at">Verbose=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>TheSampleName <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"TUBENAME"</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>UnmixSuccess <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>FullStain_GS, <span class="at">.f=</span>Luciernaga_Unmix,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a> <span class="at">controlData=</span>SCs, <span class="at">sample.name=</span>TheSampleName, <span class="at">addon=</span><span class="st">"_Luciernaga_Unmixed"</span>, <span class="at">subset=</span><span class="st">"root"</span>, <span class="at">removestrings=</span><span class="st">"fcs"</span>, <span class="at">outpath=</span>OutputLocation, <span class="at">PanelPath=</span>UnmixingPanel, <span class="at">Verbose=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>After removestrings, name is Full-Stained2</code></pre>
 </div>
@@ -848,146 +883,146 @@ Attaching package: 'dplyr'</code></pre>
 <p>After attempting (and failing) to pass from an R code chunk to a Julia code chunk, I found the implementable approach was to write the data.frames to .csv files, and then via <code>JuliaCall</code> package run Julia commands within the R function to carry out the above README suggested steps, and save the output as a .csv file that could be read back into R.</p>
 <p>The main thing needed was to provide the correct file path to the TRU-OLS.jl file with the corresponding Julia code.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Implements TRU-OLS unmixing in Julia, via the JuliaCall R package. </span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param mixmat The signature matrix</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param unstained The cleaned up exprs of the unstained</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param fullstained The cleaned up exprs of the full-stained</span></span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param TRUOLSPATH File.path to the TRU-OLS.jl file</span></span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co">#' @importFrom JuliaCall julia_setup julia_command </span></span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co">#' @importFrom utils read.csv write.csv</span></span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>TRU_OLS_Julia <span class="ot">&lt;-</span> <span class="cf">function</span>(mixmat, unstained, fullstained,</span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a> <span class="at">TRUOLSPath=</span><span class="st">"/home/david/Documents/TRU-OLS/TRU-OLS.jl"</span>) {</span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(JuliaCall)</span>
-<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.csv</span>(mixmat,      <span class="st">"mixmat.csv"</span>,      <span class="at">row.names=</span><span class="cn">FALSE</span>)</span>
-<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.csv</span>(unstained,   <span class="st">"Unstained.csv"</span>,   <span class="at">row.names=</span><span class="cn">FALSE</span>)</span>
-<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.csv</span>(fullstained, <span class="st">"FullStained.csv"</span>, <span class="at">row.names=</span><span class="cn">FALSE</span>)</span>
-<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_setup</span>()</span>
-<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'import Pkg; Pkg.add(["CSV", "DataFrames", "LinearAlgebra", "StatsBase", "FileIO", "FCSFiles"])'</span>)</span>
-<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'using CSV, DataFrames'</span>)</span>
-<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'mm = CSV.read("mixmat.csv", DataFrame)'</span>)</span>
-<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'us = CSV.read("Unstained.csv", DataFrame)'</span>)</span>
-<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'ms = CSV.read("FullStained.csv", DataFrame)'</span>)</span>
-<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'namel = names(mm)'</span>)</span>
-<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'mm = Matrix{Float64}(mm)'</span>)</span>
-<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'us = Matrix{Float64}(us)'</span>)</span>
-<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'ms = Matrix{Float64}(ms)'</span>)</span>
-<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="fu">sprintf</span>(<span class="st">'include("%s")'</span>, TRUOLSPath))</span>
-<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'result = create_complete_dataframe(mm, namel, ms, us, true)'</span>)</span>
-<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'CSV.write("result.csv", result)'</span>)</span>
-<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a>  result_r <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"result.csv"</span>, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
-<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result_r)</span>
-<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Implements TRU-OLS unmixing in Julia, via the JuliaCall R package. </span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param mixmat The signature matrix</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param unstained The cleaned up exprs of the unstained</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param fullstained The cleaned up exprs of the full-stained</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param TRUOLSPATH File.path to the TRU-OLS.jl file</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="co">#' @importFrom JuliaCall julia_setup julia_command </span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="co">#' @importFrom utils read.csv write.csv</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>TRU_OLS_Julia <span class="ot">&lt;-</span> <span class="cf">function</span>(mixmat, unstained, fullstained,</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a> <span class="at">TRUOLSPath=</span><span class="st">"/home/david/Documents/TRU-OLS/TRU-OLS.jl"</span>) {</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(JuliaCall)</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.csv</span>(mixmat,      <span class="st">"mixmat.csv"</span>,      <span class="at">row.names=</span><span class="cn">FALSE</span>)</span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.csv</span>(unstained,   <span class="st">"Unstained.csv"</span>,   <span class="at">row.names=</span><span class="cn">FALSE</span>)</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.csv</span>(fullstained, <span class="st">"FullStained.csv"</span>, <span class="at">row.names=</span><span class="cn">FALSE</span>)</span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_setup</span>()</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'import Pkg; Pkg.add(["CSV", "DataFrames", "LinearAlgebra", "StatsBase", "FileIO", "FCSFiles"])'</span>)</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'using CSV, DataFrames'</span>)</span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'mm = CSV.read("mixmat.csv", DataFrame)'</span>)</span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'us = CSV.read("Unstained.csv", DataFrame)'</span>)</span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'ms = CSV.read("FullStained.csv", DataFrame)'</span>)</span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'namel = names(mm)'</span>)</span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'mm = Matrix{Float64}(mm)'</span>)</span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'us = Matrix{Float64}(us)'</span>)</span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'ms = Matrix{Float64}(ms)'</span>)</span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="fu">sprintf</span>(<span class="st">'include("%s")'</span>, TRUOLSPath))</span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'result = create_complete_dataframe(mm, namel, ms, us, true)'</span>)</span>
+<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'CSV.write("result.csv", result)'</span>)</span>
+<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a>  result_r <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"result.csv"</span>, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
+<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result_r)</span>
+<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>With the “R to Julia and back to R” hand-off operational, the main thing left is to provide the function infrastructure in R needed to gather the required inputs, and then once the outputs are received, correctly package them back into a new .fcs file. I modified the <a href="https://github.com/DavidRach/Luciernaga/blob/main/R/Luciernaga_Unmix.R">existing function</a> infrastructure for <code>Luciernaga_Unmix()</code> used for the OLS unmixing example above, but switching out the OLS unmixing with the <code>TRU_OLS_Julia()</code> function we just wrote.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param x An interated-in full-stained raw .fcs file needing to be unmixed</span></span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param SCs The fluorophore signature matrix generated via Luciernaga_SingleColors</span></span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param Unstained_GS The GatingSet containing the raw unstained fcs file</span></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param sample.name The keyword containing the fcs file name</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param removestrings A list of values to remove from name</span></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param Verbose For troubleshooting name after removestrings</span></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param addon Additional addon to append to the new .fcs file name</span></span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param subset A gating hierarchy level to sort cells at, expression values retrieved</span></span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a><span class="co">#' from these</span></span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param outpath The return folder for the .fcs files</span></span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param PanelPath Location to a panel.csv containing correct order of fluorophores</span></span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param returnType Whether to return "fcs" or "flowframe"</span></span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param TRUOLSPATH File.path to the TRU-OLS.jl file</span></span>
-<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
-<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a><span class="co">#' @importFrom JuliaCall julia_setup julia_command </span></span>
-<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
-<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>TRUOLS_Unmix <span class="ot">&lt;-</span> <span class="cf">function</span>(x, SCs, Unstained_GS, sample.name, removestrings,</span>
-<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>   Verbose, addon, <span class="at">subset=</span><span class="st">"root"</span>, outpath, PanelPath, <span class="at">returnType=</span><span class="st">"fcs"</span>,</span>
-<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>   <span class="at">TRUOLSPath =</span> <span class="st">"/home/david/Documents/TRU-OLS/TRU-OLS.jl"</span>){</span>
-<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># File Name Clean Up</span></span>
-<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(sample.name) <span class="sc">==</span> <span class="dv">2</span>){</span>
-<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>      first <span class="ot">&lt;-</span> sample.name[[<span class="dv">1</span>]]</span>
-<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>      second <span class="ot">&lt;-</span> sample.name[[<span class="dv">2</span>]]</span>
-<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>      first <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x, first)</span>
-<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>      second <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x, second)</span>
-<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>      name <span class="ot">&lt;-</span> <span class="fu">paste</span>(first, second, <span class="at">sep=</span><span class="st">"_"</span>)</span>
-<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {name <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x, sample.name)}</span>
-<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>    name <span class="ot">&lt;-</span> <span class="fu">NameCleanUp</span>(name, <span class="at">removestrings=</span>removestrings)</span>
-<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (Verbose <span class="sc">==</span> <span class="cn">TRUE</span>){<span class="fu">message</span>(<span class="st">"After removestrings, name is "</span>, name)}</span>
-<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Normalize the Single Color Signature Matrix (important for final scaling)</span></span>
-<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">any</span>(SCs <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">&gt;</span> <span class="dv">1</span>)){</span>
-<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a>    Metadata <span class="ot">&lt;-</span> SCs <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">!</span><span class="fu">where</span>(is.numeric))</span>
-<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a>    Numerics <span class="ot">&lt;-</span> SCs <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))</span>
-<span id="cb37-39"><a href="#cb37-39" aria-hidden="true" tabindex="-1"></a>    n <span class="ot">&lt;-</span> Numerics</span>
-<span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a>    n[n <span class="sc">&lt;</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a>    A <span class="ot">&lt;-</span> <span class="fu">do.call</span>(pmax, n)</span>
-<span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a>    Normalized <span class="ot">&lt;-</span> n<span class="sc">/</span>A</span>
-<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a>    SCs <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(Metadata, Normalized)</span>
-<span id="cb37-44"><a href="#cb37-44" aria-hidden="true" tabindex="-1"></a> }</span>
-<span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-46"><a href="#cb37-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Formating SingleColors to required mixmat format</span></span>
-<span id="cb37-47"><a href="#cb37-47" aria-hidden="true" tabindex="-1"></a>    SCsM <span class="ot">&lt;-</span> <span class="fu">t</span>(SCs)</span>
-<span id="cb37-48"><a href="#cb37-48" aria-hidden="true" tabindex="-1"></a>    mixmatDF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(SCsM)</span>
-<span id="cb37-49"><a href="#cb37-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colnames</span>(mixmatDF) <span class="ot">&lt;-</span> mixmatDF[<span class="dv">1</span>,]</span>
-<span id="cb37-50"><a href="#cb37-50" aria-hidden="true" tabindex="-1"></a>    Ligands <span class="ot">&lt;-</span> mixmatDF[<span class="dv">2</span>,] <span class="sc">|&gt;</span> <span class="fu">unlist</span>() <span class="sc">|&gt;</span> <span class="fu">unname</span>()</span>
-<span id="cb37-51"><a href="#cb37-51" aria-hidden="true" tabindex="-1"></a>    mixmatDF <span class="ot">&lt;-</span> mixmatDF[<span class="dv">3</span><span class="sc">:</span><span class="fu">nrow</span>(mixmatDF),]</span>
-<span id="cb37-52"><a href="#cb37-52" aria-hidden="true" tabindex="-1"></a>    mixmat_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(mixmatDF)</span>
-<span id="cb37-53"><a href="#cb37-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-54"><a href="#cb37-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extracting the Unstained Detectors exprs values</span></span>
-<span id="cb37-55"><a href="#cb37-55" aria-hidden="true" tabindex="-1"></a>    Unstained <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(Unstained_GS, <span class="st">"root"</span>)</span>
-<span id="cb37-56"><a href="#cb37-56" aria-hidden="true" tabindex="-1"></a>    Unstained <span class="ot">&lt;-</span> flowCore<span class="sc">::</span><span class="fu">exprs</span>(Unstained[[<span class="dv">1</span>]])</span>
-<span id="cb37-57"><a href="#cb37-57" aria-hidden="true" tabindex="-1"></a>    UnstainedDF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(Unstained, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
-<span id="cb37-58"><a href="#cb37-58" aria-hidden="true" tabindex="-1"></a>    UnstainedDF <span class="ot">&lt;-</span> UnstainedDF[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(UnstainedDF), <span class="st">"FSC|SSC|Time"</span>)]</span>
-<span id="cb37-59"><a href="#cb37-59" aria-hidden="true" tabindex="-1"></a>    Unstained_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(UnstainedDF)</span>
-<span id="cb37-60"><a href="#cb37-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-61"><a href="#cb37-61" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extracting the Full-Stained Detectors exprs values</span></span>
-<span id="cb37-62"><a href="#cb37-62" aria-hidden="true" tabindex="-1"></a>    FullStainedCS <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(x, <span class="st">"root"</span>)</span>
-<span id="cb37-63"><a href="#cb37-63" aria-hidden="true" tabindex="-1"></a>    FullStained <span class="ot">&lt;-</span> flowCore<span class="sc">::</span><span class="fu">exprs</span>(FullStainedCS[[<span class="dv">1</span>]])</span>
-<span id="cb37-64"><a href="#cb37-64" aria-hidden="true" tabindex="-1"></a>    FullStainedDF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(FullStained, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
-<span id="cb37-65"><a href="#cb37-65" aria-hidden="true" tabindex="-1"></a>    StashedDF <span class="ot">&lt;-</span> FullStainedDF[stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(FullStainedDF), <span class="st">"FSC|SSC|Time"</span>)]</span>
-<span id="cb37-66"><a href="#cb37-66" aria-hidden="true" tabindex="-1"></a>    FullStainedDF <span class="ot">&lt;-</span> FullStainedDF[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(FullStainedDF), <span class="st">"FSC|SSC|Time"</span>)]</span>
-<span id="cb37-67"><a href="#cb37-67" aria-hidden="true" tabindex="-1"></a>    FullStained_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(FullStainedDF)</span>
-<span id="cb37-68"><a href="#cb37-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-69"><a href="#cb37-69" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Unmixing via the R-Julia wrapper function</span></span>
-<span id="cb37-70"><a href="#cb37-70" aria-hidden="true" tabindex="-1"></a>    TheUnmixed <span class="ot">&lt;-</span> <span class="fu">TRU_OLS_Julia</span>(<span class="at">mixmat=</span>mixmat_mat, <span class="at">unstained=</span>Unstained_mat,</span>
-<span id="cb37-71"><a href="#cb37-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">fullstained=</span>FullStained_mat, <span class="at">TRUOLSPath =</span> TRUOLSPath)</span>
-<span id="cb37-72"><a href="#cb37-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-73"><a href="#cb37-73" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Returning Time, FSC, SSC columns back in to the unmixed file</span></span>
-<span id="cb37-74"><a href="#cb37-74" aria-hidden="true" tabindex="-1"></a>    TheOrder <span class="ot">&lt;-</span> SCs <span class="sc">|&gt;</span> <span class="fu">pull</span>(Fluorophore)</span>
-<span id="cb37-75"><a href="#cb37-75" aria-hidden="true" tabindex="-1"></a>    TheLigands <span class="ot">&lt;-</span> SCs <span class="sc">|&gt;</span> <span class="fu">pull</span>(Ligand)</span>
-<span id="cb37-76"><a href="#cb37-76" aria-hidden="true" tabindex="-1"></a>    TheUnmixed <span class="ot">&lt;-</span> TheUnmixed[, TheOrder]</span>
-<span id="cb37-77"><a href="#cb37-77" aria-hidden="true" tabindex="-1"></a>    TheData <span class="ot">&lt;-</span> <span class="fu">cbind</span>(StashedDF, TheUnmixed)</span>
-<span id="cb37-78"><a href="#cb37-78" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames</span>(TheData) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb37-79"><a href="#cb37-79" aria-hidden="true" tabindex="-1"></a>    StandInStashed <span class="ot">&lt;-</span> StashedDF <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Backups=</span><span class="fu">row_number</span>()) <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Backups, <span class="at">.before=</span><span class="dv">1</span>)</span>
-<span id="cb37-80"><a href="#cb37-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-81"><a href="#cb37-81" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Handoff to Luciernaga Internal Unmix for the .fcs formatting</span></span>
-<span id="cb37-82"><a href="#cb37-82" aria-hidden="true" tabindex="-1"></a>    new_fcs <span class="ot">&lt;-</span> Luciernaga<span class="sc">:::</span><span class="fu">InternalUnmix</span>(<span class="at">cs=</span>FullStainedCS,</span>
-<span id="cb37-83"><a href="#cb37-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">StashedDF=</span>StandInStashed, <span class="at">TheData=</span>TheData, <span class="at">Ligands=</span>TheLigands)</span>
-<span id="cb37-84"><a href="#cb37-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-85"><a href="#cb37-85" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modifying the filename</span></span>
-<span id="cb37-86"><a href="#cb37-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(addon)){name <span class="ot">&lt;-</span> <span class="fu">paste0</span>(name, addon)}</span>
-<span id="cb37-87"><a href="#cb37-87" aria-hidden="true" tabindex="-1"></a>    AssembledName <span class="ot">&lt;-</span> <span class="fu">paste0</span>(name, <span class="st">".fcs"</span>)</span>
-<span id="cb37-88"><a href="#cb37-88" aria-hidden="true" tabindex="-1"></a>    new_fcs<span class="sc">@</span>description<span class="sc">$</span>GUID <span class="ot">&lt;-</span> AssembledName</span>
-<span id="cb37-89"><a href="#cb37-89" aria-hidden="true" tabindex="-1"></a>    new_fcs<span class="sc">@</span>description<span class="sc">$</span><span class="st">`</span><span class="at">$FIL</span><span class="st">`</span> <span class="ot">&lt;-</span> AssembledName</span>
-<span id="cb37-90"><a href="#cb37-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-91"><a href="#cb37-91" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sending the file out as an .fcs file</span></span>
-<span id="cb37-92"><a href="#cb37-92" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.null</span>(outpath)) {outpath <span class="ot">&lt;-</span> <span class="fu">getwd</span>()}</span>
-<span id="cb37-93"><a href="#cb37-93" aria-hidden="true" tabindex="-1"></a>    fileSpot <span class="ot">&lt;-</span> <span class="fu">file.path</span>(outpath, AssembledName)</span>
-<span id="cb37-94"><a href="#cb37-94" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (returnType <span class="sc">==</span> <span class="st">"fcs"</span>) {<span class="fu">write.FCS</span>(new_fcs, <span class="at">filename =</span> fileSpot, <span class="at">delimiter=</span><span class="st">"#"</span>)</span>
-<span id="cb37-95"><a href="#cb37-95" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {<span class="fu">return</span>(new_fcs)}</span>
-<span id="cb37-96"><a href="#cb37-96" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param x An interated-in full-stained raw .fcs file needing to be unmixed</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param SCs The fluorophore signature matrix generated via Luciernaga_SingleColors</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param Unstained_GS The GatingSet containing the raw unstained fcs file</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param sample.name The keyword containing the fcs file name</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param removestrings A list of values to remove from name</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param Verbose For troubleshooting name after removestrings</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param addon Additional addon to append to the new .fcs file name</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param subset A gating hierarchy level to sort cells at, expression values retrieved</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="co">#' from these</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param outpath The return folder for the .fcs files</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param PanelPath Location to a panel.csv containing correct order of fluorophores</span></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param returnType Whether to return "fcs" or "flowframe"</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param TRUOLSPATH File.path to the TRU-OLS.jl file</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a><span class="co">#' @importFrom JuliaCall julia_setup julia_command </span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>TRUOLS_Unmix <span class="ot">&lt;-</span> <span class="cf">function</span>(x, SCs, Unstained_GS, sample.name, removestrings,</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>   Verbose, addon, <span class="at">subset=</span><span class="st">"root"</span>, outpath, PanelPath, <span class="at">returnType=</span><span class="st">"fcs"</span>,</span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>   <span class="at">TRUOLSPath =</span> <span class="st">"/home/david/Documents/TRU-OLS/TRU-OLS.jl"</span>){</span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># File Name Clean Up</span></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(sample.name) <span class="sc">==</span> <span class="dv">2</span>){</span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>      first <span class="ot">&lt;-</span> sample.name[[<span class="dv">1</span>]]</span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>      second <span class="ot">&lt;-</span> sample.name[[<span class="dv">2</span>]]</span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>      first <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x, first)</span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>      second <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x, second)</span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>      name <span class="ot">&lt;-</span> <span class="fu">paste</span>(first, second, <span class="at">sep=</span><span class="st">"_"</span>)</span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {name <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x, sample.name)}</span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a>    name <span class="ot">&lt;-</span> <span class="fu">NameCleanUp</span>(name, <span class="at">removestrings=</span>removestrings)</span>
+<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (Verbose <span class="sc">==</span> <span class="cn">TRUE</span>){<span class="fu">message</span>(<span class="st">"After removestrings, name is "</span>, name)}</span>
+<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Normalize the Single Color Signature Matrix (important for final scaling)</span></span>
+<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">any</span>(SCs <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">&gt;</span> <span class="dv">1</span>)){</span>
+<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a>    Metadata <span class="ot">&lt;-</span> SCs <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">!</span><span class="fu">where</span>(is.numeric))</span>
+<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a>    Numerics <span class="ot">&lt;-</span> SCs <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))</span>
+<span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a>    n <span class="ot">&lt;-</span> Numerics</span>
+<span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a>    n[n <span class="sc">&lt;</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a>    A <span class="ot">&lt;-</span> <span class="fu">do.call</span>(pmax, n)</span>
+<span id="cb39-42"><a href="#cb39-42" aria-hidden="true" tabindex="-1"></a>    Normalized <span class="ot">&lt;-</span> n<span class="sc">/</span>A</span>
+<span id="cb39-43"><a href="#cb39-43" aria-hidden="true" tabindex="-1"></a>    SCs <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(Metadata, Normalized)</span>
+<span id="cb39-44"><a href="#cb39-44" aria-hidden="true" tabindex="-1"></a> }</span>
+<span id="cb39-45"><a href="#cb39-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-46"><a href="#cb39-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Formating SingleColors to required mixmat format</span></span>
+<span id="cb39-47"><a href="#cb39-47" aria-hidden="true" tabindex="-1"></a>    SCsM <span class="ot">&lt;-</span> <span class="fu">t</span>(SCs)</span>
+<span id="cb39-48"><a href="#cb39-48" aria-hidden="true" tabindex="-1"></a>    mixmatDF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(SCsM)</span>
+<span id="cb39-49"><a href="#cb39-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colnames</span>(mixmatDF) <span class="ot">&lt;-</span> mixmatDF[<span class="dv">1</span>,]</span>
+<span id="cb39-50"><a href="#cb39-50" aria-hidden="true" tabindex="-1"></a>    Ligands <span class="ot">&lt;-</span> mixmatDF[<span class="dv">2</span>,] <span class="sc">|&gt;</span> <span class="fu">unlist</span>() <span class="sc">|&gt;</span> <span class="fu">unname</span>()</span>
+<span id="cb39-51"><a href="#cb39-51" aria-hidden="true" tabindex="-1"></a>    mixmatDF <span class="ot">&lt;-</span> mixmatDF[<span class="dv">3</span><span class="sc">:</span><span class="fu">nrow</span>(mixmatDF),]</span>
+<span id="cb39-52"><a href="#cb39-52" aria-hidden="true" tabindex="-1"></a>    mixmat_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(mixmatDF)</span>
+<span id="cb39-53"><a href="#cb39-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-54"><a href="#cb39-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extracting the Unstained Detectors exprs values</span></span>
+<span id="cb39-55"><a href="#cb39-55" aria-hidden="true" tabindex="-1"></a>    Unstained <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(Unstained_GS, <span class="st">"root"</span>)</span>
+<span id="cb39-56"><a href="#cb39-56" aria-hidden="true" tabindex="-1"></a>    Unstained <span class="ot">&lt;-</span> flowCore<span class="sc">::</span><span class="fu">exprs</span>(Unstained[[<span class="dv">1</span>]])</span>
+<span id="cb39-57"><a href="#cb39-57" aria-hidden="true" tabindex="-1"></a>    UnstainedDF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(Unstained, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
+<span id="cb39-58"><a href="#cb39-58" aria-hidden="true" tabindex="-1"></a>    UnstainedDF <span class="ot">&lt;-</span> UnstainedDF[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(UnstainedDF), <span class="st">"FSC|SSC|Time"</span>)]</span>
+<span id="cb39-59"><a href="#cb39-59" aria-hidden="true" tabindex="-1"></a>    Unstained_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(UnstainedDF)</span>
+<span id="cb39-60"><a href="#cb39-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-61"><a href="#cb39-61" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extracting the Full-Stained Detectors exprs values</span></span>
+<span id="cb39-62"><a href="#cb39-62" aria-hidden="true" tabindex="-1"></a>    FullStainedCS <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(x, <span class="st">"root"</span>)</span>
+<span id="cb39-63"><a href="#cb39-63" aria-hidden="true" tabindex="-1"></a>    FullStained <span class="ot">&lt;-</span> flowCore<span class="sc">::</span><span class="fu">exprs</span>(FullStainedCS[[<span class="dv">1</span>]])</span>
+<span id="cb39-64"><a href="#cb39-64" aria-hidden="true" tabindex="-1"></a>    FullStainedDF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(FullStained, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
+<span id="cb39-65"><a href="#cb39-65" aria-hidden="true" tabindex="-1"></a>    StashedDF <span class="ot">&lt;-</span> FullStainedDF[stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(FullStainedDF), <span class="st">"FSC|SSC|Time"</span>)]</span>
+<span id="cb39-66"><a href="#cb39-66" aria-hidden="true" tabindex="-1"></a>    FullStainedDF <span class="ot">&lt;-</span> FullStainedDF[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(FullStainedDF), <span class="st">"FSC|SSC|Time"</span>)]</span>
+<span id="cb39-67"><a href="#cb39-67" aria-hidden="true" tabindex="-1"></a>    FullStained_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(FullStainedDF)</span>
+<span id="cb39-68"><a href="#cb39-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-69"><a href="#cb39-69" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Unmixing via the R-Julia wrapper function</span></span>
+<span id="cb39-70"><a href="#cb39-70" aria-hidden="true" tabindex="-1"></a>    TheUnmixed <span class="ot">&lt;-</span> <span class="fu">TRU_OLS_Julia</span>(<span class="at">mixmat=</span>mixmat_mat, <span class="at">unstained=</span>Unstained_mat,</span>
+<span id="cb39-71"><a href="#cb39-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">fullstained=</span>FullStained_mat, <span class="at">TRUOLSPath =</span> TRUOLSPath)</span>
+<span id="cb39-72"><a href="#cb39-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-73"><a href="#cb39-73" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Returning Time, FSC, SSC columns back in to the unmixed file</span></span>
+<span id="cb39-74"><a href="#cb39-74" aria-hidden="true" tabindex="-1"></a>    TheOrder <span class="ot">&lt;-</span> SCs <span class="sc">|&gt;</span> <span class="fu">pull</span>(Fluorophore)</span>
+<span id="cb39-75"><a href="#cb39-75" aria-hidden="true" tabindex="-1"></a>    TheLigands <span class="ot">&lt;-</span> SCs <span class="sc">|&gt;</span> <span class="fu">pull</span>(Ligand)</span>
+<span id="cb39-76"><a href="#cb39-76" aria-hidden="true" tabindex="-1"></a>    TheUnmixed <span class="ot">&lt;-</span> TheUnmixed[, TheOrder]</span>
+<span id="cb39-77"><a href="#cb39-77" aria-hidden="true" tabindex="-1"></a>    TheData <span class="ot">&lt;-</span> <span class="fu">cbind</span>(StashedDF, TheUnmixed)</span>
+<span id="cb39-78"><a href="#cb39-78" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames</span>(TheData) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb39-79"><a href="#cb39-79" aria-hidden="true" tabindex="-1"></a>    StandInStashed <span class="ot">&lt;-</span> StashedDF <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Backups=</span><span class="fu">row_number</span>()) <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Backups, <span class="at">.before=</span><span class="dv">1</span>)</span>
+<span id="cb39-80"><a href="#cb39-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-81"><a href="#cb39-81" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Handoff to Luciernaga Internal Unmix for the .fcs formatting</span></span>
+<span id="cb39-82"><a href="#cb39-82" aria-hidden="true" tabindex="-1"></a>    new_fcs <span class="ot">&lt;-</span> Luciernaga<span class="sc">:::</span><span class="fu">InternalUnmix</span>(<span class="at">cs=</span>FullStainedCS,</span>
+<span id="cb39-83"><a href="#cb39-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">StashedDF=</span>StandInStashed, <span class="at">TheData=</span>TheData, <span class="at">Ligands=</span>TheLigands)</span>
+<span id="cb39-84"><a href="#cb39-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-85"><a href="#cb39-85" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modifying the filename</span></span>
+<span id="cb39-86"><a href="#cb39-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(addon)){name <span class="ot">&lt;-</span> <span class="fu">paste0</span>(name, addon)}</span>
+<span id="cb39-87"><a href="#cb39-87" aria-hidden="true" tabindex="-1"></a>    AssembledName <span class="ot">&lt;-</span> <span class="fu">paste0</span>(name, <span class="st">".fcs"</span>)</span>
+<span id="cb39-88"><a href="#cb39-88" aria-hidden="true" tabindex="-1"></a>    new_fcs<span class="sc">@</span>description<span class="sc">$</span>GUID <span class="ot">&lt;-</span> AssembledName</span>
+<span id="cb39-89"><a href="#cb39-89" aria-hidden="true" tabindex="-1"></a>    new_fcs<span class="sc">@</span>description<span class="sc">$</span><span class="st">`</span><span class="at">$FIL</span><span class="st">`</span> <span class="ot">&lt;-</span> AssembledName</span>
+<span id="cb39-90"><a href="#cb39-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-91"><a href="#cb39-91" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sending the file out as an .fcs file</span></span>
+<span id="cb39-92"><a href="#cb39-92" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.null</span>(outpath)) {outpath <span class="ot">&lt;-</span> <span class="fu">getwd</span>()}</span>
+<span id="cb39-93"><a href="#cb39-93" aria-hidden="true" tabindex="-1"></a>    fileSpot <span class="ot">&lt;-</span> <span class="fu">file.path</span>(outpath, AssembledName)</span>
+<span id="cb39-94"><a href="#cb39-94" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (returnType <span class="sc">==</span> <span class="st">"fcs"</span>) {<span class="fu">write.FCS</span>(new_fcs, <span class="at">filename =</span> fileSpot, <span class="at">delimiter=</span><span class="st">"#"</span>)</span>
+<span id="cb39-95"><a href="#cb39-95" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {<span class="fu">return</span>(new_fcs)}</span>
+<span id="cb39-96"><a href="#cb39-96" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>With both the main function (and the internal R-Julia handoff function) written and active in our environment, we can now proceed to unmixing.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>UnmixSuccess <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>FullStain_GS, <span class="at">.f=</span>TRUOLS_Unmix, <span class="at">SCs=</span>SCs, <span class="at">Unstained_GS=</span>Unstained_GS, </span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a> <span class="at">sample.name=</span>TheSampleName, <span class="at">addon=</span><span class="st">"_TRUOLS_Unmixed"</span>, <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="st">"fcs"</span>, <span class="at">outpath=</span>OutputLocation, <span class="at">PanelPath=</span>UnmixingPanel, <span class="at">Verbose=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>UnmixSuccess <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>FullStain_GS, <span class="at">.f=</span>TRUOLS_Unmix, <span class="at">SCs=</span>SCs, <span class="at">Unstained_GS=</span>Unstained_GS, </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a> <span class="at">sample.name=</span>TheSampleName, <span class="at">addon=</span><span class="st">"_TRUOLS_Unmixed"</span>, <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="st">"fcs"</span>, <span class="at">outpath=</span>OutputLocation, <span class="at">PanelPath=</span>UnmixingPanel, <span class="at">Verbose=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><img src="images/JuliaOutput1.png" class="img-fluid"></p>
 <p><img src="images/JuliaOutputComplete.png" class="img-fluid"></p>
