@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,6 +11,9 @@
 
 <title>Using GitHub – Cytometry in R</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -39,10 +42,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-8eaec6b9941db0f18eecf13b95a46332.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c153bb687ce49b6c6529d158b94fe28.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -92,7 +95,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../images/hex.svg" alt="" class="navbar-logo">
+    <img src="../../images/hex.svg" alt="" class="navbar-logo light-content">
+    <img src="../../images/hex.svg" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Cytometry in R</span>
@@ -160,8 +164,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
         </a>
     </div>
   </nav>
-  <div id="quarto-announcement" data-announcement-id="517fd7fd2923fd64fe81c4cc75c6fa55" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
-<p>See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
+  <div id="quarto-announcement" data-announcement-id="dc2d9c7bdc53471fb4a7564dd51e6a50" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>Welcome Back! See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
 </div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
 </header>
 <!-- content -->
@@ -307,6 +311,12 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
   <div class="sidebar-item-container"> 
   <a href="../../course/11_DataForStats/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">11 - Data for Statistics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/12_SpectralSignatures/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 - Spectral Signatures</span></a>
   </div>
 </li>
       </ul>
@@ -719,13 +729,14 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

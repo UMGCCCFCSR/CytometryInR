@@ -6,8 +6,8 @@
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="David Rach">
   <meta name="dcterms.date" content="2026-03-24">
@@ -18,6 +18,9 @@
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -96,7 +99,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
   <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
 
   <script type="text/javascript">
@@ -348,10 +351,10 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(flowWorkspace)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(flowWorkspace)</span>
 <span id="cb1-2"><a></a><span class="fu">library</span>(ggcyto)</span>
 <span id="cb1-3"><a></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-4"><a></a><span class="fu">library</span>(stringr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-4"><a></a><span class="fu">library</span>(stringr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -396,13 +399,13 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co">#StorageLocation &lt;- file.path("course", "07_Transformations", "data") # When interactively writing the code </span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co">#StorageLocation &lt;- file.path("course", "07_Transformations", "data") # When interactively writing the code </span></span>
 <span id="cb2-2"><a></a></span>
 <span id="cb2-3"><a></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co">#When Quarto Rendering</span></span>
 <span id="cb2-4"><a></a></span>
 <span id="cb2-5"><a></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="st">".fcs"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
 <span id="cb2-6"><a></a>SFC_files <span class="ot">&lt;-</span> fcs_files[stringr<span class="sc">::</span><span class="fu">str_detect</span>(fcs_files, <span class="st">"2025"</span>)]</span>
-<span id="cb2-7"><a></a>MC_files <span class="ot">&lt;-</span> fcs_files[stringr<span class="sc">::</span><span class="fu">str_detect</span>(fcs_files, <span class="st">"G1_2"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a></a>MC_files <span class="ot">&lt;-</span> fcs_files[stringr<span class="sc">::</span><span class="fu">str_detect</span>(fcs_files, <span class="st">"G1_2"</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -427,7 +430,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>SFC_files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>SFC_files</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data/2025_07_26_AB_02_INF052_00_Ctrl.fcs"
 [2] "data/2025_07_26_AB_02_INF052_00_SEB.fcs" 
@@ -460,10 +463,10 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb5-2"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
 <span id="cb5-3"><a></a></span>
-<span id="cb5-4"><a></a>SFC_GatingSet</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-4"><a></a>SFC_GatingSet</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -492,7 +495,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">colnames</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">colnames</span>(SFC_GatingSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "Time"              "SSC-W"             "SSC-H"            
  [4] "SSC-A"             "FSC-W"             "FSC-H"            
@@ -555,7 +558,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">markernames</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a><span class="fu">markernames</span>(SFC_GatingSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         BUV395-A          BUV563-A          BUV615-A          BUV661-A 
           "CD62L"            "CD69"            "CCR4"             "Vd2" 
@@ -602,8 +605,8 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb11-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb11-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -635,7 +638,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">str</span>(SFC_GatingSet[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">str</span>(SFC_GatingSet[<span class="dv">1</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Formal class 'GatingSet' [package "flowWorkspace"] with 2 slots
   ..@ pointer       :&lt;externalptr&gt; 
@@ -665,7 +668,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">str</span>(SFC_GatingSet[[<span class="dv">1</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a><span class="fu">str</span>(SFC_GatingSet[[<span class="dv">1</span>]])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Formal class 'GatingHierarchy' [package "flowWorkspace"] with 2 slots
   ..@ pointer       :&lt;externalptr&gt; 
@@ -699,8 +702,8 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb16-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb16-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -755,7 +758,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">gh_get_transformations</span>(SFC_GatingSet[[<span class="dv">1</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="fu">gh_get_transformations</span>(SFC_GatingSet[[<span class="dv">1</span>]])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>list()</code></pre>
 </div>
@@ -784,8 +787,8 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>Logicle <span class="ot">&lt;-</span> <span class="fu">logicle_trans</span>()</span>
-<span id="cb19-2"><a></a><span class="fu">str</span>(Logicle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>Logicle <span class="ot">&lt;-</span> <span class="fu">logicle_trans</span>()</span>
+<span id="cb19-2"><a></a><span class="fu">str</span>(Logicle)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 9
  $ name        : chr "logicle"
@@ -806,8 +809,8 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>()</span>
-<span id="cb21-2"><a></a><span class="fu">str</span>(Biexponential)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>()</span>
+<span id="cb21-2"><a></a><span class="fu">str</span>(Biexponential)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 9
  $ name        : chr "flowJo_biexp"
@@ -842,8 +845,8 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>()</span>
-<span id="cb23-2"><a></a><span class="fu">str</span>(Asinh)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>()</span>
+<span id="cb23-2"><a></a><span class="fu">str</span>(Asinh)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 9
  $ name        : chr "flowJo_fasinh"
@@ -864,8 +867,8 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>AsinhGML <span class="ot">&lt;-</span> <span class="fu">asinhtGml2_trans</span>()</span>
-<span id="cb25-2"><a></a><span class="fu">str</span>(AsinhGML)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>AsinhGML <span class="ot">&lt;-</span> <span class="fu">asinhtGml2_trans</span>()</span>
+<span id="cb25-2"><a></a><span class="fu">str</span>(AsinhGML)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 9
  $ name        : chr "asinhtGml2"
@@ -924,8 +927,8 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>SFC_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(SFC_GatingSet)</span>
-<span id="cb27-2"><a></a>SFC_Parameters</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>SFC_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(SFC_GatingSet)</span>
+<span id="cb27-2"><a></a>SFC_Parameters</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "Time"              "SSC-W"             "SSC-H"            
  [4] "SSC-A"             "FSC-W"             "FSC-H"            
@@ -967,8 +970,8 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>FluorophoresOnly <span class="ot">&lt;-</span> SFC_Parameters[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(SFC_Parameters, <span class="st">"FSC|SSC|Time"</span>)]</span>
-<span id="cb29-2"><a></a>FluorophoresOnly</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>FluorophoresOnly <span class="ot">&lt;-</span> SFC_Parameters[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(SFC_Parameters, <span class="st">"FSC|SSC|Time"</span>)]</span>
+<span id="cb29-2"><a></a>FluorophoresOnly</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "BUV395-A"          "BUV563-A"          "BUV615-A"         
  [4] "BUV661-A"          "BUV737-A"          "BUV805-A"         
@@ -1007,8 +1010,8 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb31-2"><a></a>MyBiexTransform</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
+<span id="cb31-2"><a></a>MyBiexTransform</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`BUV395-A`
 Transformer: flowJo_biexp [-Inf, Inf]
@@ -1119,7 +1122,7 @@ attr(,"class")
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">str</span>(MyBiexTransform[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">str</span>(MyBiexTransform[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 3
  $ BUV395-A:List of 9
@@ -1205,7 +1208,7 @@ attr(,"class")
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">str</span>(MyBiexTransform<span class="sc">$</span><span class="st">`</span><span class="at">APC-A</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">str</span>(MyBiexTransform<span class="sc">$</span><span class="st">`</span><span class="at">APC-A</span><span class="st">`</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 9
  $ name        : chr "flowJo_biexp"
@@ -1277,7 +1280,7 @@ attr(,"class")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -1305,8 +1308,8 @@ attr(,"class")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb39-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb39-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1338,7 +1341,7 @@ attr(,"class")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>?flowjo_biexp_trans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>?flowjo_biexp_trans</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1367,7 +1370,7 @@ attr(,"class")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>?flowJoTrans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a>?flowJoTrans</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1422,13 +1425,13 @@ attr(,"class")
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
 <span id="cb42-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb42-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
 <span id="cb42-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
 <span id="cb42-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">10</span>)</span>
 <span id="cb42-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb42-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb42-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -1437,8 +1440,8 @@ attr(,"class")
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb44-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb44-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-26-1.png" width="960" class="r-stretch"></section>
@@ -1463,7 +1466,7 @@ attr(,"class")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">gh_get_transformations</span>(SFC_GatingSet[[<span class="dv">1</span>]])<span class="sc">$</span><span class="st">`</span><span class="at">BUV805-A</span><span class="st">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">gh_get_transformations</span>(SFC_GatingSet[[<span class="dv">1</span>]])<span class="sc">$</span><span class="st">`</span><span class="at">BUV805-A</span><span class="st">`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>function (x, deriv = 0) 
 {
@@ -1530,13 +1533,13 @@ attr(,"parameters")$widthBasis
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
 <span id="cb47-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb47-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
 <span id="cb47-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
 <span id="cb47-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">1000</span>)</span>
 <span id="cb47-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb47-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb47-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -1546,8 +1549,8 @@ attr(,"parameters")$widthBasis
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb49-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb49-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-29-1.png" width="960" class="r-stretch"></section>
@@ -1575,13 +1578,13 @@ attr(,"parameters")$widthBasis
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
 <span id="cb50-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb50-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
 <span id="cb50-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
 <span id="cb50-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
 <span id="cb50-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb50-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb50-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -1591,8 +1594,8 @@ attr(,"parameters")$widthBasis
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb52-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb52-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-31-1.png" width="960" class="r-stretch"></section>
@@ -1620,13 +1623,13 @@ attr(,"parameters")$widthBasis
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
 <span id="cb53-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb53-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
 <span id="cb53-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
 <span id="cb53-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">100</span>)</span>
 <span id="cb53-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb53-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb53-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -1636,8 +1639,8 @@ attr(,"parameters")$widthBasis
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb55-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb55-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-33-1.png" width="960" class="r-stretch"></section>
@@ -1683,13 +1686,13 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
 <span id="cb56-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb56-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
 <span id="cb56-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">8192</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
 <span id="cb56-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
 <span id="cb56-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb56-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb56-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -1699,8 +1702,8 @@ attr(,"parameters")$widthBasis
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb58-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb58-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-35-1.png" width="960" class="r-stretch"></section>
@@ -1708,7 +1711,7 @@ attr(,"parameters")$widthBasis
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="fu">gh_get_transformations</span>(SFC_GatingSet[[<span class="dv">1</span>]])<span class="sc">$</span><span class="st">`</span><span class="at">BUV805-A</span><span class="st">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="fu">gh_get_transformations</span>(SFC_GatingSet[[<span class="dv">1</span>]])<span class="sc">$</span><span class="st">`</span><span class="at">BUV805-A</span><span class="st">`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>function (x, deriv = 0) 
 {
@@ -1774,13 +1777,13 @@ attr(,"parameters")$widthBasis
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
 <span id="cb61-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb61-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
 <span id="cb61-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">2048</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
 <span id="cb61-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
 <span id="cb61-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb61-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb61-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -1790,8 +1793,8 @@ attr(,"parameters")$widthBasis
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb63-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb63-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-38-1.png" width="960" class="r-stretch"></section>
@@ -1799,7 +1802,7 @@ attr(,"parameters")$widthBasis
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a><span class="fu">gh_get_transformations</span>(SFC_GatingSet[[<span class="dv">1</span>]])<span class="sc">$</span><span class="st">`</span><span class="at">BUV805-A</span><span class="st">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a><span class="fu">gh_get_transformations</span>(SFC_GatingSet[[<span class="dv">1</span>]])<span class="sc">$</span><span class="st">`</span><span class="at">BUV805-A</span><span class="st">`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>function (x, deriv = 0) 
 {
@@ -1883,13 +1886,13 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
 <span id="cb66-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb66-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
 <span id="cb66-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">524288</span>,</span>
 <span id="cb66-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
 <span id="cb66-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb66-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb66-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -1899,8 +1902,8 @@ attr(,"parameters")$widthBasis
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb68-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb68-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-41-1.png" width="960" class="r-stretch"></section>
@@ -1928,13 +1931,13 @@ attr(,"parameters")$widthBasis
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
 <span id="cb69-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb69-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
 <span id="cb69-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">131072</span>,</span>
 <span id="cb69-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
 <span id="cb69-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb69-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb69-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -1944,8 +1947,8 @@ attr(,"parameters")$widthBasis
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb71-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb71-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-43-1.png" width="960" class="r-stretch"></section>
@@ -1991,13 +1994,13 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
 <span id="cb72-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb72-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
 <span id="cb72-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
 <span id="cb72-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
 <span id="cb72-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb72-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb72-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -2007,8 +2010,8 @@ attr(,"parameters")$widthBasis
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb74-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb74-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-45-1.png" width="960" class="r-stretch"></section>
@@ -2033,13 +2036,13 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
 <span id="cb75-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb75-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
 <span id="cb75-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
 <span id="cb75-5"><a></a>     <span class="at">pos=</span><span class="dv">5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
 <span id="cb75-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb75-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb75-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -2049,8 +2052,8 @@ attr(,"parameters")$widthBasis
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb77-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb77-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-47-1.png" width="960" class="r-stretch"></section>
@@ -2075,13 +2078,13 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
 <span id="cb78-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb78-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
 <span id="cb78-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">524288</span>,</span>
 <span id="cb78-5"><a></a>     <span class="at">pos=</span><span class="dv">5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">1000</span>)</span>
 <span id="cb78-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb78-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb78-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -2091,8 +2094,8 @@ attr(,"parameters")$widthBasis
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb80-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb80-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-49-1.png" width="960" class="r-stretch"></section>
@@ -2118,13 +2121,13 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
 <span id="cb81-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb81-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
 <span id="cb81-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
 <span id="cb81-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">0</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
 <span id="cb81-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb81-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb81-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -2134,8 +2137,8 @@ attr(,"parameters")$widthBasis
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb83-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb83-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-51-1.png" width="960" class="r-stretch"></section>
@@ -2160,13 +2163,13 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
 <span id="cb84-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb84-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
 <span id="cb84-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
 <span id="cb84-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">1</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
 <span id="cb84-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb84-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb84-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -2176,8 +2179,8 @@ attr(,"parameters")$widthBasis
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb86-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb86-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-53-1.png" width="960" class="r-stretch"></section>
@@ -2202,13 +2205,13 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(SFC_files,</span>
 <span id="cb87-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb87-3"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span>
 <span id="cb87-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
 <span id="cb87-5"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">2</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
 <span id="cb87-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb87-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb87-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -2218,8 +2221,8 @@ attr(,"parameters")$widthBasis
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb89-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a></a><span class="fu">ggcyto</span>(SFC_GatingSet[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb89-2"><a></a> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BUV805-A"</span>, <span class="at">y=</span><span class="st">"BV650-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-55-1.png" width="960" class="r-stretch"></section>
@@ -2265,7 +2268,7 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a></a>MC_files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a></a>MC_files</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data/G1_2_concatenated.txt_m039A.1147901.fcs"
 [2] "data/G1_2_concatenated.txt_m039B.1147889.fcs"
@@ -2295,10 +2298,10 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb92-2"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
 <span id="cb92-3"><a></a></span>
-<span id="cb92-4"><a></a>MC_GatingSet</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb92-4"><a></a>MC_GatingSet</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
@@ -2326,7 +2329,7 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a></a><span class="fu">colnames</span>(MC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a></a><span class="fu">colnames</span>(MC_GatingSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "Ce140Di"      "Ce142Di"      "Dy161Di"      "Dy162Di"      "Dy163Di"     
  [6] "Dy164Di"      "Er166Di"      "Er167Di"      "Er168Di"      "Er170Di"     
@@ -2363,7 +2366,7 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a></a><span class="fu">markernames</span>(MC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a></a><span class="fu">markernames</span>(MC_GatingSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Ce140Di                Ce142Di                Dy161Di 
                "Beads"                "Beads"   "H2BK120Ub-macroH2A" 
@@ -2425,8 +2428,8 @@ attr(,"parameters")$widthBasis
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb98-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb98-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2458,9 +2461,9 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a></a>MC_Parameters <span class="ot">&lt;-</span> <span class="fu">markernames</span>(MC_GatingSet)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb99"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a></a>MC_Parameters <span class="ot">&lt;-</span> <span class="fu">markernames</span>(MC_GatingSet)</span>
 <span id="cb99-2"><a></a>MC_MarkersInterest <span class="ot">&lt;-</span> MC_Parameters[<span class="sc">!</span><span class="fu">str_detect</span>(<span class="st">"Barcode|Beads"</span>, MC_Parameters)]</span>
-<span id="cb99-3"><a></a>MC_MarkersInterest</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb99-3"><a></a>MC_MarkersInterest</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               Dy161Di                Dy162Di                Dy163Di 
   "H2BK120Ub-macroH2A"    "CrotonylK-H3K4me3"        "H3R2cit-H2A.Z" 
@@ -2515,8 +2518,8 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a></a>InterestingMetalsOnly <span class="ot">&lt;-</span> <span class="fu">names</span>(MC_MarkersInterest)</span>
-<span id="cb101-2"><a></a>InterestingMetalsOnly</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a></a>InterestingMetalsOnly <span class="ot">&lt;-</span> <span class="fu">names</span>(MC_MarkersInterest)</span>
+<span id="cb101-2"><a></a>InterestingMetalsOnly</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "Dy161Di" "Dy162Di" "Dy163Di" "Dy164Di" "Er166Di" "Er167Di" "Er168Di"
  [8] "Er170Di" "Eu151Di" "Eu153Di" "Gd155Di" "Gd156Di" "Gd158Di" "Gd160Di"
@@ -2549,9 +2552,9 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>()</span>
 <span id="cb103-2"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
-<span id="cb103-3"><a></a><span class="fu">str</span>(MyAsinhTransform[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb103-3"><a></a><span class="fu">str</span>(MyAsinhTransform[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>List of 3
  $ Dy161Di:List of 9
@@ -2595,7 +2598,7 @@ attr(,"parameters")$widthBasis
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
@@ -2623,8 +2626,8 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb107-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb107-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2657,7 +2660,7 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a></a>?flowjo_fasinh_trans</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb108"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a></a>?flowjo_fasinh_trans</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2686,7 +2689,7 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a></a>?flowjo_fasinh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb109"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a></a>?flowjo_fasinh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2715,12 +2718,12 @@ attr(,"parameters")$widthBasis
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb110"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
 <span id="cb110-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb110-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
 <span id="cb110-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="fl">0.7</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
 <span id="cb110-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
-<span id="cb110-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb110-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
@@ -2730,8 +2733,8 @@ attr(,"parameters")$widthBasis
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb112-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb112"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb112-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-69-1.png" width="960" class="r-stretch"></section>
@@ -2739,7 +2742,7 @@ attr(,"parameters")$widthBasis
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a></a><span class="fu">gh_get_transformations</span>(MC_GatingSet[[<span class="dv">1</span>]])<span class="sc">$</span><span class="st">`</span><span class="at">Nd145Di</span><span class="st">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb113"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a></a><span class="fu">gh_get_transformations</span>(MC_GatingSet[[<span class="dv">1</span>]])<span class="sc">$</span><span class="st">`</span><span class="at">Nd145Di</span><span class="st">`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>function (x) 
 {
@@ -2776,12 +2779,12 @@ attr(,"type")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb115"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
 <span id="cb115-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb115-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
 <span id="cb115-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="fl">0.7</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
 <span id="cb115-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
-<span id="cb115-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb115-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
@@ -2791,8 +2794,8 @@ attr(,"type")
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb117-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb117"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb117-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-72-1.png" width="960" class="r-stretch"></section>
@@ -2817,12 +2820,12 @@ attr(,"type")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb118"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
 <span id="cb118-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb118-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
 <span id="cb118-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">5</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="fl">0.7</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
 <span id="cb118-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
-<span id="cb118-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb118-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
@@ -2832,8 +2835,8 @@ attr(,"type")
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb120-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb120"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb120-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-74-1.png" width="960" class="r-stretch"></section>
@@ -2858,12 +2861,12 @@ attr(,"type")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb121"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
 <span id="cb121-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb121-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
 <span id="cb121-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">3</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="fl">0.7</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
 <span id="cb121-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
-<span id="cb121-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb121-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
@@ -2873,8 +2876,8 @@ attr(,"type")
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb123-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb123"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb123-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-76-1.png" width="960" class="r-stretch"></section>
@@ -2900,12 +2903,12 @@ attr(,"type")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb124"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
 <span id="cb124-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb124-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
 <span id="cb124-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">24000</span>, <span class="at">a =</span> <span class="fl">0.7</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
 <span id="cb124-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
-<span id="cb124-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb124-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
@@ -2915,8 +2918,8 @@ attr(,"type")
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb126-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb126"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb126-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-78-1.png" width="960" class="r-stretch"></section>
@@ -2941,12 +2944,12 @@ attr(,"type")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb127"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb127"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
 <span id="cb127-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb127-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
 <span id="cb127-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">6000</span>, <span class="at">a =</span> <span class="fl">0.7</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
 <span id="cb127-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
-<span id="cb127-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb127-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
@@ -2956,8 +2959,8 @@ attr(,"type")
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb129-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb129"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb129-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-80-1.png" width="960" class="r-stretch"></section>
@@ -2983,12 +2986,12 @@ attr(,"type")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb130"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
 <span id="cb130-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb130-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
 <span id="cb130-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="dv">1</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
 <span id="cb130-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
-<span id="cb130-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb130-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
@@ -2998,8 +3001,8 @@ attr(,"type")
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb132-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb132"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb132-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-82-1.png" width="960" class="r-stretch"></section>
@@ -3024,12 +3027,12 @@ attr(,"type")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb133"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb133"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
 <span id="cb133-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb133-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
 <span id="cb133-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="dv">0</span>, <span class="at">length =</span> <span class="dv">256</span>)</span>
 <span id="cb133-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
-<span id="cb133-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb133-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
@@ -3039,8 +3042,8 @@ attr(,"type")
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb135"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb135-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb135"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb135-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-84-1.png" width="960" class="r-stretch"></section>
@@ -3066,12 +3069,12 @@ attr(,"type")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb136"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
 <span id="cb136-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb136-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
 <span id="cb136-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="dv">1</span>, <span class="at">length =</span> <span class="dv">512</span>)</span>
 <span id="cb136-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
-<span id="cb136-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb136-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
@@ -3081,8 +3084,8 @@ attr(,"type")
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb138-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb138"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb138-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-86-1.png" width="960" class="r-stretch"></section>
@@ -3107,12 +3110,12 @@ attr(,"type")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb139"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a></a>MC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(MC_files,</span>
 <span id="cb139-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb139-3"><a></a>MC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(MC_cytoset)</span>
 <span id="cb139-4"><a></a>Asinh <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">m =</span> <span class="dv">4</span>, <span class="at">t =</span> <span class="dv">12000</span>, <span class="at">a =</span> <span class="dv">1</span>, <span class="at">length =</span> <span class="dv">128</span>)</span>
 <span id="cb139-5"><a></a>MyAsinhTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(InterestingMetalsOnly, Asinh)</span>
-<span id="cb139-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb139-6"><a></a><span class="fu">transform</span>(MC_GatingSet, MyAsinhTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
@@ -3122,8 +3125,8 @@ attr(,"type")
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb141-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb141"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a></a><span class="fu">ggcyto</span>(MC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb141-2"><a></a> <span class="fu">aes</span>( <span class="at">x=</span><span class="st">"Nd145Di"</span>, <span class="at">y=</span><span class="st">"Nd146Di"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 </div>
 <img data-src="slides_inperson_files/figure-revealjs/unnamed-chunk-88-1.png" width="960" class="r-stretch"></section>
@@ -3148,8 +3151,8 @@ attr(,"type")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a></a>MyCytoSet <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(SFC_GatingSet[[<span class="dv">1</span>]], <span class="st">"root"</span>)</span>
-<span id="cb142-2"><a></a>MyCytoSet</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb142"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a></a>MyCytoSet <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(SFC_GatingSet[[<span class="dv">1</span>]], <span class="st">"root"</span>)</span>
+<span id="cb142-2"><a></a>MyCytoSet</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A cytoset with 1 samples.
 
@@ -3182,7 +3185,7 @@ cytoset has been subsetted and can be realized through 'realize_view()'.</code><
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb144"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a></a><span class="fu">exprs</span>(MyCytoSet[[<span class="dv">1</span>]])[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb144"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb144-1"><a></a><span class="fu">exprs</span>(MyCytoSet[[<span class="dv">1</span>]])[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         Time    SSC-W  SSC-H    SSC-A    FSC-W   FSC-H   FSC-A  SSC-B-W
 [1,] 396.1327 741155.4 495200 611700.2 735140.7 1398530 1713527 715626.7
@@ -3237,8 +3240,8 @@ cytoset has been subsetted and can be realized through 'realize_view()'.</code><
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a></a>MyInversedCytoSet <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(SFC_GatingSet[[<span class="dv">1</span>]], <span class="st">"root"</span>, <span class="at">inverse.transform=</span><span class="cn">TRUE</span>)</span>
-<span id="cb146-2"><a></a><span class="fu">exprs</span>(MyInversedCytoSet[[<span class="dv">1</span>]])[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb146"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a></a>MyInversedCytoSet <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(SFC_GatingSet[[<span class="dv">1</span>]], <span class="st">"root"</span>, <span class="at">inverse.transform=</span><span class="cn">TRUE</span>)</span>
+<span id="cb146-2"><a></a><span class="fu">exprs</span>(MyInversedCytoSet[[<span class="dv">1</span>]])[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         Time    SSC-W  SSC-H    SSC-A    FSC-W   FSC-H   FSC-A  SSC-B-W
 [1,] 396.1327 741155.4 495200 611700.2 735140.7 1398530 1713527 715626.7
@@ -3654,7 +3657,7 @@ cytoset has been subsetted and can be realized through 'realize_view()'.</code><
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -3766,13 +3769,14 @@ cytoset has been subsetted and can be realized through 'realize_view()'.</code><
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

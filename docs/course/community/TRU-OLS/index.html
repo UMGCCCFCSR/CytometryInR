@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,6 +11,9 @@
 
 <title>Package Walkthrough: TRU-OLS – Cytometry in R</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -74,10 +77,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../site_libs/bootstrap/bootstrap-8eaec6b9941db0f18eecf13b95a46332.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../../site_libs/bootstrap/bootstrap-5c153bb687ce49b6c6529d158b94fe28.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -127,7 +130,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../../images/hex.svg" alt="" class="navbar-logo">
+    <img src="../../../images/hex.svg" alt="" class="navbar-logo light-content">
+    <img src="../../../images/hex.svg" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">Cytometry in R</span>
@@ -195,8 +199,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
         </a>
     </div>
   </nav>
-  <div id="quarto-announcement" data-announcement-id="517fd7fd2923fd64fe81c4cc75c6fa55" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
-<p>See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
+  <div id="quarto-announcement" data-announcement-id="dc2d9c7bdc53471fb4a7564dd51e6a50" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>Welcome Back! See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
 </div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
 </header>
 <!-- content -->
@@ -342,6 +346,12 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
   <div class="sidebar-item-container"> 
   <a href="../../../course/11_DataForStats/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">11 - Data for Statistics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/12_SpectralSignatures/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 - Spectral Signatures</span></a>
   </div>
 </li>
       </ul>
@@ -569,17 +579,17 @@ Note
 <h3 class="anchored" data-anchor-id="activating-tru-ols">Activating TRU-OLS</h3>
 <p>To begin using TRU-OLS, just like any R package, we are going to need to make sure the required dependencies are installed. These are documented inside the “Manifest.toml” file. To get started, proceed to your <strong>terminal tab</strong> and run the following line of Julia code</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia code</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>julia <span class="sc">--</span>project<span class="ot">=</span>.</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia code</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>julia <span class="sc">--</span>project<span class="ot">=</span>.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="images/0000_LaunchProject.png" class="img-fluid"></p>
 <p>The Julia splash screen will then be displayed within the terminal window</p>
 <p><img src="images/0000_JuliaWelcome.png" class="img-fluid"></p>
 <p>Now that Julia is active in our terminal, we will see julia&gt; appearing on each line. Proceed to type (or paste) the following code to commence the installation of the required dependencies.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia code</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia code</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>using Pkg</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Pkg.instantiate</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Pkg.instantiate</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="images/0000_JuliaInstantiate.png" class="img-fluid"></p>
 <p>The installation of the required Julia packages will then proceed, with the status of the various steps (including installation and pre-compiling) being displayed</p>
@@ -587,23 +597,23 @@ Note
 <p>In my attempt to install the dependencies, I ended up with an error when installing the CSV package.</p>
 <p><img src="images/0000_JuliaErrror.png" class="img-fluid"></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia code</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>err</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia code</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>err</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="images/0000_DependencyError.png" class="img-fluid"></p>
 <p>Similar to when we encounter errors installing an R package, we can apply those same troubleshooting skills in this context. First glancing at the “Manifest.toml” file, the original manifest list the Julia version 1.8.5. In my case, my installed Julia version was more recent (1.12.6), suggesting we likely have a dependency clash due to the older version listed in the manifest.</p>
 <p>I decided to re-run <code>Pkg.instantiate()</code>, and as we would anticipate, I still retrieved the previous error</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia code</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia code</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>using Pkg</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Pkg.instantiate</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Pkg.instantiate</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="images/0000_VersionConflict.png" class="img-fluid"></p>
 <p>However, in this case, the message output suggested the use of <code>Pkg.resolve()</code>, which I next attempted</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia code</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia code</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>using Pkg</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Pkg.resolve</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Pkg.resolve</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="images/0000_PkgInstantiate_Resolve.png" class="img-fluid"></p>
 <p>Based on the Positron highlighting syntax, this resulted in a few package additions and deletions. On re-running <code>Pkg.instantiate()</code>, the CSV package successfully installed.</p>
@@ -620,7 +630,7 @@ Note
 <p>With both Julia and TRU-OLS now installed, switch back to the R project folder that you will be primarily be working in for unmixing.Once there, you will need to load your unmixing controls and full-stained samples into a GatingSet.</p>
 <p>As always, start by attaching to your local environment the required R packages via the <code>library()</code> call</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowWorkspace)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowWorkspace)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>As part of improvements to flowWorkspace, some behavior of
 GatingSet objects has changed. For details, please read the section
@@ -628,7 +638,7 @@ titled "The cytoframe and cytoset classes" in the package vignette:
 
   vignette("flowWorkspace-Introduction", "flowWorkspace")</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowGate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowGate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: ggcyto</code></pre>
 </div>
@@ -650,7 +660,7 @@ titled "The cytoframe and cytoset classes" in the package vignette:
 <div class="cell-output cell-output-stderr">
 <pre><code>Registered span_gate</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'dplyr'</code></pre>
@@ -675,44 +685,44 @@ Attaching package: 'dplyr'</code></pre>
 
     intersect, setdiff, setequal, union</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(JuliaCall)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(JuliaCall)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Next off, specify the storage location of the .fcs files, and also the location of the folder you want any unmixed fcs files to be saved to.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#StorageLocation &lt;- file.path("course", "community", "TRU-OLS", "data")</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#StorageLocation &lt;- file.path("course", "community", "TRU-OLS", "data")</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>)</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">#OutputLocation &lt;- file.path("course", "community", "TRU-OLS", "outputs")</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>OutputLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"outputs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>OutputLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"outputs"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Proceed to load the identified .fcs files into a GatingSet object</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".fcs"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".fcs"</span>,</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a> <span class="at">full.names=</span><span class="cn">TRUE</span>, <span class="at">recursive=</span><span class="cn">TRUE</span>)</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files,</span>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a> <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>As we will be working with raw .fcs files for the unmxing process, <strong>we do not need to transform</strong>, as we need signatures retrieved from the underlying data to appear in their normal shapes.</p>
 <p>I recommend then using <code>subset()</code> on the GatingSet, placing the single-color and unmixing controls into their own GatingSets, and repeating the process for the full-stained samples. This ensures we only retrieve signatures from the single-color controls, and that only the full-stained samples are unmixed.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pData(SFC_GatingSet)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pData(SFC_GatingSet)</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>FullStain_GS <span class="ot">&lt;-</span> <span class="fu">subset</span>(SFC_GatingSet, name <span class="sc">==</span> <span class="st">"Full-Stained2_scatter.fcs"</span>)</span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>Unstained_GS <span class="ot">&lt;-</span> <span class="fu">subset</span>(SFC_GatingSet, name <span class="sc">==</span> <span class="st">"Unstained (Cells)_scatter.fcs"</span>)</span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>UnmixingControl_GS <span class="ot">&lt;-</span> <span class="fu">subset</span>(SFC_GatingSet, name <span class="sc">!=</span> <span class="st">"Full-Stained2_scatter.fcs"</span> <span class="sc">&amp;</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>   name <span class="sc">!=</span> <span class="st">"Unstained (Cells)_scatter.fcs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>   name <span class="sc">!=</span> <span class="st">"Unstained (Cells)_scatter.fcs"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="signature-matrix" class="level2">
 <h2 class="anchored" data-anchor-id="signature-matrix">Signature Matrix</h2>
 <p>To facilitate this example, we will use the <code>Luciernaga_SingleColors()</code> function from the <code>Luciernaga</code> package to retrieve the signatures from our single-color controls. For more information, please see the <a href="https://davidrach.github.io/Luciernaga/articles/Unmixing.html#luciernaga_singlecolors">vignette</a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remotes::install_github("DavidRach/Luciernaga")</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remotes::install_github("DavidRach/Luciernaga")</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Luciernaga)</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the primary detectors</span></span>
@@ -729,10 +739,10 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>SCs <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>UnmixingControl_GS, <span class="at">.f=</span>Luciernaga_SingleColors, <span class="at">sample.name=</span><span class="st">"TUBENAME"</span>,</span>
 <span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="fu">c</span>(<span class="st">".fcs"</span>, <span class="st">"PD_AD_"</span>), <span class="at">subset=</span><span class="st">"root"</span>, <span class="at">PanelCuts=</span>ThePanelCuts, <span class="at">stats=</span><span class="st">"median"</span>, <span class="at">Verbose=</span><span class="cn">FALSE</span>, </span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a> <span class="at">SignatureView=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">bind_rows</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a> <span class="at">SignatureView=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">bind_rows</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>SCs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>SCs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Fluorophore    Ligand     UV1-A     UV2-A    UV3-A    UV4-A     UV5-A
 1  Spark Blue 550       CD3 104.74154 188.68995 420.2939 594.9452  864.0328
@@ -798,11 +808,11 @@ Attaching package: 'dplyr'</code></pre>
 </div>
 <p>Let’s also visualize the signatures against the reference signatures for the respective fluorophores to ensure that the retrieved signatures are appropiate.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>UnmixingControl_GS, <span class="at">.f=</span>Luciernaga_SingleColors, <span class="at">sample.name=</span><span class="st">"TUBENAME"</span>,</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="fu">c</span>(<span class="st">".fcs"</span>, <span class="st">"PD_AD_"</span>), <span class="at">subset=</span><span class="st">"root"</span>, <span class="at">PanelCuts=</span>ThePanelCuts, <span class="at">stats=</span><span class="st">"median"</span>, <span class="at">Verbose=</span><span class="cn">FALSE</span>, <span class="at">SignatureView=</span><span class="cn">TRUE</span>, <span class="at">returntype=</span><span class="st">"plots"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>UnmixingControl_GS, <span class="at">.f=</span>Luciernaga_SingleColors, <span class="at">sample.name=</span><span class="st">"TUBENAME"</span>,</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="fu">c</span>(<span class="st">".fcs"</span>, <span class="st">"PD_AD_"</span>), <span class="at">subset=</span><span class="st">"root"</span>, <span class="at">PanelCuts=</span>ThePanelCuts, <span class="at">stats=</span><span class="st">"median"</span>, <span class="at">Verbose=</span><span class="cn">FALSE</span>, <span class="at">SignatureView=</span><span class="cn">TRUE</span>, <span class="at">returntype=</span><span class="st">"plots"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>plots</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>plots</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -864,10 +874,10 @@ Attaching package: 'dplyr'</code></pre>
 <h2 class="anchored" data-anchor-id="ols-unmixing-via-luciernaga">OLS-Unmixing via Luciernaga</h2>
 <p>Since we may be interested in comparing how TRU-OLS unmixing differs compared to regular OLS unmixing (and since we have already generated the needed inputs), lets proceed to unmix via <code>Luciernaga</code> and generate an .fcs file to our designated outputs folder for later.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>TheSampleName <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"TUBENAME"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>TheSampleName <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"TUBENAME"</span>)</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>UnmixSuccess <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>FullStain_GS, <span class="at">.f=</span>Luciernaga_Unmix,</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a> <span class="at">controlData=</span>SCs, <span class="at">sample.name=</span>TheSampleName, <span class="at">addon=</span><span class="st">"_Luciernaga_Unmixed"</span>, <span class="at">subset=</span><span class="st">"root"</span>, <span class="at">removestrings=</span><span class="st">"fcs"</span>, <span class="at">outpath=</span>OutputLocation, <span class="at">PanelPath=</span>UnmixingPanel, <span class="at">Verbose=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a> <span class="at">controlData=</span>SCs, <span class="at">sample.name=</span>TheSampleName, <span class="at">addon=</span><span class="st">"_Luciernaga_Unmixed"</span>, <span class="at">subset=</span><span class="st">"root"</span>, <span class="at">removestrings=</span><span class="st">"fcs"</span>, <span class="at">outpath=</span>OutputLocation, <span class="at">PanelPath=</span>UnmixingPanel, <span class="at">Verbose=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>After removestrings, name is Full-Stained2</code></pre>
 </div>
@@ -883,7 +893,7 @@ Attaching package: 'dplyr'</code></pre>
 <p>After attempting (and failing) to pass from an R code chunk to a Julia code chunk, I found the implementable approach was to write the data.frames to .csv files, and then via <code>JuliaCall</code> package run Julia commands within the R function to carry out the above README suggested steps, and save the output as a .csv file that could be read back into R.</p>
 <p>The main thing needed was to provide the correct file path to the TRU-OLS.jl file with the corresponding Julia code.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Implements TRU-OLS unmixing in Julia, via the JuliaCall R package. </span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Implements TRU-OLS unmixing in Julia, via the JuliaCall R package. </span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param mixmat The signature matrix</span></span>
 <span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param unstained The cleaned up exprs of the unstained</span></span>
@@ -917,11 +927,11 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a>  result_r <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"result.csv"</span>, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
 <span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result_r)</span>
-<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>With the “R to Julia and back to R” hand-off operational, the main thing left is to provide the function infrastructure in R needed to gather the required inputs, and then once the outputs are received, correctly package them back into a new .fcs file. I modified the <a href="https://github.com/DavidRach/Luciernaga/blob/main/R/Luciernaga_Unmix.R">existing function</a> infrastructure for <code>Luciernaga_Unmix()</code> used for the OLS unmixing example above, but switching out the OLS unmixing with the <code>TRU_OLS_Julia()</code> function we just wrote.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param x An interated-in full-stained raw .fcs file needing to be unmixed</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param x An interated-in full-stained raw .fcs file needing to be unmixed</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param SCs The fluorophore signature matrix generated via Luciernaga_SingleColors</span></span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param Unstained_GS The GatingSet containing the raw unstained fcs file</span></span>
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param sample.name The keyword containing the fcs file name</span></span>
@@ -1016,13 +1026,13 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb39-93"><a href="#cb39-93" aria-hidden="true" tabindex="-1"></a>    fileSpot <span class="ot">&lt;-</span> <span class="fu">file.path</span>(outpath, AssembledName)</span>
 <span id="cb39-94"><a href="#cb39-94" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (returnType <span class="sc">==</span> <span class="st">"fcs"</span>) {<span class="fu">write.FCS</span>(new_fcs, <span class="at">filename =</span> fileSpot, <span class="at">delimiter=</span><span class="st">"#"</span>)</span>
 <span id="cb39-95"><a href="#cb39-95" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {<span class="fu">return</span>(new_fcs)}</span>
-<span id="cb39-96"><a href="#cb39-96" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-96"><a href="#cb39-96" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>With both the main function (and the internal R-Julia handoff function) written and active in our environment, we can now proceed to unmixing.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>UnmixSuccess <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>FullStain_GS, <span class="at">.f=</span>TRUOLS_Unmix, <span class="at">SCs=</span>SCs, <span class="at">Unstained_GS=</span>Unstained_GS, </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>UnmixSuccess <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>FullStain_GS, <span class="at">.f=</span>TRUOLS_Unmix, <span class="at">SCs=</span>SCs, <span class="at">Unstained_GS=</span>Unstained_GS, </span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a> <span class="at">sample.name=</span>TheSampleName, <span class="at">addon=</span><span class="st">"_TRUOLS_Unmixed"</span>, <span class="at">subset=</span><span class="st">"root"</span>,</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="st">"fcs"</span>, <span class="at">outpath=</span>OutputLocation, <span class="at">PanelPath=</span>UnmixingPanel, <span class="at">Verbose=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="st">"fcs"</span>, <span class="at">outpath=</span>OutputLocation, <span class="at">PanelPath=</span>UnmixingPanel, <span class="at">Verbose=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="images/JuliaOutput1.png" class="img-fluid"></p>
 <p><img src="images/JuliaOutputComplete.png" class="img-fluid"></p>
@@ -1109,13 +1119,14 @@ Attaching package: 'dplyr'</code></pre>
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

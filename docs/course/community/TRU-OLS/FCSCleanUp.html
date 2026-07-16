@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,6 +11,9 @@
 
 <title>FCS Clean Up for GitHub – Cytometry in R</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -73,10 +76,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../site_libs/bootstrap/bootstrap-8eaec6b9941db0f18eecf13b95a46332.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../../site_libs/bootstrap/bootstrap-5c153bb687ce49b6c6529d158b94fe28.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -126,7 +129,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../../images/hex.svg" alt="" class="navbar-logo">
+    <img src="../../../images/hex.svg" alt="" class="navbar-logo light-content">
+    <img src="../../../images/hex.svg" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">Cytometry in R</span>
@@ -194,8 +198,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
         </a>
     </div>
   </nav>
-  <div id="quarto-announcement" data-announcement-id="517fd7fd2923fd64fe81c4cc75c6fa55" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
-<p>See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
+  <div id="quarto-announcement" data-announcement-id="dc2d9c7bdc53471fb4a7564dd51e6a50" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>Welcome Back! See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
 </div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
 </header>
 <!-- content -->
@@ -343,6 +347,12 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
  <span class="menu-text">11 - Data for Statistics</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/12_SpectralSignatures/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 - Spectral Signatures</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -481,7 +491,7 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 <p>Consequently we will first gate for singlets, non-RBCs and lymphocyte scatter. Once this has been accomplished, we will downsample for 17500 of the present cells, which will result in being just under the 5 MB limit when using 5-laser Cytek Aurora raw .fcs files.</p>
 <p>As always, start by loading the required R packages via the <code>library()</code> call.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowWorkspace)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowWorkspace)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>As part of improvements to flowWorkspace, some behavior of
 GatingSet objects has changed. For details, please read the section
@@ -489,7 +499,7 @@ titled "The cytoframe and cytoset classes" in the package vignette:
 
   vignette("flowWorkspace-Introduction", "flowWorkspace")</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowGate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowGate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: ggcyto</code></pre>
 </div>
@@ -511,7 +521,7 @@ titled "The cytoframe and cytoset classes" in the package vignette:
 <div class="cell-output cell-output-stderr">
 <pre><code>Registered span_gate</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'dplyr'</code></pre>
@@ -536,61 +546,61 @@ Attaching package: 'dplyr'</code></pre>
 
     intersect, setdiff, setequal, union</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Next, activate the <code>Downsampling()</code> function that was created as part of <a href="../../../course/10_Downsampling/index.html">Week 10</a> of the course.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>RFolder <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"course"</span>, <span class="st">"community"</span>, <span class="st">"TRU-OLS"</span>,  <span class="st">"R"</span>) <span class="co"># For Interactive</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>RFolder <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"course"</span>, <span class="st">"community"</span>, <span class="st">"TRU-OLS"</span>,  <span class="st">"R"</span>) <span class="co"># For Interactive</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># RFolder &lt;- file.path("R") # For Quarto Rendering</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>MyFunctions <span class="ot">&lt;-</span> <span class="fu">list.files</span>(RFolder, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>MyFunctions, <span class="at">.f=</span>source)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>MyFunctions, <span class="at">.f=</span>source)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>With this done, specify your input file.path and output file.paths</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#StorageLocation &lt;- file.path("course", "community", "TRU-OLS", "data")</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">#StorageLocation &lt;- file.path("course", "community", "TRU-OLS", "data")</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">#OutputLocation &lt;- file.path("course", "community", "TRU-OLS", "outputs")</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>OutputLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"outputs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>OutputLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"outputs"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>And proceed to load in the .fcs files to a GatingSet.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".fcs"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".fcs"</span>,</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a> <span class="at">full.names=</span><span class="cn">TRUE</span>, <span class="at">recursive=</span><span class="cn">TRUE</span>)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files,</span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a> <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>As we will be working with raw .fcs files today, we do not need to transform. If we did need to, we would use the following code (modifying the arguments to match our own instrument settings).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>SFC_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(SFC_GatingSet)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>SFC_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(SFC_GatingSet)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>FluorophoresOnly <span class="ot">&lt;-</span> SFC_Parameters[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(SFC_Parameters, <span class="st">"FSC|SSC|Time"</span>)]</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">2</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">750</span>)</span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Next, we will create gates using the <code>flowGate</code> package, as covered during <a href="../../../course/08_WaysToGate/index.html#manual---flowgate">Week 08</a>, specifically via the iteration table.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>GatingTable <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>GatingTable <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>filterId,    <span class="sc">~</span>dims,                          <span class="sc">~</span>subset,      </span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"singlets"</span>,   <span class="fu">list</span>(<span class="st">"FSC-A"</span>, <span class="st">"FSC-H"</span>),          <span class="st">"root"</span>,  </span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"nonRBCs"</span>,     <span class="fu">list</span>(<span class="st">"SSC-A"</span>, <span class="st">"SSC-B-A"</span>),    <span class="st">"singlets"</span>,</span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"scatter"</span>,    <span class="fu">list</span>(<span class="st">"FSC-A"</span>, <span class="st">"SSC-A"</span>),      <span class="st">"nonRBCs"</span>,  </span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We can then run the following line of code, and proceed to sequentially draw the gates via the ShinyApp</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>flowGate<span class="sc">::</span><span class="fu">gs_apply_gating_strategy</span>(SFC_GatingSet, <span class="at">gating_strategy =</span> GatingTable)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>flowGate<span class="sc">::</span><span class="fu">gs_apply_gating_strategy</span>(SFC_GatingSet, <span class="at">gating_strategy =</span> GatingTable)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="images/00_Singlets.png" class="img-fluid"></p>
 <p><img src="images/00_NonRBCs.png" class="img-fluid"></p>
 <p><img src="images/00_Scatter.png" class="img-fluid"></p>
 <p>Once the gates are drawn, we can quickly validate that the gate placements will suffice for what we are trying to accomplish today. We can use the <code>Utility_UnityPlots()</code> from the <code>Luciernaga</code> package to compare the same gate across all specimens</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Luciernaga)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Luciernaga)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>Plot <span class="ot">&lt;-</span> <span class="fu">Utility_UnityPlot</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"FSC-H"</span>,</span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a> <span class="at">GatingSet=</span>SFC_GatingSet, <span class="at">sample.name=</span><span class="st">"GUID"</span>, <span class="at">bins=</span><span class="dv">70</span>,</span>
@@ -602,7 +612,7 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>Plot3 <span class="ot">&lt;-</span> <span class="fu">Utility_UnityPlot</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-A"</span>,</span>
 <span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a> <span class="at">GatingSet=</span>SFC_GatingSet, <span class="at">sample.name=</span><span class="st">"GUID"</span>, <span class="at">bins=</span><span class="dv">70</span>,</span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="st">".fcs"</span>, <span class="at">marginsubset=</span><span class="st">"singlets"</span>, <span class="at">gatesubset=</span><span class="st">"scatter"</span>, <span class="at">returntype=</span><span class="st">"patchwork"</span>, <span class="at">reference=</span><span class="cn">NULL</span>, <span class="at">clearance=</span><span class="fl">0.2</span>, <span class="at">gatelines=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="st">".fcs"</span>, <span class="at">marginsubset=</span><span class="st">"singlets"</span>, <span class="at">gatesubset=</span><span class="st">"scatter"</span>, <span class="at">returntype=</span><span class="st">"patchwork"</span>, <span class="at">reference=</span><span class="cn">NULL</span>, <span class="at">clearance=</span><span class="fl">0.2</span>, <span class="at">gatelines=</span><span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="images/Singlets1.png" class="img-fluid"></p>
 <p><img src="images/Singlets2.png" class="img-fluid"></p>
@@ -612,16 +622,16 @@ Attaching package: 'dplyr'</code></pre>
 <p><img src="images/Scatter2.png" class="img-fluid"></p>
 <p>With the gates reasonably enough placed (except for the Full-Stained 1 specimen), lets proceed and see what we have for counts.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Counts <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_count_fast</span>(SFC_GatingSet, <span class="st">"count"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Counts <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_count_fast</span>(SFC_GatingSet, <span class="st">"count"</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>Counts<span class="sc">$</span>Population <span class="ot">&lt;-</span> <span class="fu">basename</span>(Counts<span class="sc">$</span>Population)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>Counts <span class="sc">|&gt;</span> <span class="fu">filter</span>(Population <span class="sc">%in%</span> <span class="st">"scatter"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>Counts <span class="sc">|&gt;</span> <span class="fu">filter</span>(Population <span class="sc">%in%</span> <span class="st">"scatter"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="images/00_Counts.png" class="img-fluid"></p>
 <p>For a raw .fcs file from a 5-laser Cytek Aurora, downsampling to 17500 cells puts us just under the 5 MB limit. Seeing as we have enough cells, lets proceed to export out the downsampled .fcs files to our output folder.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"scatter"</span>, <span class="at">.f=</span>Downsampling,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"scatter"</span>, <span class="at">.f=</span>Downsampling,</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a> <span class="at">DownsampleCount=</span><span class="dv">17500</span>, <span class="at">addon=</span><span class="st">"scatter"</span>, <span class="at">returnType=</span><span class="st">"fcs"</span>,</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a> <span class="at">StorageLocation=</span>OutputLocation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a> <span class="at">StorageLocation=</span>OutputLocation)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="proceeding" class="level1">
@@ -688,13 +698,14 @@ Attaching package: 'dplyr'</code></pre>
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

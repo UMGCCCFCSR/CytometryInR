@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,6 +11,9 @@
 
 <title>01 - Installing R Packages – Cytometry in R</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -75,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-8eaec6b9941db0f18eecf13b95a46332.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c153bb687ce49b6c6529d158b94fe28.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -128,7 +131,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../images/hex.svg" alt="" class="navbar-logo">
+    <img src="../../images/hex.svg" alt="" class="navbar-logo light-content">
+    <img src="../../images/hex.svg" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Cytometry in R</span>
@@ -196,8 +200,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
         </a>
     </div>
   </nav>
-  <div id="quarto-announcement" data-announcement-id="517fd7fd2923fd64fe81c4cc75c6fa55" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
-<p>See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
+  <div id="quarto-announcement" data-announcement-id="dc2d9c7bdc53471fb4a7564dd51e6a50" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>Welcome Back! See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
 </div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
 </header>
 <!-- content -->
@@ -343,6 +347,12 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
   <div class="sidebar-item-container"> 
   <a href="../../course/11_DataForStats/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">11 - Data for Statistics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/12_SpectralSignatures/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 - Spectral Signatures</span></a>
   </div>
 </li>
       </ul>
@@ -619,7 +629,7 @@ Warning
 <h3 class="anchored" data-anchor-id="accessing-help-documentation">Accessing Help Documentation</h3>
 <p>Within your own index.qmd (or a new .qmd file that you created), type out/copy-paste the following <code>sessionInfo()</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br></p>
 <hr>
@@ -629,7 +639,7 @@ Warning
 <hr>
 <p>In this case, we can see the help documentation corresponding for <code>sessionInfo()</code>. Beyond hovering over the function, this can also be accessed by adding a ? directly in front of the function, and then running that line of code.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="images/03_QuestionMark.png" class="img-fluid"></p>
 <p><br></p>
@@ -647,7 +657,7 @@ Warning
 <h3 class="anchored" data-anchor-id="sessioninfo">sessionInfo()</h3>
 <p>Within your .qmd file, let’s go ahead and run the following code-block:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.5.3 (2026-03-11)
 Platform: x86_64-pc-linux-gnu
@@ -706,14 +716,14 @@ loaded via a namespace (and not attached):
 <h3 class="anchored" data-anchor-id="dplyr">dplyr</h3>
 <p>Our first R package we will install during this session is the <a href="https://dplyr.tidyverse.org/">dplyr</a> package. Since it is hosted on the CRAN repository, to install it, we will need to use the CRAN-specific installation function <code>install.packages()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">install.packages</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">install.packages</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="images/07_InstallPackages.png" class="img-fluid"></p>
 <p><br></p>
 <hr>
 <p>For the <code>install.packages()</code> function, we place within the () the name of the R package from CRAN that we wish to install.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"dplyr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"dplyr"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br></p>
 <hr>
@@ -731,7 +741,7 @@ Tip
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error:
 ! object 'dplyr' not found</code></pre>
@@ -740,7 +750,7 @@ Tip
 <p><br></p>
 <hr>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"dplyr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"dplyr"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Go ahead and click on “Run Cell” next to your code-block, to install the <code>dplyr</code> R package.</p>
 <p><br></p>
@@ -762,13 +772,13 @@ Tip
 <h3 class="anchored" data-anchor-id="attaching-packages-via-library">Attaching packages via library()</h3>
 <p>If an R package has been installed successfully, we are now able to load it (ie. make it’s functions available) to our local environment using the <code>library()</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">library</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">library</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br></p>
 <hr>
 <p>Unlike <code>install.packages()</code>, where we needed “” around the package name, the <code>library()</code> function does not require “” around the package name. Let’s go ahead and load in <code>dplyr</code>, making its respective functions to our local environment.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'dplyr'</code></pre>
@@ -789,7 +799,7 @@ Attaching package: 'dplyr'</code></pre>
 <p>From the output, we can see that <code>dplyr</code> has been attached. There are also a couple functions within dplyr that have identical names to functions within the stats and base packages. To avoid confusion, these 6 functions are masked, which is why we get the additional messages.</p>
 <p>With <code>dplyr</code> now loaded via the <code>library()</code> call, let’s check <code>sessionInfo()</code> to see what has changed.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.5.3 (2026-03-11)
 Platform: x86_64-pc-linux-gnu
@@ -832,7 +842,7 @@ loaded via a namespace (and not attached):
 <hr>
 <p>Similar to what was seen for the base R packages, <code>dplyr</code> is now attached. This means we should theoretically now have access to all its functions. We can verify this by seeing if we can look up the <code>dplyr</code> packages <code>select()</code> function and it’s respective help page.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>?select</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>?select</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><img src="images/10_Attached.png" class="img-fluid"></p>
 <p><br></p>
@@ -840,7 +850,7 @@ loaded via a namespace (and not attached):
 <p>Since its parent package has been attached to our local environment (via the <code>library()</code> call), we can see <code>dplyr</code> functions appear as suggestions as we begin to type.</p>
 <p>By contrast, is we check for the <code>ggplot()</code> function from the ggplot2 package (which we haven’t yet installed or attached via <code>library()</code>), no suggestions will pop up.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>?ggplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>?ggplot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>No documentation for 'ggplot' in specified packages and libraries:
 you could try '??ggplot'</code></pre>
@@ -859,10 +869,10 @@ you could try '??ggplot'</code></pre>
 <p>Well, to unload it from the local environment, there are a couple options. You could of course simply shut down Positron. The local environment only exist in context of when you open and close the session, which closing the program will do. All previously loaded R packages will be unattached, which is why when you start a new session you will need to load in all packages you plan on using via <code>library()</code>.</p>
 <p>Alternatively, although less used, you could <code>detach()</code> it via your console:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detach</span>(<span class="st">"package:dplyr"</span>, <span class="at">unload=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detach</span>(<span class="st">"package:dplyr"</span>, <span class="at">unload=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.5.3 (2026-03-11)
 Platform: x86_64-pc-linux-gnu
@@ -905,7 +915,7 @@ loaded via a namespace (and not attached):
 <hr>
 <p>Looking at the <code>sessionInfo()</code> output, dplyr is no longer attached to the local environment. Consequently, if we try to once again look for the documentation, no information will be retrieved.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>?dplyr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>?dplyr</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>No documentation for 'dplyr' in specified packages and libraries:
 you could try '??dplyr'</code></pre>
@@ -915,7 +925,7 @@ you could try '??dplyr'</code></pre>
 <hr>
 <p>There is a workaround however, if we want to access functions from an unloaded R package. We can specify the R package’s name, followed by two :, and then the function name. The :: conveys the context to your computer that the package is present, but may not be attached.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>?dplyr<span class="sc">::</span><span class="fu">select</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>?dplyr<span class="sc">::</span><span class="fu">select</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This particular use case can be useful if we want to run a particular function, but not load in all a packages functions (which may have identical function names to other R packages we are using and cause some conflicts).</p>
 <p><br></p>
@@ -925,10 +935,10 @@ you could try '??dplyr'</code></pre>
 <h3 class="anchored" data-anchor-id="removing-packages">Removing Packages</h3>
 <p>Just as we can install an R package, we can also uninstall an R package (although doing so is rare, most often when encountering package dependency conflict). To do so, we would use the <code>remove.packages()</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">remove.packages</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">remove.packages</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">remove.packages</span>(<span class="st">"dplyr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">remove.packages</span>(<span class="st">"dplyr"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This results in the package being removed entirely from our computer. We would then need to reinstall it if needed in the future.</p>
 <p><br></p>
@@ -939,7 +949,7 @@ you could try '??dplyr'</code></pre>
 <p>As previously mentioned, <a href="https://cran.r-project.org/">CRAN</a> is the main repository for R packages. But what if we tried to install an R package that is only found on <a href="https://www.bioconductor.org/">Bioconductor</a> or via <a href="https://github.com/trending/r">GitHub</a> using the <code>install.packages()</code> function?</p>
 <p>To see what occurs, let’s try installing the <code>PeacoQC</code> <a href="https://www.bioconductor.org/packages/release/bioc/html/PeacoQC.html">package</a> (which is found on Bioconductor).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"PeacoQC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"PeacoQC"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Installing package into '/home/david/R/x86_64-pc-linux-gnu-library/4.5'
 (as 'lib' is unspecified)</code></pre>
@@ -968,13 +978,13 @@ https://cran.r-project.org/doc/manuals/r-patched/R-admin.html#Installing-package
 <hr>
 <p>To install an R package that is located on <a href="https://www.bioconductor.org/">Bioconductor</a>, we first need to install the <code>BiocManager</code> package from CRAN. This package will allow us to install Bioconductor packages from their respective repository.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"BiocManager"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"BiocManager"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br></p>
 <hr>
 <p>Once BiocManager is installed, we can attach it to our local environment using the <code>library()</code> function</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BiocManager)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BiocManager)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Bioconductor version '3.22' is out-of-date; the current release version '3.23'
   is available with R version '4.6'; see https://bioconductor.org/install</code></pre>
@@ -998,10 +1008,10 @@ Tip
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">install</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">install</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"PeacoQC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"PeacoQC"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br></p>
 <hr>
@@ -1061,13 +1071,13 @@ Tip
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PeacoQC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PeacoQC)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br></p>
 <hr>
 <p>And we can check to see if it has been attached to the local environment</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.5.3 (2026-03-11)
 Platform: x86_64-pc-linux-gnu
@@ -1127,7 +1137,7 @@ loaded via a namespace (and not attached):
 <hr>
 <p>To see what packages are installed (but not yet loaded), we can use the <code>installed.packages()</code> function to return a list of R packages for your computer.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">installed.packages</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">installed.packages</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br></p>
 <hr>
@@ -1147,7 +1157,7 @@ loaded via a namespace (and not attached):
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Spot Check #1
+<span class="screen-reader-only">Tip</span>Spot Check #1
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1157,7 +1167,7 @@ Spot Check #1
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"remotes"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"remotes"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1169,7 +1179,7 @@ Spot Check #1
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Spot Check #2
+<span class="screen-reader-only">Tip</span>Spot Check #2
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1179,7 +1189,7 @@ Spot Check #2
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(remotes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(remotes)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1191,7 +1201,7 @@ Spot Check #2
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Spot Check #3
+<span class="screen-reader-only">Tip</span>Spot Check #3
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1201,9 +1211,9 @@ Spot Check #3
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Either by hovering over it within Positron or via</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Either by hovering over it within Positron or via</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>?<span class="fu">install_github</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>?<span class="fu">install_github</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1214,7 +1224,7 @@ Spot Check #3
 <hr>
 <p>To install an R package from GitHub, we first need the GitHub username (so <a href="https://github.com/hally166">hally166</a> in this case), which is followed by a “/”, and then the name of the package repository (so <a href="https://github.com/hally166/flowSpectrum">flowSpectrum</a> in this case). Our code should consequently be:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">"hally166/flowSpectrum"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">"hally166/flowSpectrum"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><br></p>
 <hr>
@@ -1240,7 +1250,7 @@ Spot Check #3
 <p>While we may be tempted to think of R packages as static, they change quite often, as their develipers add new features, fix bugs, etc. To help keep track of these changes (essential for <a href="https://www.nature.com/articles/d42473-019-00004-y">reproducibility</a> and replicability), R packages have version numbers.</p>
 <p>When we run <code>sessionInfo()</code>, we can see an example of this, with the version number appearing after the package name.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.5.3 (2026-03-11)
 Platform: x86_64-pc-linux-gnu
@@ -1296,7 +1306,7 @@ loaded via a namespace (and not attached):
 <hr>
 <p>Alternatively, we can retrieve the same information for the individual packages via the <code>packageVersion()</code> function</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"PeacoQC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">"PeacoQC"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] '1.20.0'</code></pre>
 </div>
@@ -1305,7 +1315,7 @@ loaded via a namespace (and not attached):
 <hr>
 <p>As well as from the <code>citation()</code> function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">citation</span>(<span class="st">"PeacoQC"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">citation</span>(<span class="st">"PeacoQC"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>To cite package 'PeacoQC' in publications use:
 
@@ -1337,15 +1347,15 @@ A BibTeX entry for LaTeX users is
 <p>We may in the future need to install specific package versions (but wont be doing so today). As expected, which repository contains the R package influences how we would go about doing this.</p>
 <p>For CRAN packages, we can use the <code>remotes</code> packages <code>install_version()</code> function. This allows us to provide the version number, and designate the repository location (the CRAN url in this case).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_version</span>(<span class="st">"ggplot2"</span>, <span class="at">version =</span> <span class="st">"3.5.2"</span>, <span class="at">repos =</span> <span class="st">"https://cloud.r-project.org"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_version</span>(<span class="st">"ggplot2"</span>, <span class="at">version =</span> <span class="st">"3.5.2"</span>, <span class="at">repos =</span> <span class="st">"https://cloud.r-project.org"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>For GitHub-based R packages, the package versioning schema is not as strict as that of CRAN or Bioconductor. Typically, changes in R packagaes are put out by their developers as <a href="https://github.com/DavidRach/Luciernaga/releases">releases</a>. When trying to install a particular release, we can add an additional argument to the <code>install_github()</code> function, specifying the release version’s tag number. For example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"DavidRach/Luciernaga"</span>, <span class="at">ref =</span> <span class="st">"v0.99.7"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"DavidRach/Luciernaga"</span>, <span class="at">ref =</span> <span class="st">"v0.99.7"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Alternatively, if the developer doesn’t implement releases, you can provide the hash number of a particular commit.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"DavidRach/Luciernaga"</span>, <span class="at">ref =</span> <span class="st">"8d1d694"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"DavidRach/Luciernaga"</span>, <span class="at">ref =</span> <span class="st">"8d1d694"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="documentation-and-websites" class="level2">
@@ -1446,7 +1456,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-1/20
+<span class="screen-reader-only">Tip</span>1/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1456,10 +1466,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://purrr.tidyverse.org/</span></span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"purrr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"purrr"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1470,7 +1480,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-2/20
+<span class="screen-reader-only">Tip</span>2/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1480,10 +1490,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: Bioconductor</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: Bioconductor</span></span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://www.bioconductor.org/packages/release/bioc/html/flowCore.html</span></span>
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"flowCore"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"flowCore"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1494,7 +1504,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-3/20
+<span class="screen-reader-only">Tip</span>3/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1504,10 +1514,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: Bioconductor</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: Bioconductor</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://www.bioconductor.org/packages/release/bioc/html/flowWorkspace.html</span></span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"flowWorkspace"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"flowWorkspace"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1518,7 +1528,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-4/20
+<span class="screen-reader-only">Tip</span>4/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1528,10 +1538,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://stringr.tidyverse.org/</span></span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"stringr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"stringr"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1542,7 +1552,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-5/20
+<span class="screen-reader-only">Tip</span>5/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1552,10 +1562,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://ggplot2.tidyverse.org/</span></span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"ggplot2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"ggplot2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1566,7 +1576,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-6/20
+<span class="screen-reader-only">Tip</span>6/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1576,10 +1586,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: Bioconductor</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: Bioconductor</span></span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://www.bioconductor.org/packages/release/bioc/html/ggcyto.html</span></span>
 <span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"ggcyto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"ggcyto"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1590,7 +1600,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-7/20
+<span class="screen-reader-only">Tip</span>7/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1600,10 +1610,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://tidyr.tidyverse.org/</span></span>
 <span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyr"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1614,7 +1624,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-8/20
+<span class="screen-reader-only">Tip</span>8/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1624,10 +1634,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: Bioconductor</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: Bioconductor</span></span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://www.bioconductor.org/packages/release/bioc/html/openCyto.html</span></span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"openCyto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"openCyto"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1638,7 +1648,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-9/20
+<span class="screen-reader-only">Tip</span>9/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1648,10 +1658,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: Bioconductor</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: Bioconductor</span></span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://www.bioconductor.org/packages/release/bioc/html/FlowSOM.html</span></span>
 <span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"FlowSOM"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"FlowSOM"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1662,7 +1672,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-10/20
+<span class="screen-reader-only">Tip</span>10/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1672,10 +1682,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://xml2.r-lib.org/</span></span>
 <span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"xml2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"xml2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1686,7 +1696,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-11/20
+<span class="screen-reader-only">Tip</span>11/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1696,10 +1706,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: GitHub</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: GitHub</span></span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://github.com/saeyslab/CytoNorm</span></span>
 <span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">"saeyslab/CytoNorm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">"saeyslab/CytoNorm"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1710,7 +1720,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-12/20
+<span class="screen-reader-only">Tip</span>12/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1720,10 +1730,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
 <span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://lubridate.tidyverse.org/</span></span>
 <span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"lubridate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"lubridate"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1734,7 +1744,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-13/20
+<span class="screen-reader-only">Tip</span>13/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1744,10 +1754,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://httr2.r-lib.org/</span></span>
 <span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"httr2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"httr2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1758,7 +1768,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-14/20
+<span class="screen-reader-only">Tip</span>14/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1768,10 +1778,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: Bioconductor</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: Bioconductor</span></span>
 <span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://www.bioconductor.org/packages/release/bioc/html/flowGate.html</span></span>
 <span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"flowGate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"flowGate"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1782,7 +1792,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-15/20
+<span class="screen-reader-only">Tip</span>15/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1792,10 +1802,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://devtools.r-lib.org/</span></span>
 <span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1806,7 +1816,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-16/20
+<span class="screen-reader-only">Tip</span>16/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1816,10 +1826,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://plotly.com/r/getting-started/</span></span>
 <span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"plotly"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"plotly"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1830,7 +1840,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-17/20
+<span class="screen-reader-only">Tip</span>17/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1840,10 +1850,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: GitHub</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: GitHub</span></span>
 <span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://github.com/biosurf/cyCombine</span></span>
 <span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">"biosurf/cyCombine"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install_github</span>(<span class="st">"biosurf/cyCombine"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1854,7 +1864,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-18/20
+<span class="screen-reader-only">Tip</span>18/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1864,10 +1874,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: Bioconductor</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: Bioconductor</span></span>
 <span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://www.bioconductor.org/packages/release/bioc/html/CytoML.html</span></span>
 <span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"CytoML"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install</span>(<span class="st">"CytoML"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1878,7 +1888,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-19/20
+<span class="screen-reader-only">Tip</span>19/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1888,10 +1898,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website: https://github.com/jkrijthe/Rtsne</span></span>
 <span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"Rtsne"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"Rtsne"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1902,7 +1912,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-20/20
+<span class="screen-reader-only">Tip</span>20/20
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1912,10 +1922,10 @@ Note
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Location: CRAN</span></span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Website:https://jlmelville.github.io/uwot/</span></span>
 <span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"uwot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"uwot"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><br></p>
@@ -1958,7 +1968,7 @@ Note
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Problem 1
+<span class="screen-reader-only">Tip</span>Problem 1
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1971,7 +1981,7 @@ Problem 1
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Problem 2
+<span class="screen-reader-only">Tip</span>Problem 2
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1984,7 +1994,7 @@ Problem 2
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Problem 3
+<span class="screen-reader-only">Tip</span>Problem 3
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -2052,13 +2062,14 @@ Problem 3
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

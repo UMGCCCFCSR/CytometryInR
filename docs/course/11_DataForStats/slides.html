@@ -6,8 +6,8 @@
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="David Rach">
   <meta name="dcterms.date" content="2026-05-05">
@@ -18,6 +18,9 @@
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -96,7 +99,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
   <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
 
   <script type="text/javascript">
@@ -450,12 +453,12 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(flowWorkspace)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(flowWorkspace)</span>
 <span id="cb1-2"><a></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb1-3"><a></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb1-4"><a></a><span class="fu">library</span>(ggcyto)</span>
 <span id="cb1-5"><a></a><span class="fu">library</span>(openCyto)</span>
-<span id="cb1-6"><a></a><span class="fu">library</span>(purrr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-6"><a></a><span class="fu">library</span>(purrr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -480,10 +483,10 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># RFolder &lt;- file.path("course", "11_DataForStats", "R") # For Interactive</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># RFolder &lt;- file.path("course", "11_DataForStats", "R") # For Interactive</span></span>
 <span id="cb2-2"><a></a>RFolder <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"R"</span>) <span class="co"># For Quarto Rendering</span></span>
 <span id="cb2-3"><a></a>MyFunctions <span class="ot">&lt;-</span> <span class="fu">list.files</span>(RFolder, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
-<span id="cb2-4"><a></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>MyFunctions, <span class="at">.f=</span>source)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-4"><a></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>MyFunctions, <span class="at">.f=</span>source)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -508,7 +511,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co"># For Quarto Rendering</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co"># For Quarto Rendering</span></span>
 <span id="cb3-2"><a></a><span class="co"># StorageLocation &lt;- file.path("course", "11_DataForStats", "data")</span></span>
 <span id="cb3-3"><a></a></span>
 <span id="cb3-4"><a></a>OutputFolder <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co"># For Quarto Rendering</span></span>
@@ -518,7 +521,7 @@ David Rach
 <span id="cb3-8"><a></a></span>
 <span id="cb3-9"><a></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files, </span>
 <span id="cb3-10"><a></a>     <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
-<span id="cb3-11"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-11"><a></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -543,13 +546,13 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>SFC_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(SFC_GatingSet)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>SFC_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(SFC_GatingSet)</span>
 <span id="cb4-2"><a></a>FluorophoresOnly <span class="ot">&lt;-</span> SFC_Parameters[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(SFC_Parameters, <span class="st">"FSC|SSC|Time"</span>)]</span>
 <span id="cb4-3"><a></a></span>
 <span id="cb4-4"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>,</span>
 <span id="cb4-5"><a></a> <span class="at">maxValue=</span><span class="dv">262144</span>, <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">2</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">750</span>)</span>
 <span id="cb4-6"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb4-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-7"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 19 samples</code></pre>
 </div>
@@ -578,7 +581,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>CurrentMetadata <span class="ot">&lt;-</span> <span class="fu">pData</span>(SFC_GatingSet)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>CurrentMetadata <span class="ot">&lt;-</span> <span class="fu">pData</span>(SFC_GatingSet)</span>
 <span id="cb6-2"><a></a>CurrentMetadata <span class="ot">&lt;-</span> CurrentMetadata <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">specimen =</span> name) <span class="sc">|&gt;</span></span>
 <span id="cb6-3"><a></a>     <span class="fu">mutate</span>(<span class="at">specimen =</span> stringr<span class="sc">::</span><span class="fu">str_extract</span>(specimen, <span class="st">"INF</span><span class="sc">\\</span><span class="st">d+"</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb6-4"><a></a>     <span class="fu">mutate</span>(<span class="at">specimen =</span> stringr<span class="sc">::</span><span class="fu">str_replace</span>(specimen, <span class="st">"INF0(</span><span class="sc">\\</span><span class="st">d{3})"</span>, <span class="st">"INF</span><span class="sc">\\</span><span class="st">1"</span>))</span>
@@ -586,7 +589,7 @@ David Rach
 <span id="cb6-6"><a></a>TheCSV <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">"Metadata.csv"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
 <span id="cb6-7"><a></a>AdditionalMetadata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(TheCSV, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
 <span id="cb6-8"><a></a>AdditionalMetadata <span class="ot">&lt;-</span> AdditionalMetadata<span class="sc">|&gt;</span></span>
-<span id="cb6-9"><a></a>     <span class="fu">mutate</span>(<span class="at">specimen =</span> stringr<span class="sc">::</span><span class="fu">str_replace</span>(specimen, <span class="st">"INF0(</span><span class="sc">\\</span><span class="st">d{3})"</span>, <span class="st">"INF</span><span class="sc">\\</span><span class="st">1"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-9"><a></a>     <span class="fu">mutate</span>(<span class="at">specimen =</span> stringr<span class="sc">::</span><span class="fu">str_replace</span>(specimen, <span class="st">"INF0(</span><span class="sc">\\</span><span class="st">d{3})"</span>, <span class="st">"INF</span><span class="sc">\\</span><span class="st">1"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -611,11 +614,11 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>UpdatedMetadata <span class="ot">&lt;-</span> <span class="fu">left_join</span>(CurrentMetadata, </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>UpdatedMetadata <span class="ot">&lt;-</span> <span class="fu">left_join</span>(CurrentMetadata, </span>
 <span id="cb7-2"><a></a>     AdditionalMetadata, <span class="at">by=</span><span class="st">"specimen"</span>)</span>
 <span id="cb7-3"><a></a><span class="fu">rownames</span>(UpdatedMetadata) <span class="ot">&lt;-</span> UpdatedMetadata<span class="sc">$</span>name</span>
 <span id="cb7-4"><a></a><span class="fu">pData</span>(SFC_GatingSet) <span class="ot">&lt;-</span> UpdatedMetadata</span>
-<span id="cb7-5"><a></a><span class="fu">pData</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-5"><a></a><span class="fu">pData</span>(SFC_GatingSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                                                                 name
 2025_07_29_AB_03_INF134_00_SEB__Tcells.fcs 2025_07_29_AB_03_INF134_00_SEB__Tcells.fcs
@@ -723,9 +726,9 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>OurGateTemplate <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>OurGateTemplate <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation,</span>
 <span id="cb9-2"><a></a> <span class="at">pattern=</span><span class="st">"GatesUnmixed.csv"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
-<span id="cb9-3"><a></a>Example <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(OurGateTemplate, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-3"><a></a>Example <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(OurGateTemplate, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -733,7 +736,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>Example</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>Example</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>         alias pop      parent             dims   gating_method
 1     singlets   +        root      FSC-A,FSC-H     singletGate
@@ -829,12 +832,12 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell" data-warnings="false">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="co"># install.packages("data.table") # CRAN</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="co"># install.packages("data.table") # CRAN</span></span>
 <span id="cb12-2"><a></a>GatesToApply <span class="ot">&lt;-</span> data.table<span class="sc">::</span><span class="fu">fread</span>(OurGateTemplate)</span>
 <span id="cb12-3"><a></a></span>
 <span id="cb12-4"><a></a>TheFullTemplate <span class="ot">&lt;-</span> <span class="fu">gatingTemplate</span>(GatesToApply)</span>
 <span id="cb12-5"><a></a></span>
-<span id="cb12-6"><a></a><span class="fu">gt_gating</span>(TheFullTemplate, SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-6"><a></a><span class="fu">gt_gating</span>(TheFullTemplate, SFC_GatingSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -880,8 +883,8 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="co"># remotes::install_github("DavidRach/Luciernaga")</span></span>
-<span id="cb13-2"><a></a><span class="fu">library</span>(Luciernaga)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a><span class="co"># remotes::install_github("DavidRach/Luciernaga")</span></span>
+<span id="cb13-2"><a></a><span class="fu">library</span>(Luciernaga)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -907,16 +910,16 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>IndividualPlot <span class="ot">&lt;-</span> <span class="fu">Utility_GatingPlots</span>(<span class="at">x=</span>SFC_GatingSet[[<span class="dv">1</span>]],</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>IndividualPlot <span class="ot">&lt;-</span> <span class="fu">Utility_GatingPlots</span>(<span class="at">x=</span>SFC_GatingSet[[<span class="dv">1</span>]],</span>
 <span id="cb14-2"><a></a> <span class="at">sample.name =</span> <span class="st">"GUID"</span>, <span class="at">removestrings =</span> <span class="st">".fcs"</span>, </span>
-<span id="cb14-3"><a></a> <span class="at">gtFile =</span> GatesToApply,<span class="at">returnType=</span><span class="st">"patchwork"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-3"><a></a> <span class="at">gtFile =</span> GatesToApply,<span class="at">returnType=</span><span class="st">"patchwork"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>IndividualPlot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>IndividualPlot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`1`</code></pre>
 </div>
@@ -1016,10 +1019,10 @@ $`7`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">.f=</span>Utility_GatingPlots, </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">.f=</span>Utility_GatingPlots, </span>
 <span id="cb23-2"><a></a>     <span class="at">sample.name =</span> <span class="st">"GUID"</span>, <span class="at">removestrings =</span> <span class="st">".fcs"</span>,</span>
 <span id="cb23-3"><a></a>     <span class="at">gtFile =</span> GatesToApply,<span class="at">returnType=</span><span class="st">"pdf"</span>,</span>
-<span id="cb23-4"><a></a>     <span class="at">outpath=</span>OutputFolder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-4"><a></a>     <span class="at">outpath=</span>OutputFolder)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1069,18 +1072,18 @@ $`7`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>Plot <span class="ot">&lt;-</span> <span class="fu">Utility_UnityPlot</span>(<span class="at">x=</span><span class="st">"PE-Fire 744-A"</span>, <span class="at">y=</span><span class="st">"Alexa Fluor 488-A"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>Plot <span class="ot">&lt;-</span> <span class="fu">Utility_UnityPlot</span>(<span class="at">x=</span><span class="st">"PE-Fire 744-A"</span>, <span class="at">y=</span><span class="st">"Alexa Fluor 488-A"</span>,</span>
 <span id="cb24-2"><a></a> <span class="at">GatingSet=</span>SFC_GatingSet, <span class="at">sample.name=</span><span class="st">"GUID"</span>, <span class="at">bins=</span><span class="dv">70</span>,</span>
 <span id="cb24-3"><a></a> <span class="at">removestrings=</span><span class="st">".fcs"</span>, <span class="at">marginsubset=</span><span class="st">"Tcells"</span>, </span>
 <span id="cb24-4"><a></a> <span class="at">gatesubset=</span><span class="st">"CD4+"</span>, <span class="at">returntype=</span><span class="st">"patchwork"</span>, </span>
-<span id="cb24-5"><a></a> <span class="at">reference=</span><span class="cn">NULL</span>, <span class="at">clearance=</span><span class="fl">0.2</span>, <span class="at">gatelines=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-5"><a></a> <span class="at">reference=</span><span class="cn">NULL</span>, <span class="at">clearance=</span><span class="fl">0.2</span>, <span class="at">gatelines=</span><span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>Plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>Plot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`1`</code></pre>
 </div>
@@ -1171,19 +1174,19 @@ $`4`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="co"># pData(SFC_GatingSet)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="co"># pData(SFC_GatingSet)</span></span>
 <span id="cb30-2"><a></a></span>
 <span id="cb30-3"><a></a>SinglePlot <span class="ot">&lt;-</span> <span class="fu">Utility_RidgePlots</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"CD8+"</span>, </span>
 <span id="cb30-4"><a></a>     <span class="at">TheFill=</span><span class="st">"infant_sex"</span>, <span class="at">TheX =</span> <span class="st">"APC-Fire 750-A"</span>,</span>
 <span id="cb30-5"><a></a>     <span class="at">TheY=</span><span class="st">"specimen"</span>,<span class="at">returntype=</span><span class="st">"patchwork"</span>, <span class="at">outpath=</span>OutputFolder, </span>
-<span id="cb30-6"><a></a>     <span class="at">filename=</span><span class="st">"RidgePlot_Condition"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-6"><a></a>     <span class="at">filename=</span><span class="st">"RidgePlot_Condition"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>SinglePlot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>SinglePlot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`1`</code></pre>
 </div>
@@ -1235,10 +1238,10 @@ $`4`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">Utility_NbyNPlots</span>(<span class="at">x=</span>SFC_GatingSet[[<span class="dv">1</span>]], <span class="at">sample.name =</span> <span class="st">"GUID"</span>, </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">Utility_NbyNPlots</span>(<span class="at">x=</span>SFC_GatingSet[[<span class="dv">1</span>]], <span class="at">sample.name =</span> <span class="st">"GUID"</span>, </span>
 <span id="cb33-2"><a></a>    <span class="at">removestrings =</span> <span class="st">".fcs"</span>, <span class="at">marginsubset =</span> <span class="st">"Tcells"</span>,</span>
 <span id="cb33-3"><a></a>    <span class="at">gatesubset =</span> <span class="st">"CD4+"</span>, <span class="at">ycolumn =</span> <span class="st">"Spark Blue 550-A"</span>, <span class="at">bins =</span> <span class="dv">70</span>,</span>
-<span id="cb33-4"><a></a>    <span class="at">returntype=</span><span class="st">"patchwork"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb33-4"><a></a>    <span class="at">returntype=</span><span class="st">"patchwork"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`1`</code></pre>
 </div>
@@ -1387,7 +1390,7 @@ $`6`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>Data <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_count_with_meta</span>(SFC_GatingSet, <span class="st">"freq"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>Data <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_count_with_meta</span>(SFC_GatingSet, <span class="st">"freq"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1432,7 +1435,7 @@ $`6`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="co"># colnames(Data)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="co"># colnames(Data)</span></span>
 <span id="cb41-2"><a></a>Data<span class="sc">$</span>Population <span class="ot">&lt;-</span> <span class="fu">basename</span>(Data<span class="sc">$</span>Population)</span>
 <span id="cb41-3"><a></a>Data<span class="sc">$</span>Frequency <span class="ot">&lt;-</span> <span class="fu">round</span>(Data<span class="sc">$</span>Frequency, <span class="dv">2</span>)</span>
 <span id="cb41-4"><a></a></span>
@@ -1440,7 +1443,7 @@ $`6`</code></pre>
 <span id="cb41-6"><a></a></span>
 <span id="cb41-7"><a></a>Data <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">!</span>tidyselect<span class="sc">::</span><span class="fu">any_of</span>(RemoveTheseColumns))</span>
 <span id="cb41-8"><a></a>Data <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(specimen, Condition,</span>
-<span id="cb41-9"><a></a> timepoint, ptype, infant_sex, <span class="at">.before=</span>Population)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb41-9"><a></a> timepoint, ptype, infant_sex, <span class="at">.before=</span>Population)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1449,7 +1452,7 @@ $`6`</code></pre>
 <h3 id="pivot_wider">pivot_wider</h3>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a><span class="fu">head</span>(Data, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a><span class="fu">head</span>(Data, <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   specimen Condition timepoint  ptype infant_sex  Population Frequency
      &lt;char&gt;    &lt;char&gt;    &lt;char&gt; &lt;char&gt;     &lt;char&gt;      &lt;char&gt;     &lt;num&gt;
@@ -1540,8 +1543,8 @@ $`6`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="co"># install.packages("tidyr") #CRAN</span></span>
-<span id="cb44-2"><a></a><span class="fu">library</span>(tidyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a></a><span class="co"># install.packages("tidyr") #CRAN</span></span>
+<span id="cb44-2"><a></a><span class="fu">library</span>(tidyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1550,7 +1553,7 @@ $`6`</code></pre>
 <p>Next, we provide the column whose values will become the new colum names to “name_from”, and the column which will become the new column values to “values_from”. And we are set to execute the pivot.</p>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>Data <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">pivot_wider</span>(<span class="at">names_from=</span>Population, <span class="at">values_from =</span> Frequency)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a>Data <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">pivot_wider</span>(<span class="at">names_from=</span>Population, <span class="at">values_from =</span> Frequency)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1558,7 +1561,7 @@ $`6`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">head</span>(Data, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">head</span>(Data, <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 30
   specimen Condition timepoint ptype  infant_sex singlets lymphocytes Tcells
@@ -1754,7 +1757,7 @@ $`6`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="fu">head</span>(Data, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="fu">head</span>(Data, <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 30
   specimen Condition timepoint ptype  infant_sex singlets lymphocytes Tcells
@@ -1793,7 +1796,7 @@ $`6`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a><span class="fu">colnames</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a><span class="fu">colnames</span>(Data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "specimen"    "Condition"   "timepoint"   "ptype"       "infant_sex" 
  [6] "singlets"    "lymphocytes" "Tcells"      "Vd2+"        "Vd2_CD107a" 
@@ -1846,7 +1849,7 @@ $`6`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="fu">unique</span>(Data<span class="sc">$</span>infant_sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="fu">unique</span>(Data<span class="sc">$</span>infant_sex)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Female" "Male"  </code></pre>
 </div>
@@ -1854,7 +1857,7 @@ $`6`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a><span class="fu">unique</span>(Data<span class="sc">$</span>ptype)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a><span class="fu">unique</span>(Data<span class="sc">$</span>ptype)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "HEU-lo" "HU"     "HEU-hi"</code></pre>
 </div>
@@ -1882,7 +1885,7 @@ $`6`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a><span class="fu">summary</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a><span class="fu">summary</span>(Data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   specimen          Condition          timepoint            ptype          
  Length:19          Length:19          Length:19          Length:19         
@@ -2016,8 +2019,8 @@ $`6`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a><span class="fu">t.test</span>(Data[[<span class="st">"Tcells"</span>]] <span class="sc">~</span> Data[[<span class="st">"infant_sex"</span>]],</span>
-<span id="cb58-2"><a></a> <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a><span class="fu">t.test</span>(Data[[<span class="st">"Tcells"</span>]] <span class="sc">~</span> Data[[<span class="st">"infant_sex"</span>]],</span>
+<span id="cb58-2"><a></a> <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Two Sample t-test
@@ -2075,8 +2078,8 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a></a><span class="co"># install.packages("broom") # CRAN</span></span>
-<span id="cb60-2"><a></a><span class="fu">library</span>(broom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a></a><span class="co"># install.packages("broom") # CRAN</span></span>
+<span id="cb60-2"><a></a><span class="fu">library</span>(broom)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2084,8 +2087,8 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a><span class="fu">tidy</span>(<span class="fu">t.test</span>(Data[[<span class="st">"Tcells"</span>]] <span class="sc">~</span> Data[[<span class="st">"infant_sex"</span>]],</span>
-<span id="cb61-2"><a></a> <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a><span class="fu">tidy</span>(<span class="fu">t.test</span>(Data[[<span class="st">"Tcells"</span>]] <span class="sc">~</span> Data[[<span class="st">"infant_sex"</span>]],</span>
+<span id="cb61-2"><a></a> <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 10
   estimate estimate1 estimate2 statistic p.value parameter conf.low conf.high
@@ -2117,8 +2120,8 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a><span class="fu">tidy</span>(<span class="fu">t.test</span>(Data[[<span class="st">"Vd2+"</span>]] <span class="sc">~</span> Data[[<span class="st">"infant_sex"</span>]],</span>
-<span id="cb63-2"><a></a> <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a><span class="fu">tidy</span>(<span class="fu">t.test</span>(Data[[<span class="st">"Vd2+"</span>]] <span class="sc">~</span> Data[[<span class="st">"infant_sex"</span>]],</span>
+<span id="cb63-2"><a></a> <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 10
   estimate estimate1 estimate2 statistic p.value parameter conf.low conf.high
@@ -2133,8 +2136,8 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a><span class="fu">tidy</span>(<span class="fu">t.test</span>(Data[[<span class="st">"CD4+"</span>]] <span class="sc">~</span> Data[[<span class="st">"infant_sex"</span>]],</span>
-<span id="cb65-2"><a></a> <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a><span class="fu">tidy</span>(<span class="fu">t.test</span>(Data[[<span class="st">"CD4+"</span>]] <span class="sc">~</span> Data[[<span class="st">"infant_sex"</span>]],</span>
+<span id="cb65-2"><a></a> <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 10
   estimate estimate1 estimate2 statistic p.value parameter conf.low conf.high
@@ -2149,8 +2152,8 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a><span class="fu">tidy</span>(<span class="fu">t.test</span>(Data[[<span class="st">"CD8+"</span>]] <span class="sc">~</span> Data[[<span class="st">"infant_sex"</span>]],</span>
-<span id="cb67-2"><a></a> <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a><span class="fu">tidy</span>(<span class="fu">t.test</span>(Data[[<span class="st">"CD8+"</span>]] <span class="sc">~</span> Data[[<span class="st">"infant_sex"</span>]],</span>
+<span id="cb67-2"><a></a> <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 10
   estimate estimate1 estimate2 statistic p.value parameter conf.low conf.high
@@ -2165,8 +2168,8 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a><span class="fu">tidy</span>(<span class="fu">t.test</span>(Data[[<span class="st">"CD8-"</span>]] <span class="sc">~</span> Data[[<span class="st">"infant_sex"</span>]],</span>
-<span id="cb69-2"><a></a> <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a><span class="fu">tidy</span>(<span class="fu">t.test</span>(Data[[<span class="st">"CD8-"</span>]] <span class="sc">~</span> Data[[<span class="st">"infant_sex"</span>]],</span>
+<span id="cb69-2"><a></a> <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 10
   estimate estimate1 estimate2 statistic p.value parameter conf.low conf.high
@@ -2218,7 +2221,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
 <span id="cb71-2"><a></a><span class="co">#' enable quick statistical outputs for our extracted data</span></span>
 <span id="cb71-3"><a></a><span class="co">#' </span></span>
 <span id="cb71-4"><a></a><span class="co">#' @param data The data.frame or tibble object containing our dataset.</span></span>
@@ -2228,7 +2231,7 @@ mean in group Female   mean in group Male
 <span id="cb71-8"><a></a>StatsFromFlow <span class="ot">&lt;-</span> <span class="cf">function</span>(data, theColumn, theFactor){</span>
 <span id="cb71-9"><a></a>     <span class="fu">tidy</span>(<span class="fu">t.test</span>(data[[theColumn]] <span class="sc">~</span> data[[theFactor]],</span>
 <span id="cb71-10"><a></a>      <span class="at">alternative =</span> <span class="st">"two.sided"</span>, <span class="at">var.equal =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb71-11"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb71-11"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2253,7 +2256,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a></a><span class="fu">StatsFromFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD4+"</span>, <span class="at">theFactor=</span><span class="st">"infant_sex"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a></a><span class="fu">StatsFromFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD4+"</span>, <span class="at">theFactor=</span><span class="st">"infant_sex"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 10
   estimate estimate1 estimate2 statistic p.value parameter conf.low conf.high
@@ -2305,7 +2308,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a></a><span class="fu">colnames</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a></a><span class="fu">colnames</span>(Data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "specimen"    "Condition"   "timepoint"   "ptype"       "infant_sex" 
  [6] "singlets"    "lymphocytes" "Tcells"      "Vd2+"        "Vd2_CD107a" 
@@ -2338,11 +2341,11 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a></a><span class="fu">colnames</span>(Data)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a></a><span class="fu">colnames</span>(Data)[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "specimen"   "Condition"  "timepoint"  "ptype"      "infant_sex"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a><span class="fu">summary</span>(Data[,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a><span class="fu">summary</span>(Data[,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   specimen          Condition          timepoint            ptype          
  Length:19          Length:19          Length:19          Length:19         
@@ -2377,7 +2380,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a><span class="fu">ncol</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a><span class="fu">ncol</span>(Data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 30</code></pre>
 </div>
@@ -2405,7 +2408,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a></a><span class="fu">colnames</span>(Data)[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a></a><span class="fu">colnames</span>(Data)[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "singlets"    "lymphocytes" "Tcells"      "Vd2+"        "Vd2_CD107a" 
  [6] "Vd2_IL2"     "Vd2_TNFa"    "Vd2_IFNg"    "Vd2-"        "CD4+"       
@@ -2457,9 +2460,9 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)]</span>
 <span id="cb84-2"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow,</span>
-<span id="cb84-3"><a></a> <span class="at">data=</span>Data, <span class="at">theFactor=</span><span class="st">"infant_sex"</span>) <span class="sc">|&gt;</span> <span class="fu">bind_rows</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb84-3"><a></a> <span class="at">data=</span>Data, <span class="at">theFactor=</span><span class="st">"infant_sex"</span>) <span class="sc">|&gt;</span> <span class="fu">bind_rows</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 25 × 10
    estimate estimate1 estimate2 statistic  p.value parameter  conf.low conf.high
@@ -2521,7 +2524,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
 <span id="cb86-2"><a></a><span class="co">#' enable quick statistical outputs for our extracted data</span></span>
 <span id="cb86-3"><a></a><span class="co">#' </span></span>
 <span id="cb86-4"><a></a><span class="co">#' @param data The data.frame or tibble object containing our dataset.</span></span>
@@ -2536,7 +2539,7 @@ mean in group Female   mean in group Male
 <span id="cb86-13"><a></a>     Results <span class="ot">&lt;-</span> Results <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">GateName=</span>GateName) <span class="sc">|&gt;</span></span>
 <span id="cb86-14"><a></a>           <span class="fu">mutate</span>(<span class="at">FactorName=</span>FactorName)</span>
 <span id="cb86-15"><a></a>     <span class="fu">return</span>(Results)</span>
-<span id="cb86-16"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb86-16"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2544,9 +2547,9 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)]</span>
 <span id="cb87-2"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow,</span>
-<span id="cb87-3"><a></a> <span class="at">data=</span>Data, <span class="at">theFactor=</span><span class="st">"infant_sex"</span>) <span class="sc">|&gt;</span> <span class="fu">bind_rows</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb87-3"><a></a> <span class="at">data=</span>Data, <span class="at">theFactor=</span><span class="st">"infant_sex"</span>) <span class="sc">|&gt;</span> <span class="fu">bind_rows</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 25 × 12
    estimate estimate1 estimate2 statistic  p.value parameter  conf.low conf.high
@@ -2630,7 +2633,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
 <span id="cb89-2"><a></a><span class="co">#' enable quick statistical outputs for our extracted data</span></span>
 <span id="cb89-3"><a></a><span class="co">#' </span></span>
 <span id="cb89-4"><a></a><span class="co">#' @param data The data.frame or tibble object containing our dataset</span></span>
@@ -2653,7 +2656,7 @@ mean in group Female   mean in group Male
 <span id="cb89-21"><a></a>     Results <span class="ot">&lt;-</span> Results <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">GateName=</span>GateName) <span class="sc">|&gt;</span></span>
 <span id="cb89-22"><a></a>           <span class="fu">mutate</span>(<span class="at">FactorName=</span>FactorName)</span>
 <span id="cb89-23"><a></a>     <span class="fu">return</span>(Results)</span>
-<span id="cb89-24"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb89-24"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2661,10 +2664,10 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)]</span>
 <span id="cb90-2"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
 <span id="cb90-3"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">parametric=</span><span class="st">"parametric"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb90-4"><a></a>      <span class="fu">bind_rows</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb90-4"><a></a>      <span class="fu">bind_rows</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 25 × 12
    estimate estimate1 estimate2 statistic  p.value parameter  conf.low conf.high
@@ -2690,10 +2693,10 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)]</span>
 <span id="cb92-2"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
 <span id="cb92-3"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">parametric=</span><span class="st">"non-parametric"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb92-4"><a></a>      <span class="fu">bind_rows</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb92-4"><a></a>      <span class="fu">bind_rows</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 25 × 6
    statistic  p.value method                     alternative GateName FactorName
@@ -2755,7 +2758,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a></a><span class="fu">unique</span>(Data<span class="sc">$</span>ptype)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a></a><span class="fu">unique</span>(Data<span class="sc">$</span>ptype)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "HEU-lo" "HU"     "HEU-hi"</code></pre>
 </div>
@@ -2803,7 +2806,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
 <span id="cb96-2"><a></a><span class="co">#' enable quick statistical outputs for our extracted data</span></span>
 <span id="cb96-3"><a></a><span class="co">#' </span></span>
 <span id="cb96-4"><a></a><span class="co">#' @param data The data.frame or tibble object containing our dataset</span></span>
@@ -2828,7 +2831,7 @@ mean in group Female   mean in group Male
 <span id="cb96-23"><a></a>     Results <span class="ot">&lt;-</span> Results <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">GateName=</span>GateName) <span class="sc">|&gt;</span> </span>
 <span id="cb96-24"><a></a>          <span class="fu">mutate</span>(<span class="at">FactorName=</span>FactorName)</span>
 <span id="cb96-25"><a></a>     <span class="fu">return</span>(FactorLevels)</span>
-<span id="cb96-26"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb96-26"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2836,9 +2839,9 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
 <span id="cb97-2"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
-<span id="cb97-3"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">parametric=</span><span class="st">"parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb97-3"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">parametric=</span><span class="st">"parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] "Female" "Male"  </code></pre>
@@ -2887,7 +2890,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb99"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
 <span id="cb99-2"><a></a><span class="co">#' enable quick statistical outputs for our extracted data</span></span>
 <span id="cb99-3"><a></a><span class="co">#' </span></span>
 <span id="cb99-4"><a></a><span class="co">#' @param data The data.frame or tibble object containing our dataset</span></span>
@@ -2914,7 +2917,7 @@ mean in group Female   mean in group Male
 <span id="cb99-25"><a></a>     Results <span class="ot">&lt;-</span> Results <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">GateName=</span>GateName) <span class="sc">|&gt;</span></span>
 <span id="cb99-26"><a></a>           <span class="fu">mutate</span>(<span class="at">FactorName=</span>FactorName)</span>
 <span id="cb99-27"><a></a>     <span class="fu">return</span>(Results)</span>
-<span id="cb99-28"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb99-28"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2922,9 +2925,9 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
 <span id="cb100-2"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
-<span id="cb100-3"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">parametric=</span><span class="st">"parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb100-3"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">parametric=</span><span class="st">"parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 # A tibble: 1 × 12
@@ -2941,9 +2944,9 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
 <span id="cb102-2"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
-<span id="cb102-3"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">parametric=</span><span class="st">"non-parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb102-3"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">parametric=</span><span class="st">"non-parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 # A tibble: 1 × 6
@@ -2975,7 +2978,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
 <span id="cb104-2"><a></a><span class="co">#' enable quick statistical outputs for our extracted data</span></span>
 <span id="cb104-3"><a></a><span class="co">#' </span></span>
 <span id="cb104-4"><a></a><span class="co">#' @param data The data.frame or tibble object containing our dataset</span></span>
@@ -3008,7 +3011,7 @@ mean in group Female   mean in group Male
 <span id="cb104-31"><a></a></span>
 <span id="cb104-32"><a></a>     <span class="co"># Results &lt;- Results |&gt; mutate(GateName=GateName) |&gt; mutate(FactorName=FactorName)</span></span>
 <span id="cb104-33"><a></a>     <span class="fu">return</span>(Results)</span>
-<span id="cb104-34"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb104-34"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3016,9 +3019,9 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
 <span id="cb105-2"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
-<span id="cb105-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb105-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] "Success!"</code></pre>
@@ -3030,9 +3033,9 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
 <span id="cb107-2"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
-<span id="cb107-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"non-parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb107-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"non-parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] "Success!"</code></pre>
@@ -3061,7 +3064,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb109"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
 <span id="cb109-2"><a></a><span class="co">#' enable quick statistical outputs for our extracted data</span></span>
 <span id="cb109-3"><a></a><span class="co">#' </span></span>
 <span id="cb109-4"><a></a><span class="co">#' @param data The data.frame or tibble object containing our dataset</span></span>
@@ -3094,7 +3097,7 @@ mean in group Female   mean in group Male
 <span id="cb109-31"><a></a></span>
 <span id="cb109-32"><a></a>     <span class="co"># Results &lt;- Results |&gt; mutate(GateName=GateName) |&gt; mutate(FactorName=FactorName)</span></span>
 <span id="cb109-33"><a></a>     <span class="fu">return</span>(Results)</span>
-<span id="cb109-34"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb109-34"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3102,9 +3105,9 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb110"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
 <span id="cb110-2"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
-<span id="cb110-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb110-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 # A tibble: 2 × 6
@@ -3120,9 +3123,9 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb112"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
 <span id="cb112-2"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
-<span id="cb112-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"non-parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb112-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"non-parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 # A tibble: 1 × 4
@@ -3154,7 +3157,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb114"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
 <span id="cb114-2"><a></a><span class="co">#' enable quick statistical outputs for our extracted data</span></span>
 <span id="cb114-3"><a></a><span class="co">#' </span></span>
 <span id="cb114-4"><a></a><span class="co">#' @param data The data.frame or tibble object containing our dataset</span></span>
@@ -3190,7 +3193,7 @@ mean in group Female   mean in group Male
 <span id="cb114-34"><a></a>     Results <span class="ot">&lt;-</span> Results <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">GateName=</span>GateName) <span class="sc">|&gt;</span></span>
 <span id="cb114-35"><a></a>           <span class="fu">mutate</span>(<span class="at">FactorName=</span>FactorName)</span>
 <span id="cb114-36"><a></a>     <span class="fu">return</span>(Results)</span>
-<span id="cb114-37"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb114-37"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3198,9 +3201,9 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb115"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
 <span id="cb115-2"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
-<span id="cb115-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb115-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 # A tibble: 1 × 9
@@ -3233,7 +3236,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb117"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a></a><span class="co">#' Helper function that wraps the various statistical test to</span></span>
 <span id="cb117-2"><a></a><span class="co">#' enable quick statistical outputs for our extracted data</span></span>
 <span id="cb117-3"><a></a><span class="co">#' </span></span>
 <span id="cb117-4"><a></a><span class="co">#' @param data The data.frame or tibble object containing our dataset</span></span>
@@ -3293,7 +3296,7 @@ mean in group Female   mean in group Male
 <span id="cb117-58"><a></a>     Results <span class="ot">&lt;-</span> Results <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">GateName=</span>GateName) <span class="sc">|&gt;</span></span>
 <span id="cb117-59"><a></a>           <span class="fu">mutate</span>(<span class="at">FactorName=</span>FactorName)</span>
 <span id="cb117-60"><a></a>     <span class="fu">return</span>(Results)</span>
-<span id="cb117-61"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb117-61"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3318,9 +3321,9 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb118"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
 <span id="cb118-2"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
-<span id="cb118-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"parametric"</span>, <span class="at">alpha=</span><span class="fl">0.99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb118-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"parametric"</span>, <span class="at">alpha=</span><span class="fl">0.99</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 # A tibble: 3 × 6
@@ -3337,9 +3340,9 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb120"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span>]</span>
 <span id="cb120-2"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
-<span id="cb120-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"non-parametric"</span>, <span class="at">alpha=</span><span class="fl">0.99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb120-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"non-parametric"</span>, <span class="at">alpha=</span><span class="fl">0.99</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 # A tibble: 3 × 6
@@ -3391,12 +3394,12 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a></a><span class="co"># t-test</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb122"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a></a><span class="co"># t-test</span></span>
 <span id="cb122-2"><a></a></span>
 <span id="cb122-3"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)]</span>
 <span id="cb122-4"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
 <span id="cb122-5"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">parametric=</span><span class="st">"parametric"</span>, <span class="at">alpha=</span><span class="fl">0.05</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb122-6"><a></a>     <span class="fu">bind_rows</span>() <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(p.value <span class="sc">&lt;</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb122-6"><a></a>     <span class="fu">bind_rows</span>() <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(p.value <span class="sc">&lt;</span> <span class="fl">0.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 12
   estimate estimate1 estimate2 statistic p.value parameter conf.low  conf.high
@@ -3414,11 +3417,11 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a></a><span class="co"># Wilcoxon</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb124"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a></a><span class="co"># Wilcoxon</span></span>
 <span id="cb124-2"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)]</span>
 <span id="cb124-3"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
 <span id="cb124-4"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">parametric=</span><span class="st">"non-parametric"</span>, <span class="at">alpha=</span><span class="fl">0.05</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb124-5"><a></a>     <span class="fu">bind_rows</span>() <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(p.value <span class="sc">&lt;</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb124-5"><a></a>     <span class="fu">bind_rows</span>() <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(p.value <span class="sc">&lt;</span> <span class="fl">0.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 6
   statistic p.value method                       alternative GateName FactorName
@@ -3435,11 +3438,11 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a></a><span class="co"># One-Way Anova</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb126"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a></a><span class="co"># One-Way Anova</span></span>
 <span id="cb126-2"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)]</span>
 <span id="cb126-3"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
 <span id="cb126-4"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"parametric"</span>, <span class="at">alpha=</span><span class="fl">0.05</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb126-5"><a></a>     <span class="fu">bind_rows</span>() <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(p.value <span class="sc">&lt;</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb126-5"><a></a>     <span class="fu">bind_rows</span>() <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(p.value <span class="sc">&lt;</span> <span class="fl">0.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 9
   term           df   sumsq  meansq statistic p.value method GateName FactorName
@@ -3455,11 +3458,11 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a></a><span class="co"># Kruskal-Wallis</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb128"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a></a><span class="co"># Kruskal-Wallis</span></span>
 <span id="cb128-2"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data)[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)]</span>
 <span id="cb128-3"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns, <span class="at">.f=</span>StatsFromFlow, <span class="at">data=</span>Data,</span>
 <span id="cb128-4"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">parametric=</span><span class="st">"non-parametric"</span>, <span class="at">alpha=</span><span class="fl">0.05</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb128-5"><a></a>     <span class="fu">bind_rows</span>() <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(p.value <span class="sc">&lt;</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb128-5"><a></a>     <span class="fu">bind_rows</span>() <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(p.value <span class="sc">&lt;</span> <span class="fl">0.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 4 × 6
   statistic p.value parameter method                       GateName FactorName
@@ -3550,7 +3553,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a></a><span class="co">#' Generate a beeswarm-boxplot for a given column by a factor column</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb130"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a></a><span class="co">#' Generate a beeswarm-boxplot for a given column by a factor column</span></span>
 <span id="cb130-2"><a></a><span class="co">#' of interest</span></span>
 <span id="cb130-3"><a></a><span class="co">#' </span></span>
 <span id="cb130-4"><a></a><span class="co">#' @param data The data.frame or tibble object containing our dataset</span></span>
@@ -3579,7 +3582,7 @@ mean in group Female   mean in group Male
 <span id="cb130-27"><a></a>               <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">8</span>)</span>
 <span id="cb130-28"><a></a>               )</span>
 <span id="cb130-29"><a></a>     <span class="fu">return</span>(plot)</span>
-<span id="cb130-30"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb130-30"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3604,7 +3607,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb131"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a></a><span class="fu">library</span>(ggplot2) <span class="co">#Due to all the dependencies</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb131"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a></a><span class="fu">library</span>(ggplot2) <span class="co">#Due to all the dependencies</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3629,11 +3632,11 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a></a>shape_sex <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Female"</span> <span class="ot">=</span> <span class="dv">22</span>, <span class="st">"Male"</span> <span class="ot">=</span> <span class="dv">21</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb132"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a></a>shape_sex <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Female"</span> <span class="ot">=</span> <span class="dv">22</span>, <span class="st">"Male"</span> <span class="ot">=</span> <span class="dv">21</span>)</span>
 <span id="cb132-2"><a></a>shape_ptype <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"HU"</span> <span class="ot">=</span> <span class="dv">22</span>, <span class="st">"HEU-lo"</span> <span class="ot">=</span> <span class="dv">21</span>, <span class="st">"HEU-hi"</span> <span class="ot">=</span> <span class="dv">21</span>)</span>
 <span id="cb132-3"><a></a></span>
 <span id="cb132-4"><a></a>fill_sex <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Female"</span> <span class="ot">=</span> <span class="st">"white"</span>, <span class="st">"Male"</span> <span class="ot">=</span> <span class="st">"black"</span>)</span>
-<span id="cb132-5"><a></a>fill_ptype <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"HU"</span> <span class="ot">=</span> <span class="st">"white"</span>, <span class="st">"HEU-lo"</span> <span class="ot">=</span> <span class="st">"darkgray"</span>, <span class="st">"HEU-hi"</span> <span class="ot">=</span> <span class="st">"black"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb132-5"><a></a>fill_ptype <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"HU"</span> <span class="ot">=</span> <span class="st">"white"</span>, <span class="st">"HEU-lo"</span> <span class="ot">=</span> <span class="st">"darkgray"</span>, <span class="st">"HEU-hi"</span> <span class="ot">=</span> <span class="st">"black"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3658,8 +3661,8 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb133"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a></a><span class="fu">StatPlotsForFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD4+"</span>, <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, </span>
-<span id="cb133-2"><a></a>     <span class="at">shape_palette=</span>shape_sex, <span class="at">fill_palette=</span>fill_sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb133"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb133-1"><a></a><span class="fu">StatPlotsForFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD4+"</span>, <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, </span>
+<span id="cb133-2"><a></a>     <span class="at">shape_palette=</span>shape_sex, <span class="at">fill_palette=</span>fill_sex)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -3674,8 +3677,8 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a></a><span class="fu">StatPlotsForFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD4+"</span>, <span class="at">theFactor=</span><span class="st">"ptype"</span>, </span>
-<span id="cb134-2"><a></a>     <span class="at">shape_palette=</span>shape_ptype, <span class="at">fill_palette=</span>fill_ptype)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb134"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a></a><span class="fu">StatPlotsForFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD4+"</span>, <span class="at">theFactor=</span><span class="st">"ptype"</span>, </span>
+<span id="cb134-2"><a></a>     <span class="at">shape_palette=</span>shape_ptype, <span class="at">fill_palette=</span>fill_ptype)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -3707,10 +3710,10 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb135"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a></a>Data<span class="sc">$</span>ptype <span class="ot">&lt;-</span> <span class="fu">factor</span>(Data<span class="sc">$</span>ptype, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">"HU"</span>, <span class="st">"HEU-lo"</span>, <span class="st">"HEU-hi"</span>))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb135"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb135-1"><a></a>Data<span class="sc">$</span>ptype <span class="ot">&lt;-</span> <span class="fu">factor</span>(Data<span class="sc">$</span>ptype, <span class="at">levels=</span><span class="fu">c</span>(<span class="st">"HU"</span>, <span class="st">"HEU-lo"</span>, <span class="st">"HEU-hi"</span>))</span>
 <span id="cb135-2"><a></a></span>
 <span id="cb135-3"><a></a><span class="fu">StatPlotsForFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD4+"</span>, <span class="at">theFactor=</span><span class="st">"ptype"</span>, </span>
-<span id="cb135-4"><a></a>     <span class="at">shape_palette=</span>shape_ptype, <span class="at">fill_palette=</span>fill_ptype)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb135-4"><a></a>     <span class="at">shape_palette=</span>shape_ptype, <span class="at">fill_palette=</span>fill_ptype)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -3725,8 +3728,8 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a></a><span class="fu">StatPlotsForFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD4+"</span>, <span class="at">theFactor=</span><span class="st">"ptype"</span>, </span>
-<span id="cb136-2"><a></a>     <span class="at">shape_palette=</span>shape_ptype, <span class="at">fill_palette=</span>fill_ptype)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb136"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a></a><span class="fu">StatPlotsForFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD4+"</span>, <span class="at">theFactor=</span><span class="st">"ptype"</span>, </span>
+<span id="cb136-2"><a></a>     <span class="at">shape_palette=</span>shape_ptype, <span class="at">fill_palette=</span>fill_ptype)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -3758,7 +3761,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a></a><span class="co">#' Generate a beeswarm-boxplot for a given column by a factor column</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb137"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a></a><span class="co">#' Generate a beeswarm-boxplot for a given column by a factor column</span></span>
 <span id="cb137-2"><a></a><span class="co">#' of interest</span></span>
 <span id="cb137-3"><a></a><span class="co">#' </span></span>
 <span id="cb137-4"><a></a><span class="co">#' @param data The data.frame or tibble object containing our dataset</span></span>
@@ -3796,7 +3799,7 @@ mean in group Female   mean in group Male
 <span id="cb137-36"><a></a>               <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="dv">8</span>)</span>
 <span id="cb137-37"><a></a>               )</span>
 <span id="cb137-38"><a></a>     <span class="fu">return</span>(plot)</span>
-<span id="cb137-39"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb137-39"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3804,8 +3807,8 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a></a><span class="fu">StatPlotsForFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD4+"</span>, <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, </span>
-<span id="cb138-2"><a></a>     <span class="at">shape_palette=</span>shape_sex, <span class="at">fill_palette=</span>fill_sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb138"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a></a><span class="fu">StatPlotsForFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD4+"</span>, <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, </span>
+<span id="cb138-2"><a></a>     <span class="at">shape_palette=</span>shape_sex, <span class="at">fill_palette=</span>fill_sex)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -3858,7 +3861,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a></a>ThePlot <span class="ot">&lt;-</span> <span class="fu">StatPlotsForFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD4+"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb139"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a></a>ThePlot <span class="ot">&lt;-</span> <span class="fu">StatPlotsForFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD4+"</span>,</span>
 <span id="cb139-2"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">shape_palette=</span>shape_sex,</span>
 <span id="cb139-3"><a></a> <span class="at">fill_palette=</span>fill_sex)</span>
 <span id="cb139-4"><a></a></span>
@@ -3868,7 +3871,7 @@ mean in group Female   mean in group Male
 <span id="cb139-8"><a></a>TheFile <span class="ot">&lt;-</span> <span class="fu">file.path</span>(OutputFolder, ThePlotName)</span>
 <span id="cb139-9"><a></a></span>
 <span id="cb139-10"><a></a><span class="fu">ggsave</span>(<span class="at">filename =</span> TheFile, ThePlot, <span class="at">dpi =</span> <span class="dv">600</span>,</span>
-<span id="cb139-11"><a></a> <span class="at">width =</span> <span class="dv">4</span>, <span class="at">height =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb139-11"><a></a> <span class="at">width =</span> <span class="dv">4</span>, <span class="at">height =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3901,17 +3904,17 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb140"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)])</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb140"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a></a>TheseColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)])</span>
 <span id="cb140-2"><a></a>ListOfPlots <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheseColumns,</span>
 <span id="cb140-3"><a></a> <span class="at">.f=</span>StatPlotsForFlow, <span class="at">data=</span>Data, <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, </span>
-<span id="cb140-4"><a></a> <span class="at">shape_palette=</span>shape_sex, <span class="at">fill_palette=</span>fill_sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb140-4"><a></a> <span class="at">shape_palette=</span>shape_sex, <span class="at">fill_palette=</span>fill_sex)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a></a>ListOfPlots[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb141"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a></a>ListOfPlots[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -3921,7 +3924,7 @@ mean in group Female   mean in group Male
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a></a>ListOfPlots[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb143"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a></a>ListOfPlots[<span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -3931,7 +3934,7 @@ mean in group Female   mean in group Male
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a></a>ListOfPlots[<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb145"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a></a>ListOfPlots[<span class="dv">3</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -3941,7 +3944,7 @@ mean in group Female   mean in group Male
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb147"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a></a>ListOfPlots[<span class="dv">4</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb147"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a></a>ListOfPlots[<span class="dv">4</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -3990,12 +3993,12 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a></a>Lymphocytes <span class="ot">&lt;-</span> ListOfPlots[<span class="dv">2</span>][[<span class="dv">1</span>]]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb149"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a></a>Lymphocytes <span class="ot">&lt;-</span> ListOfPlots[<span class="dv">2</span>][[<span class="dv">1</span>]]</span>
 <span id="cb149-2"><a></a>Tcells <span class="ot">&lt;-</span> ListOfPlots[<span class="dv">3</span>][[<span class="dv">1</span>]]</span>
 <span id="cb149-3"><a></a>Vd2s <span class="ot">&lt;-</span> ListOfPlots[<span class="dv">4</span>][[<span class="dv">1</span>]]</span>
 <span id="cb149-4"><a></a>CD4s <span class="ot">&lt;-</span> ListOfPlots[<span class="dv">10</span>][[<span class="dv">1</span>]]</span>
 <span id="cb149-5"><a></a>CD8s <span class="ot">&lt;-</span> ListOfPlots[<span class="dv">16</span>][[<span class="dv">1</span>]]</span>
-<span id="cb149-6"><a></a>DNs <span class="ot">&lt;-</span> ListOfPlots[<span class="dv">21</span>][[<span class="dv">1</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb149-6"><a></a>DNs <span class="ot">&lt;-</span> ListOfPlots[<span class="dv">21</span>][[<span class="dv">1</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -4020,8 +4023,8 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb150"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb150-1"><a></a><span class="co"># install.packages("patchwork")</span></span>
-<span id="cb150-2"><a></a><span class="fu">library</span>(patchwork)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb150"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb150-1"><a></a><span class="co"># install.packages("patchwork")</span></span>
+<span id="cb150-2"><a></a><span class="fu">library</span>(patchwork)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -4046,7 +4049,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb151"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb151-1"><a></a>(Lymphocytes <span class="sc">|</span> Tcells)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb151"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb151-1"><a></a>(Lymphocytes <span class="sc">|</span> Tcells)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -4078,7 +4081,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb152"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a></a>(Lymphocytes <span class="sc">|</span> Tcells) <span class="sc">/</span> (CD4s <span class="sc">|</span> CD8s <span class="sc">|</span> DNs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb152"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb152-1"><a></a>(Lymphocytes <span class="sc">|</span> Tcells) <span class="sc">/</span> (CD4s <span class="sc">|</span> CD8s <span class="sc">|</span> DNs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -4130,7 +4133,7 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb153"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb153-1"><a></a>PatchworkImage <span class="ot">&lt;-</span> (Lymphocytes <span class="sc">|</span> Tcells) <span class="sc">/</span> (CD4s <span class="sc">|</span> CD8s <span class="sc">|</span> DNs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb153"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb153-1"><a></a>PatchworkImage <span class="ot">&lt;-</span> (Lymphocytes <span class="sc">|</span> Tcells) <span class="sc">/</span> (CD4s <span class="sc">|</span> CD8s <span class="sc">|</span> DNs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -4138,7 +4141,7 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb154"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb154-1"><a></a>ThePlot <span class="ot">&lt;-</span> PatchworkImage</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb154"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb154-1"><a></a>ThePlot <span class="ot">&lt;-</span> PatchworkImage</span>
 <span id="cb154-2"><a></a></span>
 <span id="cb154-3"><a></a>Abbreviation <span class="ot">&lt;-</span> <span class="st">"_sex.png"</span></span>
 <span id="cb154-4"><a></a>PlotName <span class="ot">&lt;-</span> <span class="st">"Patchwork"</span></span>
@@ -4146,7 +4149,7 @@ mean in group Female   mean in group Male
 <span id="cb154-6"><a></a>TheFile <span class="ot">&lt;-</span> <span class="fu">file.path</span>(OutputFolder, ThePlotName)</span>
 <span id="cb154-7"><a></a></span>
 <span id="cb154-8"><a></a><span class="fu">ggsave</span>(<span class="at">filename =</span> TheFile, ThePlot, <span class="at">dpi =</span> <span class="dv">600</span>,</span>
-<span id="cb154-9"><a></a> <span class="at">width =</span> <span class="dv">4</span>, <span class="at">height =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb154-9"><a></a> <span class="at">width =</span> <span class="dv">4</span>, <span class="at">height =</span> <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -4175,15 +4178,15 @@ mean in group Female   mean in group Male
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb155"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb155-1"><a></a>Condensed <span class="ot">&lt;-</span> <span class="fu">Utility_Patchwork</span>(<span class="at">x=</span>ListOfPlots,</span>
-<span id="cb155-2"><a></a> <span class="at">thecolumns=</span><span class="dv">2</span>, <span class="at">therows=</span><span class="dv">3</span>, <span class="at">returntype=</span><span class="st">"patchwork"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb155"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb155-1"><a></a>Condensed <span class="ot">&lt;-</span> <span class="fu">Utility_Patchwork</span>(<span class="at">x=</span>ListOfPlots,</span>
+<span id="cb155-2"><a></a> <span class="at">thecolumns=</span><span class="dv">2</span>, <span class="at">therows=</span><span class="dv">3</span>, <span class="at">returntype=</span><span class="st">"patchwork"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a></a>Condensed[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb156"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb156-1"><a></a>Condensed[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`1`</code></pre>
 </div>
@@ -4193,7 +4196,7 @@ mean in group Female   mean in group Male
 <section class="slide level2">
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb158"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb158-1"><a></a>Condensed[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb158"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb158-1"><a></a>Condensed[<span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`2`</code></pre>
 </div>
@@ -4204,9 +4207,9 @@ mean in group Female   mean in group Male
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb160"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb160-1"><a></a>PDF <span class="ot">&lt;-</span> <span class="fu">Utility_Patchwork</span>(<span class="at">x=</span>ListOfPlots, <span class="at">thecolumns=</span><span class="dv">2</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb160"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb160-1"><a></a>PDF <span class="ot">&lt;-</span> <span class="fu">Utility_Patchwork</span>(<span class="at">x=</span>ListOfPlots, <span class="at">thecolumns=</span><span class="dv">2</span>,</span>
 <span id="cb160-2"><a></a> <span class="at">therows=</span><span class="dv">3</span>,  <span class="at">returntype=</span><span class="st">"pdf"</span>, <span class="at">outfolder=</span>OutputFolder,</span>
-<span id="cb160-3"><a></a> <span class="at">filename=</span><span class="st">"Patchwork"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb160-3"><a></a> <span class="at">filename=</span><span class="st">"Patchwork"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`1`</code></pre>
 </div>
@@ -4271,7 +4274,7 @@ $`5`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb166"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb166-1"><a></a><span class="co">#' This function runs the desired statistical test on a column of</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb166"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb166-1"><a></a><span class="co">#' This function runs the desired statistical test on a column of</span></span>
 <span id="cb166-2"><a></a><span class="co">#' interest for a particular factor column, and then adds the results</span></span>
 <span id="cb166-3"><a></a><span class="co">#' to a ggbeeswarm boxplot, returning a ggplot2 object. </span></span>
 <span id="cb166-4"><a></a><span class="co">#' </span></span>
@@ -4297,7 +4300,7 @@ $`5`</code></pre>
 <span id="cb166-24"><a></a>     <span class="at">correction=</span>correction)</span>
 <span id="cb166-25"><a></a></span>
 <span id="cb166-26"><a></a>     <span class="fu">return</span>(Stats)</span>
-<span id="cb166-27"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb166-27"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -4305,9 +4308,9 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb167"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb167-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb167"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb167-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb167-2"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">shape_palette=</span>shape_sex,</span>
-<span id="cb167-3"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb167-3"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 12
   estimate estimate1 estimate2 statistic p.value parameter conf.low conf.high
@@ -4340,9 +4343,9 @@ $`5`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb169"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb169-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"DN_IFNg"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb169"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb169-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"DN_IFNg"</span>,</span>
 <span id="cb169-2"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">shape_palette=</span>shape_sex,</span>
-<span id="cb169-3"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"non-parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb169-3"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"non-parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 6
   statistic p.value method                       alternative GateName FactorName
@@ -4410,7 +4413,7 @@ $`5`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb171"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb171-1"><a></a><span class="co">#' Small helper function to appropiately round up</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb171"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb171-1"><a></a><span class="co">#' Small helper function to appropiately round up</span></span>
 <span id="cb171-2"><a></a><span class="co">#'  significant digits, since being used in a plot. </span></span>
 <span id="cb171-3"><a></a><span class="co">#' </span></span>
 <span id="cb171-4"><a></a><span class="co">#' @param x The p-value being passed in</span></span>
@@ -4425,7 +4428,7 @@ $`5`</code></pre>
 <span id="cb171-13"><a></a>  } <span class="cf">else</span> <span class="cf">if</span> (x <span class="sc">&gt;</span> <span class="fl">0.000001</span>) {<span class="fu">round</span>(x, <span class="dv">6</span>)</span>
 <span id="cb171-14"><a></a>  } <span class="cf">else</span>{<span class="fu">return</span>(x)</span>
 <span id="cb171-15"><a></a>  }</span>
-<span id="cb171-16"><a></a>  } </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb171-16"><a></a>  } </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -4433,7 +4436,7 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb172"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb172-1"><a></a><span class="co">#' This function runs the desired statistical test on a column of</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb172"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb172-1"><a></a><span class="co">#' This function runs the desired statistical test on a column of</span></span>
 <span id="cb172-2"><a></a><span class="co">#' interest for a particular factor column, and then adds the results</span></span>
 <span id="cb172-3"><a></a><span class="co">#' to a ggbeeswarm boxplot, returning a ggplot2 object. </span></span>
 <span id="cb172-4"><a></a><span class="co">#' </span></span>
@@ -4482,7 +4485,7 @@ $`5`</code></pre>
 <span id="cb172-47"><a></a>            }</span>
 <span id="cb172-48"><a></a></span>
 <span id="cb172-49"><a></a>     <span class="fu">return</span>(MoldedPvalue)</span>
-<span id="cb172-50"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb172-50"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -4490,10 +4493,10 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb173"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb173-1"><a></a><span class="co"># t-test</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb173"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb173-1"><a></a><span class="co"># t-test</span></span>
 <span id="cb173-2"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb173-3"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">shape_palette=</span>shape_sex,</span>
-<span id="cb173-4"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb173-4"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.04</code></pre>
 </div>
@@ -4504,10 +4507,10 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb175"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb175-1"><a></a><span class="co"># wilcoxon</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb175"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb175-1"><a></a><span class="co"># wilcoxon</span></span>
 <span id="cb175-2"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb175-3"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">shape_palette=</span>shape_sex,</span>
-<span id="cb175-4"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"non-parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb175-4"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"non-parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.04</code></pre>
 </div>
@@ -4518,10 +4521,10 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb177"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb177-1"><a></a><span class="co"># One-Way Anova</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb177"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb177-1"><a></a><span class="co"># One-Way Anova</span></span>
 <span id="cb177-2"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb177-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">shape_palette=</span>shape_ptype,</span>
-<span id="cb177-4"><a></a> <span class="at">fill_palette=</span>fill_ptype, <span class="at">parametric =</span> <span class="st">"parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb177-4"><a></a> <span class="at">fill_palette=</span>fill_ptype, <span class="at">parametric =</span> <span class="st">"parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "n.s"</code></pre>
 </div>
@@ -4532,10 +4535,10 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb179"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb179-1"><a></a><span class="co"># Kruskal Wallis</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb179"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb179-1"><a></a><span class="co"># Kruskal Wallis</span></span>
 <span id="cb179-2"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb179-3"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">shape_palette=</span>shape_ptype,</span>
-<span id="cb179-4"><a></a> <span class="at">fill_palette=</span>fill_ptype, <span class="at">parametric =</span> <span class="st">"non-parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb179-4"><a></a> <span class="at">fill_palette=</span>fill_ptype, <span class="at">parametric =</span> <span class="st">"non-parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "n.s"</code></pre>
 </div>
@@ -4564,10 +4567,10 @@ $`5`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb181"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb181-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb181"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb181-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb181-2"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">shape_palette=</span>shape_ptype,</span>
 <span id="cb181-3"><a></a> <span class="at">fill_palette=</span>fill_ptype, <span class="at">parametric =</span> <span class="st">"parametric"</span>,</span>
-<span id="cb181-4"><a></a> <span class="at">alpha=</span><span class="fl">0.99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb181-4"><a></a> <span class="at">alpha=</span><span class="fl">0.99</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] 0.55
@@ -4585,10 +4588,10 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb183"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb183-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb183"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb183-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb183-2"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">shape_palette=</span>shape_ptype,</span>
 <span id="cb183-3"><a></a> <span class="at">fill_palette=</span>fill_ptype, <span class="at">parametric =</span> <span class="st">"non-parametric"</span>,</span>
-<span id="cb183-4"><a></a> <span class="at">alpha=</span><span class="fl">0.99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb183-4"><a></a> <span class="at">alpha=</span><span class="fl">0.99</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] 0.91
@@ -4643,7 +4646,7 @@ $`5`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb185"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb185-1"><a></a><span class="co">#' This function runs the desired statistical test on a column of</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb185"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb185-1"><a></a><span class="co">#' This function runs the desired statistical test on a column of</span></span>
 <span id="cb185-2"><a></a><span class="co">#' interest for a particular factor column, and then adds the results</span></span>
 <span id="cb185-3"><a></a><span class="co">#' to a ggbeeswarm boxplot, returning a ggplot2 object. </span></span>
 <span id="cb185-4"><a></a><span class="co">#' </span></span>
@@ -4697,7 +4700,7 @@ $`5`</code></pre>
 <span id="cb185-52"><a></a>     ThePData <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Index=</span>ActualValues, <span class="at">ThePvalues=</span>ShownPvalues)</span>
 <span id="cb185-53"><a></a></span>
 <span id="cb185-54"><a></a>     <span class="fu">return</span>(ThePData)</span>
-<span id="cb185-55"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb185-55"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -4705,9 +4708,9 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb186"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb186-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb186"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb186-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb186-2"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">shape_palette=</span>shape_sex,</span>
-<span id="cb186-3"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb186-3"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Index ThePvalues
 1     1       0.04</code></pre>
@@ -4719,10 +4722,10 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb188"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb188-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb188"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb188-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb188-2"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">shape_palette=</span>shape_ptype, </span>
 <span id="cb188-3"><a></a> <span class="at">fill_palette=</span>fill_ptype, <span class="at">parametric =</span> <span class="st">"parametric"</span>,</span>
-<span id="cb188-4"><a></a> <span class="at">alpha=</span><span class="fl">0.88</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb188-4"><a></a> <span class="at">alpha=</span><span class="fl">0.88</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  Index ThePvalues
 1     1       0.55
@@ -4752,7 +4755,7 @@ $`5`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb190"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb190-1"><a></a><span class="co">#' This function runs the desired statistical test on a column of</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb190"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb190-1"><a></a><span class="co">#' This function runs the desired statistical test on a column of</span></span>
 <span id="cb190-2"><a></a><span class="co">#' interest for a particular factor column, and then adds the results</span></span>
 <span id="cb190-3"><a></a><span class="co">#' to a ggbeeswarm boxplot, returning a ggplot2 object. </span></span>
 <span id="cb190-4"><a></a><span class="co">#' </span></span>
@@ -4827,7 +4830,7 @@ $`5`</code></pre>
 <span id="cb190-73"><a></a>               )</span>
 <span id="cb190-74"><a></a></span>
 <span id="cb190-75"><a></a>     <span class="fu">return</span>(plot)</span>
-<span id="cb190-76"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb190-76"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -4835,10 +4838,10 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb191"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb191-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb191"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb191-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb191-2"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">shape_palette=</span>shape_ptype,</span>
 <span id="cb191-3"><a></a> <span class="at">fill_palette=</span>fill_ptype, <span class="at">parametric =</span> <span class="st">"parametric"</span>,</span>
-<span id="cb191-4"><a></a> <span class="at">alpha=</span><span class="fl">0.88</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb191-4"><a></a> <span class="at">alpha=</span><span class="fl">0.88</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -4890,7 +4893,7 @@ $`5`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb192"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb192-1"><a></a><span class="co">#' This function runs the desired statistical test on a column of</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb192"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb192-1"><a></a><span class="co">#' This function runs the desired statistical test on a column of</span></span>
 <span id="cb192-2"><a></a><span class="co">#' interest for a particular factor column, and then adds the results</span></span>
 <span id="cb192-3"><a></a><span class="co">#' to a ggbeeswarm boxplot, returning a ggplot2 object. </span></span>
 <span id="cb192-4"><a></a><span class="co">#' </span></span>
@@ -4964,7 +4967,7 @@ $`5`</code></pre>
 <span id="cb192-72"><a></a>     SingleY <span class="ot">&lt;-</span> SingleY<span class="sc">*</span><span class="fl">1.1</span> <span class="co">#For a little wiggle room</span></span>
 <span id="cb192-73"><a></a></span>
 <span id="cb192-74"><a></a>     <span class="fu">return</span>(SingleY)</span>
-<span id="cb192-75"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb192-75"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -4972,10 +4975,10 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb193"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb193-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb193"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb193-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb193-2"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">shape_palette=</span>shape_ptype,</span>
 <span id="cb193-3"><a></a> <span class="at">fill_palette=</span>fill_ptype, <span class="at">parametric =</span> <span class="st">"parametric"</span>,</span>
-<span id="cb193-4"><a></a> <span class="at">alpha=</span><span class="fl">0.88</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb193-4"><a></a> <span class="at">alpha=</span><span class="fl">0.88</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.022</code></pre>
 </div>
@@ -5029,7 +5032,7 @@ $`5`</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb195"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb195-1"><a></a><span class="co">#' Coereba Package Internal, used for Utility_Behemoth</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb195"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb195-1"><a></a><span class="co">#' Coereba Package Internal, used for Utility_Behemoth</span></span>
 <span id="cb195-2"><a></a><span class="co">#'</span></span>
 <span id="cb195-3"><a></a><span class="co">#' @param plot The ggplot2 object</span></span>
 <span id="cb195-4"><a></a><span class="co">#' @param Method Passed method for statistics</span></span>
@@ -5133,7 +5136,7 @@ $`5`</code></pre>
 <span id="cb195-102"><a></a>  } <span class="cf">else</span> {<span class="fu">return</span>(plot)}</span>
 <span id="cb195-103"><a></a></span>
 <span id="cb195-104"><a></a>  <span class="fu">return</span>(plot)</span>
-<span id="cb195-105"><a></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb195-105"><a></a>  }</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </div>
@@ -5159,7 +5162,7 @@ $`5`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb196"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb196-1"><a></a><span class="co">#' This function runs the desired statistical test on a column of</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb196"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb196-1"><a></a><span class="co">#' This function runs the desired statistical test on a column of</span></span>
 <span id="cb196-2"><a></a><span class="co">#' interest for a particular factor column, and then adds the results</span></span>
 <span id="cb196-3"><a></a><span class="co">#' to a ggbeeswarm boxplot, returning a ggplot2 object. </span></span>
 <span id="cb196-4"><a></a><span class="co">#' </span></span>
@@ -5238,7 +5241,7 @@ $`5`</code></pre>
 <span id="cb196-77"><a></a>       <span class="at">SingleY=</span>SingleY)</span>
 <span id="cb196-78"><a></a></span>
 <span id="cb196-79"><a></a>     <span class="fu">return</span>(plot2)</span>
-<span id="cb196-80"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb196-80"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -5263,9 +5266,9 @@ $`5`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb197"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb197-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb197"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb197-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb197-2"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">shape_palette=</span>shape_sex,</span>
-<span id="cb197-3"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb197-3"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -5280,9 +5283,9 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb198"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb198-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb198"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb198-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb198-2"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">shape_palette=</span>shape_sex,</span>
-<span id="cb198-3"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"non-parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb198-3"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"non-parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -5297,9 +5300,9 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb199"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb199-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb199"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb199-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb199-2"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">shape_palette=</span>shape_ptype,</span>
-<span id="cb199-3"><a></a> <span class="at">fill_palette=</span>fill_ptype, <span class="at">parametric =</span> <span class="st">"parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb199-3"><a></a> <span class="at">fill_palette=</span>fill_ptype, <span class="at">parametric =</span> <span class="st">"parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -5314,9 +5317,9 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb200"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb200-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb200"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb200-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb200-2"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">shape_palette=</span>shape_ptype,</span>
-<span id="cb200-3"><a></a> <span class="at">fill_palette=</span>fill_ptype, <span class="at">parametric =</span> <span class="st">"non-parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb200-3"><a></a> <span class="at">fill_palette=</span>fill_ptype, <span class="at">parametric =</span> <span class="st">"non-parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -5351,10 +5354,10 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb201"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb201-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb201"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb201-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb201-2"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">shape_palette=</span>shape_ptype,</span>
 <span id="cb201-3"><a></a> <span class="at">fill_palette=</span>fill_ptype, <span class="at">parametric =</span> <span class="st">"parametric"</span>,</span>
-<span id="cb201-4"><a></a> <span class="at">alpha=</span><span class="fl">0.99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb201-4"><a></a> <span class="at">alpha=</span><span class="fl">0.99</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -5369,10 +5372,10 @@ $`5`</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb202"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb202-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb202"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb202-1"><a></a><span class="fu">CombinedFlow</span>(<span class="at">data=</span>Data, <span class="at">theColumn=</span><span class="st">"CD8_IFNg"</span>,</span>
 <span id="cb202-2"><a></a> <span class="at">theFactor=</span><span class="st">"ptype"</span>, <span class="at">shape_palette=</span>shape_ptype,</span>
 <span id="cb202-3"><a></a> <span class="at">fill_palette=</span>fill_ptype, <span class="at">parametric =</span> <span class="st">"non-parametric"</span>,</span>
-<span id="cb202-4"><a></a> <span class="at">alpha=</span><span class="fl">0.99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb202-4"><a></a> <span class="at">alpha=</span><span class="fl">0.99</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -5405,10 +5408,10 @@ $`5`</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb203"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb203-1"><a></a>TheColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)])</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb203"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb203-1"><a></a>TheColumns <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Data[<span class="dv">6</span><span class="sc">:</span><span class="fu">ncol</span>(Data)])</span>
 <span id="cb203-2"><a></a>ThePlots <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>TheColumns, <span class="at">.f=</span>CombinedFlow,</span>
 <span id="cb203-3"><a></a> <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">shape_palette=</span>shape_sex,</span>
-<span id="cb203-4"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"parametric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb203-4"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"parametric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in `purrr::map()`:
 ℹ In index: 1.
@@ -5459,9 +5462,9 @@ Caused by error in `.f()`:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb205"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb205-1"><a></a>ThePlots <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(TheColumns, <span class="sc">~</span> <span class="fu">CombinedFlow</span>(<span class="at">theColumn =</span> .x,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb205"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb205-1"><a></a>ThePlots <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(TheColumns, <span class="sc">~</span> <span class="fu">CombinedFlow</span>(<span class="at">theColumn =</span> .x,</span>
 <span id="cb205-2"><a></a> <span class="at">data=</span>Data, <span class="at">theFactor=</span><span class="st">"infant_sex"</span>, <span class="at">shape_palette=</span>shape_sex,</span>
-<span id="cb205-3"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"parametric"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb205-3"><a></a> <span class="at">fill_palette=</span>fill_sex, <span class="at">parametric =</span> <span class="st">"parametric"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -5469,7 +5472,7 @@ Caused by error in `.f()`:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb206"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb206-1"><a></a>ThePlots[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb206"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb206-1"><a></a>ThePlots[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -5487,7 +5490,7 @@ Caused by error in `.f()`:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb208"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb208-1"><a></a>ThePlots[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb208"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb208-1"><a></a>ThePlots[<span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -5505,7 +5508,7 @@ Caused by error in `.f()`:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb210"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb210-1"><a></a>ThePlots[<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb210"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb210-1"><a></a>ThePlots[<span class="dv">3</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -5523,7 +5526,7 @@ Caused by error in `.f()`:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb212"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb212-1"><a></a>ThePlots[<span class="dv">4</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb212"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb212-1"><a></a>ThePlots[<span class="dv">4</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]</code></pre>
 </div>
@@ -5558,9 +5561,9 @@ Caused by error in `.f()`:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb214"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb214-1"><a></a>PDF <span class="ot">&lt;-</span> <span class="fu">Utility_Patchwork</span>(<span class="at">x=</span>ThePlots, <span class="at">thecolumns=</span><span class="dv">2</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb214"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb214-1"><a></a>PDF <span class="ot">&lt;-</span> <span class="fu">Utility_Patchwork</span>(<span class="at">x=</span>ThePlots, <span class="at">thecolumns=</span><span class="dv">2</span>,</span>
 <span id="cb214-2"><a></a> <span class="at">therows=</span><span class="dv">3</span>, <span class="at">returntype=</span><span class="st">"pdf"</span>, <span class="at">outfolder=</span>OutputFolder,</span>
-<span id="cb214-3"><a></a> <span class="at">filename=</span><span class="st">"AllThePlots"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb214-3"><a></a> <span class="at">filename=</span><span class="st">"AllThePlots"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`1`</code></pre>
 </div>
@@ -6068,7 +6071,7 @@ $`5`</code></pre>
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -6180,13 +6183,14 @@ $`5`</code></pre>
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

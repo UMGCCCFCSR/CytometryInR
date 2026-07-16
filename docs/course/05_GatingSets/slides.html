@@ -6,8 +6,8 @@
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="David Rach">
   <meta name="dcterms.date" content="2026-03-03">
@@ -18,6 +18,9 @@
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -96,7 +99,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
   <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
 
   <script type="text/javascript">
@@ -350,13 +353,13 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="co"># Folder &lt;- file.path("course", "05_GatingSets", "data") # For Testing</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="co"># Folder &lt;- file.path("course", "05_GatingSets", "data") # For Testing</span></span>
 <span id="cb1-2"><a></a></span>
 <span id="cb1-3"><a></a> Folder <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co"># For Quarto Rendering</span></span>
 <span id="cb1-4"><a></a></span>
 <span id="cb1-5"><a></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(Folder, <span class="at">pattern=</span><span class="st">".fcs"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
 <span id="cb1-6"><a></a></span>
-<span id="cb1-7"><a></a>fcs_files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-7"><a></a>fcs_files</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data/2025_07_26_AB_02_INF052_00_Ctrl.fcs"
 [2] "data/2025_07_26_AB_02_INF052_00_SEB.fcs" 
@@ -389,7 +392,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>fcs_files[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a>fcs_files[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data/2025_07_26_AB_02_INF052_00_Ctrl.fcs"</code></pre>
 </div>
@@ -417,15 +420,15 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="co"># BiocManager::install("flowCore") #Bioconductor</span></span>
-<span id="cb5-2"><a></a><span class="fu">library</span>(flowCore)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="co"># BiocManager::install("flowCore") #Bioconductor</span></span>
+<span id="cb5-2"><a></a><span class="fu">library</span>(flowCore)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>flowFrame <span class="ot">&lt;-</span> <span class="fu">read.FCS</span>(<span class="at">filename=</span>fcs_files[<span class="dv">1</span>], <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>flowFrame <span class="ot">&lt;-</span> <span class="fu">read.FCS</span>(<span class="at">filename=</span>fcs_files[<span class="dv">1</span>], <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>,</span>
 <span id="cb6-2"><a></a> <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb6-3"><a></a>flowFrame</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-3"><a></a>flowFrame</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>flowFrame object '2025_07_26_AB_02_INF052_00_Ctrl.fcs'
 with 10000 cells and 43 observables:
@@ -467,7 +470,7 @@ $P43           AF-A        NA   4194304      -111     4194303
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">read.FCS</span>(<span class="at">filename=</span>fcs_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">read.FCS</span>(<span class="at">filename=</span>fcs_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in `read.FCS()`:
 ! 'filename' must be character scalar</code></pre>
@@ -496,11 +499,11 @@ $P43           AF-A        NA   4194304      -111     4194303
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>fcs_files[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>fcs_files[<span class="dv">1</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data/2025_07_26_AB_02_INF052_00_Ctrl.fcs"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">str</span>(fcs_files[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a><span class="fu">str</span>(fcs_files[<span class="dv">1</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> chr "data/2025_07_26_AB_02_INF052_00_Ctrl.fcs"</code></pre>
 </div>
@@ -508,7 +511,7 @@ $P43           AF-A        NA   4194304      -111     4194303
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>fcs_files</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>fcs_files</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data/2025_07_26_AB_02_INF052_00_Ctrl.fcs"
 [2] "data/2025_07_26_AB_02_INF052_00_SEB.fcs" 
@@ -517,7 +520,7 @@ $P43           AF-A        NA   4194304      -111     4194303
 [5] "data/2025_07_26_AB_02_INF179_00_Ctrl.fcs"
 [6] "data/2025_07_26_AB_02_INF179_00_SEB.fcs" </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">str</span>(fcs_files)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a><span class="fu">str</span>(fcs_files)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> chr [1:6] "data/2025_07_26_AB_02_INF052_00_Ctrl.fcs" ...</code></pre>
 </div>
@@ -545,9 +548,9 @@ $P43           AF-A        NA   4194304      -111     4194303
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>flowSet <span class="ot">&lt;-</span> <span class="fu">read.flowSet</span>(<span class="at">files=</span>fcs_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>flowSet <span class="ot">&lt;-</span> <span class="fu">read.flowSet</span>(<span class="at">files=</span>fcs_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>,</span>
 <span id="cb18-2"><a></a> <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb18-3"><a></a>flowSet</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-3"><a></a>flowSet</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A flowSet with 6 experiments.
 
@@ -577,8 +580,8 @@ column names(43): Time SSC-W ... APC-Fire 810-A AF-A</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">read.flowSet</span>(<span class="at">files=</span>fcs_files[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>)],</span>
-<span id="cb20-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">read.flowSet</span>(<span class="at">files=</span>fcs_files[<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span>)],</span>
+<span id="cb20-2"><a></a> <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A flowSet with 3 experiments.
 
@@ -608,7 +611,7 @@ column names(43): Time SSC-W ... APC-Fire 810-A AF-A</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="fu">class</span>(flowSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a><span class="fu">class</span>(flowSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "flowSet"
 attr(,"package")
@@ -661,7 +664,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">str</span>(flowSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="fu">str</span>(flowSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Formal class 'flowSet' [package "flowCore"] with 2 slots
   ..@ frames   :&lt;environment: 0x5644369ea6c8&gt; 
@@ -775,14 +778,14 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="co"># Base R</span></span>
-<span id="cb26-2"><a></a><span class="fu">object.size</span>(flowFrame)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a><span class="co"># Base R</span></span>
+<span id="cb26-2"><a></a><span class="fu">object.size</span>(flowFrame)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>3570896 bytes</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="co"># install.packages("lobstr") # CRAN</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="co"># install.packages("lobstr") # CRAN</span></span>
 <span id="cb28-2"><a></a><span class="fu">library</span>(lobstr)</span>
-<span id="cb28-3"><a></a><span class="fu">obj_size</span>(flowFrame)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-3"><a></a><span class="fu">obj_size</span>(flowFrame)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>3.53 MB</code></pre>
 </div>
@@ -810,7 +813,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">obj_size</span>(flowSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">obj_size</span>(flowSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>20.99 MB</code></pre>
 </div>
@@ -838,7 +841,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">mem_used</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">mem_used</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>159.61 MB</code></pre>
 </div>
@@ -886,7 +889,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>OperatingSystem <span class="ot">&lt;-</span> <span class="fu">Sys.info</span>()[[<span class="st">"sysname"</span>]]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a>OperatingSystem <span class="ot">&lt;-</span> <span class="fu">Sys.info</span>()[[<span class="st">"sysname"</span>]]</span>
 <span id="cb34-2"><a></a></span>
 <span id="cb34-3"><a></a><span class="cf">if</span> (OperatingSystem <span class="sc">==</span> <span class="st">"Windows"</span>) { <span class="co"># Windows</span></span>
 <span id="cb34-4"><a></a>  <span class="co"># install.packages("ps") # CRAN</span></span>
@@ -900,7 +903,7 @@ attr(,"package")
 <span id="cb34-12"><a></a>  } <span class="cf">else</span> <span class="cf">if</span> (OperatingSystem <span class="sc">==</span> <span class="st">"Linux"</span>) { <span class="co"># Linux</span></span>
 <span id="cb34-13"><a></a>    <span class="fu">system</span>(<span class="st">"free -h"</span>)</span>
 <span id="cb34-14"><a></a></span>
-<span id="cb34-15"><a></a>  } <span class="cf">else</span> {<span class="fu">message</span>(<span class="st">"A wild FreeBSD-User appears"</span>)}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-15"><a></a>  } <span class="cf">else</span> {<span class="fu">message</span>(<span class="st">"A wild FreeBSD-User appears"</span>)}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -908,11 +911,11 @@ attr(,"package")
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="co"># install.packages("ps") # CRAN</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="co"># install.packages("ps") # CRAN</span></span>
 <span id="cb35-2"><a></a><span class="fu">library</span>(ps)</span>
 <span id="cb35-3"><a></a>Memory <span class="ot">&lt;-</span> ps<span class="sc">::</span><span class="fu">ps_system_memory</span>()</span>
 <span id="cb35-4"><a></a><span class="fu">message</span>(<span class="st">"Total GB "</span>, <span class="fu">round</span>(Memory<span class="sc">$</span>total <span class="sc">/</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">3</span>, <span class="dv">2</span>))</span>
-<span id="cb35-5"><a></a><span class="fu">message</span>(<span class="st">"Free GB "</span>, <span class="fu">round</span>(Memory<span class="sc">$</span>free <span class="sc">/</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">3</span>, <span class="dv">2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb35-5"><a></a><span class="fu">message</span>(<span class="st">"Free GB "</span>, <span class="fu">round</span>(Memory<span class="sc">$</span>free <span class="sc">/</span> <span class="dv">1024</span><span class="sc">^</span><span class="dv">3</span>, <span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -937,8 +940,8 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="co"># BiocManager::install("flowWorkspace") #Bioconductor</span></span>
-<span id="cb36-2"><a></a><span class="fu">library</span>(flowWorkspace)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="co"># BiocManager::install("flowWorkspace") #Bioconductor</span></span>
+<span id="cb36-2"><a></a><span class="fu">library</span>(flowWorkspace)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -963,9 +966,9 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>cytoframe <span class="ot">&lt;-</span> <span class="fu">load_cytoframe_from_fcs</span>(fcs_files[<span class="dv">1</span>], <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>cytoframe <span class="ot">&lt;-</span> <span class="fu">load_cytoframe_from_fcs</span>(fcs_files[<span class="dv">1</span>], <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb37-2"><a></a></span>
-<span id="cb37-3"><a></a>cytoframe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb37-3"><a></a>cytoframe</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>cytoframe object '2025_07_26_AB_02_INF052_00_Ctrl.fcs'
 with 10000 cells and 43 observables:
@@ -991,7 +994,7 @@ row names(0):</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">class</span>(cytoframe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">class</span>(cytoframe)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "cytoframe"
 attr(,"package")
@@ -1021,7 +1024,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">load_cytoframe_from_fcs</span>(fcs_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">load_cytoframe_from_fcs</span>(fcs_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error:
 ! Expected string vector of length 1</code></pre>
@@ -1050,9 +1053,9 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a>cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a>cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files, <span class="at">truncate_max_range =</span> <span class="cn">FALSE</span>, <span class="at">transformation =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb43-2"><a></a></span>
-<span id="cb43-3"><a></a>cytoset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb43-3"><a></a>cytoset</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A cytoset with 6 samples.
 
@@ -1063,7 +1066,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">class</span>(cytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">class</span>(cytoset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "cytoset"
 attr(,"package")
@@ -1093,7 +1096,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a><span class="fu">str</span>(cytoframe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a><span class="fu">str</span>(cytoframe)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Formal class 'cytoframe' [package "flowWorkspace"] with 5 slots
   ..@ pointer    :&lt;externalptr&gt; 
@@ -1123,7 +1126,7 @@ attr(,"package")
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="fu">str</span>(cytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="fu">str</span>(cytoset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Formal class 'cytoset' [package "flowWorkspace"] with 3 slots
   ..@ pointer  :&lt;externalptr&gt; 
@@ -1185,7 +1188,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="fu">obj_size</span>(flowFrame)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="fu">obj_size</span>(flowFrame)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>3.53 MB</code></pre>
 </div>
@@ -1193,7 +1196,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a><span class="fu">obj_size</span>(cytoframe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a><span class="fu">obj_size</span>(cytoframe)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>5.40 kB</code></pre>
 </div>
@@ -1221,7 +1224,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">obj_size</span>(flowSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">obj_size</span>(flowSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>20.99 MB</code></pre>
 </div>
@@ -1229,7 +1232,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a><span class="fu">obj_size</span>(cytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a><span class="fu">obj_size</span>(cytoset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>3.88 kB</code></pre>
 </div>
@@ -1297,8 +1300,8 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a>ConvertedToCytoframe <span class="ot">&lt;-</span> <span class="fu">flowFrame_to_cytoframe</span>(flowFrame)</span>
-<span id="cb59-2"><a></a>ConvertedToCytoframe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a>ConvertedToCytoframe <span class="ot">&lt;-</span> <span class="fu">flowFrame_to_cytoframe</span>(flowFrame)</span>
+<span id="cb59-2"><a></a>ConvertedToCytoframe</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>cytoframe object 'file53a066f5f67'
 with 10000 cells and 43 observables:
@@ -1324,7 +1327,7 @@ row names(0):</code></pre>
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a><span class="fu">obj_size</span>(ConvertedToCytoframe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a><span class="fu">obj_size</span>(ConvertedToCytoframe)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>5.40 kB</code></pre>
 </div>
@@ -1352,8 +1355,8 @@ row names(0):</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a>ConvertedToFlowframe <span class="ot">&lt;-</span> flowWorkspace<span class="sc">::</span><span class="fu">cytoframe_to_flowFrame</span>(cytoframe)</span>
-<span id="cb63-2"><a></a>ConvertedToFlowframe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a>ConvertedToFlowframe <span class="ot">&lt;-</span> flowWorkspace<span class="sc">::</span><span class="fu">cytoframe_to_flowFrame</span>(cytoframe)</span>
+<span id="cb63-2"><a></a>ConvertedToFlowframe</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>flowFrame object '2025_07_26_AB_02_INF052_00_Ctrl.fcs'
 with 10000 cells and 43 observables:
@@ -1378,7 +1381,7 @@ $P43           AF-A        NA     4194303      -111     4194303
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a><span class="fu">obj_size</span>(ConvertedToFlowframe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a><span class="fu">obj_size</span>(ConvertedToFlowframe)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>3.53 MB</code></pre>
 </div>
@@ -1406,8 +1409,8 @@ $P43           AF-A        NA     4194303      -111     4194303
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a>ConvertedToCytoset <span class="ot">&lt;-</span> <span class="fu">flowSet_to_cytoset</span>(flowSet)</span>
-<span id="cb67-2"><a></a>ConvertedToCytoset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a>ConvertedToCytoset <span class="ot">&lt;-</span> <span class="fu">flowSet_to_cytoset</span>(flowSet)</span>
+<span id="cb67-2"><a></a>ConvertedToCytoset</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A cytoset with 6 samples.
 
@@ -1418,7 +1421,7 @@ $P43           AF-A        NA     4194303      -111     4194303
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a><span class="fu">obj_size</span>(ConvertedToCytoset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a><span class="fu">obj_size</span>(ConvertedToCytoset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>3.88 kB</code></pre>
 </div>
@@ -1446,8 +1449,8 @@ $P43           AF-A        NA     4194303      -111     4194303
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a>ConvertedToFlowset <span class="ot">&lt;-</span> <span class="fu">cytoset_to_flowSet</span>(flowSet)</span>
-<span id="cb71-2"><a></a>ConvertedToFlowset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a>ConvertedToFlowset <span class="ot">&lt;-</span> <span class="fu">cytoset_to_flowSet</span>(flowSet)</span>
+<span id="cb71-2"><a></a>ConvertedToFlowset</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A flowSet with 6 experiments.
 
@@ -1457,7 +1460,7 @@ column names(43): Time SSC-W ... APC-Fire 810-A AF-A</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a></a><span class="fu">obj_size</span>(ConvertedToFlowset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a></a><span class="fu">obj_size</span>(ConvertedToFlowset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>20.99 MB</code></pre>
 </div>
@@ -1485,8 +1488,8 @@ column names(43): Time SSC-W ... APC-Fire 810-A AF-A</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a></a>GatingSet1 <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(flowSet)</span>
-<span id="cb75-2"><a></a>GatingSet1 </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a></a>GatingSet1 <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(flowSet)</span>
+<span id="cb75-2"><a></a>GatingSet1 </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -1494,7 +1497,7 @@ column names(43): Time SSC-W ... APC-Fire 810-A AF-A</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a></a><span class="fu">class</span>(GatingSet1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a></a><span class="fu">class</span>(GatingSet1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "GatingSet"
 attr(,"package")
@@ -1507,8 +1510,8 @@ attr(,"package")
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a></a>GatingSet2 <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(cytoset)</span>
-<span id="cb79-2"><a></a>GatingSet2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a></a>GatingSet2 <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(cytoset)</span>
+<span id="cb79-2"><a></a>GatingSet2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -1516,7 +1519,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a></a><span class="fu">class</span>(GatingSet1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a></a><span class="fu">class</span>(GatingSet1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "GatingSet"
 attr(,"package")
@@ -1643,8 +1646,8 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a></a><span class="co"># BiocManager::install("CytoML") #Bioconductor</span></span>
-<span id="cb83-2"><a></a><span class="fu">library</span>(CytoML)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a></a><span class="co"># BiocManager::install("CytoML") #Bioconductor</span></span>
+<span id="cb83-2"><a></a><span class="fu">library</span>(CytoML)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1686,12 +1689,12 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a>Folder <span class="co"># Defined Above</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a>Folder <span class="co"># Defined Above</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a>FlowJoWsp <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> Folder, <span class="at">pattern =</span> <span class="st">".wsp"</span>, <span class="at">full =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb86-2"><a></a>FlowJoWsp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a></a>FlowJoWsp <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> Folder, <span class="at">pattern =</span> <span class="st">".wsp"</span>, <span class="at">full =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb86-2"><a></a>FlowJoWsp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data/FlowJoWSP_OpenedCopy.wsp" "data/FlowJoWSP_Unopened.wsp"  </code></pre>
 </div>
@@ -1719,8 +1722,8 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a></a>ThisWorkspace <span class="ot">&lt;-</span> FlowJoWsp[stringr<span class="sc">::</span><span class="fu">str_detect</span>(FlowJoWsp, <span class="st">"Opened"</span>)]</span>
-<span id="cb88-2"><a></a>ThisWorkspace</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a></a>ThisWorkspace <span class="ot">&lt;-</span> FlowJoWsp[stringr<span class="sc">::</span><span class="fu">str_detect</span>(FlowJoWsp, <span class="st">"Opened"</span>)]</span>
+<span id="cb88-2"><a></a>ThisWorkspace</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data/FlowJoWSP_OpenedCopy.wsp"</code></pre>
 </div>
@@ -1748,8 +1751,8 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a></a>ws <span class="ot">&lt;-</span> <span class="fu">open_flowjo_xml</span>(ThisWorkspace)</span>
-<span id="cb90-2"><a></a>ws</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a></a>ws <span class="ot">&lt;-</span> <span class="fu">open_flowjo_xml</span>(ThisWorkspace)</span>
+<span id="cb90-2"><a></a>ws</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>File location:  data/FlowJoWSP_OpenedCopy.wsp 
 
@@ -1761,7 +1764,7 @@ Groups in Workspace
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a></a><span class="fu">class</span>(ws)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a></a><span class="fu">class</span>(ws)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "flowjo_workspace"
 attr(,"package")
@@ -1811,7 +1814,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a></a>gs <span class="ot">&lt;-</span> <span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> Folder)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a></a>gs <span class="ot">&lt;-</span> <span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> Folder)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error:
 ! Multiple FCS files match sample 00_Ctrl.fcs by filename, event count, and keywords.
@@ -1821,7 +1824,7 @@ Candidates are:
 /home/david/Documents/CytometryInR/course/05_GatingSets/data/2025_07_26_AB_02_INF179_00_Ctrl.fcs
 Please move incorrect files out of this directory or its subdirectories.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a></a>gs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a></a>gs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error:
 ! object 'gs' not found</code></pre>
@@ -1850,7 +1853,7 @@ Please move incorrect files out of this directory or its subdirectories.</code><
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a></a>?flowjo_to_gatingset</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb98"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a></a>?flowjo_to_gatingset</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1886,8 +1889,8 @@ Please move incorrect files out of this directory or its subdirectories.</code><
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a></a>gs <span class="ot">&lt;-</span> <span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> Folder, <span class="at">additional.keys=</span><span class="st">"GROUPNAME"</span>)</span>
-<span id="cb99-2"><a></a>gs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb99"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a></a>gs <span class="ot">&lt;-</span> <span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> Folder, <span class="at">additional.keys=</span><span class="st">"GROUPNAME"</span>)</span>
+<span id="cb99-2"><a></a>gs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 6 samples</code></pre>
 </div>
@@ -1895,7 +1898,7 @@ Please move incorrect files out of this directory or its subdirectories.</code><
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a></a><span class="fu">class</span>(gs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a></a><span class="fu">class</span>(gs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "GatingSet"
 attr(,"package")
@@ -1945,11 +1948,11 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a></a><span class="fu">system.time</span>({</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a></a><span class="fu">system.time</span>({</span>
 <span id="cb103-2"><a></a></span>
 <span id="cb103-3"><a></a><span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> Folder, <span class="at">additional.keys=</span><span class="st">"GROUPNAME"</span>)</span>
 <span id="cb103-4"><a></a></span>
-<span id="cb103-5"><a></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb103-5"><a></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
   0.565   0.004   0.569 </code></pre>
@@ -1978,16 +1981,16 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a></a><span class="co"># install.packages("bench") # CRAN</span></span>
-<span id="cb105-2"><a></a><span class="fu">library</span>(bench)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a></a><span class="co"># install.packages("bench") # CRAN</span></span>
+<span id="cb105-2"><a></a><span class="fu">library</span>(bench)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a></a><span class="fu">mark</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb106"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a></a><span class="fu">mark</span>(</span>
 <span id="cb106-2"><a></a>  Test <span class="ot">&lt;-</span> <span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> Folder, <span class="at">additional.keys=</span><span class="st">"GROUPNAME"</span>),</span>
 <span id="cb106-3"><a></a>  <span class="at">iterations=</span> <span class="dv">5</span></span>
-<span id="cb106-4"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb106-4"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 6
   expression                             min median `itr/sec` mem_alloc `gc/sec`
@@ -2038,7 +2041,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a></a><span class="fu">plot</span>(gs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb108"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a></a><span class="fu">plot</span>(gs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2070,7 +2073,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a></a><span class="fu">gs_get_pop_paths</span>(gs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb109"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a></a><span class="fu">gs_get_pop_paths</span>(gs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "root"                                             
  [2] "/Scatter"                                         
@@ -2117,8 +2120,8 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a></a>Data <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_count_fast</span>(gs)</span>
-<span id="cb111-2"><a></a><span class="fu">head</span>(Data, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb111"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a></a>Data <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_count_fast</span>(gs)</span>
+<span id="cb111-2"><a></a><span class="fu">head</span>(Data, <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                 name                         Population
                &lt;char&gt;                             &lt;char&gt;
@@ -2159,7 +2162,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a></a><span class="fu">pData</span>(gs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb113"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a></a><span class="fu">pData</span>(gs)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                          name
 00_Ctrl.fcs_INF052 00_Ctrl.fcs
@@ -2193,10 +2196,10 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a></a>AlternateGS <span class="ot">&lt;-</span> <span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> Folder,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb115"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a></a>AlternateGS <span class="ot">&lt;-</span> <span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> Folder,</span>
 <span id="cb115-2"><a></a> <span class="at">additional.keys=</span><span class="st">"GROUPNAME"</span>,</span>
 <span id="cb115-3"><a></a> <span class="at">keywords=</span><span class="fu">c</span>(<span class="st">"$DATE"</span>, <span class="st">"$CYT"</span>, <span class="st">"GROUPNAME"</span>))</span>
-<span id="cb115-4"><a></a><span class="fu">pData</span>(AlternateGS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb115-4"><a></a><span class="fu">pData</span>(AlternateGS)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                   GROUPNAME   $CYT       $DATE        name
 00_Ctrl.fcs_INF052    INF052 Aurora 26-Jul-2025 00_Ctrl.fcs
@@ -2316,7 +2319,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a></a><span class="fu">packageVersion</span>(<span class="st">"ggplot2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb117"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a></a><span class="fu">packageVersion</span>(<span class="st">"ggplot2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] '4.0.3'</code></pre>
 </div>
@@ -2324,7 +2327,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb119"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a></a><span class="fu">packageVersion</span>(<span class="st">"ggcyto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb119"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a></a><span class="fu">packageVersion</span>(<span class="st">"ggcyto"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] '1.39.4'</code></pre>
 </div>
@@ -2397,8 +2400,8 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb121"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a></a><span class="fu">remove.packages</span>(<span class="st">"ggplot2"</span>)</span>
-<span id="cb121-2"><a></a><span class="fu">remove.packages</span>(<span class="st">"ggcyto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb121"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb121-1"><a></a><span class="fu">remove.packages</span>(<span class="st">"ggplot2"</span>)</span>
+<span id="cb121-2"><a></a><span class="fu">remove.packages</span>(<span class="st">"ggcyto"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2448,7 +2451,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a></a><span class="fu">install.packages</span>(<span class="st">"ggplot2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb122"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a></a><span class="fu">install.packages</span>(<span class="st">"ggplot2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2473,7 +2476,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb123"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"RGLab/ggcyto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb123"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"RGLab/ggcyto"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2498,8 +2501,8 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb124-2"><a></a><span class="fu">library</span>(ggcyto)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb124"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb124-2"><a></a><span class="fu">library</span>(ggcyto)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2524,7 +2527,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb125"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a></a><span class="fu">ggcyto</span>(gs[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb125"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a></a><span class="fu">ggcyto</span>(gs[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"root"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2566,7 +2569,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a></a><span class="fu">ggcyto</span>(gs[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD4+"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb126"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a></a><span class="fu">ggcyto</span>(gs[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD4+"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2628,7 +2631,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb127"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a></a><span class="fu">ggcyto</span>(gs[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD4+"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb127"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb127-1"><a></a><span class="fu">ggcyto</span>(gs[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD4+"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"FSC-A"</span>, <span class="at">y=</span><span class="st">"SSC-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2660,7 +2663,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a></a><span class="fu">ggcyto</span>(gs[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"IFNg"</span>, <span class="at">y=</span><span class="st">"TNFa"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb128"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a></a><span class="fu">ggcyto</span>(gs[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"IFNg"</span>, <span class="at">y=</span><span class="st">"TNFa"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2692,7 +2695,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb129"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a></a><span class="fu">ggcyto</span>(gs[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BV750-A"</span>, <span class="at">y=</span><span class="st">"PE-Dazzle594-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb129"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb129-1"><a></a><span class="fu">ggcyto</span>(gs[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"BV750-A"</span>, <span class="at">y=</span><span class="st">"PE-Dazzle594-A"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2707,7 +2710,7 @@ attr(,"package")
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a></a><span class="fu">ggcyto</span>(gs[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"CD4"</span>, <span class="at">y=</span><span class="st">"CD8"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb130"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a></a><span class="fu">ggcyto</span>(gs[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"CD4"</span>, <span class="at">y=</span><span class="st">"CD8"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -3079,7 +3082,7 @@ attr(,"package")
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -3191,13 +3194,14 @@ attr(,"package")
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

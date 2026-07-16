@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,6 +11,9 @@
 
 <title>DimViz vs.&nbsp;Transformation – Cytometry in R</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -73,10 +76,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../../site_libs/bootstrap/bootstrap-8eaec6b9941db0f18eecf13b95a46332.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../../site_libs/bootstrap/bootstrap-5c153bb687ce49b6c6529d158b94fe28.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -126,7 +129,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../../images/hex.svg" alt="" class="navbar-logo">
+    <img src="../../../images/hex.svg" alt="" class="navbar-logo light-content">
+    <img src="../../../images/hex.svg" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">Cytometry in R</span>
@@ -194,8 +198,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
         </a>
     </div>
   </nav>
-  <div id="quarto-announcement" data-announcement-id="517fd7fd2923fd64fe81c4cc75c6fa55" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
-<p>See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
+  <div id="quarto-announcement" data-announcement-id="dc2d9c7bdc53471fb4a7564dd51e6a50" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>Welcome Back! See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
 </div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
 </header>
 <!-- content -->
@@ -341,6 +345,12 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
   <div class="sidebar-item-container"> 
   <a href="../../../course/11_DataForStats/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">11 - Data for Statistics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/12_SpectralSignatures/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 - Spectral Signatures</span></a>
   </div>
 </li>
       </ul>
@@ -492,7 +502,7 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 <section id="set-up" class="level1">
 <h1>Set Up</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowWorkspace)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowWorkspace)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>As part of improvements to flowWorkspace, some behavior of
 GatingSet objects has changed. For details, please read the section
@@ -500,7 +510,7 @@ titled "The cytoframe and cytoset classes" in the package vignette:
 
   vignette("flowWorkspace-Introduction", "flowWorkspace")</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attaching package: 'dplyr'</code></pre>
@@ -515,8 +525,8 @@ Attaching package: 'dplyr'</code></pre>
 
     intersect, setdiff, setequal, union</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggcyto)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggcyto)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: flowCore</code></pre>
 </div>
@@ -526,15 +536,15 @@ Attaching package: 'dplyr'</code></pre>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: BH</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowGate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowGate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Registered polygon_gate</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Registered span_gate</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(uwot) <span class="co"># CRAN # install.packages("uwot")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(uwot) <span class="co"># CRAN # install.packages("uwot")</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: Matrix</code></pre>
 </div>
@@ -549,19 +559,19 @@ Attaching package: 'Matrix'</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RFolder &lt;- file.path("community", "ejemplos", "R") # For Interactive</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RFolder &lt;- file.path("community", "ejemplos", "R") # For Interactive</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>RFolder <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"R"</span>) <span class="co"># For Quarto Rendering</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>MyFunctions <span class="ot">&lt;-</span> <span class="fu">list.files</span>(RFolder, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>MyFunctions, <span class="at">.f=</span>source)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>MyFunctions, <span class="at">.f=</span>source)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co"># For Quarto Rendering</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co"># For Quarto Rendering</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#StorageLocation &lt;- file.path("community", "ejemplos", "data")</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>OutputFolder <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"outputs"</span>) <span class="co"># For Quarto Rendering</span></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">#OutputFolder &lt;- file.path("community", "ejemplos", "outputs")</span></span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".fcs"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".fcs"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="transformations" class="level2">
 <h2 class="anchored" data-anchor-id="transformations">Transformations</h2>
@@ -569,7 +579,7 @@ Attaching package: 'Matrix'</code></pre>
 <section id="biexponential-1" class="level2">
 <h2 class="anchored" data-anchor-id="biexponential-1">Biexponential 1</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Biexponential1_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files, <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Biexponential1_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files, <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>Biexponential1_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(Biexponential1_cytoset)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>Biexponential1_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Biexponential1_GatingSet)</span>
@@ -578,13 +588,13 @@ Attaching package: 'Matrix'</code></pre>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>Biexponential1 <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
 <span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">2</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">750</span>)</span>
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>MyBiexTransform_1 <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential1)</span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="fu">transform</span>(Biexponential1_GatingSet, MyBiexTransform_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="fu">transform</span>(Biexponential1_GatingSet, MyBiexTransform_1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pData(Biexponential1_GatingSet)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pData(Biexponential1_GatingSet)</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># markernames(Biexponential1_GatingSet)</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># remotes::install_github("DavidRach/Luciernaga")</span></span>
@@ -593,7 +603,7 @@ Attaching package: 'Matrix'</code></pre>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">TheFill=</span><span class="st">"name"</span>, <span class="at">TheX =</span> <span class="st">"BUV805-A"</span>, <span class="at">TheY=</span><span class="st">"name"</span>,<span class="at">returntype=</span><span class="st">"patchwork"</span>,</span>
 <span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">outpath=</span>OutputFolder, <span class="at">filename=</span><span class="st">"CD4RidgePlot_Biexponential1"</span>)</span>
 <span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>SinglePlot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>SinglePlot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`1`</code></pre>
 </div>
@@ -612,7 +622,7 @@ Attaching package: 'Matrix'</code></pre>
 <section id="biexponential-2" class="level2">
 <h2 class="anchored" data-anchor-id="biexponential-2">Biexponential 2</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Biexponential2_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files, <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>Biexponential2_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files, <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>Biexponential2_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(Biexponential2_cytoset)</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>Biexponential2_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Biexponential2_GatingSet)</span>
@@ -621,13 +631,13 @@ Attaching package: 'Matrix'</code></pre>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>Biexponential2 <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
 <span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">pos=</span><span class="fl">5.5</span>, <span class="at">neg=</span><span class="dv">2</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">1000</span>)</span>
 <span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>MyBiexTransform_2 <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential2)</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="fu">transform</span>(Biexponential2_GatingSet, MyBiexTransform_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="fu">transform</span>(Biexponential2_GatingSet, MyBiexTransform_2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pData(Biexponential1_GatingSet)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pData(Biexponential1_GatingSet)</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># markernames(Biexponential1_GatingSet)</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># remotes::install_github("DavidRach/Luciernaga")</span></span>
@@ -636,7 +646,7 @@ Attaching package: 'Matrix'</code></pre>
 <span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">TheFill=</span><span class="st">"name"</span>, <span class="at">TheX =</span> <span class="st">"BUV805-A"</span>, <span class="at">TheY=</span><span class="st">"name"</span>,<span class="at">returntype=</span><span class="st">"patchwork"</span>,</span>
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">outpath=</span>OutputFolder, <span class="at">filename=</span><span class="st">"CD4RidgePlot_Biexponential2"</span>)</span>
 <span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>SinglePlot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>SinglePlot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`1`</code></pre>
 </div>
@@ -655,20 +665,20 @@ Attaching package: 'Matrix'</code></pre>
 <section id="arcsinh-1" class="level2">
 <h2 class="anchored" data-anchor-id="arcsinh-1">Arcsinh 1</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Arcsinh1_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files, <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Arcsinh1_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files, <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>Arcsinh1_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(Arcsinh1_cytoset)</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>Arcsinh1_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Arcsinh1_GatingSet)</span>
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>FluorophoresOnly <span class="ot">&lt;-</span> Arcsinh1_Parameters[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(Arcsinh1_Parameters, <span class="st">"FSC|SSC|Time"</span>)]</span>
 <span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>Arcsinh_1 <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">t =</span> <span class="dv">262144</span>, <span class="at">m =</span> <span class="fl">4.5</span>, <span class="at">a =</span> <span class="dv">0</span>)</span>
 <span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>MyArcsinhTransform_1 <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Arcsinh_1)</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">transform</span>(Arcsinh1_GatingSet, MyArcsinhTransform_1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="fu">transform</span>(Arcsinh1_GatingSet, MyArcsinhTransform_1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pData(Biexponential1_GatingSet)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pData(Biexponential1_GatingSet)</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co"># markernames(Biexponential1_GatingSet)</span></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co"># remotes::install_github("DavidRach/Luciernaga")</span></span>
@@ -677,7 +687,7 @@ Attaching package: 'Matrix'</code></pre>
 <span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">TheFill=</span><span class="st">"name"</span>, <span class="at">TheX =</span> <span class="st">"BUV805-A"</span>, <span class="at">TheY=</span><span class="st">"name"</span>,<span class="at">returntype=</span><span class="st">"patchwork"</span>,</span>
 <span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">outpath=</span>OutputFolder, <span class="at">filename=</span><span class="st">"CD4RidgePlot_Arcsinh1"</span>)</span>
 <span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>SinglePlot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>SinglePlot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`1`</code></pre>
 </div>
@@ -696,20 +706,20 @@ Attaching package: 'Matrix'</code></pre>
 <section id="arcsinh-2" class="level2">
 <h2 class="anchored" data-anchor-id="arcsinh-2">Arcsinh 2</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>Arcsinh2_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files, <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>Arcsinh2_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files, <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>Arcsinh2_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(Arcsinh2_cytoset)</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>Arcsinh2_Parameters <span class="ot">&lt;-</span> <span class="fu">colnames</span>(Arcsinh2_GatingSet)</span>
 <span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>FluorophoresOnly <span class="ot">&lt;-</span> Arcsinh2_Parameters[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(Arcsinh2_Parameters, <span class="st">"FSC|SSC|Time"</span>)]</span>
 <span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>Arcsinh_2 <span class="ot">&lt;-</span> <span class="fu">flowjo_fasinh_trans</span>(<span class="at">t =</span> <span class="dv">13172</span>, <span class="at">m =</span> <span class="fl">5.5</span>, <span class="at">a=</span><span class="dv">0</span>)</span>
 <span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>MyArcsinhTransform_2 <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Arcsinh_2)</span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="fu">transform</span>(Arcsinh2_GatingSet, MyArcsinhTransform_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="fu">transform</span>(Arcsinh2_GatingSet, MyArcsinhTransform_2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pData(Biexponential1_GatingSet)</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pData(Biexponential1_GatingSet)</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co"># markernames(Biexponential1_GatingSet)</span></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># remotes::install_github("DavidRach/Luciernaga")</span></span>
@@ -718,7 +728,7 @@ Attaching package: 'Matrix'</code></pre>
 <span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">TheFill=</span><span class="st">"name"</span>, <span class="at">TheX =</span> <span class="st">"BUV805-A"</span>, <span class="at">TheY=</span><span class="st">"name"</span>,<span class="at">returntype=</span><span class="st">"patchwork"</span>,</span>
 <span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">outpath=</span>OutputFolder, <span class="at">filename=</span><span class="st">"CD4RidgePlot_Arcsinh2"</span>)</span>
 <span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>SinglePlot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>SinglePlot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$`1`</code></pre>
 </div>
@@ -738,13 +748,13 @@ Attaching package: 'Matrix'</code></pre>
 <section id="umap" class="level1">
 <h1>UMAP</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># markernames(Biexponential1_GatingSet)</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>TheseMarkers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"BUV805-A"</span>, <span class="st">"BV650-A"</span>, <span class="st">"APC-Fire 750-A"</span>, <span class="st">"APC-Fire 810-A"</span>, <span class="st">"BUV395-A"</span>, <span class="st">"BV605-A"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># markernames(Biexponential1_GatingSet)</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>TheseMarkers <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"BUV805-A"</span>, <span class="st">"BV650-A"</span>, <span class="st">"APC-Fire 750-A"</span>, <span class="st">"APC-Fire 810-A"</span>, <span class="st">"BUV395-A"</span>, <span class="st">"BV605-A"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="biexponential1" class="level2">
 <h2 class="anchored" data-anchor-id="biexponential1">Biexponential1</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Dataset <span class="ot">&lt;-</span> <span class="fu">Concatenate</span>(<span class="at">gs=</span>Biexponential1_GatingSet, <span class="at">inverse.transform=</span><span class="cn">FALSE</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Dataset <span class="ot">&lt;-</span> <span class="fu">Concatenate</span>(<span class="at">gs=</span>Biexponential1_GatingSet, <span class="at">inverse.transform=</span><span class="cn">FALSE</span>,</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a> <span class="at">returnType=</span><span class="st">"data.frame"</span>, <span class="at">desiredCols=</span><span class="fu">c</span>(<span class="st">"name"</span>), <span class="at">subset=</span><span class="st">"root"</span>,</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a> <span class="at">DownsampleCount =</span> <span class="dv">10000</span>, <span class="at">addon=</span><span class="st">"Tcells"</span>)</span>
 <span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -756,7 +766,7 @@ Attaching package: 'Matrix'</code></pre>
 <span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_dist    =</span> <span class="fl">0.2</span>,</span>
 <span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">metric      =</span> <span class="st">"euclidean"</span>,</span>
 <span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose     =</span> <span class="cn">TRUE</span></span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>14:33:45 UMAP embedding parameters a = 1.262 b = 1.003</code></pre>
 </div>
@@ -789,7 +799,7 @@ Attaching package: 'Matrix'</code></pre>
 14:33:53 Using rng type: pcg
 14:34:07 Optimization finished</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>Dataset<span class="sc">$</span>UMAP1 <span class="ot">&lt;-</span> Toy_UMAP[, <span class="dv">1</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>Dataset<span class="sc">$</span>UMAP1 <span class="ot">&lt;-</span> Toy_UMAP[, <span class="dv">1</span>]</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>Dataset<span class="sc">$</span>UMAP2 <span class="ot">&lt;-</span> Toy_UMAP[, <span class="dv">2</span>]</span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
@@ -797,7 +807,7 @@ Attaching package: 'Matrix'</code></pre>
 <span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.4</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span></span>
 <span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"UMAP — T cells - Biexponential1"</span>, <span class="at">color =</span> <span class="st">"BUV805-A"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"UMAP — T cells - Biexponential1"</span>, <span class="at">color =</span> <span class="st">"BUV805-A"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -810,7 +820,7 @@ Attaching package: 'Matrix'</code></pre>
 <section id="biexponential2" class="level2">
 <h2 class="anchored" data-anchor-id="biexponential2">Biexponential2</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>Dataset <span class="ot">&lt;-</span> <span class="fu">Concatenate</span>(<span class="at">gs=</span>Biexponential2_GatingSet, <span class="at">inverse.transform=</span><span class="cn">FALSE</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>Dataset <span class="ot">&lt;-</span> <span class="fu">Concatenate</span>(<span class="at">gs=</span>Biexponential2_GatingSet, <span class="at">inverse.transform=</span><span class="cn">FALSE</span>,</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a> <span class="at">returnType=</span><span class="st">"data.frame"</span>, <span class="at">desiredCols=</span><span class="fu">c</span>(<span class="st">"name"</span>), <span class="at">subset=</span><span class="st">"root"</span>,</span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a> <span class="at">DownsampleCount =</span> <span class="dv">10000</span>, <span class="at">addon=</span><span class="st">"Tcells"</span>)</span>
 <span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -821,7 +831,7 @@ Attaching package: 'Matrix'</code></pre>
 <span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_dist    =</span> <span class="fl">0.2</span>,</span>
 <span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">metric      =</span> <span class="st">"euclidean"</span>,</span>
 <span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose     =</span> <span class="cn">TRUE</span></span>
-<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>14:34:09 UMAP embedding parameters a = 1.262 b = 1.003</code></pre>
 </div>
@@ -854,7 +864,7 @@ Attaching package: 'Matrix'</code></pre>
 14:34:17 Using rng type: pcg
 14:34:30 Optimization finished</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>Dataset<span class="sc">$</span>UMAP1 <span class="ot">&lt;-</span> Toy_UMAP[, <span class="dv">1</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>Dataset<span class="sc">$</span>UMAP1 <span class="ot">&lt;-</span> Toy_UMAP[, <span class="dv">1</span>]</span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>Dataset<span class="sc">$</span>UMAP2 <span class="ot">&lt;-</span> Toy_UMAP[, <span class="dv">2</span>]</span>
 <span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
@@ -862,7 +872,7 @@ Attaching package: 'Matrix'</code></pre>
 <span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.4</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span></span>
 <span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"UMAP — T cells - Biexponential2"</span>, <span class="at">color =</span> <span class="st">"BUV805-A"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"UMAP — T cells - Biexponential2"</span>, <span class="at">color =</span> <span class="st">"BUV805-A"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -875,7 +885,7 @@ Attaching package: 'Matrix'</code></pre>
 <section id="arcsinh1" class="level2">
 <h2 class="anchored" data-anchor-id="arcsinh1">Arcsinh1</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>Dataset <span class="ot">&lt;-</span> <span class="fu">Concatenate</span>(<span class="at">gs=</span>Arcsinh1_GatingSet, <span class="at">inverse.transform=</span><span class="cn">FALSE</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>Dataset <span class="ot">&lt;-</span> <span class="fu">Concatenate</span>(<span class="at">gs=</span>Arcsinh1_GatingSet, <span class="at">inverse.transform=</span><span class="cn">FALSE</span>,</span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a> <span class="at">returnType=</span><span class="st">"data.frame"</span>, <span class="at">desiredCols=</span><span class="fu">c</span>(<span class="st">"name"</span>), <span class="at">subset=</span><span class="st">"root"</span>,</span>
 <span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a> <span class="at">DownsampleCount =</span> <span class="dv">10000</span>, <span class="at">addon=</span><span class="st">"Tcells"</span>)</span>
 <span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -886,7 +896,7 @@ Attaching package: 'Matrix'</code></pre>
 <span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_dist    =</span> <span class="fl">0.2</span>,</span>
 <span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">metric      =</span> <span class="st">"euclidean"</span>,</span>
 <span id="cb61-11"><a href="#cb61-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose     =</span> <span class="cn">TRUE</span></span>
-<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb61-12"><a href="#cb61-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>14:34:32 UMAP embedding parameters a = 1.262 b = 1.003</code></pre>
 </div>
@@ -919,7 +929,7 @@ Attaching package: 'Matrix'</code></pre>
 14:34:41 Using rng type: pcg
 14:34:54 Optimization finished</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>Dataset<span class="sc">$</span>UMAP1 <span class="ot">&lt;-</span> Toy_UMAP[, <span class="dv">1</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>Dataset<span class="sc">$</span>UMAP1 <span class="ot">&lt;-</span> Toy_UMAP[, <span class="dv">1</span>]</span>
 <span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>Dataset<span class="sc">$</span>UMAP2 <span class="ot">&lt;-</span> Toy_UMAP[, <span class="dv">2</span>]</span>
 <span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
@@ -927,7 +937,7 @@ Attaching package: 'Matrix'</code></pre>
 <span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.4</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb70-7"><a href="#cb70-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span></span>
 <span id="cb70-8"><a href="#cb70-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"UMAP — T cells - ArcSinh1"</span>, <span class="at">color =</span> <span class="st">"BUV805-A"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb70-9"><a href="#cb70-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"UMAP — T cells - ArcSinh1"</span>, <span class="at">color =</span> <span class="st">"BUV805-A"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -940,7 +950,7 @@ Attaching package: 'Matrix'</code></pre>
 <section id="arcsinh2" class="level2">
 <h2 class="anchored" data-anchor-id="arcsinh2">Arcsinh2</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>Dataset <span class="ot">&lt;-</span> <span class="fu">Concatenate</span>(<span class="at">gs=</span>Arcsinh2_GatingSet, <span class="at">inverse.transform=</span><span class="cn">FALSE</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>Dataset <span class="ot">&lt;-</span> <span class="fu">Concatenate</span>(<span class="at">gs=</span>Arcsinh2_GatingSet, <span class="at">inverse.transform=</span><span class="cn">FALSE</span>,</span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a> <span class="at">returnType=</span><span class="st">"data.frame"</span>, <span class="at">desiredCols=</span><span class="fu">c</span>(<span class="st">"name"</span>), <span class="at">subset=</span><span class="st">"root"</span>,</span>
 <span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a> <span class="at">DownsampleCount =</span> <span class="dv">10000</span>, <span class="at">addon=</span><span class="st">"Tcells"</span>)</span>
 <span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -951,7 +961,7 @@ Attaching package: 'Matrix'</code></pre>
 <span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">min_dist    =</span> <span class="fl">0.2</span>,</span>
 <span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">metric      =</span> <span class="st">"euclidean"</span>,</span>
 <span id="cb71-11"><a href="#cb71-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">verbose     =</span> <span class="cn">TRUE</span></span>
-<span id="cb71-12"><a href="#cb71-12" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb71-12"><a href="#cb71-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>14:34:56 UMAP embedding parameters a = 1.262 b = 1.003</code></pre>
 </div>
@@ -987,7 +997,7 @@ Attaching package: 'Matrix'</code></pre>
 14:35:04 Using rng type: pcg
 14:35:17 Optimization finished</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>Dataset<span class="sc">$</span>UMAP1 <span class="ot">&lt;-</span> Toy_UMAP[, <span class="dv">1</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>Dataset<span class="sc">$</span>UMAP1 <span class="ot">&lt;-</span> Toy_UMAP[, <span class="dv">1</span>]</span>
 <span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>Dataset<span class="sc">$</span>UMAP2 <span class="ot">&lt;-</span> Toy_UMAP[, <span class="dv">2</span>]</span>
 <span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
@@ -995,7 +1005,7 @@ Attaching package: 'Matrix'</code></pre>
 <span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">0.4</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
 <span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span></span>
 <span id="cb80-8"><a href="#cb80-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb80-9"><a href="#cb80-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"UMAP — T cells - ArcSinh2"</span>, <span class="at">color =</span> <span class="st">"BUV805-A"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb80-9"><a href="#cb80-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"UMAP — T cells - ArcSinh2"</span>, <span class="at">color =</span> <span class="st">"BUV805-A"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -1064,13 +1074,14 @@ Attaching package: 'Matrix'</code></pre>
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
