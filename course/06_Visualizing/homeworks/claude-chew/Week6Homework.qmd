@@ -4,18 +4,80 @@
 In this session, we created beeswarm-style boxplot to display our T-cell frequencies on the y-axis, and timepoint on the x-axis. Using the concepts covered this week, swap out “timepoint” for the “Condition” variable. Adjust other layer arguments accordingly until you can return a similar plot at the end of the class. Finally, figure out how to switch around the order the Condition values are displayed on the x-axis.
 
 ```{r}
+library(dplyr)
+library(ggplot2)
+
+StorageLocation <- file.path("data")
+
+TheCSV <- list.files(StorageLocation, pattern=".csv", full.names=TRUE)
+Data <- read.csv(TheCSV, check.names=FALSE)
+
+AlternateData <- read.csv(TheCSV, check.names=FALSE)
+AlternateData <- AlternateData |> 
+    mutate(TcellProportion=Tcells_count/CD45_count) |>
+    mutate(TcellFrequency=TcellProportion *100) |>
+    mutate(TcellFrequency=round(TcellFrequency, 1))
+ggplot(AlternateData) + aes(x=Condition, y=TcellFrequency) + 
+    geom_boxplot() + geom_beeswarm(size = 1.5, cex = 2, aes(shape = infant_sex , fill = infant_sex)) +
+    scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex)
+
+AlternateData <- AlternateData |>
+  mutate(
+    Condition = factor(
+      Condition,
+      levels = c("Ctrl", "SEB", "PPD")
+    )
+  ) |>
+  arrange(Condition)
+
+ggplot(AlternateData) +
+  aes(x = Condition, y = TcellFrequency) +
+  geom_boxplot() +
+  geom_beeswarm(
+    size = 1.5,
+    cex = 2,
+    aes(shape = infant_sex, fill = infant_sex)
+  ) +
+  scale_x_discrete(limits = c("SEB", "PPD", "Ctrl")) +
+  scale_shape_manual(values = shape_sex) +
+  scale_fill_manual(values = fill_sex)
+
+ggplot(AlternateData) +
+  aes(x = Condition, y = TcellFrequency) +
+  geom_boxplot() +
+  geom_beeswarm(
+    size = 1.5,
+    cex = 2,
+    aes(shape = infant_sex, fill = infant_sex)
+  ) +
+  scale_x_discrete(limits = c("PPD", "Ctrl", "SEB")) +
+  scale_shape_manual(values = shape_sex) +
+  scale_fill_manual(values = fill_sex)
 
 ```
 
 
+Problem 1 Plot: T-cell frequency by ![](homeworks/images/Problem1_Plot.png)
+Problem 1 Plot: Condition Rearranged 1 ![](homeworks/images/Problem1_ConditionRearranged1.png)
+Problem 1 Plot: Condition Rearranged 2 ![](homeworks/images/Problem1_ConditionRearranged2.png)
 
 # Problem 2
 Circle back to the CytoML-ggcyto flowplot, and modify it until happy with the visual appearance. You may use any resource on the internet to assist, but you must document your steps so that we can also repeat them.
 
 ```{r}
+library(CytoML)
+library(ggcyto)
 
+# StorageLocation # Defined Above
+FlowJoWsp <- list.files(path = StorageLocation, pattern = ".wsp", full = TRUE)
+ws <- open_flowjo_xml(FlowJoWsp)
+gs <- flowjo_to_gatingset(ws=ws, name=1, path = StorageLocation, additional.keys = "GROUPNAME")
+
+Plot <- ggcyto(gs[6], subset="Tcells", aes(x="CD8", y="CD4")) + geom_hex(bins=250) + theme_light()
+Plot
 ```
 
+Problem 2 Plot: ![](homeworks/images/Problem2_Plot.png)
 
 
 # Problem 3
@@ -23,4 +85,9 @@ In Mismatched Assumptions, we saw two examples of a histogram/density overlay sh
 
 ```{r}
 
+ggplot(AlternateData) + aes(x=TcellFrequency, fill=Condition) + geom_histogram(binwidth = 2) + 
+    scale_color_gradientn(colors=rainbow(6)) +
+    facet_wrap(~Condition)
 ```
+
+Problem 3 Plot: ![](homeworks/images/Problem3_Plot.png)

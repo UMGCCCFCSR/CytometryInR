@@ -1,0 +1,186 @@
+# Week 8 Take-home Problems
+
+# Problem 1
+Using `flowGate`, go ahead and create your own series of gates for either our data or your own for any cell populations that might interest you. Once done, save the GatingSet, and then successfully reload it. Add another gate, but intentionally misdraw it. Then proceed to visualize, identify and correct it, before saving again. 
+
+If you do plan to switch over to R for gating long-term, these skillsets will be essential, as you will need to be confident in your ability to adjust your gates as needed. 
+
+```{r}
+# Load libraries
+library(flowWorkspace)
+library(ggplot2)
+library(ggcyto)
+library(flowGate)
+
+# Designate paths, cytoset, GatingSet
+StorageLocation <- file.path("data1") 
+
+fcs_files <- list.files(StorageLocation, pattern=".fcs", full.names=TRUE)
+fcs_files
+
+claude_cytoset <- load_cytoset_from_fcs(fcs_files,
+ truncate_max_range = FALSE, transformation = FALSE)
+claude_GatingSet <- GatingSet(claude_cytoset)
+
+##Apply Compensation
+ff <- read.FCS(fcs_files, transformation = FALSE)
+keyword(ff)$SPILL
+spill <- keyword(ff)$SPILL
+claude_GatingSet <- compensate(claude_GatingSet, spill)
+
+# Continue on...
+# Get Fluorescent Parameters only
+claude_Parameters <- colnames(claude_GatingSet)
+claude_Parameters
+
+FluorophoresOnly <- claude_Parameters[!stringr::str_detect(claude_Parameters, "FSC|SSC|Time")]
+FluorophoresOnly
+
+# Apply Biexponential Transformation
+Biexponential <- flowjo_biexp_trans(maxValue = 262144, pos=4.5, neg=2, widthBasis = -500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(claude_GatingSet, MyBiexTransform)
+
+# Check if Bixep transformation is good enough to proceed...
+ggcyto(claude_GatingSet[1], subset="root",
+ aes(x="CD4", y="CD8")) + geom_hex(bins=200)
+
+# Draw some cleanup gates
+flowGate::gs_gate_interactive(gs=claude_GatingSet, filterId="Live", sample=1,
+dims=list("FSC-A", "Zombie NIR"), subset="root")
+
+flowGate::gs_gate_interactive(gs=claude_GatingSet, filterId="singlets", sample=1,
+dims=list("FSC-A", "FSC-W"), subset="Live")
+
+# Quick QC check for numbers of events in each gate and GatingSet tree
+gs_pop_get_count_fast(claude_GatingSet) |> 
+    dplyr::filter(Population %in% "/Live/singlets")
+
+plot(claude_GatingSet)
+
+flowGate::gs_gate_interactive(gs=claude_GatingSet, filterId="T Cells", sample=1,
+dims=list("CD3", "SSC-A"), subset="singlets")
+
+flowGate::gs_gate_interactive(gs=claude_GatingSet, filterId="CD8+", sample=1,
+dims=list("CD4", "CD8"), subset="T Cells")
+
+flowGate::gs_gate_interactive(gs=claude_GatingSet, filterId="CD4+", sample=1,
+dims=list("CD4", "CD8"), subset="T Cells", overlayGates="CD8+")
+
+plot(claude_GatingSet)
+
+StorageLocationAndName <- file.path(StorageLocation, "claudeflowGate.gs")
+save_gs(claude_GatingSet, StorageLocationAndName)
+
+load_gs(StorageLocationAndName)
+
+flowGate::gs_gate_interactive(gs=claude_GatingSet, filterId="CD4-CD8-", sample=1,
+dims=list("CD4", "CD8"), subset="singlets", overlayGates=c("CD4+", "CD8+"))
+
+gs_pop_remove(claude_GatingSet, "CD4-CD8-")
+
+plot(claude_GatingSet)
+
+flowGate::gs_gate_interactive(gs=claude_GatingSet, filterId="CD4-CD8-", sample=1,
+dims=list("CD4", "CD8"), subset="T Cells", overlayGates=c("CD4+", "CD8+"))
+
+StorageLocationAndName <- file.path(StorageLocation, "claudeflowGate.gs")
+save_gs(claude_GatingSet, StorageLocationAndName)
+
+p <- ggcyto::autoplot(claude_GatingSet[[1]]) + theme_bw()
+p
+```
+
+![](/homeworks/images/Problem_1.png)
+
+
+# Problem 2
+Go ahead and create your own `openCyto` gate template, extending to whatever cell target population of interest. Visualize the differences, and ensure that the gates are correctly applied for everyone. Set gate_constaint arguments as needed until everything is just right. 
+
+If you do plan to switch over to R for gating long-term, these skillsets will be essential, as you will need to be confident in your ability to adjust your gates as needed.
+
+```{r}
+library(openCyto)
+library(data.table)
+
+template <- gh_generate_template(
+    claude_GatingSet[[1]]
+)
+
+write.csv(
+    template,
+    "data1/template.csv",
+    row.names=FALSE
+)
+
+claude_cytoset <- load_cytoset_from_fcs(
+    fcs_files,
+    transformation = FALSE
+)
+
+claude_GatingSet <- GatingSet(claude_cytoset)
+
+claude_GatingSet <- compensate(
+    claude_GatingSet,
+    spill
+)
+
+transform(
+    claude_GatingSet,
+    MyBiexTransform
+)
+
+gh_get_transformations(
+    claude_GatingSet[[1]]
+)
+
+GateTemplate <- list.files(StorageLocation, pattern=".csv", full.names=TRUE)
+GatesToApply <- data.table::fread(GateTemplate)
+claudeGateTemplate <- gatingTemplate(GatesToApply)
+
+gt_gating(claudeGateTemplate, claude_GatingSet)
+
+ggcyto::autoplot(claude_GatingSet[[1]]) + theme_bw()
+
+```
+
+![](/homeworks/images/Problem_2.png)
+
+# Problem 3
+Re-run your `openCyto` template, but then add a few additional `flowGate` on to to extend it further. Save the gating set, close out of positron, and successfully reload. 
+
+```{r}
+library(openCyto)
+GateTemplate <- list.files(StorageLocation, pattern=".csv", full.names=TRUE)
+GatesToApply <- data.table::fread(GateTemplate)
+claudeGateTemplate <- gatingTemplate(GatesToApply)
+
+gt_gating(claudeGateTemplate, claude_GatingSet)
+
+
+flowGate::gs_gate_interactive(
+    gs = claude_GatingSet,
+    filterId = "CD4+CD8+",
+    sample = 1,
+    dims = c("V525-A","B675-A"),
+    subset = "T Cells"
+)
+
+StorageLocationAndName <- file.path(StorageLocation, "claudeflowGateProblem3.gs")
+save_gs(claude_GatingSet, StorageLocationAndName)
+
+# Run from here after exit Positron and reload
+
+library(flowWorkspace)
+library(ggplot2)
+library(ggcyto)
+library(flowGate)
+
+StorageLocation <- file.path("data1") 
+StorageLocationAndName <- file.path(StorageLocation, "claudeflowGateProblem3.gs")
+claudeGatingSet <- load_gs(StorageLocationAndName)
+
+ggcyto::autoplot(claudeGatingSet[[1]]) + theme_bw()
+```
+
+![](/homeworks/images/Problem_3Relaunch.png)
