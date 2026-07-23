@@ -6,8 +6,8 @@
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="David Rach">
   <meta name="dcterms.date" content="2026-04-28">
@@ -18,6 +18,9 @@
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -96,7 +99,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
   <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
 
   <script type="text/javascript">
@@ -505,11 +508,11 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(flowWorkspace)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(flowWorkspace)</span>
 <span id="cb1-2"><a></a><span class="fu">library</span>(flowGate)</span>
 <span id="cb1-3"><a></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb1-4"><a></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-5"><a></a><span class="fu">library</span>(purrr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a></a><span class="fu">library</span>(purrr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -517,7 +520,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co">#StorageLocation &lt;- file.path("course", "10_Downsampling", "data") # Interacting directly </span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co">#StorageLocation &lt;- file.path("course", "10_Downsampling", "data") # Interacting directly </span></span>
 <span id="cb2-2"><a></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co">#For Quarto Rendering</span></span>
 <span id="cb2-3"><a></a></span>
 <span id="cb2-4"><a></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".fcs"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
@@ -529,7 +532,7 @@ David Rach
 <span id="cb2-10"><a></a>Biexponential <span class="ot">&lt;-</span> <span class="fu">flowjo_biexp_trans</span>(<span class="at">channelRange=</span><span class="dv">4096</span>, <span class="at">maxValue=</span><span class="dv">262144</span>,</span>
 <span id="cb2-11"><a></a>     <span class="at">pos=</span><span class="fl">4.5</span>, <span class="at">neg=</span><span class="dv">2</span>, <span class="at">widthBasis=</span><span class="sc">-</span><span class="dv">500</span>)</span>
 <span id="cb2-12"><a></a>MyBiexTransform <span class="ot">&lt;-</span> <span class="fu">transformerList</span>(FluorophoresOnly, Biexponential)</span>
-<span id="cb2-13"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-13"><a></a><span class="fu">transform</span>(SFC_GatingSet, MyBiexTransform)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>A GatingSet with 3 samples</code></pre>
 </div>
@@ -558,7 +561,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>GatingTable <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a>GatingTable <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">tribble</span>(</span>
 <span id="cb4-2"><a></a>  <span class="sc">~</span>filterId,    <span class="sc">~</span>dims,                          <span class="sc">~</span>subset,      </span>
 <span id="cb4-3"><a></a>  <span class="st">"singlets"</span>,   <span class="fu">list</span>(<span class="st">"FSC-A"</span>, <span class="st">"FSC-H"</span>),          <span class="st">"root"</span>,      </span>
 <span id="cb4-4"><a></a>  <span class="st">"live"</span>,       <span class="fu">list</span>(<span class="st">"FSC-A"</span>, <span class="st">"Zombie NIR-A"</span>),   <span class="st">"singlets"</span>,  </span>
@@ -566,7 +569,7 @@ David Rach
 <span id="cb4-6"><a></a>  <span class="st">"CD4+"</span>,       <span class="fu">list</span>(<span class="st">"CD8"</span>, <span class="st">"CD4"</span>),              <span class="st">"Tcells"</span>,   </span>
 <span id="cb4-7"><a></a>  <span class="st">"CD8+"</span>,       <span class="fu">list</span>(<span class="st">"CD8"</span>, <span class="st">"CD4"</span>),              <span class="st">"Tcells"</span>,   </span>
 <span id="cb4-8"><a></a>  <span class="st">"DN"</span>,         <span class="fu">list</span>(<span class="st">"CD8"</span>, <span class="st">"CD4"</span>),              <span class="st">"Tcells"</span>,  </span>
-<span id="cb4-9"><a></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-9"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -574,7 +577,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>flowGate<span class="sc">::</span><span class="fu">gs_apply_gating_strategy</span>(SFC_GatingSet, <span class="at">gating_strategy =</span> GatingTable)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a>flowGate<span class="sc">::</span><span class="fu">gs_apply_gating_strategy</span>(SFC_GatingSet, <span class="at">gating_strategy =</span> GatingTable)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -605,7 +608,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">plot</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a><span class="fu">plot</span>(SFC_GatingSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -638,7 +641,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">pData</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a><span class="fu">pData</span>(SFC_GatingSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                                                                                   name
 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs
@@ -689,7 +692,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>Data <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_count_fast</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>Data <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_count_fast</span>(SFC_GatingSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -714,7 +717,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>Data<span class="sc">$</span>Population</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>Data<span class="sc">$</span>Population</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "/singlets"                  "/singlets/live"            
  [3] "/singlets/live/Tcells"      "/singlets/live/Tcells/CD4+"
@@ -750,8 +753,8 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>Data<span class="sc">$</span>Population <span class="ot">&lt;-</span> <span class="fu">basename</span>(Data<span class="sc">$</span>Population)</span>
-<span id="cb12-2"><a></a>Data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>Data<span class="sc">$</span>Population <span class="ot">&lt;-</span> <span class="fu">basename</span>(Data<span class="sc">$</span>Population)</span>
+<span id="cb12-2"><a></a>Data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                                   name Population
                                                  &lt;char&gt;     &lt;char&gt;
@@ -818,7 +821,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Data, <span class="fu">aes</span>(<span class="at">x =</span> Population, <span class="at">y =</span> Count, <span class="at">color =</span> name)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Data, <span class="fu">aes</span>(<span class="at">x =</span> Population, <span class="at">y =</span> Count, <span class="at">color =</span> name)) <span class="sc">+</span></span>
 <span id="cb14-2"><a></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
 <span id="cb14-3"><a></a>  <span class="fu">labs</span>(</span>
 <span id="cb14-4"><a></a>    <span class="at">title =</span> <span class="st">"Cell Counts by Gate"</span>,</span>
@@ -833,7 +836,7 @@ David Rach
 <span id="cb14-13"><a></a>    <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>),</span>
 <span id="cb14-14"><a></a>    <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>(),</span>
 <span id="cb14-15"><a></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()</span>
-<span id="cb14-16"><a></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-16"><a></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -841,7 +844,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>Plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a></a>Plot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -876,10 +879,10 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>plotly<span class="sc">::</span><span class="fu">ggplotly</span>(Plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>plotly<span class="sc">::</span><span class="fu">ggplotly</span>(Plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-a7420da36b4aed0ec10e" style="width:960px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-a7420da36b4aed0ec10e">{"x":{"data":[{"x":[5,4,6,1,2,3],"y":[9485,9253,8871,5680,2473,560],"text":["Population: singlets<br />Count: 9485<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: live<br />Count: 9253<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: Tcells<br />Count: 8871<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: CD4+<br />Count: 5680<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: CD8+<br />Count: 2473<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: DN<br />Count:  560<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","opacity":1,"size":15.118110236220474,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(248,118,109,1)"}},"hoveron":"points","name":"2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","legendgroup":"2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[5,4,6,1,2,3],"y":[9549,9193,8517,5147,3028,240],"text":["Population: singlets<br />Count: 9549<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: live<br />Count: 9193<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: Tcells<br />Count: 8517<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: CD4+<br />Count: 5147<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: CD8+<br />Count: 3028<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: DN<br />Count:  240<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,186,56,1)","opacity":1,"size":15.118110236220474,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,186,56,1)"}},"hoveron":"points","name":"2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","legendgroup":"2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[5,4,6,1,2,3],"y":[9466,9177,8644,6765,1658,129],"text":["Population: singlets<br />Count: 9466<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: live<br />Count: 9177<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: Tcells<br />Count: 8644<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: CD4+<br />Count: 6765<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: CD8+<br />Count: 1658<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: DN<br />Count:  129<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(97,156,255,1)","opacity":1,"size":15.118110236220474,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(97,156,255,1)"}},"hoveron":"points","name":"2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","legendgroup":"2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":45.356579493565803,"r":8.634288086342881,"b":44.034869240348698,"l":64.75716064757161},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762},"title":{"text":"<b> Cell Counts by Gate <\/b>","font":{"color":"rgba(0,0,0,1)","family":"","size":20.722291407222919},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,6.5999999999999996],"tickmode":"array","ticktext":["CD4+","CD8+","DN","live","singlets","Tcells"],"tickvals":[1,2,3,3.9999999999999996,5,6],"categoryorder":"array","categoryarray":["CD4+","CD8+","DN","live","singlets","Tcells"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":4.3171440431714405,"tickwidth":0.78493528057662576,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.814860938148611},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":{"text":"Population","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-342,10020],"tickmode":"array","ticktext":["0","2500","5000","7500","10000"],"tickvals":[0,2500,5000.0000000000009,7500,10000],"categoryorder":"array","categoryarray":["0","2500","5000","7500","10000"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":4.3171440431714405,"tickwidth":0.78493528057662576,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.814860938148611},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.78493528057662576,"zeroline":false,"anchor":"x","title":{"text":"Count","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":"rgba(255,255,255,1)","line":{"color":"rgba(51,51,51,1)","width":0.78493528057662576,"linetype":"solid"},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":2.2333571939871155,"font":{"color":"rgba(0,0,0,1)","family":"","size":10.62681610626816},"orientation":"h","x":0.5,"y":-0.14999999999999999,"xanchor":"center","yanchor":"top","title":{"text":"Sample","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"34d437a3a118":{"x":{},"y":{},"colour":{},"type":"scatter"}},"cur_data":"34d437a3a118","visdat":{"34d437a3a118":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-780468742e324fe47caa" style="width:960px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-780468742e324fe47caa">{"x":{"data":[{"x":[5,4,6,1,2,3],"y":[9485,9253,8871,5680,2473,560],"text":["Population: singlets<br />Count: 9485<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: live<br />Count: 9253<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: Tcells<br />Count: 8871<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: CD4+<br />Count: 5680<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: CD8+<br />Count: 2473<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: DN<br />Count:  560<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","opacity":1,"size":15.118110236220474,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(248,118,109,1)"}},"hoveron":"points","name":"2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","legendgroup":"2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[5,4,6,1,2,3],"y":[9549,9193,8517,5147,3028,240],"text":["Population: singlets<br />Count: 9549<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: live<br />Count: 9193<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: Tcells<br />Count: 8517<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: CD4+<br />Count: 5147<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: CD8+<br />Count: 3028<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: DN<br />Count:  240<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,186,56,1)","opacity":1,"size":15.118110236220474,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,186,56,1)"}},"hoveron":"points","name":"2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","legendgroup":"2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[5,4,6,1,2,3],"y":[9466,9177,8644,6765,1658,129],"text":["Population: singlets<br />Count: 9466<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: live<br />Count: 9177<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: Tcells<br />Count: 8644<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: CD4+<br />Count: 6765<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: CD8+<br />Count: 1658<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: DN<br />Count:  129<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(97,156,255,1)","opacity":1,"size":15.118110236220474,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(97,156,255,1)"}},"hoveron":"points","name":"2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","legendgroup":"2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":45.356579493565803,"r":8.634288086342881,"b":44.034869240348698,"l":64.75716064757161},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762},"title":{"text":"<b> Cell Counts by Gate <\/b>","font":{"color":"rgba(0,0,0,1)","family":"","size":20.722291407222919},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,6.5999999999999996],"tickmode":"array","ticktext":["CD4+","CD8+","DN","live","singlets","Tcells"],"tickvals":[1,2,3,3.9999999999999996,5,6],"categoryorder":"array","categoryarray":["CD4+","CD8+","DN","live","singlets","Tcells"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":4.3171440431714405,"tickwidth":0.78493528057662576,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.814860938148611},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":{"text":"Population","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-342,10020],"tickmode":"array","ticktext":["0","2500","5000","7500","10000"],"tickvals":[0,2500,5000.0000000000009,7500,10000],"categoryorder":"array","categoryarray":["0","2500","5000","7500","10000"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":4.3171440431714405,"tickwidth":0.78493528057662576,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.814860938148611},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.78493528057662576,"zeroline":false,"anchor":"x","title":{"text":"Count","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":"rgba(255,255,255,1)","line":{"color":"rgba(51,51,51,1)","width":0.78493528057662576,"linetype":"solid"},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":2.2333571939871155,"font":{"color":"rgba(0,0,0,1)","family":"","size":10.62681610626816},"orientation":"h","x":0.5,"y":-0.14999999999999999,"xanchor":"center","yanchor":"top","title":{"text":"Sample","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"5b04d340857":{"x":{},"y":{},"colour":{},"type":"scatter"}},"cur_data":"5b04d340857","visdat":{"5b04d340857":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -1041,14 +1044,14 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb17-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb17-3"><a></a><span class="co">#' </span></span>
 <span id="cb17-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in. </span></span>
 <span id="cb17-5"><a></a><span class="co">#' </span></span>
 <span id="cb17-6"><a></a>Downsampling <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
 <span id="cb17-7"><a></a>  <span class="co"># Our code will go here</span></span>
-<span id="cb17-8"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-8"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1096,8 +1099,8 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>x <span class="ot">&lt;-</span> SFC_GatingSet[[<span class="dv">1</span>]]</span>
-<span id="cb18-2"><a></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>x <span class="ot">&lt;-</span> SFC_GatingSet[[<span class="dv">1</span>]]</span>
+<span id="cb18-2"><a></a>x</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Sample:  2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs 
 GatingHierarchy with  7  gates</code></pre>
@@ -1126,14 +1129,14 @@ GatingHierarchy with  7  gates</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb20-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb20-3"><a></a><span class="co">#' </span></span>
 <span id="cb20-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in. </span></span>
 <span id="cb20-5"><a></a><span class="co">#' </span></span>
 <span id="cb20-6"><a></a>Downsampling <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
 <span id="cb20-7"><a></a>  <span class="fu">class</span>(x)</span>
-<span id="cb20-8"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-8"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="fragment">
@@ -1161,7 +1164,7 @@ GatingHierarchy with  7  gates</code></pre>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">.f=</span>Downsampling)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">.f=</span>Downsampling)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] "GatingHierarchy"
@@ -1212,14 +1215,14 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb23-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb23-3"><a></a><span class="co">#' </span></span>
 <span id="cb23-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in. </span></span>
 <span id="cb23-5"><a></a><span class="co">#' </span></span>
 <span id="cb23-6"><a></a>Downsampling <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
 <span id="cb23-7"><a></a>  EventsInTheGate <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(x, subset)</span>
-<span id="cb23-8"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-8"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1244,7 +1247,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb24-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb24-3"><a></a><span class="co">#' </span></span>
 <span id="cb24-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -1252,7 +1255,7 @@ attr(,"package")
 <span id="cb24-6"><a></a><span class="co">#' </span></span>
 <span id="cb24-7"><a></a>Downsampling <span class="ot">&lt;-</span> <span class="cf">function</span>(x, subset){</span>
 <span id="cb24-8"><a></a>  EventsInTheGate <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(x, subset)</span>
-<span id="cb24-9"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-9"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1300,7 +1303,7 @@ attr(,"package")
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 A cytoset with 1 samples.
@@ -1335,7 +1338,7 @@ cytoset has been subsetted and can be realized through 'realize_view()'.</code><
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb27-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb27-3"><a></a><span class="co">#' </span></span>
 <span id="cb27-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -1344,7 +1347,7 @@ cytoset has been subsetted and can be realized through 'realize_view()'.</code><
 <span id="cb27-7"><a></a>Downsampling <span class="ot">&lt;-</span> <span class="cf">function</span>(x, subset){</span>
 <span id="cb27-8"><a></a>  EventsInTheGate <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(x, subset)</span>
 <span id="cb27-9"><a></a>  MeasurementData <span class="ot">&lt;-</span> <span class="fu">exprs</span>(EventsInTheGate)</span>
-<span id="cb27-10"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-10"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1352,7 +1355,7 @@ cytoset has been subsetted and can be realized through 'realize_view()'.</code><
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in `map()`:
 ℹ In index: 1.
@@ -1403,7 +1406,7 @@ Caused by error:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb30-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb30-3"><a></a><span class="co">#' </span></span>
 <span id="cb30-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -1412,7 +1415,7 @@ Caused by error:
 <span id="cb30-7"><a></a>Downsampling <span class="ot">&lt;-</span> <span class="cf">function</span>(x, subset){</span>
 <span id="cb30-8"><a></a>  EventsInTheGate <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(x, subset)</span>
 <span id="cb30-9"><a></a>  MeasurementData <span class="ot">&lt;-</span> <span class="fu">exprs</span>(EventsInTheGate[[<span class="dv">1</span>]])</span>
-<span id="cb30-10"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-10"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1420,8 +1423,8 @@ Caused by error:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>Data <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span>
-<span id="cb31-2"><a></a><span class="fu">head</span>(Data[[<span class="dv">1</span>]], <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>Data <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span>
+<span id="cb31-2"><a></a><span class="fu">head</span>(Data[[<span class="dv">1</span>]], <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       Time    SSC-W  SSC-H    SSC-A    FSC-W   FSC-H   FSC-A  SSC-B-W SSC-B-H
 [1,]  88303 800625.8 412920 550990.7 745687.8 1207102 1500202 767241.9  336298
@@ -1493,7 +1496,7 @@ Caused by error:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb33-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb33-3"><a></a><span class="co">#' </span></span>
 <span id="cb33-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -1503,7 +1506,7 @@ Caused by error:
 <span id="cb33-8"><a></a>  EventsInTheGate <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(x, subset)</span>
 <span id="cb33-9"><a></a>  MeasurementData <span class="ot">&lt;-</span> <span class="fu">exprs</span>(EventsInTheGate[[<span class="dv">1</span>]])</span>
 <span id="cb33-10"><a></a>  <span class="fu">summary</span>(MeasurementData)</span>
-<span id="cb33-11"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb33-11"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1511,7 +1514,7 @@ Caused by error:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
       Time            SSC-W             SSC-H             SSC-A        
@@ -1649,7 +1652,7 @@ Caused by error:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb36-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb36-3"><a></a><span class="co">#' </span></span>
 <span id="cb36-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -1659,7 +1662,7 @@ Caused by error:
 <span id="cb36-8"><a></a>  EventsInTheGate <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(x, subset, <span class="at">inverse.transform=</span><span class="cn">TRUE</span>)</span>
 <span id="cb36-9"><a></a>  MeasurementData <span class="ot">&lt;-</span> <span class="fu">exprs</span>(EventsInTheGate[[<span class="dv">1</span>]])</span>
 <span id="cb36-10"><a></a>  <span class="fu">summary</span>(MeasurementData)</span>
-<span id="cb36-11"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb36-11"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1667,7 +1670,7 @@ Caused by error:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
       Time            SSC-W             SSC-H             SSC-A        
@@ -1844,7 +1847,7 @@ Caused by error:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb39-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb39-3"><a></a><span class="co">#' </span></span>
 <span id="cb39-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -1858,7 +1861,7 @@ Caused by error:
 <span id="cb39-12"><a></a>   <span class="at">inverse.transform=</span>inverse.transform)</span>
 <span id="cb39-13"><a></a>  MeasurementData <span class="ot">&lt;-</span> <span class="fu">exprs</span>(EventsInTheGate[[<span class="dv">1</span>]])</span>
 <span id="cb39-14"><a></a>  <span class="fu">summary</span>(MeasurementData)</span>
-<span id="cb39-15"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-15"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1866,7 +1869,7 @@ Caused by error:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
       Time            SSC-W             SSC-H             SSC-A        
@@ -1975,7 +1978,7 @@ Caused by error:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb42-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb42-3"><a></a><span class="co">#' </span></span>
 <span id="cb42-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -1989,7 +1992,7 @@ Caused by error:
 <span id="cb42-12"><a></a>   <span class="at">inverse.transform=</span>inverse.transform)</span>
 <span id="cb42-13"><a></a>  MeasurementData <span class="ot">&lt;-</span> <span class="fu">exprs</span>(EventsInTheGate[[<span class="dv">1</span>]])</span>
 <span id="cb42-14"><a></a>  <span class="fu">class</span>(MeasurementData)</span>
-<span id="cb42-15"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb42-15"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1997,7 +2000,7 @@ Caused by error:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] "matrix" "array" </code></pre>
@@ -2026,7 +2029,7 @@ Caused by error:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb45-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb45-3"><a></a><span class="co">#' </span></span>
 <span id="cb45-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -2041,7 +2044,7 @@ Caused by error:
 <span id="cb45-13"><a></a>  MeasurementData <span class="ot">&lt;-</span> <span class="fu">exprs</span>(EventsInTheGate[[<span class="dv">1</span>]])</span>
 <span id="cb45-14"><a></a>  MeasurementDataFramed <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(MeasurementData, <span class="at">check.names =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb45-15"><a></a>  <span class="fu">class</span>(MeasurementDataFramed)</span>
-<span id="cb45-16"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb45-16"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2049,7 +2052,7 @@ Caused by error:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] "data.frame"</code></pre>
@@ -2078,7 +2081,7 @@ Caused by error:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb48-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb48-3"><a></a><span class="co">#' </span></span>
 <span id="cb48-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -2093,7 +2096,7 @@ Caused by error:
 <span id="cb48-13"><a></a>  MeasurementData <span class="ot">&lt;-</span> <span class="fu">exprs</span>(EventsInTheGate[[<span class="dv">1</span>]])</span>
 <span id="cb48-14"><a></a>  MeasurementDataFramed <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(MeasurementData, <span class="at">check.names =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb48-15"><a></a>  <span class="fu">nrow</span>(MeasurementDataFramed)</span>
-<span id="cb48-16"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb48-16"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2101,7 +2104,7 @@ Caused by error:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] 8871</code></pre>
@@ -2150,7 +2153,7 @@ Caused by error:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb51-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb51-3"><a></a><span class="co">#' </span></span>
 <span id="cb51-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -2170,7 +2173,7 @@ Caused by error:
 <span id="cb51-18"><a></a>  Downsampled_DataFrame <span class="ot">&lt;-</span> <span class="fu">slice_sample</span>(MeasurementDataFramed, <span class="at">n =</span> DownsampleCount, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb51-19"><a></a></span>
 <span id="cb51-20"><a></a>  <span class="fu">nrow</span>(Downsampled_DataFrame)</span>
-<span id="cb51-21"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb51-21"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2178,7 +2181,7 @@ Caused by error:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">1000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">1000</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] 1000</code></pre>
@@ -2207,7 +2210,7 @@ Caused by error:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb54-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb54-3"><a></a><span class="co">#' </span></span>
 <span id="cb54-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -2227,7 +2230,7 @@ Caused by error:
 <span id="cb54-18"><a></a>  Downsampled_DataFrame <span class="ot">&lt;-</span> <span class="fu">slice_sample</span>(MeasurementDataFramed, <span class="at">n =</span> DownsampleCount, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb54-19"><a></a></span>
 <span id="cb54-20"><a></a>  <span class="fu">return</span>(Downsampled_DataFrame)</span>
-<span id="cb54-21"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb54-21"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2235,97 +2238,86 @@ Caused by error:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
-     Time    SSC-W  SSC-H    SSC-A    FSC-W   FSC-H   FSC-A  SSC-B-W SSC-B-H
-1  580443 785711.6 480653 629424.4 778720.1 1493893 1938874 764108.9  379336
-2  263924 776255.4 535335 692594.6 722002.0 1464941 1762817 777409.7  450843
-3  419443 752858.1 485520 609212.8 725564.3 1463059 1769239 741565.9  377144
-4  625190 778347.9 477405 619312.0 772089.2 1305376 1679778 766872.4  349349
-5  361673 790295.4 368781 485743.2 717144.1 1307337 1562582 772814.4  261359
-6  354476 772713.9 355030 457227.7 721039.3 1216342 1461717 747653.3  316218
-7  295168 768968.1 253920 325427.3 686418.8 1036595 1185897 750572.1  215125
-8  748806 773203.9 393261 506784.9 708250.8 1103158 1302188 727720.0  357261
-9  716343 748678.9 476893 595066.2 730100.2 1390611 1692142 741988.5  353916
-10 416665 724318.5 337133 406986.1 741612.1 1234528 1525902 709301.2  290502
-    SSC-B-A    BUV395-A   BUV563-A   BUV615-A     BUV661-A  BUV737-A
-1  483090.0  6035.71777  1713.5354 -188.27133 -2458.973877  5454.716
-2  584149.5 12425.77832  8411.3174  377.72095    52.402561 10442.484
-3  466128.5  5942.66162 14633.2412  574.14062  -133.615402 11623.387
-4  446510.2 18143.25000   800.1056 1227.38513     7.162624  6731.030
-5  336636.7  1743.41101  2245.2512  -61.78175  -208.700439  2908.579
-6  394035.7  1152.84521  1027.5303   85.58940   -90.848007  4221.805
-7  269111.4   983.51898  3900.5962  297.28479  -771.497986  6947.692
-8  433309.9  5121.27490  5364.5059  297.74365  -219.577591  5902.409
-9  437669.3   -33.23448  1609.5297  150.17276  -621.710266   828.888
-10 343422.4   668.35614  2184.7227   11.40761   305.403961 11274.814
-      BUV805-A Pacific Blue-A    BV480-A   BV570-A   BV605-A    BV650-A
-1    128.34084      374.09305  309.09546  568.2867 31280.223 82222.6250
-2  26534.04297      558.69910 -253.97784 -111.7932 11444.233  -126.4285
-3  24860.90234      750.44965 -301.83356 -171.4080 16931.328  -165.8380
-4  22664.91406      332.41650  -47.01189 -242.6331 16550.893   338.7156
-5  24811.33594      980.34021 -448.34839 -271.5385 30319.836   -38.1963
-6  24789.77539       43.81395  454.48502  685.6393 10805.614  1259.1711
-7  28642.92773       28.06671  425.83020 -620.5026 81295.203  -809.2260
-8  33101.95703      119.28330  508.18100  976.5010 30297.564   634.4191
-9    -58.77835      231.51431 2112.89404 -248.0677  1268.925   757.3802
-10 18172.44727      319.01810 -229.70959 -381.6025  6058.732  -389.0589
-        BV711-A    BV750-A     BV786-A Alexa Fluor 488-A Spark Blue 550-A
-1   1393.360718 2588.15869   775.08746          570.3693         20391.00
-2    -81.960686  395.52133   726.99414         1224.1113         38656.14
-3   -137.472168 1550.90125   -81.55336          343.3922         31535.14
-4     83.735725   23.85567  1117.21008          582.9496         28543.12
-5   -571.444702 1780.00391  -616.87042         -271.0587         19718.22
-6    -49.222698 -553.81750   921.34961         1016.6669         20659.77
-7    173.857437  409.72504  -450.33905         3428.8887         21912.22
-8  -1688.322632 2187.13379 -1085.56531          667.3824         25968.47
-9     -1.929151  519.50525  -310.61432          443.6071         46613.50
-10  -326.073212  701.69965  1025.50696         -138.0918         17235.86
-   Spark Blue 574-A     RB613-A    RB705-A    RB780-A      PE-A PE-Dazzle594-A
-1         10039.316   689.79865 35010.7539   98.90771  965.7225     -998.86609
-2          9812.249   753.91730 69098.3750  310.26651 6513.2275      805.17206
-3          8345.097  2084.69800 51004.4570 -165.00777 2822.8943    -1305.81616
-4         11928.233   498.91861 44838.5078 -141.58507 1068.2528      578.62769
-5         11707.009   -48.12948 60178.2109 1086.16638 1178.7609      352.06580
-6          7632.394  -235.50362 28985.3281  186.38254 1235.2456      279.46524
-7         16514.178  -929.16949 33821.8711 -221.51198  156.5873      342.93842
-8         10690.031  -332.61453 75475.4766 1300.19763 1436.0536     1143.66125
-9         15376.186 45459.47656   926.4654  -54.67871  157.8252     -301.29471
-10         9636.384   688.71869 15042.0234 -228.60567 3752.4131       55.51624
-     PE-Cy5-A PE-Fire 700-A PE-Fire 744-A PE-Vio770-A     APC-A
-1  3996.12231    3498.60059    333.101868    302.3231  844.7371
-2   -19.96523    8262.34082   -225.564438    296.3278  464.9512
-3   -54.95395    9292.31836   -317.783569    795.1481 1187.8329
-4   -64.87681    4269.90479   -202.182236   1048.5155  793.4348
-5  -525.91595    2809.34473    686.841614  -1086.9791 1228.5222
-6   153.76704    1824.74658      3.024392    256.1721 -151.8647
-7   705.07990     546.98370  14534.207031   2333.6116 1166.6212
-8  -133.56766    4030.73071    876.575928   -163.7531  618.9386
-9   852.20099     -61.24686   -333.284424    976.1855  278.4803
-10  740.11816    3301.93481   -328.408875   1677.5732 -270.6543
-   Alexa Fluor 647-A APC-R700-A Zombie NIR-A APC-Fire 750-A APC-Fire 810-A
-1          553.99609  -258.5701   1620.01062      19747.691      12893.043
-2         -167.47562  -129.8875   1387.94336      15190.907      10973.400
-3         -328.55194   243.1473    526.96356      11420.375      12850.569
-4          371.38504  -613.8753   2043.39758      16674.268      12961.646
-5         -445.28290  1017.3338    244.34711      12142.394       8446.867
-6          486.42261   364.9626   1177.18750       7476.871       5551.838
-7          -27.13836   574.1630    155.11714      11502.148       2436.484
-8         -187.18413   461.8787    -78.00886      18380.975       7067.777
-9          280.05975   166.9318   1255.88171       3949.970       3403.590
-10         513.60077   -19.1101   1464.26843       4869.517       4842.919
-       AF-A
-1  5455.699
-2  4905.084
-3  5309.593
-4  5846.889
-5  3962.142
-6  4099.326
-7  2387.382
-8  3113.906
-9  4331.191
-10 4285.277</code></pre>
+     Time    SSC-W  SSC-H    SSC-A    FSC-W   FSC-H     FSC-A  SSC-B-W SSC-B-H
+1  404374 767403.5 401192 513126.9 727695.1 1078235 1307710.5 749097.6  390617
+2  277816 785273.0 315120 412425.4 722588.7  820821  988526.6 746435.6  352912
+3  218009 716952.8 533680 637705.6 723262.3 1090946 1315066.9 706448.9  329353
+4  299116 726943.4 618113 748888.7 689039.1 1372163 1575789.8 719899.3  553457
+5  528146 743058.8 556753 689500.4 722910.2 1906789 2297395.2 744651.6  383605
+6  602083 738053.1 573246 705143.3 725425.8 1635956 1977941.0 720577.4  439633
+7  870034 767067.0 524353 670356.5 737236.2 1438353 1767343.2 766364.0  407547
+8  402824 744262.9 529583 656915.0 719664.6 1373092 1646942.8 723705.1  378680
+9  118025 758334.4 580350 733498.9 731848.5 1551215 1892090.6 749166.0  375139
+10  86585 790454.4 382786 504291.4 736929.1 1270822 1560842.9 776169.6  281677
+    SSC-B-A   BUV395-A  BUV563-A   BUV615-A    BUV661-A    BUV737-A    BUV805-A
+1  487683.8 3933.11328 20032.857  -112.9859   314.48700  2986.55127 31142.14648
+2  439043.5 5064.83789 10471.876   982.4874   592.71753  9238.91016 28976.37695
+3  387785.1 3420.31787  9903.729 -2387.0640   -91.03760   499.46848  -113.35579
+4  664055.6 4060.79028  7540.969  -105.3697   109.49934  5672.62402 21087.28711
+5  476086.8  -38.19287  5292.831  -504.8170  -380.38217   699.88293  -172.24536
+6  527982.7   61.80043 49329.859   165.0020  1117.20459    75.30203    91.22337
+7  520548.9 4836.38721  1752.309   249.3678  -116.24078 10245.79297 30655.19141
+8  456754.4 1336.34338 12233.891  -604.0908   503.85889  4361.49707 29684.50391
+9  468402.3 5169.82715 11371.705 -1095.6567   -84.72282   629.17853 -1015.96692
+10 364381.9 5463.02539  2710.525 -1159.6450 -1157.10791   139.96291  -397.12601
+   Pacific Blue-A    BV480-A     BV570-A   BV605-A      BV650-A     BV711-A
+1       603.96246 -265.71957  -630.01569 30946.428     54.25214  -273.64554
+2       988.75348   49.01839 -1731.49658  5385.226    325.82196 -2142.82739
+3       313.42285 1910.77405   557.50012 93703.914   7072.42725   616.99030
+4       553.35968  381.89438   430.73178 14892.666    327.50964  -353.17484
+5       552.14264 9399.34961  -280.33160 90403.523  83697.71094   600.58453
+6      -220.89413  758.69324   -15.18508  2081.764 114208.32812 -1421.81616
+7       -98.96837 -357.74054  -521.83447 35608.570   -187.04248   914.38934
+8       549.79919 -760.60431   273.50543 21541.285   -574.87183    38.94446
+9       299.45889   19.40162  1255.38965  4731.071 107883.21094   169.47826
+10      597.02515 -501.98691  -684.53088 84606.508  93391.10938   674.30432
+      BV750-A    BV786-A Alexa Fluor 488-A Spark Blue 550-A Spark Blue 574-A
+1    47.36256   511.4783         -42.60456         26554.99         11267.90
+2   246.12549   676.9259        1202.16956         26928.89         14406.42
+3  1423.18640   861.0669         228.40231         34300.37         11200.96
+4  2358.77686   105.1915         341.61914         32067.77          9205.62
+5   764.98413  -449.9586        -117.69215         20675.68         12966.31
+6  1533.71667 -1851.0312         648.28210         19414.25         16361.24
+7    91.25008   404.8185        -556.23254         52075.22         11726.28
+8   574.50385  1474.4974        -332.71548         23508.64         10200.41
+9    65.99889  1197.7535          50.43943         23113.70         17475.34
+10 -259.91342  1112.8280        -435.39697         29977.21         13940.23
+       RB613-A      RB705-A     RB780-A       PE-A PE-Dazzle594-A   PE-Cy5-A
+1  -1462.09875  33576.94141 -1188.37024  -841.5666      1480.7548   -16.4628
+2    173.47182  61605.12891  -632.44867  5505.7734       809.8583   114.3085
+3   6627.02881   5752.24658   395.82730 -1286.6245       258.4655  7401.1108
+4    344.49176  48784.01562  -565.72455  1626.0577       390.8632   320.0248
+5   2563.92383    -67.72686   493.34964   352.8927      1077.0234   241.7103
+6    -34.41975   -145.47964  -101.72819  -301.4895      -170.1189 25452.3594
+7  -1101.52515 149823.42188   503.20917  2156.1023      1830.4576   233.9506
+8  -1747.03076  48313.09766  -314.07037   833.4003      1587.0396    41.8739
+9   -280.38242    299.84686    41.07655  -172.3961      1277.5820  6071.1606
+10    96.21486   -248.69855   614.56665   277.3523     -1100.6312 27178.5977
+   PE-Fire 700-A PE-Fire 744-A PE-Vio770-A      APC-A Alexa Fluor 647-A
+1     1560.43994     0.3978777  1153.68787  575.50098        -618.93658
+2     3434.17163  -271.4281006  1261.32996  -33.33548        -457.94324
+3     4928.54590  -236.1500397   781.44891   81.94391         108.62079
+4     4343.78369  -162.6782074   602.40118  508.69528        -257.69052
+5      -36.55097   368.5792542  -274.52267 1223.30505        -263.25577
+6     7184.77148  3997.7531738  -295.89450 -493.81787         656.27991
+7     7818.05420    30.9935627    60.39135 -100.59264         249.67749
+8     5396.51611  -424.4978638   400.14066 -212.96684         -27.63379
+9     -228.30409   177.3000488  1341.25610  409.46616        -535.10150
+10    2342.20508   165.8334045  -263.53345  364.34723        -134.10162
+   APC-R700-A Zombie NIR-A APC-Fire 750-A APC-Fire 810-A     AF-A
+1  1182.53296     677.1993     10242.2930      7512.8403 4555.377
+2   476.84128     898.2892      9039.1123      5891.1611 2809.883
+3  -339.64746    1107.8682     16264.6250      5331.2520 3995.997
+4  2394.11182    -235.3846     13228.3877      5763.9785 3310.193
+5   397.70221     226.9605       885.3292      -464.7840 6339.825
+6   412.47653    1825.0531     24565.1816       507.3927 4905.656
+7   -13.24127    1603.6724      8312.0400     15744.6191 5712.461
+8  -246.37170     661.0433     11938.1611     11357.5957 5393.571
+9   150.18652     891.7035      5375.7114      2697.4500 5369.935
+10  280.78290     672.4620     26481.2695      4276.0034 5315.647</code></pre>
 </div>
 </div>
 </div>
@@ -2372,10 +2364,10 @@ Caused by error:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a>plotly<span class="sc">::</span><span class="fu">ggplotly</span>(Plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a>plotly<span class="sc">::</span><span class="fu">ggplotly</span>(Plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-57b283d7bc0e2a2dd4c2" style="width:960px;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-57b283d7bc0e2a2dd4c2">{"x":{"data":[{"x":[5,4,6,1,2,3],"y":[9485,9253,8871,5680,2473,560],"text":["Population: singlets<br />Count: 9485<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: live<br />Count: 9253<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: Tcells<br />Count: 8871<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: CD4+<br />Count: 5680<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: CD8+<br />Count: 2473<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: DN<br />Count:  560<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","opacity":1,"size":15.118110236220474,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(248,118,109,1)"}},"hoveron":"points","name":"2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","legendgroup":"2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[5,4,6,1,2,3],"y":[9549,9193,8517,5147,3028,240],"text":["Population: singlets<br />Count: 9549<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: live<br />Count: 9193<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: Tcells<br />Count: 8517<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: CD4+<br />Count: 5147<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: CD8+<br />Count: 3028<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: DN<br />Count:  240<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,186,56,1)","opacity":1,"size":15.118110236220474,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,186,56,1)"}},"hoveron":"points","name":"2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","legendgroup":"2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[5,4,6,1,2,3],"y":[9466,9177,8644,6765,1658,129],"text":["Population: singlets<br />Count: 9466<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: live<br />Count: 9177<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: Tcells<br />Count: 8644<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: CD4+<br />Count: 6765<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: CD8+<br />Count: 1658<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: DN<br />Count:  129<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(97,156,255,1)","opacity":1,"size":15.118110236220474,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(97,156,255,1)"}},"hoveron":"points","name":"2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","legendgroup":"2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":45.356579493565803,"r":8.634288086342881,"b":44.034869240348698,"l":64.75716064757161},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762},"title":{"text":"<b> Cell Counts by Gate <\/b>","font":{"color":"rgba(0,0,0,1)","family":"","size":20.722291407222919},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,6.5999999999999996],"tickmode":"array","ticktext":["CD4+","CD8+","DN","live","singlets","Tcells"],"tickvals":[1,2,3,3.9999999999999996,5,6],"categoryorder":"array","categoryarray":["CD4+","CD8+","DN","live","singlets","Tcells"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":4.3171440431714405,"tickwidth":0.78493528057662576,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.814860938148611},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":{"text":"Population","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-342,10020],"tickmode":"array","ticktext":["0","2500","5000","7500","10000"],"tickvals":[0,2500,5000.0000000000009,7500,10000],"categoryorder":"array","categoryarray":["0","2500","5000","7500","10000"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":4.3171440431714405,"tickwidth":0.78493528057662576,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.814860938148611},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.78493528057662576,"zeroline":false,"anchor":"x","title":{"text":"Count","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":"rgba(255,255,255,1)","line":{"color":"rgba(51,51,51,1)","width":0.78493528057662576,"linetype":"solid"},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":2.2333571939871155,"font":{"color":"rgba(0,0,0,1)","family":"","size":10.62681610626816},"orientation":"h","x":0.5,"y":-0.14999999999999999,"xanchor":"center","yanchor":"top","title":{"text":"Sample","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"34d446dbd37b":{"x":{},"y":{},"colour":{},"type":"scatter"}},"cur_data":"34d446dbd37b","visdat":{"34d446dbd37b":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-b6003ec9ca53314da68c" style="width:960px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-b6003ec9ca53314da68c">{"x":{"data":[{"x":[5,4,6,1,2,3],"y":[9485,9253,8871,5680,2473,560],"text":["Population: singlets<br />Count: 9485<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: live<br />Count: 9253<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: Tcells<br />Count: 8871<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: CD4+<br />Count: 5680<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: CD8+<br />Count: 2473<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","Population: DN<br />Count:  560<br />name: 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(248,118,109,1)","opacity":1,"size":15.118110236220474,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(248,118,109,1)"}},"hoveron":"points","name":"2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","legendgroup":"2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[5,4,6,1,2,3],"y":[9549,9193,8517,5147,3028,240],"text":["Population: singlets<br />Count: 9549<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: live<br />Count: 9193<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: Tcells<br />Count: 8517<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: CD4+<br />Count: 5147<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: CD8+<br />Count: 3028<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","Population: DN<br />Count:  240<br />name: 2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,186,56,1)","opacity":1,"size":15.118110236220474,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,186,56,1)"}},"hoveron":"points","name":"2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","legendgroup":"2025_07_26_AB_02-INF100-00_Ctrl_Unmixed__Tcells.fcs","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[5,4,6,1,2,3],"y":[9466,9177,8644,6765,1658,129],"text":["Population: singlets<br />Count: 9466<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: live<br />Count: 9177<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: Tcells<br />Count: 8644<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: CD4+<br />Count: 6765<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: CD8+<br />Count: 1658<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","Population: DN<br />Count:  129<br />name: 2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(97,156,255,1)","opacity":1,"size":15.118110236220474,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(97,156,255,1)"}},"hoveron":"points","name":"2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","legendgroup":"2025_07_26_AB_02-INF179-00_Ctrl_Unmixed__Tcells.fcs","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":45.356579493565803,"r":8.634288086342881,"b":44.034869240348698,"l":64.75716064757161},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762},"title":{"text":"<b> Cell Counts by Gate <\/b>","font":{"color":"rgba(0,0,0,1)","family":"","size":20.722291407222919},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,6.5999999999999996],"tickmode":"array","ticktext":["CD4+","CD8+","DN","live","singlets","Tcells"],"tickvals":[1,2,3,3.9999999999999996,5,6],"categoryorder":"array","categoryarray":["CD4+","CD8+","DN","live","singlets","Tcells"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":4.3171440431714405,"tickwidth":0.78493528057662576,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.814860938148611},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y","title":{"text":"Population","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-342,10020],"tickmode":"array","ticktext":["0","2500","5000","7500","10000"],"tickvals":[0,2500,5000.0000000000009,7500,10000],"categoryorder":"array","categoryarray":["0","2500","5000","7500","10000"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":4.3171440431714405,"tickwidth":0.78493528057662576,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.814860938148611},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.78493528057662576,"zeroline":false,"anchor":"x","title":{"text":"Count","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":"rgba(255,255,255,1)","line":{"color":"rgba(51,51,51,1)","width":0.78493528057662576,"linetype":"solid"},"yref":"paper","xref":"paper","layer":"below","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":2.2333571939871155,"font":{"color":"rgba(0,0,0,1)","family":"","size":10.62681610626816},"orientation":"h","x":0.5,"y":-0.14999999999999999,"xanchor":"center","yanchor":"top","title":{"text":"Sample","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"5b0468c3758f":{"x":{},"y":{},"colour":{},"type":"scatter"}},"cur_data":"5b0468c3758f","visdat":{"5b0468c3758f":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -2421,7 +2413,7 @@ Caused by error:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb58-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb58-3"><a></a><span class="co">#' </span></span>
 <span id="cb58-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -2441,7 +2433,7 @@ Caused by error:
 <span id="cb58-18"><a></a>  Downsampled_DataFrame <span class="ot">&lt;-</span> <span class="fu">slice_sample</span>(MeasurementDataFramed, <span class="at">n =</span> DownsampleCount, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb58-19"><a></a></span>
 <span id="cb58-20"><a></a>  <span class="fu">nrow</span>(Downsampled_DataFrame)</span>
-<span id="cb58-21"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb58-21"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2449,7 +2441,7 @@ Caused by error:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] 2473
@@ -2562,7 +2554,7 @@ Caused by error:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb61-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb61-3"><a></a><span class="co">#' </span></span>
 <span id="cb61-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -2592,7 +2584,7 @@ Caused by error:
 <span id="cb61-28"><a></a>  Downsampled_DataFrame <span class="ot">&lt;-</span> <span class="fu">slice_sample</span>(MeasurementDataFramed, <span class="at">n =</span> DownsampleCount, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb61-29"><a></a></span>
 <span id="cb61-30"><a></a>  <span class="fu">nrow</span>(Downsampled_DataFrame)</span>
-<span id="cb61-31"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb61-31"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2600,9 +2592,9 @@ Caused by error:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a></a><span class="co"># 0.1 or 10% of each .fcs file</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a></a><span class="co"># 0.1 or 10% of each .fcs file</span></span>
 <span id="cb62-2"><a></a></span>
-<span id="cb62-3"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb62-3"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="fl">0.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] 247
@@ -2770,7 +2762,7 @@ Caused by error:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb64-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb64-3"><a></a><span class="co">#' </span></span>
 <span id="cb64-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -2801,7 +2793,7 @@ Caused by error:
 <span id="cb64-29"><a></a></span>
 <span id="cb64-30"><a></a>  DownsampledMatrix <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(Downsampled_DataFrame)</span>
 <span id="cb64-31"><a></a>  <span class="fu">class</span>(DownsampledMatrix)</span>
-<span id="cb64-32"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb64-32"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2809,7 +2801,7 @@ Caused by error:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] "matrix" "array" 
@@ -2844,7 +2836,7 @@ Caused by error:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb67-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb67-3"><a></a><span class="co">#' </span></span>
 <span id="cb67-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -2879,7 +2871,7 @@ Caused by error:
 <span id="cb67-33"><a></a>  OriginalDescription <span class="ot">&lt;-</span> <span class="fu">keyword</span>(flowFrame)</span>
 <span id="cb67-34"><a></a></span>
 <span id="cb67-35"><a></a>  <span class="fu">return</span>(OriginalParameters)</span>
-<span id="cb67-36"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb67-36"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2887,7 +2879,7 @@ Caused by error:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 An object of class 'AnnotatedDataFrame'
@@ -2939,7 +2931,7 @@ An object of class 'AnnotatedDataFrame'
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb70-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb70-3"><a></a><span class="co">#' </span></span>
 <span id="cb70-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -2976,7 +2968,7 @@ An object of class 'AnnotatedDataFrame'
 <span id="cb70-35"><a></a>  NewFCS <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">"flowFrame"</span>, <span class="at">exprs=</span>DownsampledMatrix, <span class="at">parameters=</span>OriginalParameters, <span class="at">description=</span>OriginalDescription)</span>
 <span id="cb70-36"><a></a></span>
 <span id="cb70-37"><a></a>  <span class="fu">return</span>(NewFCS)</span>
-<span id="cb70-38"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb70-38"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2984,7 +2976,7 @@ An object of class 'AnnotatedDataFrame'
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 flowFrame object '2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs'
@@ -3068,7 +3060,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb73-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb73-3"><a></a><span class="co">#' </span></span>
 <span id="cb73-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -3113,7 +3105,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 <span id="cb73-43"><a></a>  NewFCS <span class="ot">&lt;-</span> <span class="fu">new</span>(<span class="st">"flowFrame"</span>, <span class="at">exprs=</span>DownsampledMatrix, <span class="at">parameters=</span>OriginalParameters, <span class="at">description=</span>OriginalDescription)</span>
 <span id="cb73-44"><a></a></span>
 <span id="cb73-45"><a></a>  <span class="fu">return</span>(NewFCS)</span>
-<span id="cb73-46"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb73-46"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3121,7 +3113,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD8"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD8"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 flowFrame object '2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells_CD8.fcs'
@@ -3185,7 +3177,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb76-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb76-3"><a></a><span class="co">#' </span></span>
 <span id="cb76-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -3234,7 +3226,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 <span id="cb76-47"><a></a>  StoreFCSFileHere <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, UpdatedGUID)</span>
 <span id="cb76-48"><a></a></span>
 <span id="cb76-49"><a></a>  <span class="fu">return</span>(StoreFCSFileHere)</span>
-<span id="cb76-50"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb76-50"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3242,8 +3234,8 @@ $P43           AF-A        NA   4194275      -111   4194275
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD8"</span>,</span>
-<span id="cb77-2"><a></a> <span class="at">StorageLocation=</span><span class="st">"/home/JohnDoe/Desktop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD8"</span>,</span>
+<span id="cb77-2"><a></a> <span class="at">StorageLocation=</span><span class="st">"/home/JohnDoe/Desktop"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] "/home/JohnDoe/Desktop/2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells_CD8.fcs"</code></pre>
@@ -3292,7 +3284,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb79-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb79-3"><a></a><span class="co">#' </span></span>
 <span id="cb79-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -3344,7 +3336,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 <span id="cb79-50"><a></a>  StoreFCSFileHere <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, UpdatedGUID)</span>
 <span id="cb79-51"><a></a></span>
 <span id="cb79-52"><a></a>  <span class="fu">return</span>(StoreFCSFileHere)</span>
-<span id="cb79-53"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb79-53"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3352,7 +3344,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD8"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD8"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] "/home/david/Documents/CytometryInR/course/10_Downsampling/2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells_CD8.fcs"</code></pre>
@@ -3381,7 +3373,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb82-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb82-3"><a></a><span class="co">#' </span></span>
 <span id="cb82-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -3434,7 +3426,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 <span id="cb82-51"><a></a>  <span class="fu">write.FCS</span>(NewFCS, <span class="at">filename =</span> StoreFCSFileHere, <span class="at">delimiter=</span><span class="st">"#"</span>)</span>
 <span id="cb82-52"><a></a></span>
 <span id="cb82-53"><a></a>  <span class="fu">return</span>(StoreFCSFileHere)</span>
-<span id="cb82-54"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb82-54"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3442,9 +3434,9 @@ $P43           AF-A        NA   4194275      -111   4194275
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a></a><span class="co"># Returning to Working directory, provide StorageLocation value if trying to store elsewhere</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a></a><span class="co"># Returning to Working directory, provide StorageLocation value if trying to store elsewhere</span></span>
 <span id="cb83-2"><a></a></span>
-<span id="cb83-3"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD8"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb83-3"><a></a><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD8"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3500,7 +3492,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb84-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb84-3"><a></a><span class="co">#' </span></span>
 <span id="cb84-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -3561,7 +3553,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 <span id="cb84-59"><a></a>    <span class="fu">return</span>(NewFCS) <span class="co">#All other criterias return a flowFrame with metadata</span></span>
 <span id="cb84-60"><a></a>    }</span>
 <span id="cb84-61"><a></a></span>
-<span id="cb84-62"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb84-62"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3569,38 +3561,38 @@ $P43           AF-A        NA   4194275      -111   4194275
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a></a>Data <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD8"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a></a>Data <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD8"</span>,</span>
 <span id="cb85-2"><a></a>  <span class="at">returnType=</span><span class="st">"data.frame"</span>)</span>
-<span id="cb85-3"><a></a><span class="fu">head</span>(Data[[<span class="dv">1</span>]], <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb85-3"><a></a><span class="fu">head</span>(Data[[<span class="dv">1</span>]], <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>    Time    SSC-W  SSC-H    SSC-A    FSC-W   FSC-H   FSC-A  SSC-B-W SSC-B-H
-1 628093 794514.2 419373 555329.7 746770.6 1351994 1682716 766452.3  310948
-2 473305 845098.2 277222 390466.4 681717.8  952577 1082314 832931.2  278670
-3 740294 758467.8 399254 504702.2 737245.1 1082829 1330517 759439.9  240078
-   SSC-B-A BUV395-A   BUV563-A    BUV615-A    BUV661-A BUV737-A  BUV805-A
-1 397211.3 2754.883 10610.5068 -1329.24280   -39.21202 7877.466  957.5333
-2 386854.9 7157.472 12316.6865   196.66402  1820.32239 3698.604  640.6609
-3 303874.7 6856.576   543.0663    52.79062 -1306.78174 4290.040 -763.2958
-  Pacific Blue-A   BV480-A    BV570-A  BV605-A   BV650-A    BV711-A  BV750-A
-1       403.2686  286.3477   573.6090 96508.89 112505.86  -195.8605 1190.984
-2      -219.6052 1128.4012 -1010.3590 22712.44  38471.11 -1020.4296 1641.452
-3       714.8276 -267.1832   381.1777 60508.80  85583.45   614.8690 2581.718
+1 162586 742791.6 497925 616424.2 703263.2 1299497 1523148 749175.7  260113
+2  15336 791196.8 619605 817049.1 768360.0 1416439 1813892 762617.4  449855
+3 494606 761883.2 634744 806001.4 729002.0 1764287 2143615 762153.2  494629
+   SSC-B-A    BUV395-A  BUV563-A   BUV615-A  BUV661-A  BUV737-A  BUV805-A
+1 324783.9   740.70197  4922.934 -790.52917 -930.9059  558.7756 -670.0909
+2 571778.8    51.72709  8730.252  -11.37446 -639.4735  396.4120  955.7141
+3 628305.2 27676.29688 14760.277 -195.97885 -610.0331 1023.0157 -869.4452
+  Pacific Blue-A   BV480-A   BV570-A   BV605-A   BV650-A    BV711-A   BV750-A
+1       494.8506  667.4133 1122.0558 17609.471  78295.49   97.22742 1094.2521
+2       492.2580 1084.8176  606.7499  3628.549 116668.21  -10.39132  778.2063
+3       676.8893  345.8633  535.5885 21611.326  78032.73 -415.91129 1576.7925
      BV786-A Alexa Fluor 488-A Spark Blue 550-A Spark Blue 574-A   RB613-A
-1   122.8538          331.5587         35531.67        18630.086 1498.2098
-2 -1078.3300         1312.0110         26162.91         7234.602  879.1202
-3  -385.5331         -422.2481         24622.04        12960.457  444.6306
-   RB705-A    RB780-A     PE-A PE-Dazzle594-A  PE-Cy5-A PE-Fire 700-A
-1 10885.30   46.64902 1886.373      -160.1340 1542.2196      1995.925
-2 23507.00  -25.69784 1488.456      1272.1089  179.5753      1290.261
-3 31876.32 -607.22839 1702.636      -287.8279 3961.7192      2517.323
+1 323.757324          74.47834         25337.79         12879.88 8959.9766
+2 215.470978          70.22282         28326.71         18647.99 6747.3335
+3  -5.924212         261.01849         25825.69         19483.99  213.1915
+    RB705-A    RB780-A      PE-A PE-Dazzle594-A   PE-Cy5-A PE-Fire 700-A
+1  347.0964  -24.14758 -729.5618      172.12677  3360.2986      5202.661
+2  198.5140 -101.60837  369.6831      807.67493   861.5584      5952.300
+3 -705.3999  204.55536 -431.1481       30.45621 16744.3105     10723.780
   PE-Fire 744-A PE-Vio770-A     APC-A Alexa Fluor 647-A APC-R700-A Zombie NIR-A
-1       95.7639    820.4869 1808.7490        -1493.3607   70.84206    2289.9700
-2     -159.6878    107.7293  678.6934        -1295.2246  884.18976     798.0268
-3     -475.5693   1108.8646 1053.3936         -233.0045  145.68790     466.7322
+1     -288.3989   951.77759 -300.2375          654.8751  -32.46235     230.5519
+2      265.1711   195.53497 -790.8199         1334.8418  -56.01944     968.4402
+3     -499.3099    99.20302 1742.2000        -1556.0511  471.47653     722.5490
   APC-Fire 750-A APC-Fire 810-A     AF-A
-1       20334.13       9841.931 4417.417
-2       11221.99       7309.309 1932.079
-3       17105.74       7644.988 4309.146</code></pre>
+1       11644.16       984.3568 3841.158
+2       30134.88       718.0236 6421.049
+3       19975.61      4797.9307 5134.255</code></pre>
 </div>
 </div>
 </div>
@@ -3647,9 +3639,9 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a></a>Data <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD8"</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a></a>Data <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD8"</span>,</span>
 <span id="cb87-2"><a></a>  <span class="at">returnType=</span><span class="st">"data.frame"</span>)</span>
-<span id="cb87-3"><a></a><span class="fu">head</span>(Data[[<span class="dv">1</span>]], <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb87-3"><a></a><span class="fu">head</span>(Data[[<span class="dv">1</span>]], <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3718,7 +3710,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a></a><span class="co">#' This function downsamples from a designated gate to our desired number</span></span>
 <span id="cb88-2"><a></a><span class="co">#' of cells, returning as a new .fcs file</span></span>
 <span id="cb88-3"><a></a><span class="co">#' </span></span>
 <span id="cb88-4"><a></a><span class="co">#' @param x A GatingSet object, typically iterated in.</span></span>
@@ -3783,7 +3775,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 <span id="cb88-63"><a></a>    <span class="fu">return</span>(NewFCS) <span class="co">#All other criterias return a flowFrame with metadata</span></span>
 <span id="cb88-64"><a></a>    }</span>
 <span id="cb88-65"><a></a></span>
-<span id="cb88-66"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb88-66"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3791,8 +3783,8 @@ $P43           AF-A        NA   4194275      -111   4194275
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD8"</span>,</span>
-<span id="cb89-2"><a></a>  <span class="at">returnType=</span><span class="st">"flowFrame"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a></a>purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet[<span class="dv">1</span>], <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD8"</span>,</span>
+<span id="cb89-2"><a></a>  <span class="at">returnType=</span><span class="st">"flowFrame"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 flowFrame object '2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells_CD8.fcs'
@@ -3879,8 +3871,8 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"CD4+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD4"</span>,</span>
-<span id="cb91-2"><a></a>  <span class="at">returnType=</span><span class="st">"fcs"</span>, <span class="at">StorageLocation=</span><span class="st">"/home/david/Desktop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"CD4+"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">2500</span>, <span class="at">addon=</span><span class="st">"CD4"</span>,</span>
+<span id="cb91-2"><a></a>  <span class="at">returnType=</span><span class="st">"fcs"</span>, <span class="at">StorageLocation=</span><span class="st">"/home/david/Desktop"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3905,8 +3897,8 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="fl">0.1</span>, <span class="at">addon=</span><span class="st">"_Tcells"</span>,</span>
-<span id="cb92-2"><a></a>  <span class="at">returnType=</span><span class="st">"fcs"</span>, <span class="at">StorageLocation=</span><span class="st">"/home/david/Desktop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb92"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="fl">0.1</span>, <span class="at">addon=</span><span class="st">"_Tcells"</span>,</span>
+<span id="cb92-2"><a></a>  <span class="at">returnType=</span><span class="st">"fcs"</span>, <span class="at">StorageLocation=</span><span class="st">"/home/david/Desktop"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -3951,8 +3943,8 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a></a>AllDNs <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">10000000</span>, <span class="at">addon=</span><span class="st">"DN_All"</span>,</span>
-<span id="cb93-2"><a></a>  <span class="at">returnType=</span><span class="st">"fcs"</span>, <span class="at">StorageLocation=</span><span class="st">"/home/david/Desktop"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a></a>AllDNs <span class="ot">&lt;-</span> purrr<span class="sc">::</span><span class="fu">map</span>(<span class="at">.x=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="at">.f=</span>Downsampling, <span class="at">DownsampleCount=</span><span class="dv">10000000</span>, <span class="at">addon=</span><span class="st">"DN_All"</span>,</span>
+<span id="cb93-2"><a></a>  <span class="at">returnType=</span><span class="st">"fcs"</span>, <span class="at">StorageLocation=</span><span class="st">"/home/david/Desktop"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -4101,7 +4093,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a></a><span class="co">#' Concatenate Internal</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a></a><span class="co">#' Concatenate Internal</span></span>
 <span id="cb94-2"><a></a><span class="co">#' </span></span>
 <span id="cb94-3"><a></a><span class="co">#' @param x </span><span class="al">TBD</span></span>
 <span id="cb94-4"><a></a><span class="co">#' @param y </span><span class="al">TBD</span></span>
@@ -4306,7 +4298,7 @@ $P43           AF-A        NA   4194275      -111   4194275
 <span id="cb94-203"><a></a>  } <span class="cf">else</span> {</span>
 <span id="cb94-204"><a></a>    <span class="fu">return</span>(UpdatedFCS) <span class="co">#All other criterias return a flowFrame with metadata</span></span>
 <span id="cb94-205"><a></a>    }</span>
-<span id="cb94-206"><a></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb94-206"><a></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </div>
@@ -4333,8 +4325,8 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a></a>CurrentMetadata <span class="ot">&lt;-</span> <span class="fu">pData</span>(SFC_GatingSet)</span>
-<span id="cb95-2"><a></a>CurrentMetadata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a></a>CurrentMetadata <span class="ot">&lt;-</span> <span class="fu">pData</span>(SFC_GatingSet)</span>
+<span id="cb95-2"><a></a>CurrentMetadata</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                                                                                   name
 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs
@@ -4365,13 +4357,13 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a></a>TheCSV <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".csv"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a></a>TheCSV <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".csv"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
 <span id="cb97-2"><a></a>AdditionalMetadata <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(TheCSV, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
-<span id="cb97-3"><a></a><span class="fu">colnames</span>(CurrentMetadata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb97-3"><a></a><span class="fu">colnames</span>(CurrentMetadata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "name"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a></a><span class="fu">colnames</span>(AdditionalMetadata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb99"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a></a><span class="fu">colnames</span>(AdditionalMetadata)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "name"       "condition"  "infant_sex" "HEU_status"</code></pre>
 </div>
@@ -4399,10 +4391,10 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a></a>UpdatedMetadata <span class="ot">&lt;-</span> <span class="fu">left_join</span>(CurrentMetadata, AdditionalMetadata, <span class="at">by=</span><span class="st">"name"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a></a>UpdatedMetadata <span class="ot">&lt;-</span> <span class="fu">left_join</span>(CurrentMetadata, AdditionalMetadata, <span class="at">by=</span><span class="st">"name"</span>)</span>
 <span id="cb101-2"><a></a><span class="fu">rownames</span>(UpdatedMetadata) <span class="ot">&lt;-</span> UpdatedMetadata<span class="sc">$</span>name</span>
 <span id="cb101-3"><a></a><span class="fu">pData</span>(SFC_GatingSet) <span class="ot">&lt;-</span> UpdatedMetadata</span>
-<span id="cb101-4"><a></a><span class="fu">pData</span>(SFC_GatingSet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb101-4"><a></a><span class="fu">pData</span>(SFC_GatingSet)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                                                                                   name
 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs 2025_07_26_AB_02-INF052-00_Ctrl_Unmixed__Tcells.fcs
@@ -4462,9 +4454,9 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a></a><span class="fu">Concatenate</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"CD4+"</span>, <span class="at">addon=</span><span class="st">"CD4"</span>, <span class="at">DownsampleCount=</span><span class="dv">2000</span>,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb103"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a></a><span class="fu">Concatenate</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"CD4+"</span>, <span class="at">addon=</span><span class="st">"CD4"</span>, <span class="at">DownsampleCount=</span><span class="dv">2000</span>,</span>
 <span id="cb103-2"><a></a>  <span class="at">desiredCols=</span><span class="fu">c</span>(<span class="st">"name"</span>, <span class="st">"condition"</span>, <span class="st">"infant_sex"</span>, <span class="st">"HEU_status"</span>), <span class="at">returnType=</span><span class="st">"flowframe"</span>,</span>
-<span id="cb103-3"><a></a>  <span class="at">filename=</span><span class="st">"ConcatenatedCD4"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb103-3"><a></a>  <span class="at">filename=</span><span class="st">"ConcatenatedCD4"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -4489,8 +4481,8 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a></a><span class="fu">Concatenate</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"CD4+"</span>, <span class="at">addon=</span><span class="st">"CD4"</span>, <span class="at">DownsampleCount=</span><span class="dv">2000</span>,</span>
-<span id="cb104-2"><a></a>  <span class="at">desiredCols=</span><span class="fu">c</span>(<span class="st">"name"</span>, <span class="st">"condition"</span>, <span class="st">"infant_sex"</span>, <span class="st">"HEU_status"</span>), <span class="at">returnType=</span><span class="st">"fcs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a></a><span class="fu">Concatenate</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"CD4+"</span>, <span class="at">addon=</span><span class="st">"CD4"</span>, <span class="at">DownsampleCount=</span><span class="dv">2000</span>,</span>
+<span id="cb104-2"><a></a>  <span class="at">desiredCols=</span><span class="fu">c</span>(<span class="st">"name"</span>, <span class="st">"condition"</span>, <span class="st">"infant_sex"</span>, <span class="st">"HEU_status"</span>), <span class="at">returnType=</span><span class="st">"fcs"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="fragment">
@@ -4544,8 +4536,8 @@ $P43           AF-A        NA   4194275      -111   4194275
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a></a><span class="fu">Concatenate</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">addon=</span><span class="st">"CD8"</span>, <span class="at">DownsampleCount=</span><span class="dv">10000000</span>,</span>
-<span id="cb105-2"><a></a>  <span class="at">desiredCols=</span><span class="fu">c</span>(<span class="st">"name"</span>, <span class="st">"condition"</span>, <span class="st">"infant_sex"</span>, <span class="st">"HEU_status"</span>), <span class="at">returnType=</span><span class="st">"flowframe"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb105"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a></a><span class="fu">Concatenate</span>(<span class="at">gs=</span>SFC_GatingSet, <span class="at">subset=</span><span class="st">"CD8+"</span>, <span class="at">addon=</span><span class="st">"CD8"</span>, <span class="at">DownsampleCount=</span><span class="dv">10000000</span>,</span>
+<span id="cb105-2"><a></a>  <span class="at">desiredCols=</span><span class="fu">c</span>(<span class="st">"name"</span>, <span class="st">"condition"</span>, <span class="st">"infant_sex"</span>, <span class="st">"HEU_status"</span>), <span class="at">returnType=</span><span class="st">"flowframe"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>flowFrame object 'MyConcatenatedFCS.fcs'
 with 7159 cells and 47 observables:
@@ -4647,10 +4639,10 @@ $P47 HEU_status     NA      2001      1000      3000
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a></a><span class="co">#RFolder &lt;- file.path("course", "10_Downsampling", "R") # For Interactive</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a></a><span class="co">#RFolder &lt;- file.path("course", "10_Downsampling", "R") # For Interactive</span></span>
 <span id="cb107-2"><a></a>RFolder <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"R"</span>) <span class="co"># For Quarto Rendering</span></span>
 <span id="cb107-3"><a></a>MyFunctions <span class="ot">&lt;-</span> <span class="fu">list.files</span>(RFolder, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
-<span id="cb107-4"><a></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>MyFunctions, <span class="at">.f=</span>source)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb107-4"><a></a>purrr<span class="sc">::</span><span class="fu">walk</span>(<span class="at">.x=</span>MyFunctions, <span class="at">.f=</span>source)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -5040,7 +5032,7 @@ $P47 HEU_status     NA      2001      1000      3000
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -5152,13 +5144,14 @@ $P47 HEU_status     NA      2001      1000      3000
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

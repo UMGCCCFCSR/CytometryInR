@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="David Rach">
+<meta name="dcterms.date" content="2026-05-23">
+
+<title>Package Walkthrough: TRU-OLS – Cytometry in R</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<link href="../../../course/community/AutoSpectral/index.html" rel="prev">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-5c153bb687ce49b6c6529d158b94fe28.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../../images/hex.svg" alt="" class="navbar-logo light-content">
+    <img src="../../../images/hex.svg" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">Cytometry in R</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../Schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../course/index.html"> 
+<span class="menu-text">Course</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../Announcements.html"> 
+<span class="menu-text">Announcements</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../ExistingResources.html"> 
+<span class="menu-text">Existing Resources</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/UMGCCCFCSR/CytometryInR/discussions"> 
+<span class="menu-text">Discussions</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../Homeworks.html"> 
+<span class="menu-text">Homeworks</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.youtube.com/@CytometryInR"> <i class="bi bi-youtube" role="img" aria-label="YouTube">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/UMGCCCFCSR/CytometryInR"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../../course/community/AutoSpectral/index.html">Community</a></li><li class="breadcrumb-item"><a href="../../../course/community/TRU-OLS/index.html">TRU-OLS</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+  <div id="quarto-announcement" data-announcement-id="dc2d9c7bdc53471fb4a7564dd51e6a50" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>Welcome Back! See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
+</div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Getting Started</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/00_GitHub/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - GitHub</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/00_WorkstationSetup/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Workstation Setup</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/00_Positron/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Positron</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/00_Git/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/00_Quarto/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Quarto</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/00_Homeworks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Getting Help</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/00_Floreada/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Floreada</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Intro to R</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/01_InstallingRPackages/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">01 - Installing R Packages</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/02_FilePaths/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">02 - File Paths</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/03_InsideFCSFile/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">03 - Inside a .FCS file</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/04_IntroToTidyverse/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">04 - Intro to Tidyverse</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/05_GatingSets/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">05 - Gating Sets</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/06_Visualizing/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">06 - Visualizing With ggplot2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/07_Transformations/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">07 - Applying Transformations</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/08_WaysToGate/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">08 - Ways to Gate</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/09_Functions/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">09 - It’s Raining Functions!</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Cytometry Core</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/10_Downsampling/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">10 - Downsampling and Concatenation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/11_DataForStats/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">11 - Data for Statistics</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/12_SpectralSignatures/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 - Spectral Signatures</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Beyond the Sandbox</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">The World is your Oyster</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Bonus Content</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/10_Downsampling/concatenate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Concatenate - Extended Cut</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Spectral Flow Cytometry</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/SDY3080/ImmPort.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Retrieving ImmPort data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/SDY3080/SetUp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cleanup Gates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/SDY3080/SignatureMatrices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Signature Matrices</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true">
+ <span class="menu-text">Community</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/community/AutoSpectral/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AutoSpectral</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../../course/community/TRU-OLS/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">TRU-OLS</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a>
+  <ul>
+  <li><a href="#logistics" id="toc-logistics" class="nav-link" data-scroll-target="#logistics">Logistics</a></li>
+  <li><a href="#method" id="toc-method" class="nav-link" data-scroll-target="#method">Method</a></li>
+  </ul></li>
+  <li><a href="#walk-through" id="toc-walk-through" class="nav-link" data-scroll-target="#walk-through">Walk-through</a>
+  <ul>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a>
+  <ul>
+  <li><a href="#installing-julia" id="toc-installing-julia" class="nav-link" data-scroll-target="#installing-julia">Installing Julia</a></li>
+  <li><a href="#downloading-tru-ols" id="toc-downloading-tru-ols" class="nav-link" data-scroll-target="#downloading-tru-ols">Downloading TRU-OLS</a></li>
+  <li><a href="#activating-tru-ols" id="toc-activating-tru-ols" class="nav-link" data-scroll-target="#activating-tru-ols">Activating TRU-OLS</a></li>
+  </ul></li>
+  <li><a href="#dataset" id="toc-dataset" class="nav-link" data-scroll-target="#dataset">Dataset</a></li>
+  <li><a href="#loading-fcs-files-to-gatingset" id="toc-loading-fcs-files-to-gatingset" class="nav-link" data-scroll-target="#loading-fcs-files-to-gatingset">Loading FCS files to GatingSet</a></li>
+  <li><a href="#signature-matrix" id="toc-signature-matrix" class="nav-link" data-scroll-target="#signature-matrix">Signature Matrix</a></li>
+  <li><a href="#ols-unmixing-via-luciernaga" id="toc-ols-unmixing-via-luciernaga" class="nav-link" data-scroll-target="#ols-unmixing-via-luciernaga">OLS-Unmixing via Luciernaga</a></li>
+  <li><a href="#tru-ols-unmixing" id="toc-tru-ols-unmixing" class="nav-link" data-scroll-target="#tru-ols-unmixing">TRU-OLS Unmixing</a></li>
+  </ul></li>
+  <li><a href="#take-away" id="toc-take-away" class="nav-link" data-scroll-target="#take-away">Take Away</a></li>
+  <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources">Additional Resources</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../../course/community/AutoSpectral/index.html">Community</a></li><li class="breadcrumb-item"><a href="../../../course/community/TRU-OLS/index.html">TRU-OLS</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Package Walkthrough: TRU-OLS</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>David Rach </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 23, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><img src="../../../images/WebsiteBanner.png" class="img-fluid"></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://img.shields.io/badge/license-AGPLv3-blue.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
+</div>
+<p>For the YouTube livestream schedule, see <a href="https://www.youtube.com/@cytometryinr">here</a></p>
+<p>For screen-shot slides, click <a href="">here</a></p>
+<p><img src="../../../images/YouTubeHex.png" class="img-fluid" style="width:50.0%"></p>
+<p><br></p>
+<hr>
+<section id="background" class="level1">
+<h1>Background</h1>
+<p>There are different ways to unmix spectral flow cytometry data. <a href="https://github.com/De-Novo-Research/TRU-OLS">TRU-OLS</a> is one of them, with the methodology behind the approach explained in this 2025 <a href="https://onlinelibrary.wiley.com/doi/10.1002/cyto.a.24957">Cyto Part A</a> paper by <a href="https://github.com/ryankmet1">Ryan Kmet</a> and <a href="https://orcid.org/0000-0003-1713-0605">David Novo</a>.</p>
+<section id="logistics" class="level2">
+<h2 class="anchored" data-anchor-id="logistics">Logistics</h2>
+<p>It is implemented in the <a href="https://julialang.org/">Julia</a> programming language. Since this is a Cytometry in R course (and I have no plans to implement a Cytometry in Julia course), we will need to figure out a few logistics first. Namely…</p>
+<ul>
+<li>We will need to retrieve the information we need for unmixing from the raw .fcs files in R</li>
+<li>Hand off these intermediate outputs to Julia (either directly or via the <code>JuliaCall</code> R package)</li>
+<li>After unmixing has been carried out, return these outputs to R, and integrate them back into a properly formatted .fcs file</li>
+</ul>
+<p>In this walk-through, we will see a basic example of how this can be implemented, leveraging what we know about the R programming language, plus select targeted google searches, to allow us to pass what is needed to Julia, and then get the returned objects back into R.</p>
+<p>If we manage to get these three goals accomplished, we will be able to unmix our data using TRU-OLS, and end up will properly set up .fcs files that can be opened with any flow cytometry software.</p>
+</section>
+<section id="method" class="level2">
+<h2 class="anchored" data-anchor-id="method">Method</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The following notes about TRU-OLS arose as part of a <a href="https://www.reddit.com/r/flowcytometry/comments/1dccpjb/announcing_the_flow_cytometry_discord_server/">Cytometry Discord</a> discussion thread within the “data” channel on August 25, 2025 discussing the released <a href="https://onlinelibrary.wiley.com/doi/10.1002/cyto.a.24957">paper</a>. As a community “Journal Club”, some important details may have been missed. All screenshots (and badly hand-scrawled notes) originate from the paper figures. The thread is reposted below with minimal editing.</p>
+</div>
+</div>
+<p>Background: As we increase number of markers in the unmixing matrix, variance contributes to increasing amounts of noise around the negative population. This was illustrated recently in the <a href="https://www.biorxiv.org/content/10.1101/2025.04.17.649396v2">Mair and Mage</a> paper. For the unstained sample iteratively unmixed up to 40 markers, you can see how this spreads out. 1/n</p>
+<p><img src="images/DiscordWalkthrough/Spread.png" class="img-fluid"></p>
+<p>The way TRU-OLS seems to work relies on the unmixing controls (single color and unstained). Single colors are used to provide the signatures for the full matrix. The unstained is then unmixed against this matrix. A cutoff point is then set at the 99.5% (very right edge) of the spread. This cutoff is used to help determine for individual cells what fluorophores are present before downsizing the matrix to only the relevant fluorophores. 2/n</p>
+<p><img src="images/DiscordWalkthrough/Cutofff.webp" class="img-fluid"></p>
+<p>Consequently, for the full-stained sample, each cell is initially unmixed. If the value is below the cutoff set by the unstained spread, the marker is presumed negative and removed from the re-unmix matrix. Once all the “irrelevant” fluors are removed, the full-stained cell is reunmixed with the remaining fluorophore matrix. 3/n</p>
+<p><img src="images/DiscordWalkthrough/BehindScenes.webp" class="img-fluid"></p>
+<p>Finally, the “irrelevant” fluorophores on the re-unmixed cell can be either set to 0, or reorganized into the original spread of the unstained negative. 4/n</p>
+<p><img src="images/DiscordWalkthrough/ReshapingNegative.webp" class="img-fluid"></p>
+<p>When enumerating how many markers were retained for the individual re-unmixing, we see following distribution of “smaller matrices used”. 5/n:</p>
+<p><img src="images/DiscordWalkthrough/RelevantDyes.webp" class="img-fluid"></p>
+<p>In addition to removing all events below the cutoffs, the removal of “irrelevant” markers results in the Bermuda zone between the cutoff and the bright population to also clean up when comparing between regular OLS unmixing and the TRU-OLS approach. 6/n.</p>
+<p><img src="images/DiscordWalkthrough/Bermuda.png" class="img-fluid"></p>
+<p>The approach makes the most difference on cells where there wasn’t much marker co-expression to begin with. For the heavily co-expressed cells, everything is kept, and their uncertainty still persist as spread. 7/n.</p>
+<p><img src="images/DiscordWalkthrough/Results.webp" class="img-fluid"></p>
+<p>My outstanding questions is one, if we are depending on the positive peaks remaining in the same place based on the reference, how does this work for cells across multiple individuals in practice. Likewise, I will need to play around with more dim population data before I can vouch haven’t also thrown the baby out with bathwater. With that said, I like it.</p>
+</section>
+</section>
+<section id="walk-through" class="level1">
+<h1>Walk-through</h1>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<p>Before getting started, let’s make sure that both the Julia programming language is installed on our local computer, and then proceed to download TRU-OLS and make sure it is active in our local environment.</p>
+<section id="installing-julia" class="level3">
+<h3 class="anchored" data-anchor-id="installing-julia">Installing Julia</h3>
+<p>Since how you install <a href="https://julialang.org/">Julia</a> will vary depending on your computer <a href="../../../course/00_WorkstationSetup/index.html">operating system</a>, please see these <a href="../../../course/community/TRU-OLS/InstallingJulia.html">instructions</a>. Once Julia has been successfully installed, please return and proceed to the next step.</p>
+</section>
+<section id="downloading-tru-ols" class="level3">
+<h3 class="anchored" data-anchor-id="downloading-tru-ols">Downloading TRU-OLS</h3>
+<p>As of the moment, TRU-OLS is available via <a href="https://github.com/De-Novo-Research/TRU-OLS">GitHub</a>. Consequently, we are able to download it similar to any GitHub-based code to make it available on our local computer. To simplify the installation process (and allow us to make any necessary changes should we encounter dependency version issues later on), I recommend going ahead and forking the repository. This additionally helps the authors track usage and community interest in their work.</p>
+<p><img src="images/000_ForkIt.png" class="img-fluid"></p>
+<p>After forking the project to your own GitHub account, copy the url, open up <a href="../../../course/00_Positron/index.html">Positron</a>, and select the drop-down option on the upper-right to create a New Folder from Git.</p>
+<p><img src="images/0000_NewFolderFromGit.png" class="img-fluid"></p>
+<p>Paste in the url to your forked version of TRU-OLS, and proceed with the download.</p>
+<p><img src="images/0000_FromGit.png" class="img-fluid"></p>
+<p>Following completion, open the new project folder inside Positron.</p>
+</section>
+<section id="activating-tru-ols" class="level3">
+<h3 class="anchored" data-anchor-id="activating-tru-ols">Activating TRU-OLS</h3>
+<p>To begin using TRU-OLS, just like any R package, we are going to need to make sure the required dependencies are installed. These are documented inside the “Manifest.toml” file. To get started, proceed to your <strong>terminal tab</strong> and run the following line of Julia code</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia code</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>julia <span class="sc">--</span>project<span class="ot">=</span>.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><img src="images/0000_LaunchProject.png" class="img-fluid"></p>
+<p>The Julia splash screen will then be displayed within the terminal window</p>
+<p><img src="images/0000_JuliaWelcome.png" class="img-fluid"></p>
+<p>Now that Julia is active in our terminal, we will see julia&gt; appearing on each line. Proceed to type (or paste) the following code to commence the installation of the required dependencies.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia code</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>using Pkg</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Pkg.instantiate</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><img src="images/0000_JuliaInstantiate.png" class="img-fluid"></p>
+<p>The installation of the required Julia packages will then proceed, with the status of the various steps (including installation and pre-compiling) being displayed</p>
+<p><img src="images/0000_ProgressBar.png" class="img-fluid"></p>
+<p>In my attempt to install the dependencies, I ended up with an error when installing the CSV package.</p>
+<p><img src="images/0000_JuliaErrror.png" class="img-fluid"></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia code</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>err</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><img src="images/0000_DependencyError.png" class="img-fluid"></p>
+<p>Similar to when we encounter errors installing an R package, we can apply those same troubleshooting skills in this context. First glancing at the “Manifest.toml” file, the original manifest list the Julia version 1.8.5. In my case, my installed Julia version was more recent (1.12.6), suggesting we likely have a dependency clash due to the older version listed in the manifest.</p>
+<p>I decided to re-run <code>Pkg.instantiate()</code>, and as we would anticipate, I still retrieved the previous error</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia code</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>using Pkg</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Pkg.instantiate</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><img src="images/0000_VersionConflict.png" class="img-fluid"></p>
+<p>However, in this case, the message output suggested the use of <code>Pkg.resolve()</code>, which I next attempted</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Julia code</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>using Pkg</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">Pkg.resolve</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><img src="images/0000_PkgInstantiate_Resolve.png" class="img-fluid"></p>
+<p>Based on the Positron highlighting syntax, this resulted in a few package additions and deletions. On re-running <code>Pkg.instantiate()</code>, the CSV package successfully installed.</p>
+<p>Checking the Source control tab in the actions bar, and clicking on the “Manifest.toml” file, we can see the different updates that were effectuated by <code>Pkg.resolve()</code></p>
+<p>Once this was done, I saved my changes to the files, staged them to version control, wrote a short commit message, before pushing everything from my local fork back to GitHub. This prevents the need to repeat the troubleshooting process next time I needed to set TRU-OLS up on another computer in the future.</p>
+</section>
+</section>
+<section id="dataset" class="level2">
+<h2 class="anchored" data-anchor-id="dataset">Dataset</h2>
+<p>For this walkthrough, the spectral flow cytometry .fcs files being used were generated in 2025 as part of the yearly <a href="https://umgccfcss.github.io/BISCC_2025/Day1_5L.html">5-day training workshop</a> here at <a href="https://www.medschool.umaryland.edu/cibr/core/umgccc_flow/">UMGCCC FCSR</a>. The panel consisted of 5 markers (CD45, CD3, CD4, CD8 and Viability). This panel was used to stain mouse splenocytes, which were then acquired on a 5-laser Cytek Aurora.</p>
+</section>
+<section id="loading-fcs-files-to-gatingset" class="level2">
+<h2 class="anchored" data-anchor-id="loading-fcs-files-to-gatingset">Loading FCS files to GatingSet</h2>
+<p>With both Julia and TRU-OLS now installed, switch back to the R project folder that you will be primarily be working in for unmixing.Once there, you will need to load your unmixing controls and full-stained samples into a GatingSet.</p>
+<p>As always, start by attaching to your local environment the required R packages via the <code>library()</code> call</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowWorkspace)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>As part of improvements to flowWorkspace, some behavior of
+GatingSet objects has changed. For details, please read the section
+titled "The cytoframe and cytoset classes" in the package vignette:
+
+  vignette("flowWorkspace-Introduction", "flowWorkspace")</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(flowGate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: ggcyto</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: ggplot2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: flowCore</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: ncdfFlow</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: BH</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered polygon_gate</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered span_gate</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:ncdfFlow':
+
+    filter</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:flowCore':
+
+    filter</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(purrr)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(JuliaCall)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Next off, specify the storage location of the .fcs files, and also the location of the folder you want any unmixed fcs files to be saved to.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">#StorageLocation &lt;- file.path("course", "community", "TRU-OLS", "data")</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co">#OutputLocation &lt;- file.path("course", "community", "TRU-OLS", "outputs")</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>OutputLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"outputs"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Proceed to load the identified .fcs files into a GatingSet object</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fcs_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".fcs"</span>,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a> <span class="at">full.names=</span><span class="cn">TRUE</span>, <span class="at">recursive=</span><span class="cn">TRUE</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>SFC_cytoset <span class="ot">&lt;-</span> <span class="fu">load_cytoset_from_fcs</span>(fcs_files,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a> <span class="at">truncate_max_range=</span><span class="cn">FALSE</span>, <span class="at">transformation=</span><span class="cn">FALSE</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>SFC_GatingSet <span class="ot">&lt;-</span> <span class="fu">GatingSet</span>(SFC_cytoset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>As we will be working with raw .fcs files for the unmxing process, <strong>we do not need to transform</strong>, as we need signatures retrieved from the underlying data to appear in their normal shapes.</p>
+<p>I recommend then using <code>subset()</code> on the GatingSet, placing the single-color and unmixing controls into their own GatingSets, and repeating the process for the full-stained samples. This ensures we only retrieve signatures from the single-color controls, and that only the full-stained samples are unmixed.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># pData(SFC_GatingSet)</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>FullStain_GS <span class="ot">&lt;-</span> <span class="fu">subset</span>(SFC_GatingSet, name <span class="sc">==</span> <span class="st">"Full-Stained2_scatter.fcs"</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>Unstained_GS <span class="ot">&lt;-</span> <span class="fu">subset</span>(SFC_GatingSet, name <span class="sc">==</span> <span class="st">"Unstained (Cells)_scatter.fcs"</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>UnmixingControl_GS <span class="ot">&lt;-</span> <span class="fu">subset</span>(SFC_GatingSet, name <span class="sc">!=</span> <span class="st">"Full-Stained2_scatter.fcs"</span> <span class="sc">&amp;</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>   name <span class="sc">!=</span> <span class="st">"Unstained (Cells)_scatter.fcs"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="signature-matrix" class="level2">
+<h2 class="anchored" data-anchor-id="signature-matrix">Signature Matrix</h2>
+<p>To facilitate this example, we will use the <code>Luciernaga_SingleColors()</code> function from the <code>Luciernaga</code> package to retrieve the signatures from our single-color controls. For more information, please see the <a href="https://davidrach.github.io/Luciernaga/articles/Unmixing.html#luciernaga_singlecolors">vignette</a>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remotes::install_github("DavidRach/Luciernaga")</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Luciernaga)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the primary detectors</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>UnmixingPanel <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Fluorophore =</span> <span class="fu">c</span>(<span class="st">"BV510-A"</span>, <span class="st">"BV605-A"</span>, <span class="st">"Spark Blue 550-A"</span>, <span class="st">"7-AAD-A"</span>, <span class="st">"Alexa Fluor 700-A"</span>),</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Detector =</span> <span class="fu">c</span>(<span class="st">"V7-A"</span>, <span class="st">"V10-A"</span>, <span class="st">"B3-A"</span>, <span class="st">"YG4-A"</span>, <span class="st">"R4-A"</span>))</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Define what brightness percentiles to include</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>ThePanelCuts <span class="ot">&lt;-</span> UnmixingPanel <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">-</span>Detector) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">From=</span><span class="fl">0.8</span>) <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">To=</span><span class="dv">1</span>)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract the signatures </span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>SCs <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>UnmixingControl_GS, <span class="at">.f=</span>Luciernaga_SingleColors, <span class="at">sample.name=</span><span class="st">"TUBENAME"</span>,</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="fu">c</span>(<span class="st">".fcs"</span>, <span class="st">"PD_AD_"</span>), <span class="at">subset=</span><span class="st">"root"</span>, <span class="at">PanelCuts=</span>ThePanelCuts, <span class="at">stats=</span><span class="st">"median"</span>, <span class="at">Verbose=</span><span class="cn">FALSE</span>, </span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a> <span class="at">SignatureView=</span><span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">bind_rows</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>SCs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Fluorophore    Ligand     UV1-A     UV2-A    UV3-A    UV4-A     UV5-A
+1  Spark Blue 550       CD3 104.74154 188.68995 420.2939 594.9452  864.0328
+2           BV605       CD4  79.07824 158.78110 496.5042 651.8056  871.7632
+3 Alexa Fluor 700      CD45 107.72574 219.83228 498.7449 701.1989 1017.6757
+4           BV510       CD8 121.22008 231.06911 546.3041 832.8344 1744.4631
+5           7-AAD Viability  75.56364  73.38842  87.1750  86.8321  131.5948
+      UV6-A      UV7-A      UV8-A     UV9-A     UV10-A    UV11-A    UV12-A
+1 1495.2246  2580.6736  2742.1285  2186.741   688.7473  312.4049  191.5149
+2 1413.0586  2221.1409  1417.7964  7160.168 13850.0234 6889.8103 2858.5405
+3 1794.0203  2884.1611  1783.2721  1394.581   432.0355  269.5648  965.4911
+4 5374.4111 25075.5771 21001.8184 17206.926  6222.8848 2291.9504 1099.8838
+5  224.5899   322.6273   235.3316   536.639  1366.8877 3236.7268 2164.1993
+     UV13-A    UV14-A    UV15-A    UV16-A       V1-A      V2-A      V3-A
+1  140.9085  153.3083  146.2526  135.8367  142.32812  364.2118  472.9013
+2 2163.7251 1983.9139 1231.0778  862.3104 4854.59058 6594.5967 5717.8762
+3 4073.7609 4180.7432 2346.9130 1820.5828  147.33545  392.1243  528.0650
+4  762.3667  746.6266  530.1944  411.1842  229.92508 1765.3419 6732.9707
+5 1850.2953 1949.2087 1384.9995 1028.7186   56.95234  187.5039  268.9663
+        V4-A       V5-A       V6-A       V7-A       V8-A       V9-A      V10-A
+1   467.2418   891.2451  3398.5063 10576.7729  6412.2529  4036.4619  3800.3064
+2  3200.3501  1989.8629  1320.9020  1545.9777 14717.8267 56108.5410 69693.8047
+3   522.9897   805.8846   800.3869  1068.3057   784.9185   531.3835   594.9357
+4 14236.3481 37583.2031 39042.7402 53597.5996 37457.4648 23858.7520 24001.5322
+5   281.9515   383.5099   349.8906   424.0339   979.9825  2716.0559 11870.2383
+       V11-A      V12-A      V13-A      V14-A     V15-A     V16-A      B1-A
+1  1398.0156   729.8098   610.9025   482.7387  406.1053  211.9564 1727.9603
+2 33012.0508 13375.8213 10442.9980  6913.8130 4227.4131 1816.5377  472.0234
+3   410.3605  3569.9545 18858.6064 13525.6689 7742.5754 3852.9854  485.0185
+4  8262.2681  3854.7830  2837.6615  1933.1819 1358.4150  576.0975  587.8901
+5 19976.5449 13250.9321 11821.9834  9180.0054 6730.8584 3196.4229  147.2456
+        B2-A       B3-A       B4-A      B5-A       B6-A       B7-A       B8-A
+1 11803.6841 31791.0898 13055.8618 9729.2339  5960.7681  3127.5720  2222.0243
+2   442.6214   540.6498   738.8925 2996.0658  2870.6008  2005.9507  1302.9653
+3   469.6182   560.3932   305.5835  339.6832   244.6713   152.8191   210.2808
+4   554.4593   658.5273   372.5866  380.8456   288.1743   165.7359   140.0763
+5   155.3411   214.6584  1326.2528 5897.7673 20978.9561 54340.7949 46198.2520
+        B9-A      B10-A       B11-A      B12-A       B13-A       B14-A
+1  2092.9392  1235.8806   801.18732   685.7439   506.45784   602.38147
+2  1045.8303   616.8634   411.57971   301.7630   210.75192   234.18474
+3  1098.3724  2552.8210  1888.99933  1150.0874   777.24994   927.87350
+4   146.0795   108.9569    69.67178    74.3706    55.30247    71.59775
+5 49241.4121 30504.1377 19612.47266 17056.9932 12517.82764 13991.46777
+      YG1-A       YG2-A       YG3-A       YG4-A        YG5-A       YG6-A
+1  728.4496   412.28871   294.84369    225.3277    122.32074   123.49529
+2 4960.2808 23393.29395 23929.44727  15121.0571   9115.67529  6222.96021
+3  173.3573    88.36777   109.43902    267.5920    776.15417  5119.80396
+4  193.2470    99.99137    92.44199    164.6935     92.89421    81.73549
+5 3614.0844 13031.28711 40427.65039 124554.5195 101246.96484 93211.57812
+        YG7-A       YG8-A       YG9-A      YG10-A       R1-A       R2-A
+1    159.5041    86.86105    60.32009    49.90587   59.36887   65.15396
+2   6832.3105  2701.12439  1620.54364   951.89786  127.81407  119.96352
+3  29223.2451 12844.04395  7387.60693  4942.44336  370.45784 4182.69580
+4    126.0765    67.43141    54.69088    66.03951   69.02694   71.98460
+5 112102.7891 51718.50781 38361.86328 23770.70703 1828.64563 2459.72717
+         R3-A         R4-A        R5-A        R6-A        R7-A        R8-A
+1    58.51100     53.43020    36.55869    50.95368    65.37681    22.83324
+2   107.51331     96.55773    79.32631    83.67997    79.76941    45.79163
+3 37749.57227 103404.82812 94201.42188 46773.15820 44290.40430 25535.98047
+4    76.35984     66.68982    53.12717    64.87876    73.56101    36.30670
+5  2500.10327   1926.56720  1511.25427  1097.58972  1131.22571   595.57352</code></pre>
+</div>
+</div>
+<p>Let’s also visualize the signatures against the reference signatures for the respective fluorophores to ensure that the retrieved signatures are appropiate.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>plots <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>UnmixingControl_GS, <span class="at">.f=</span>Luciernaga_SingleColors, <span class="at">sample.name=</span><span class="st">"TUBENAME"</span>,</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="fu">c</span>(<span class="st">".fcs"</span>, <span class="st">"PD_AD_"</span>), <span class="at">subset=</span><span class="st">"root"</span>, <span class="at">PanelCuts=</span>ThePanelCuts, <span class="at">stats=</span><span class="st">"median"</span>, <span class="at">Verbose=</span><span class="cn">FALSE</span>, <span class="at">SignatureView=</span><span class="cn">TRUE</span>, <span class="at">returntype=</span><span class="st">"plots"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>plots</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+[[2]]</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-13-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+[[3]]</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-13-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+[[4]]</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-13-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+[[5]]</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-13-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In this case, the signatures are close enough to the reference that we can proceed (the rough edges are likely result of the datasets single-color unmixing controls being <a href="../../../course/community/TRU-OLS/FCSCleanUp.html">severely downsampled</a> in order to pass the GitHub size limits)</p>
+</section>
+<section id="ols-unmixing-via-luciernaga" class="level2">
+<h2 class="anchored" data-anchor-id="ols-unmixing-via-luciernaga">OLS-Unmixing via Luciernaga</h2>
+<p>Since we may be interested in comparing how TRU-OLS unmixing differs compared to regular OLS unmixing (and since we have already generated the needed inputs), lets proceed to unmix via <code>Luciernaga</code> and generate an .fcs file to our designated outputs folder for later.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>TheSampleName <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"TUBENAME"</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>UnmixSuccess <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>FullStain_GS, <span class="at">.f=</span>Luciernaga_Unmix,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a> <span class="at">controlData=</span>SCs, <span class="at">sample.name=</span>TheSampleName, <span class="at">addon=</span><span class="st">"_Luciernaga_Unmixed"</span>, <span class="at">subset=</span><span class="st">"root"</span>, <span class="at">removestrings=</span><span class="st">"fcs"</span>, <span class="at">outpath=</span>OutputLocation, <span class="at">PanelPath=</span>UnmixingPanel, <span class="at">Verbose=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>After removestrings, name is Full-Stained2</code></pre>
+</div>
+</div>
+</section>
+<section id="tru-ols-unmixing" class="level2">
+<h2 class="anchored" data-anchor-id="tru-ols-unmixing">TRU-OLS Unmixing</h2>
+<p>Within the <a href="https://github.com/De-Novo-Research/TRU-OLS">TRU-OLS</a> README, we are given a few line of codes with instructions on how to run</p>
+<p><img src="images/TRUOLS_Readme.png" class="img-fluid"></p>
+<p>The main inputs are three csv files that are read into JUlia, mixmat (the signature matrix of the single-colors), unstained (the cleaned up exprs output for the unstained sample), and multi (the cleaned up exprs outputs for the full-stained sample). The names of the fluorophores are then subsequently retrieved from the mixmat file.</p>
+<p>These data.frames are then all converted to matrices, before being passed off to <code>create_complete_dataframe()</code> function, which runs using the default parameters.</p>
+<p>From previous function building <a href="../../../course/10_Downsampling/index.html">examples</a>, we have enough familiarity with the <code>flowWorkspace</code> package to figure out how to retrieve and clean up the <code>exprs()</code> output in R to fulfill the inputs needed for unstained and full-stained samples to be passed to Julia. We can also use <code>Luciernaga_SingleColors()</code> to generate the mixmat data.frame of fluorophore signatures.</p>
+<p>After attempting (and failing) to pass from an R code chunk to a Julia code chunk, I found the implementable approach was to write the data.frames to .csv files, and then via <code>JuliaCall</code> package run Julia commands within the R function to carry out the above README suggested steps, and save the output as a .csv file that could be read back into R.</p>
+<p>The main thing needed was to provide the correct file path to the TRU-OLS.jl file with the corresponding Julia code.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Implements TRU-OLS unmixing in Julia, via the JuliaCall R package. </span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param mixmat The signature matrix</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param unstained The cleaned up exprs of the unstained</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param fullstained The cleaned up exprs of the full-stained</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param TRUOLSPATH File.path to the TRU-OLS.jl file</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="co">#' @importFrom JuliaCall julia_setup julia_command </span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="co">#' @importFrom utils read.csv write.csv</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>TRU_OLS_Julia <span class="ot">&lt;-</span> <span class="cf">function</span>(mixmat, unstained, fullstained,</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a> <span class="at">TRUOLSPath=</span><span class="st">"/home/david/Documents/TRU-OLS/TRU-OLS.jl"</span>) {</span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(JuliaCall)</span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.csv</span>(mixmat,      <span class="st">"mixmat.csv"</span>,      <span class="at">row.names=</span><span class="cn">FALSE</span>)</span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.csv</span>(unstained,   <span class="st">"Unstained.csv"</span>,   <span class="at">row.names=</span><span class="cn">FALSE</span>)</span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.csv</span>(fullstained, <span class="st">"FullStained.csv"</span>, <span class="at">row.names=</span><span class="cn">FALSE</span>)</span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_setup</span>()</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'import Pkg; Pkg.add(["CSV", "DataFrames", "LinearAlgebra", "StatsBase", "FileIO", "FCSFiles"])'</span>)</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'using CSV, DataFrames'</span>)</span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'mm = CSV.read("mixmat.csv", DataFrame)'</span>)</span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'us = CSV.read("Unstained.csv", DataFrame)'</span>)</span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'ms = CSV.read("FullStained.csv", DataFrame)'</span>)</span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'namel = names(mm)'</span>)</span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'mm = Matrix{Float64}(mm)'</span>)</span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'us = Matrix{Float64}(us)'</span>)</span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'ms = Matrix{Float64}(ms)'</span>)</span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="fu">sprintf</span>(<span class="st">'include("%s")'</span>, TRUOLSPath))</span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'result = create_complete_dataframe(mm, namel, ms, us, true)'</span>)</span>
+<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">julia_command</span>(<span class="st">'CSV.write("result.csv", result)'</span>)</span>
+<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a>  result_r <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"result.csv"</span>, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
+<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result_r)</span>
+<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>With the “R to Julia and back to R” hand-off operational, the main thing left is to provide the function infrastructure in R needed to gather the required inputs, and then once the outputs are received, correctly package them back into a new .fcs file. I modified the <a href="https://github.com/DavidRach/Luciernaga/blob/main/R/Luciernaga_Unmix.R">existing function</a> infrastructure for <code>Luciernaga_Unmix()</code> used for the OLS unmixing example above, but switching out the OLS unmixing with the <code>TRU_OLS_Julia()</code> function we just wrote.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param x An interated-in full-stained raw .fcs file needing to be unmixed</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param SCs The fluorophore signature matrix generated via Luciernaga_SingleColors</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param Unstained_GS The GatingSet containing the raw unstained fcs file</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param sample.name The keyword containing the fcs file name</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param removestrings A list of values to remove from name</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param Verbose For troubleshooting name after removestrings</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param addon Additional addon to append to the new .fcs file name</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param subset A gating hierarchy level to sort cells at, expression values retrieved</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a><span class="co">#' from these</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param outpath The return folder for the .fcs files</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param PanelPath Location to a panel.csv containing correct order of fluorophores</span></span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param returnType Whether to return "fcs" or "flowframe"</span></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param TRUOLSPATH File.path to the TRU-OLS.jl file</span></span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a><span class="co">#' @importFrom JuliaCall julia_setup julia_command </span></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>TRUOLS_Unmix <span class="ot">&lt;-</span> <span class="cf">function</span>(x, SCs, Unstained_GS, sample.name, removestrings,</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>   Verbose, addon, <span class="at">subset=</span><span class="st">"root"</span>, outpath, PanelPath, <span class="at">returnType=</span><span class="st">"fcs"</span>,</span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>   <span class="at">TRUOLSPath =</span> <span class="st">"/home/david/Documents/TRU-OLS/TRU-OLS.jl"</span>){</span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># File Name Clean Up</span></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(sample.name) <span class="sc">==</span> <span class="dv">2</span>){</span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>      first <span class="ot">&lt;-</span> sample.name[[<span class="dv">1</span>]]</span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>      second <span class="ot">&lt;-</span> sample.name[[<span class="dv">2</span>]]</span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>      first <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x, first)</span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>      second <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x, second)</span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>      name <span class="ot">&lt;-</span> <span class="fu">paste</span>(first, second, <span class="at">sep=</span><span class="st">"_"</span>)</span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {name <span class="ot">&lt;-</span> <span class="fu">keyword</span>(x, sample.name)}</span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a>    name <span class="ot">&lt;-</span> <span class="fu">NameCleanUp</span>(name, <span class="at">removestrings=</span>removestrings)</span>
+<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (Verbose <span class="sc">==</span> <span class="cn">TRUE</span>){<span class="fu">message</span>(<span class="st">"After removestrings, name is "</span>, name)}</span>
+<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Normalize the Single Color Signature Matrix (important for final scaling)</span></span>
+<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">any</span>(SCs <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">&gt;</span> <span class="dv">1</span>)){</span>
+<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a>    Metadata <span class="ot">&lt;-</span> SCs <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">!</span><span class="fu">where</span>(is.numeric))</span>
+<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a>    Numerics <span class="ot">&lt;-</span> SCs <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))</span>
+<span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a>    n <span class="ot">&lt;-</span> Numerics</span>
+<span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a>    n[n <span class="sc">&lt;</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a>    A <span class="ot">&lt;-</span> <span class="fu">do.call</span>(pmax, n)</span>
+<span id="cb39-42"><a href="#cb39-42" aria-hidden="true" tabindex="-1"></a>    Normalized <span class="ot">&lt;-</span> n<span class="sc">/</span>A</span>
+<span id="cb39-43"><a href="#cb39-43" aria-hidden="true" tabindex="-1"></a>    SCs <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(Metadata, Normalized)</span>
+<span id="cb39-44"><a href="#cb39-44" aria-hidden="true" tabindex="-1"></a> }</span>
+<span id="cb39-45"><a href="#cb39-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-46"><a href="#cb39-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Formating SingleColors to required mixmat format</span></span>
+<span id="cb39-47"><a href="#cb39-47" aria-hidden="true" tabindex="-1"></a>    SCsM <span class="ot">&lt;-</span> <span class="fu">t</span>(SCs)</span>
+<span id="cb39-48"><a href="#cb39-48" aria-hidden="true" tabindex="-1"></a>    mixmatDF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(SCsM)</span>
+<span id="cb39-49"><a href="#cb39-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colnames</span>(mixmatDF) <span class="ot">&lt;-</span> mixmatDF[<span class="dv">1</span>,]</span>
+<span id="cb39-50"><a href="#cb39-50" aria-hidden="true" tabindex="-1"></a>    Ligands <span class="ot">&lt;-</span> mixmatDF[<span class="dv">2</span>,] <span class="sc">|&gt;</span> <span class="fu">unlist</span>() <span class="sc">|&gt;</span> <span class="fu">unname</span>()</span>
+<span id="cb39-51"><a href="#cb39-51" aria-hidden="true" tabindex="-1"></a>    mixmatDF <span class="ot">&lt;-</span> mixmatDF[<span class="dv">3</span><span class="sc">:</span><span class="fu">nrow</span>(mixmatDF),]</span>
+<span id="cb39-52"><a href="#cb39-52" aria-hidden="true" tabindex="-1"></a>    mixmat_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(mixmatDF)</span>
+<span id="cb39-53"><a href="#cb39-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-54"><a href="#cb39-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extracting the Unstained Detectors exprs values</span></span>
+<span id="cb39-55"><a href="#cb39-55" aria-hidden="true" tabindex="-1"></a>    Unstained <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(Unstained_GS, <span class="st">"root"</span>)</span>
+<span id="cb39-56"><a href="#cb39-56" aria-hidden="true" tabindex="-1"></a>    Unstained <span class="ot">&lt;-</span> flowCore<span class="sc">::</span><span class="fu">exprs</span>(Unstained[[<span class="dv">1</span>]])</span>
+<span id="cb39-57"><a href="#cb39-57" aria-hidden="true" tabindex="-1"></a>    UnstainedDF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(Unstained, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
+<span id="cb39-58"><a href="#cb39-58" aria-hidden="true" tabindex="-1"></a>    UnstainedDF <span class="ot">&lt;-</span> UnstainedDF[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(UnstainedDF), <span class="st">"FSC|SSC|Time"</span>)]</span>
+<span id="cb39-59"><a href="#cb39-59" aria-hidden="true" tabindex="-1"></a>    Unstained_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(UnstainedDF)</span>
+<span id="cb39-60"><a href="#cb39-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-61"><a href="#cb39-61" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extracting the Full-Stained Detectors exprs values</span></span>
+<span id="cb39-62"><a href="#cb39-62" aria-hidden="true" tabindex="-1"></a>    FullStainedCS <span class="ot">&lt;-</span> <span class="fu">gs_pop_get_data</span>(x, <span class="st">"root"</span>)</span>
+<span id="cb39-63"><a href="#cb39-63" aria-hidden="true" tabindex="-1"></a>    FullStained <span class="ot">&lt;-</span> flowCore<span class="sc">::</span><span class="fu">exprs</span>(FullStainedCS[[<span class="dv">1</span>]])</span>
+<span id="cb39-64"><a href="#cb39-64" aria-hidden="true" tabindex="-1"></a>    FullStainedDF <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(FullStained, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
+<span id="cb39-65"><a href="#cb39-65" aria-hidden="true" tabindex="-1"></a>    StashedDF <span class="ot">&lt;-</span> FullStainedDF[stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(FullStainedDF), <span class="st">"FSC|SSC|Time"</span>)]</span>
+<span id="cb39-66"><a href="#cb39-66" aria-hidden="true" tabindex="-1"></a>    FullStainedDF <span class="ot">&lt;-</span> FullStainedDF[<span class="sc">!</span>stringr<span class="sc">::</span><span class="fu">str_detect</span>(<span class="fu">names</span>(FullStainedDF), <span class="st">"FSC|SSC|Time"</span>)]</span>
+<span id="cb39-67"><a href="#cb39-67" aria-hidden="true" tabindex="-1"></a>    FullStained_mat <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(FullStainedDF)</span>
+<span id="cb39-68"><a href="#cb39-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-69"><a href="#cb39-69" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Unmixing via the R-Julia wrapper function</span></span>
+<span id="cb39-70"><a href="#cb39-70" aria-hidden="true" tabindex="-1"></a>    TheUnmixed <span class="ot">&lt;-</span> <span class="fu">TRU_OLS_Julia</span>(<span class="at">mixmat=</span>mixmat_mat, <span class="at">unstained=</span>Unstained_mat,</span>
+<span id="cb39-71"><a href="#cb39-71" aria-hidden="true" tabindex="-1"></a>    <span class="at">fullstained=</span>FullStained_mat, <span class="at">TRUOLSPath =</span> TRUOLSPath)</span>
+<span id="cb39-72"><a href="#cb39-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-73"><a href="#cb39-73" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Returning Time, FSC, SSC columns back in to the unmixed file</span></span>
+<span id="cb39-74"><a href="#cb39-74" aria-hidden="true" tabindex="-1"></a>    TheOrder <span class="ot">&lt;-</span> SCs <span class="sc">|&gt;</span> <span class="fu">pull</span>(Fluorophore)</span>
+<span id="cb39-75"><a href="#cb39-75" aria-hidden="true" tabindex="-1"></a>    TheLigands <span class="ot">&lt;-</span> SCs <span class="sc">|&gt;</span> <span class="fu">pull</span>(Ligand)</span>
+<span id="cb39-76"><a href="#cb39-76" aria-hidden="true" tabindex="-1"></a>    TheUnmixed <span class="ot">&lt;-</span> TheUnmixed[, TheOrder]</span>
+<span id="cb39-77"><a href="#cb39-77" aria-hidden="true" tabindex="-1"></a>    TheData <span class="ot">&lt;-</span> <span class="fu">cbind</span>(StashedDF, TheUnmixed)</span>
+<span id="cb39-78"><a href="#cb39-78" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames</span>(TheData) <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb39-79"><a href="#cb39-79" aria-hidden="true" tabindex="-1"></a>    StandInStashed <span class="ot">&lt;-</span> StashedDF <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Backups=</span><span class="fu">row_number</span>()) <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Backups, <span class="at">.before=</span><span class="dv">1</span>)</span>
+<span id="cb39-80"><a href="#cb39-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-81"><a href="#cb39-81" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Handoff to Luciernaga Internal Unmix for the .fcs formatting</span></span>
+<span id="cb39-82"><a href="#cb39-82" aria-hidden="true" tabindex="-1"></a>    new_fcs <span class="ot">&lt;-</span> Luciernaga<span class="sc">:::</span><span class="fu">InternalUnmix</span>(<span class="at">cs=</span>FullStainedCS,</span>
+<span id="cb39-83"><a href="#cb39-83" aria-hidden="true" tabindex="-1"></a>    <span class="at">StashedDF=</span>StandInStashed, <span class="at">TheData=</span>TheData, <span class="at">Ligands=</span>TheLigands)</span>
+<span id="cb39-84"><a href="#cb39-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-85"><a href="#cb39-85" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Modifying the filename</span></span>
+<span id="cb39-86"><a href="#cb39-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(addon)){name <span class="ot">&lt;-</span> <span class="fu">paste0</span>(name, addon)}</span>
+<span id="cb39-87"><a href="#cb39-87" aria-hidden="true" tabindex="-1"></a>    AssembledName <span class="ot">&lt;-</span> <span class="fu">paste0</span>(name, <span class="st">".fcs"</span>)</span>
+<span id="cb39-88"><a href="#cb39-88" aria-hidden="true" tabindex="-1"></a>    new_fcs<span class="sc">@</span>description<span class="sc">$</span>GUID <span class="ot">&lt;-</span> AssembledName</span>
+<span id="cb39-89"><a href="#cb39-89" aria-hidden="true" tabindex="-1"></a>    new_fcs<span class="sc">@</span>description<span class="sc">$</span><span class="st">`</span><span class="at">$FIL</span><span class="st">`</span> <span class="ot">&lt;-</span> AssembledName</span>
+<span id="cb39-90"><a href="#cb39-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-91"><a href="#cb39-91" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sending the file out as an .fcs file</span></span>
+<span id="cb39-92"><a href="#cb39-92" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.null</span>(outpath)) {outpath <span class="ot">&lt;-</span> <span class="fu">getwd</span>()}</span>
+<span id="cb39-93"><a href="#cb39-93" aria-hidden="true" tabindex="-1"></a>    fileSpot <span class="ot">&lt;-</span> <span class="fu">file.path</span>(outpath, AssembledName)</span>
+<span id="cb39-94"><a href="#cb39-94" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (returnType <span class="sc">==</span> <span class="st">"fcs"</span>) {<span class="fu">write.FCS</span>(new_fcs, <span class="at">filename =</span> fileSpot, <span class="at">delimiter=</span><span class="st">"#"</span>)</span>
+<span id="cb39-95"><a href="#cb39-95" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {<span class="fu">return</span>(new_fcs)}</span>
+<span id="cb39-96"><a href="#cb39-96" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>With both the main function (and the internal R-Julia handoff function) written and active in our environment, we can now proceed to unmixing.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>UnmixSuccess <span class="ot">&lt;-</span> <span class="fu">map</span>(<span class="at">.x=</span>FullStain_GS, <span class="at">.f=</span>TRUOLS_Unmix, <span class="at">SCs=</span>SCs, <span class="at">Unstained_GS=</span>Unstained_GS, </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a> <span class="at">sample.name=</span>TheSampleName, <span class="at">addon=</span><span class="st">"_TRUOLS_Unmixed"</span>, <span class="at">subset=</span><span class="st">"root"</span>,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a> <span class="at">removestrings=</span><span class="st">"fcs"</span>, <span class="at">outpath=</span>OutputLocation, <span class="at">PanelPath=</span>UnmixingPanel, <span class="at">Verbose=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><img src="images/JuliaOutput1.png" class="img-fluid"></p>
+<p><img src="images/JuliaOutputComplete.png" class="img-fluid"></p>
+<p>And for a quick sanity check, lets check both the OLS and TRU-OLS files to make sure that the .fcs file formatting worked in practice.</p>
+<p>OLS</p>
+<p><img src="images/Gate_OLSCD45.png" class="img-fluid"></p>
+<p><img src="images/Gates_OLSTcells.png" class="img-fluid"></p>
+<p>TRU-OLS</p>
+<p><img src="images/Gate_TruOLSCD45.png" class="img-fluid"></p>
+<p><img src="images/Gates_TRUOLSTcells.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="take-away" class="level1">
+<h1>Take Away</h1>
+<p>In this walk-through, we showcased how to install Julia, activate TRU-OLS within a Positron project folder, and then leverage our existing knowledge about flow cytometry infrastructure as implemented in R via the <code>flowWorkspace</code> package to gather the required inputs. We then wrote a small helper and wrapper function to handoff these inputs to Julia for unmixing, before returning them to R for formatting and export out as .fcs files.</p>
+<p>Obviously, this is an initial implementation, and several areas could use additional improvements. This entire process was single-threaded, and could benefit from parallel computing implementation to take advantage of most computers having multiple cores. Additionally, the use of <code>JuliaCall</code> as an intermediate introduces some lag as it gets reactivated on each iteration.</p>
+<p>And this has only been checked on Cytek Aurora files, so its likely some changes need to be implemented for other manufacturers.</p>
+<p>Regardless, as with all the course code, all the above is AGPL3-0 licensed, and you are free to customize it to your hearts content. We gladly welcome any modifications/contributions to make the above coding examples more robust in the future.</p>
+<p>Hopefully, this lowers the barrier of entry, so that anyone interested in exploring how the TRU-OLS method of unmixing might differ for their own datasets is able to gnerate a quick example for evaluation.</p>
+<p>Cheers! David</p>
+<p><img src="images/TakeAway.jpg" class="img-fluid"></p>
+</section>
+<section id="additional-resources" class="level1">
+<h1>Additional Resources</h1>
+<p><a href="https://onlinelibrary.wiley.com/doi/10.1002/cyto.a.24957">Reducing Spreading: Removing the Impact of Irrelevant Dyes Improves Unmixed Flow Cytometry Data</a> The original paper describing TRU-OLS, describing the methodology. If you are trying to customize the function further to take advantage of some of the non-default options, worth checking out.</p>
+<p><a href="https://nrennie.rbind.io/blog/introduction-julia-r-users/">Introduction to Julia for R users</a> A blogpost by Nicola Rennie, covering some of the intro to Julia details that R users would appreciate knowing</p>
+<p><a href="https://davidrach.github.io/Luciernaga/articles/Unmixing.html">Unmixing with Luciernaga</a> The walk-through vignette documenting how to use the <code>Luciernaga</code> unmixing helper functions (still under development)</p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://www.gnu.org/graphics/agplv3-with-text-162x68.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../../course/community/AutoSpectral/index.html" class="pagination-link" aria-label="AutoSpectral">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">AutoSpectral</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Made with <a href="https://quarto.org/">Quarto</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p><img src="../../../images/AGPL3.png" class="img-fluid" alt="AGPL-3.0"> <img src="../../../images/CCBYSA.png" class="img-fluid" alt="CC-BY-SA"></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
