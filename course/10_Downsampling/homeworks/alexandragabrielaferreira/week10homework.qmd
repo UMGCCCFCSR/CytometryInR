@@ -1,0 +1,539 @@
+---
+title: "Homework week 10"
+author: "Gabriela Ferreira"
+date:   2026/07/23
+format:
+  html:
+    code-fold: true
+    code-summary: "Code"
+toc: true
+toc-depth: 4
+---
+
+
+
+# Problem 1
+
+"Load a dataset into R, gate it however you like, and then export out a population of interest as their own .fcs files. Open them in either Floreada.io or the commercial software of your choice, and take a screenshot of how they look by two markers of interest."
+
+
+## Setup
+
+Let's load some test files in the environment:
+
+```{r}
+#| eval: FALSE
+
+# activate libraries:
+
+library(flowWorkspace)
+library(flowGate)
+library(dplyr)
+library(ggplot2)
+library(purrr)
+
+# get or set working directory:
+
+getwd()
+
+file_path = file.path("homeworkdata")
+
+#list files:
+
+fcs_files = list.files(file_path, pattern=".fcs", full.names=TRUE)
+fcs_files
+
+
+#load files in a cytoset:
+
+CFC_cytoset = load_cytoset_from_fcs(fcs_files, truncate_max_range = FALSE, transformation = FALSE)
+str(CFC_cytoset)
+
+#create a gatingset:
+
+CFC_GatingSet = GatingSet(CFC_cytoset)
+
+# extract the column names which are the parameters inside the gating set
+CFC_Parameters = colnames(CFC_GatingSet)
+CFC_Parameters
+```
+
+The data I'm using was acquired in a conventional cytometer and I had DAPI as live/dead differentiator and these cells were transduced with a mock vector (GFP) and a treatment vector. 
+
+Before I continue I will explore the FCS file with code from week 03 to see if I have any useful information about these files:
+
+
+```{r}
+#| eval: FALSE
+
+firstfile = fcs_files[1]
+firstfile
+read.FCS(filename=firstfile)
+flowFrame = read.FCS(filename=firstfile, transformation = FALSE, truncate_max_range = FALSE)
+MFI_Matrix <- flowFrame@exprs
+MFI_Matrix
+ParameterData <- flowFrame@parameters@data
+
+head(ParameterData, 10)
+
+markers = markernames(CFC_GatingSet)
+markers
+
+```
+
+![](/course/10_Downsampling/homeworks/alexandragabrielaferreira/images/problem1_understandingFCSfiles.PNG)
+
+
+
+![](/course/10_Downsampling/homeworks/alexandragabrielaferreira/images/problem1_markers.PNG)
+
+So now I know that in my files I have the following channel/fluorochrome combinations: DAPI for viability, APC with MHC-I, APC-Cy7 with CD45 and GFP for GFP, PerCP-Cy5.5 was used as an empty channel for autofluorescence and gating strategy.
+
+
+Before I gate these files, I will go back to week 07 lesson and play with transformation a bit to optimize visualization:
+
+
+```{r}
+#| eval: FALSE
+
+
+# remove scatters and time parameters from the parameters column:
+FluorophoresOnly = CFC_Parameters[!stringr::str_detect(CFC_Parameters, "FSC|SSC|Time")]
+FluorophoresOnly
+
+#preparing bioexponential transformation (copypasted from week07 homework)
+Biexponential <- flowjo_biexp_trans() #default values
+
+#Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,pos=4.5, neg=0, widthBasis=-1000) # width at -1000
+
+#Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144/2,pos=4.5, neg=0, widthBasis=-1000) # width and maxvalue changed:
+
+#Biexponential = flowjo_biexp_trans(channelRange=4096, maxValue=262144, pos=4.5, neg=2, widthBasis=-500)
+
+# attribute the bioexponential transformation to the fluorophores of interest (in this case all)
+MyBiexTransform = transformerList(FluorophoresOnly, Biexponential)
+
+
+#  apply the transformation to gating set:
+transform(CFC_GatingSet, MyBiexTransform)
+
+# plot the flow plot for one file:
+ggcyto(CFC_GatingSet[4], subset="root",
+ aes(x="APC-A", y="GFP-A")) + geom_hex(bins=100)
+
+ggcyto(CFC_GatingSet[2], subset="root",
+ aes(x="APC-A", y="GFP-A")) + geom_hex(bins=100)
+```
+
+The default values for biexponential are absolutely fine:
+
+![](/course/10_Downsampling/homeworks/alexandragabrielaferreira/images/problem1_defaultbiexp.png)
+
+
+Then I will create some gates using flowGate package and a tibble:
+
+With this I can design a new gating strategy that makes sense:
+
+
+```{r}
+#| eval: FALSE
+
+
+GatingTable = tibble::tribble(
+  ~filterId,    ~dims,                          ~subset,      
+  "singlets",   list("FSC-A", "FSC-H"),          "root",      
+  "live",       list("FSC-A", "DAPI-A"),        "singlets",  
+  "GFP+",     list("GFP-A", "FSC-A"),            "live",     
+)
+
+
+#apply the gating strategy using gs_apply_gating_strategy:
+
+gs_apply_gating_strategy(CFC_GatingSet, gating_strategy = GatingTable)
+
+
+#look at the overall structure of the gating strategy:
+
+plot(CFC_GatingSet)
+
+# quick overal look to the full gating strategy:
+
+ggcyto::autoplot(CFC_GatingSet[[4]]) + theme_bw()
+```
+
+
+![](/course/10_Downsampling/homeworks/alexandragabrielaferreira/images/problem1_gatingstrategy.png)
+
+
+gating strategy applied successfully!
+
+
+
+I also know my metadata is quite empty. So I will alter it to include a few more details that could be useful for downstream analysis:
+
+```{r}
+#| eval: FALSE
+
+metadata = pData(CFC_GatingSet)
+str(metadata)
+
+# Create a column with the timepoint, remove everything except D5 from the name
+
+testing = metadata |> mutate(Timepoint = name)
+
+testing = testing |> mutate(Timepoint = sub("^[^_]*_([^_]*)_.*$", "\\1", testing$Timepoint))
+
+
+testing$Timepoint
+## replace D5 for 5
+
+testing = testing |> mutate(Timepoint = sub("D5", "5", testing$Timepoint))
+
+testing
+
+# create a column "condition" and remove all characters except the condition
+
+testing = testing |> mutate(Condition = name)
+testing = testing |> mutate(Condition = sub("^[^_]*_[^_]*_([^_]*)_.*$", "\\1", testing$Condition))
+
+testing
+
+# create a column called cell line and remove all characters except the first before the first underscore
+
+testing = testing |> mutate(Cell_Line = name)
+
+testing = testing |> mutate(Cell_Line = sub("_.*", "", testing$Cell_Line))
+
+testing
+
+metadata = testing
+
+head(metadata, 4)
+
+#replace the original metadata for the updated one
+
+pData(CFC_GatingSet) = metadata
+
+pData(CFC_GatingSet)
+
+plot(CFC_GatingSet)
+```
+
+Changed metadata (Regex rules applied according to chatGPT):
+
+![](/course/10_Downsampling/homeworks/alexandragabrielaferreira/images/problem1_changingmetadata.PNG)
+
+
+## Solution
+
+I will export .fcs files that only contain the GFP+ cells.
+
+
+Let's see how many events are within GFP+:
+
+```{r}
+#| code-fold: show
+#| eval: FALSE
+# get fcs counts from each file for all populations:
+
+FCS_counts = gs_pop_get_count_fast(CFC_GatingSet)
+
+head(FCS_counts)
+
+FCS_counts$Population = basename(FCS_counts$Population)
+
+head(FCS_counts)
+
+# plot the FCS counts for all populations inside FCS files:
+
+Plot = ggplot(FCS_counts, aes(x = Population, y = Count, color = name)) +
+  geom_point(size = 4) +
+  labs(
+    title = "Cell Counts by Gate",
+    x = "Population",
+    y = "Count",
+    color = "Sample"
+  ) +
+  theme_bw(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    legend.position = "bottom",
+    legend.text = element_text(size = 8),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+
+Plot
+
+plotly::ggplotly(Plot)
+```
+
+
+![](/course/10_Downsampling/homeworks/alexandragabrielaferreira/images/problem1_countsplot.png)
+
+From the plot we can see the highest number of GFP+ cells is from a single file and is slightly higher than 20K events.
+
+
+We can use the downsampling function created in the lesson to export the files based on GFP+ cells by passing a number higher than 20K events:
+
+
+
+```{r}
+#| code-fold: FALSE
+#| eval: FALSE
+
+# bringing Downsampling function into the environment:
+path_functions = ("d:/Gabriela/Documents/R")
+
+downsampling_path = list.files(path_functions, pattern="Downsampling", full.names=TRUE)
+downsampling_path
+
+source(downsampling_path)
+
+# using downsampling function to create fcs inside the homework data directory:
+
+file_path = file.path("homeworkdata")
+
+purrr::walk(.x=CFC_GatingSet, gate="GFP+", .f=Downsampling, DownsampleCount=35000, addon="onlyGFPpos", returnType="fcs", StorageLocation = file_path)
+```
+
+![](/course/10_Downsampling/homeworks/alexandragabrielaferreira/images/problem1_downsamplingransuccessfully.PNG)
+
+I asked ChatGPT how could I import the downsampling.R function into my environment. 
+After that, I had a couple more errors related with some changes I did during the practice but after fixing those I arrived to successfully exported fcs files:
+
+
+![](/course/10_Downsampling/homeworks/alexandragabrielaferreira/images/problem1_exportedfiles.PNG)
+
+
+Let's load one of the files in floreada an see how it looks like:
+
+![](/course/10_Downsampling/homeworks/alexandragabrielaferreira/images/problem1_floreadascreenprint.PNG)
+
+Important to note, these files need manual compensation.
+
+
+
+# Problem 2
+
+"In the example for Downsampling() we only changed one keyword (GUID), after substituting in our desired addon right before the .fcs. Since keyword use might vary by manufacturer, create a couple additional arguments for Downsampling() that allow you to change out the values for some additional keywords."
+
+
+## Solution
+
+Adding a concatenation date as a keyword to the files created:
+
+
+```{r}
+#| code-fold: show
+#| eval: FALSE
+
+#' This function downsamples from a designated gate to our desired number
+#' of cells, returning as a new .fcs file
+#' 
+#' @param x A GatingSet object, typically iterated in.
+#' 
+#' @param gate The gate from which to retrieve cell counts from 
+#' 
+#' @param inverse Whether to revert values back to their
+#' original untransformed values before export as an .fcs file, default
+#' is set to TRUE
+#' 
+#' @param DownsampleCount The desired number of cells to downsample from
+#' each gated population. If value is less than 1, subsets out the 
+#' equivalent proportion from that specimen
+#' 
+#' @param addon An additional character value to add before .fcs in the GUID
+#' keyword to tell the downsampled file apart from the original. 
+#' 
+#' @param StorageLocation A file.path to the folder you want to store the new downsampled
+#' 
+#' fcs file to. Default NULL results in .fcs file being stored in current working directory
+#' 
+#' @param returnType Whether to return as a "fcs" file (default), or "flowFrame" or "data.frame"
+#' 
+#' 
+#' @param Date adds a keyword with the concatenation date, preferably YYMMDD
+#' 
+#' 
+Downsampling_1 <- function(x, gate, inverse=TRUE, DownsampleCount,
+  addon, StorageLocation=NULL, returnType="fcs", Date){
+
+
+EventsInTheGate = gs_pop_get_data(x, gate, inverse.transform = inverse)
+  Exprs_data = exprs(EventsInTheGate[[1]])
+  Exprs_data_frame = as.data.frame(Exprs_data, check.names = FALSE)
+
+  if (DownsampleCount < 1){
+    count = nrow(EventsInTheGate) # Original Count
+    count = as.numeric(count) #Sanity Check on Value Type
+    count = count*DownsampleCount # Target Cells
+    count = round(count, 0) #rounded without decimals
+    DownsampleCount = count # Over-writting DownsampleCount used for downsampling
+  }
+
+  downsample_data_frame = slice_sample(Exprs_data_frame, n = DownsampleCount, replace = FALSE) 
+  
+  downsample_matrix = as.matrix(downsample_data_frame)
+
+  flowFrame = EventsInTheGate[[1, returnType="flowFrame"]]
+  Original_parameters = parameters(flowFrame)
+  Original_keywords = keyword(flowFrame)
+
+  original_name = Original_keywords$GUID #gets the original name from GUID
+
+  updated_name = paste0("_", addon, ".fcs") # adds between addon between _ and .fcs
+
+  updated_GUID = sub(".fcs", updated_name, original_name) 
+  
+  #Switching out .fcs for Updated Name via the sub function
+  Original_keywords$GUID = updated_GUID # OVERWRITING THE original keyword with the new one
+
+  #adding a new keyword to the keyword list:
+
+  new_keyword = list(ConcatDate = Date)
+
+  Original_keywords = c(Original_keywords, new_keyword)
+  
+  
+  new_fcs = new("flowFrame", exprs=downsample_matrix, parameters=Original_parameters, description=Original_keywords)
+
+  if (is.null(StorageLocation)){
+    StorageLocation <- getwd()}
+
+  StorageLocation = file.path(StorageLocation, updated_GUID)
+
+
+if (returnType == "fcs"){
+    write.FCS(new_fcs, filename = StorageLocation, delimiter="#") # Write out .fcs file inside the storage location provided
+  } else if (returnType == "data.frame"){
+    return(downsample_data_frame) #Return data.frame without metadata changes (no keywords or parameters)
+  } else {
+    return(new_fcs) #All other criterias return a flowFrame with metadata
+    }
+}
+```
+
+
+let's see if it works in a gatingset with three files:
+
+
+```{r}
+#| eval: FALSE 
+
+#get the folder path where the files are:
+file_paths = file.path("data")
+
+#get the fcs files full paths, hence full.names = TRUE
+fcs_files = list.files(file_paths, pattern="Tcells.fcs", full.names=TRUE)
+files = c(fcs_files[1], fcs_files[4], fcs_files[7])
+
+
+#load the files into a cytoset:
+SFC_cytoset = load_cytoset_from_fcs(files, truncate_max_range = FALSE, transformation = FALSE)
+
+#load the cytoset into a gatingset:
+SFC_GatingSet = GatingSet(SFC_cytoset)
+
+# extract the column names which are the parameters inside the gating set
+SFC_Parameters = colnames(SFC_GatingSet)
+
+# remove scatters and time parameters from the parameters column:
+FluorophoresOnly = SFC_Parameters[!stringr::str_detect(SFC_Parameters, "FSC|SSC|Time")]
+
+
+#create the bioexponential transformation
+Biexponential = flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=2, widthBasis=-500)
+
+# attribute the bioexponential transformation to the fluorophores of interest (in this case all)
+MyBiexTransform = transformerList(FluorophoresOnly, Biexponential)
+
+
+# apply the transformation to the gating set
+transform(SFC_GatingSet, MyBiexTransform)
+
+#  Gating strategy:
+
+
+GatingTable = tibble::tribble(
+  ~filterId,    ~dims,                          ~subset,      
+  "singlets",   list("FSC-A", "FSC-H"),          "root",      
+  "live",       list("FSC-A", "Zombie NIR-A"),   "singlets",  
+  "Tcells",     list("CD3", "CD45"),             "live",     
+  "CD4+",       list("CD8", "CD4"),              "Tcells",   
+  "CD8+",       list("CD8", "CD4"),              "Tcells",   
+  "DN",         list("CD8", "CD4"),              "Tcells",  
+)
+
+
+#apply the gating strategy using gs_apply_gating_strategy:
+
+gs_apply_gating_strategy(SFC_GatingSet, gating_strategy = GatingTable)
+
+
+#look at the overall structure of the gating strategy:
+
+plot(SFC_GatingSet)
+
+ggcyto::autoplot(SFC_GatingSet[[1]]) + theme_bw()
+```
+
+
+So after having the gating set ready I can downsample the files into CD8+ only:
+
+
+
+```{r}
+#| code-fold: show
+#| eval: FALSE
+
+
+purrr::walk(.x=SFC_GatingSet, gate="CD8+", .f=Downsampling_1, DownsampleCount=2500, addon="onlyCD8", returnType="fcs", Date= 260723, StorageLocation = file_path)
+```
+
+
+![](/course/10_Downsampling/homeworks/alexandragabrielaferreira/images/problem2_newfiles.PNG)
+
+New downsampled files were added to the path. Now I need to confirm the keyword was added to the files:
+
+```{r}
+#| code-fold: show
+#| eval: FALSE
+
+# get or set working directory:
+
+getwd()
+
+file_path = file.path("homeworkdata")
+
+#list files:
+
+fcs_files = list.files(file_path, pattern="onlyCD8", full.names=TRUE)
+fcs_files
+
+
+firstfile = fcs_files[1]
+firstfile
+read.FCS(filename=firstfile)
+flowFrame = read.FCS(filename=firstfile, transformation = FALSE, truncate_max_range = FALSE)
+
+Original_keywords = keyword(flowFrame)
+
+Original_keywords
+```
+
+![](/course/10_Downsampling/homeworks/alexandragabrielaferreira/images/problem2_addedkeyword.PNG)
+
+we can see the added keyword in the new files.
+
+
+# Problem 3
+
+"Trickier - After concatenating out an .fcs file for a cell subset of your choice, reload it back into R, extract out both the exprs matrix, and the description list. Using the keywords that got added, figure out a way using dplyr to revert the numeric keys (denoted by “_key”) in the exprs matrix back to their original character values as recorded in the keywords."
+
+### Solution
+
+To be continued...
+
+
