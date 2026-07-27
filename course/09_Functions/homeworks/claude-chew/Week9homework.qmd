@@ -28,21 +28,29 @@ Using the initial framework for the CellConcentration function, retrieve several
 :::
 
 ```{r}
+# Load Libraries
 library(flowWorkspace)
 library(flowGate)
 library(ggplot2)
 library(ggcyto)
 library(dplyr)
 library(purrr)
+```
 
-# StorageLocation <- file.path("course", "09_Functions", "data") # Interactive path
+```{r}
+# Set Storage Folder, file paths
 StorageLocation <- file.path("data") # Quarto Rendering path
-
 fcs_files <- list.files(StorageLocation, pattern=".fcs", full.names=TRUE)
+```
 
+```{r}
+# Create Gating Set
 MyCytoset <- load_cytoset_from_fcs(fcs_files, transformation=FALSE, truncate_max_range=FALSE)
 MyGatingSet <- GatingSet(MyCytoset)
+```
 
+```{r}
+# Apply Biexponential Transformation to the Data and check that it makes sense
 MainDetectorsOnly <- c("V3-A", "B4-A", "R1-A")
 
 Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
@@ -58,7 +66,10 @@ ggcyto(MyGatingSet[[1]], subset="root",
 
 ggcyto(MyGatingSet[[1]], subset="root",
  aes(x="R1-A", y="B4-A")) + geom_hex(bins=100)
+```
 
+```{r}
+# Create Gating Table
 GatingTable <- tibble::tribble(
   ~filterId,    ~dims,                          ~subset,           
   "CD45",       list("B4-A", "SSC-A"),            "root",     
@@ -67,30 +78,27 @@ GatingTable <- tibble::tribble(
   "TandNKcells",  list("V3-A", "SSC-A"),            "CD45",
 )
 
+# Create and apply gates
 flowGate::gs_apply_gating_strategy(MyGatingSet, gating_strategy = GatingTable)
 plot(MyGatingSet)
 
 pData(MyGatingSet)$name
+```
 
-purrr::map(.x=MyGatingSet, .f=CellConcentration)
 
-CellConcentration <- function(x){
-    keyword(x)
-}
+```{r}
 
-KeywordList <- purrr::map(.x=MyGatingSet[1], .f=CellConcentration)
-head(KeywordList[[1]],10000)
+# Create Functions
 
 CellConcentration <- function(x, subset, dilutionMultiplier){
-    Date <- keyword(x)$`$DATE` # Day-Month-Year
+    Date <- keyword(x)$`$DATE`
     InstrumentSerial <- keyword(x)$`$CYTSN`
     TotalFileEvents <- keyword(x)$`$TOT`
     Specimen <- keyword(x)$GUID
     StartTime <- keyword(x)$`$BTIM`
     EndTime <- keyword(x)$`$ETIM`
-    CD45 Scaling <- keyword(x)$`$P43DISPLAY`
-    CD45 Gain Setting <- keyword(x)$`$P43V`
-    CD45 Bit Depth <- keyword(x)$`$P43B`
+    CD45_GainSetting <- keyword(x)$`$P43V`
+    CD45_BitDepth <- keyword(x)$`$P43B`
 
     Volume <- keyword(x)$`$VOL`
     Volume <- as.numeric(Volume)
@@ -101,7 +109,8 @@ CellConcentration <- function(x, subset, dilutionMultiplier){
     Concentration <- (Cells*1000)/Volume
     Concentration <- Concentration*dilutionMultiplier
 
-    Data <- data.frame(
+
+Data <- data.frame(
         Date=Date,
         InstrumentSerial=InstrumentSerial,
         Specimen=Specimen,
@@ -109,7 +118,102 @@ CellConcentration <- function(x, subset, dilutionMultiplier){
         EndTime=EndTime,
         Volume=Volume, 
         Cells=Cells,
-        Concentration=Concentration
+        Concentration=Concentration,
+        CD45_GainSetting=CD45_GainSetting,
+        CD45_BitDepth=CD45_BitDepth,
+        TotalFileEvents=TotalFileEvents
+        
+        )
+
+    return(Data)
+
+
+}
+
+purrr::map(.x=MyGatingSet[1], .f=CellConcentration, subset="root", dilutionMultiplier=1)
+
+KeywordList <- purrr::map(.x=MyGatingSet[1], .f=CellConcentration, subset="root", dilutionMultiplier=1)
+head(KeywordList[[1]],10000)
+
+# Create a single data.frame containing all samples
+KeywordTable <- purrr::map_dfr(
+    MyGatingSet,
+    CellConcentration,
+    subset = "root",
+    dilutionMultiplier =1
+)
+
+KeywordTable
+
+# Export data.frame as CSV file
+write.csv(KeywordTable, file = file.path("homeworks","Problem2.csv"),row.names=FALSE)
+```
+
+
+:::{.callout-tip title="Problem 3"}
+For CellConcentration, we retrieved both start and end time. Look up information on `lubridate` package, convert these times to a time-style format, and from acquired volume derive uL/min at which each .fcs file was acquired. Did this vary at all across days?
+:::
+
+```{r}
+#install.packages("lubridate")
+
+library(lubridate)
+
+CellConcentration <- function(x, subset, dilutionMultiplier){
+    Date <- keyword(x)$`$DATE`
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+    CD45_GainSetting <- keyword(x)$`$P43V`
+    CD45_BitDepth <- keyword(x)$`$P43B`
+
+    Volume <- keyword(x)$`$VOL`
+    Volume <- as.numeric(Volume)
+
+    EventsInTheGate <- gs_pop_get_data(x, subset)
+    Cells <- nrow(EventsInTheGate)[[1]] #[[1]] since the output is in a list
+
+    Concentration <- (Cells*1000)/Volume
+    Concentration <- Concentration*dilutionMultiplier
+
+    StartDateTime <- strptime(
+        paste(Date, StartTime),
+        format = "%d-%b-%Y %H:%M:%OS"
+    )
+
+    EndDateTime <- strptime(
+        paste(Date, EndTime),
+        format = "%d-%b-%Y %H:%M:%OS"
+    )
+
+    AcquisitionMinutes <- as.numeric(
+        difftime(
+            EndDateTime,
+            StartDateTime,
+            units = "mins"
+        )
+    )
+
+    AcquisitionRate <- AcquisitionMinutes/Volume
+
+
+Data <- data.frame(
+        Date=Date,
+        InstrumentSerial=InstrumentSerial,
+        Specimen=Specimen,
+        StartTime=StartTime,
+        EndTime=EndTime,
+        Volume=Volume, 
+        Cells=Cells,
+        Concentration=Concentration,
+        CD45_GainSetting=CD45_GainSetting,
+        CD45_BitDepth=CD45_BitDepth,
+        TotalFileEvents=TotalFileEvents,
+        AcquisitionMinutes = AcquisitionMinutes,
+        AcquisitionRate=AcquisitionRate
+
         
         )
 
@@ -117,9 +221,15 @@ CellConcentration <- function(x, subset, dilutionMultiplier){
 }
 
 
+KeywordTable <- purrr::map_dfr(
+    MyGatingSet,
+    CellConcentration,
+    subset = "root",
+    dilutionMultiplier =1
+)
+
+KeywordTable
 ```
 
-
-:::{.callout-tip title="Problem 3"}
-For CellConcentration, we retrieved both start and end time. Look up information on `lubridate` package, convert these times to a time-style format, and from acquired volume derrive uL/min at which each .fcs file was acquired. Did this vary at all across days?
-:::
+The acquisition rate in ul/min was very stable between acquisition dates.
+![](/homeworks/Problem3.png)
