@@ -1,0 +1,15 @@
+{
+  "hash": "dc6c747234aa1382b32a00cd5a8737eb",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Downsampling\"\nauthor: \"David Rach\"\n\nformat: html\n---\n\n# Background\n\nDue to trying to keep the overall file size down, I am downsampling to 100 events. For anyone interested in how I did this, this Quarto Markdown Document contains the code needed to repeat the process. \n\n# Getting Started\n\nAttach the required packages via the `library()` function\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(purrr) # CRAN\nlibrary(flowWorkspace) # Bioconductor\nlibrary(Luciernaga) #DavidRach/Luciernaga\n```\n:::\n\n\n## Specify file.path and identify files\n\nDue to the counts being conducter on two separate instruments, the number of columns differs, so they will need to be loaded into separate GatingSet objects. \n\n\n::: {.cell}\n\n```{.r .cell-code}\nStorageLocation <- file.path(\"course\", \"02_FilePaths\", \"data\")\nExisting <- list.files(StorageLocation, pattern=\".fcs\", full.names=TRUE)\nList1 <- Existing[1:2] # 3L Aurora\nList2 <- Existing[3:8] # 4L Aurora\n```\n:::\n\n\n## Load .fcs files into a GatingSet\n\nLoad in files to their respective GatingSet objects\n\n\n::: {.cell}\n\n```{.r .cell-code}\ncs1 <- load_cytoset_from_fcs(List1, truncate_max_range = FALSE, transformation = FALSE)\ngs1 <- GatingSet(cs1)\n\ncs2 <- load_cytoset_from_fcs(List2, truncate_max_range = FALSE, transformation = FALSE)\ngs2 <- GatingSet(cs2)\n```\n:::\n\n\n# Downsample each sample and pass back to the folder\n\nFrom here, each file in the Gating set is passed to `Utility_Downsample()`, subsampling for 100 events. In this case, subsets argument is set to \"root\", so all events. If we had implemented gates, we could have selected a particular population from which to downsample. \n\n\n::: {.cell}\n\n```{.r .cell-code}\nwalk(.x=gs1, .f=Luciernaga::Utility_Downsample,\n sample.name=c(\"$PROJ\", \"GROUPNAME\", \"TUBENAME\"),\n export=TRUE, outpath=StorageLocation,\n  subsample=100, subsets=\"root\", inverse.transform=FALSE)\n\nwalk(.x=gs2, .f=Luciernaga::Utility_Downsample,\n sample.name=c(\"$PROJ\", \"GROUPNAME\", \"TUBENAME\"),\n export=TRUE, outpath=StorageLocation,\n  subsample=100, subsets=\"root\", inverse.transform=FALSE)\n```\n:::\n\n\n# Conclusion\n\nIn the end, we went from having files that were the following size\n\n![](images/OG_Size.png)\n\nTo ones that were like this:\n\n![](images/Downsampled.png)\n\nWe will look more at how the Utility_Downsample is constructed during [Week #10](/Schedule.qmd#downsampling-and-concatenation)\n\n\n::: {.cell}\n\n```{.r .cell-code}\nsessionInfo()\n```\n:::\n\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

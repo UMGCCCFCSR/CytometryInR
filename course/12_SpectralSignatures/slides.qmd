@@ -1,0 +1,2963 @@
+---
+title: "12 - Spectral Signatures"
+author: "David Rach"
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    incremental: true
+page-layout: full
+execute:
+  echo: true
+  warning: false
+  message: true
+---
+
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+For the YouTube livestream recording, see [here](https://www.youtube.com/live/ArMYM1Gr6DI?si=Tp55c74vbKz0WLK3&t=192)
+
+For screen-shot slides, click [here](/course/12_SpectralSignatures/slides.qmd)
+
+<br>
+
+---
+
+# Background
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Welcome back to the 12th week of the [Cytometry in R](/Schedule.qmd) course. For the next three session, we will be primarily focusing on topics related to spectral flow cytometry (SFC) (although they are also somewhat applicable to conventional flow cytometry (CFC)). In the process, we will continue to grow the functional programming skills we have been gradually accumulating through this middle section of the course. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When it comes to SFC, our ability to infer the presence or absence for particular fluorophores (as well as relative abundance) present on the surface of individual full-stained cells is directly tied to our ability to extract and provide reference fluorescent signatures from our unmixing controls (both single-color and unstained) that accurately match those same signatures as they are seen on the full-stained sample. These extracted fluorescent signatures are combined in the form of a matrix, which is referenced at the time of unmixing. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Over these next three sessions, my goal is that everyone gains hands-on-familiarity with the indiviudal steps in this process, so that what may currently seem to many as a black box is demystified. Additionally, the toolsets you'll develop may help you find solutions and answer problems that we as a field are still grappling with. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+While the focus of the primary course material is on providing context while building out skillsets, the [bonus content](/course/SDY3080/SetUp.qmd) accompanying these sessions is more geared towards showing how to implement the same topics as part of an everyday workflow. 
+:::
+:::
+
+---
+
+# Walk Through
+
+:::{.callout-important title="Housekeeping"}
+As we do [every week](/course/02_FilePaths/index.qmd), on GitHub, [sync](/course/00_Homeworks/index.qmd#sync-your-fork) your forked version of the CytometryInR course to bring in the most recent updates. Then within Positron, [pull](/course/00_Homeworks/index.qmd#pull-to-local) in those changes to your local computer. 
+
+For YouTube walkthrough of this process, click [here](https://www.youtube.com/live/Zfctacqpe90?si=a7Ad61kj6_UDNkGw&t=32)
+
+After [setting up](/course/00_Git/index.qmd#new-folder-from-template) a "Week12" project folder, copy over the contents of "course/12_SpectralSignatures/data" to that folder. This will hopefully prevent merge issues next week when attempting to pull in new course material. Once you have your new project folder organized, remember to [commit](/course/00_Git/index.qmd#push) and push your changes to GitHub to maintain remote version control. 
+
+If you encounter issues syncing due to the Take-Home Problem merge conflict, see this [walkthrough](https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/). The updated homework submission protocol can be found [here](https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/UpdatedPullRequest)
+:::
+
+---
+
+## Dataset
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For this walk-through, we will be using the [SDY3080](https://immport.org/shared/study/SDY3080/summary) dataset from the NIH's [ImmPort](https://www.immport.org/) repository. These .fcs files are the original data for our 2025 [Cord Blood Innate-Like T cell](https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2025.1628145/full) paper, and is currently one of the few datasets on ImmPort that includes raw (i.e. not yet unmixed) .fcs files and the unmixing controls (single color and unstained), allowing for re-unmixing. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+These .fcs files were acquired on a [5-laser Cytek Aurora](https://umgccfcss.github.io/Aurora5L/) (with 16 UV detectors, 16 Violet Detectors, 14 Blue Detectors, 10 Yellow-Green Detectors, and 8 Red detectors). Since raw .fcs files are substantially larger than their unmixed counterparts (due to the extra columns in the `exprs` matrix and all the associated [metadata](/course/10_Downsampling/concatenate.qmd) in `parameters` and `keyword` slots). Given GitHub file sharing limitations, after implementing clean-up gates, leftover events were downsampled for 5000 beads or 10000 cells as detailed in the [bonus content](/course/SDY3080/SetUp.qmd). 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For the .fcs files being used today, the unmixing controls consist of full sets of both bead and cell single-color controls. For the cell controls, these were composed of leftover Cord Blood Mononuclear Cells (CBMCs) or Peripheral Blood Mononuclear cells (PBMCs). There are additionally individual specimen unstained controls based on individual treatment conditions for background removal, and to isolate autofluorescence signatures for use in unmixing. Additional details can be found [here](https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2025.1628145/full#s2). 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If you want to follow along with your own spectral flow cytometry dataset, you can!!! In addition to the pre-processing steps we follow below, you may also want to check out the [Bonus Material](/course/SDY3080/ImmPort.qmd) for additional details that have been abbreviated. One thing to be aware of, some of the reference control checking/visualization functions from `Luciernaga` haven't been fully validated for non-Cytek instruments (as our core only has Cytek instruments, so no data to play around with during the original function creation). Please open a [Discussion](https://github.com/UMGCCCFCSR/CytometryInR/discussions/categories/q-a) if you encounter issues/errors for something you suspect might be instrument keyword/column name related, as in most cases these are relatively simple fixes to implement. 
+:::
+:::
+
+---
+
+
+## Updating flowGate and Luciernaga
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Over the "early summer" break, taking advantage of the open-source nature of the projects, I tackled some issues for both the [flowGate](https://github.com/NKInstinct/flowGate/commits/master/) and [Luciernaga](https://github.com/DavidRach/Luciernaga/commits/main/) R packages, providing some additional useful functions to make the implementation of this walk-through easier. To take advantage of these changes, you will need to make sure to update both packages before continuing.
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The easiest way to accomplish this would be to first uninstall these packages via the `remove.packages()` function
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+remove.packages("flowGate")
+remove.packages("Luciernaga")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+At which point, they can be reinstalled via the `remotes` package `install_github()` function. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+library(remotes)
+install_github("NKInstinct/flowGate") # Alternatively via BiocManager::install for the "developmental" branch
+install_github("DavidRach/Luciernaga")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+At which point, we can check via `packageVersion()` to ensure we have at least the following versions installed. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+packageVersion("flowGate") # Needs to be 1.31.1 or above
+packageVersion("Luciernaga") # Needs to be 0.99.10 or above
+```
+
+:::
+
+---
+
+## Planning
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As always with coding, it's worthwhile to sketch out a brief plan of what you are trying to accomplish, breaking the overall task into smaller steps that can be tackled sequentially. It's also worth thinking about what individual components are involved in the process when you are unmixing using commercial software as a point of comparison. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Since we are working in R with the .fcs files retrieved from ImmPort, we will need to load them into a [GatingSet](/course/05_GatingSets/index.qmd) object similar to what we have been doing throughout the course. Likewise, since dead cells, debris, doublets may have different autofluorescence (or be especially prone to non-specific staining), we will likely need to implement some gates using `flowGate` to isolate just the cell or bead population we are interested in. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Once these initial clean-up gates are implemented, we will need to draw a gate around events "positive" for a given fluorophore, ideally those that are staining as bright or brighter in terms of MFI (meaning that on the x-axis of our plot we will need to correctly select the corresponding peak detector). 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Once this is done, we can retrieve the `exprs()` matrix for those cells within the designated gate. We can then take the median/mean for each detector, followed by subtraction of the background to derive the values corresponding to the fluorophore. These are then typically normalized (scaled) so that all values range from 0 to 1. At this point, we will then need to visualize the normalized fluorescent signature to make sure we did everything correctly (or at least is reasonably accurate vs. published references). 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+At which point, we can repeat the process for.... however many fluorophores are in the SFC panel ... (don't worry, we will take advantage of somebody else's functions to make this part less painful for those with medium or large panels). 
+:::
+:::
+
+---
+
+## Set Up
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Alright, let's go ahead and get our .fcs files into their GatingSet(s) and get some clean-up gates implemented. Fortunately for us, we can repurpose code that we have run previously, just repurposing it for this particular walk-through. 
+:::
+:::
+
+---
+
+### Loading R packages
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets go ahead attach the R packages that we will need today to our local environment via the `library()` call, which makes the functions that each package contains available for our later use.
+:::
+:::
+
+::: {.fragment}
+```{r}
+library(flowWorkspace)
+library(flowGate)
+library(Luciernaga)
+library(dplyr)
+library(stringr)
+library(ggplot2)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next, lets create the variable/object containing the file.path to both today's dataset, as well as an output storage location where we can store any intermediate outputs or plots. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+StorageLocation <- file.path("data") # For Quarto Render
+# StorageLocation <- file.path("course", "12_SpectralSignatures", "data")
+
+OutputLocation <- file.path("outputs") # For Quarto Render
+# OutputLocation <- file.path("course", "12_SpectralSignatures", "outputs")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With the file.path designated, lets check and see what .fcs files are currently present in our folder. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+fcs_files <- list.files(StorageLocation, pattern=".fcs", full.names=TRUE)
+fcs_files
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Looking at the file names, we need to figure out a way to separate the bead single-color controls from the cell single-color controls and cell unstained controls. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we glance through, it appears that the bead unmixing controls all share the "ILT_00" and "(Beads)" character strings in their file names, while all cell unmixing controls contain "ILT_01" and "(Cells)" character strings in their file name.
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Additionally, there are 3 cell unstained controls that are designated by the presence of "_Unstained".
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Using the `stringr` package, we can utilize `str_detect()` function within the square brackets to subset the original [vector list](/course/02_FilePaths/index.qmd#stringr) just for those files that match the search pattern (i.e. those returning as TRUE). In combination, this results in separate vector lists for the different unmixing control types
+:::
+:::
+
+::: {.fragment}
+```{r}
+Bead_FCS <- fcs_files[stringr::str_detect(fcs_files, "Bead")]
+Bead_FCS
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Cell_FCS <- fcs_files[stringr::str_detect(fcs_files, "Cells")]
+Cell_FCS
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+UnstainedCell_FCS <- fcs_files[stringr::str_detect(fcs_files, "_Unstained")]
+UnstainedCell_FCS
+```
+
+:::
+
+---
+
+### Gating Sets
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Now that we have separated out the individual .fcs files based on type of unmixing control, lets proceed to load each into their own [GatingSets](/course/05_GatingSets/index.qmd). This will make our lives a little bit easier in the long run, as we will only be working with 1 type of unmixing control per GatingSet when it comes time to iterate. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Beads_cytoset <- load_cytoset_from_fcs(Bead_FCS, truncate_max_range=FALSE, transformation=FALSE)
+BeadsSC_GatingSet <- GatingSet(Beads_cytoset)
+
+
+Cells_cytoset <- load_cytoset_from_fcs(Cell_FCS, truncate_max_range=FALSE, transformation=FALSE)
+CellsSC_GatingSet <- GatingSet(Cells_cytoset)
+
+UnstainedCells_cytoset <- load_cytoset_from_fcs(UnstainedCell_FCS, truncate_max_range=FALSE, transformation=FALSE)
+CellsUnstained_GatingSet <- GatingSet(UnstainedCells_cytoset)
+```
+
+:::
+
+---
+
+### Should we Transform?
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If you recall previous weeks, you may recall that normally at this point of the pre-processing, we [transform](/course/07_Transformations/index.qmd) our fluorescent detectors/parameters. Since our ultimate goal is to extract spectral fluorescent signature values from our raw .fcs files, you may be wondering if we need to transform at all (given that the transformation will change the underlying values, which depending on the parameters/arguments given may bias the shape of the signature). This intuition is a good one, as this is something we indeed want to avoid. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+However, between our current point (assembled GatingSet) and then (extracting `exprs`), we still need to create a positive gate on the events that are bright or brighter for the given fluorophore's peak detector. Since fluorescent values tend to be spread out on a biexponential scale, doing this without transforming can be challenging. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Consequently, it's easier for our workflow if we go ahead and transform first, gate, and then remember to set the "inverse.transform = TRUE" argument at the time of cytoset/exprs extraction to ensure we are getting the original raw values. Lets therefore go ahead and apply transformations for our fluorescent detectors channels. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+# Identify biexponential fluorescent detectors, exclude linear ones like FSC
+
+SFC_Parameters <- colnames(CellsUnstained_GatingSet)
+FluorophoresOnly <- SFC_Parameters[!stringr::str_detect(SFC_Parameters, "FSC|SSC|Time")]
+
+# Biexponential values that were optimal for this particular instrument/dataset, yours may vary, see Week 7!
+
+Biexponential <-  flowjo_biexp_trans(channelRange=4096, maxValue=4194304,
+  pos=5.62, neg=0, widthBasis=-1000)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+
+# Beads Single Colors
+
+transform(BeadsSC_GatingSet, MyBiexTransform)
+
+# Cells Single Colors
+
+transform(CellsSC_GatingSet, MyBiexTransform)
+
+# Cells Unstained
+
+transform(CellsUnstained_GatingSet, MyBiexTransform)
+```
+
+:::
+
+---
+
+### Clean Up Gates
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For our clean-up gates, we have a [couple methods](/course/08_WaysToGate/index.qmd) by which we can implement them. Lets go with the manual method via the `flowGate` package's Shiny app for now, which in turn will allow us to see the functionality of the [new functions](https://github.com/NKInstinct/flowGate/pull/12) that were added to it. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets set up a GatingTable template for the gates we want to create (scatter and singlets for the bead controls, singlets and scatter for the cell controls)
+:::
+:::
+
+::: {.fragment}
+```{r}
+BeadGatingTable <- tibble::tribble(
+  ~filterId,    ~dims,                          ~subset,  
+  "scatter",    list("FSC-A", "SSC-A"),      "root",     
+  "singlets",   list("FSC-A", "FSC-H"),          "scatter"
+)
+
+
+CellGatingTable <- tibble::tribble(
+  ~filterId,    ~dims,                          ~subset,      
+  "singlets",   list("FSC-A", "FSC-H"),          "root",  
+  "scatter",    list("FSC-A", "SSC-A"),      "singlets",  
+)
+```
+
+:::
+
+---
+
+#### Beads Single Colors
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With the GatingTables defined, we can then use the `gs_apply_gating_strategy()` function and iterate through the gate drawing, similar to what we have already encountered back during [Week 08](/course/08_WaysToGate/index.qmd)
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+flowGate::gs_apply_gating_strategy(BeadsSC_GatingSet, gating_strategy = BeadGatingTable)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Once the ShinyApp launches, select polygon, draw your gate based on scatter, and click Done. If you mess us, hit reset. Remember, these particular example files were "pre-cleaned" and "downsampled", so `ggplot2` has a tendency to zoom in. 
+:::
+:::
+
+---
+
+![](images/01_BeadsScatter.png)
+
+---
+
+And next, draw your scatter gate. 
+
+---
+
+![](images/02_BeadsSinglets.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Now that these initial gates have been applied to our GatingSet, we need to evaluate whether they were applied correctly for each individual specimen. In the old version of `flowGate`, this was a one-size-fits-all, and if it was off, we would need to recreate the gate across the board to try to account for this. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Since the ability to change the gate position for an individual specimen was already [present](https://github.com/RGLab/flowWorkspace/blob/510b28a41fccfd6f637ae940bd056aaf51eba26e/R/setGate_Methods.R#L84) in the `flowWorkspace` package, the [new](https://github.com/NKInstinct/flowGate/pull/12/changes) `gs_apply_gate_check()` function  in `flowGate` takes advantage of this functionality by iterating through individual specimens in a GatingSet, allowing adjustments to be made for that specific gate on an individual basis.
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+gs_apply_gate_check(gs=BeadsSC_GatingSet, gate="scatter")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If for a given specimen the gate is good as is, just select "Done". 
+:::
+:::
+
+---
+
+![](images/03_FineAsIs.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If it needs changing, draw a better polygon gate, and then select "Done". Here are a couple examples where different adjustments were made. 
+:::
+:::
+
+---
+
+![](images/04_Adjusted.png)
+
+---
+
+![](images/05_MajorAdjust.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With this first gate ("scatter") now checked across all specimens, we just need to repeat the process for the other applied gate ("singlets"). 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+gs_apply_gate_check(gs=BeadsSC_GatingSet, gate="singlets")
+```
+
+:::
+
+---
+
+![](images/06_SingletsGood.png)
+
+---
+
+![](images/07_SingletsAdjust.png)
+
+---
+
+![](images/07_SingletsMajorAdjust.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And with that, the Bead Single-Color controls have been properly gated. On to the next unmixing control type!
+:::
+:::
+
+---
+
+
+#### Cells Single Colors
+
+::: {.fragment}
+::: {.callout-tip title="."}
+At this point, we can repeat the process for our Cell Single Color controls, first applying initial gates to the GatingSet via `gs_apply_gating_strategy()`
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+flowGate::gs_apply_gating_strategy(CellsSC_GatingSet, gating_strategy = CellGatingTable)
+```
+
+:::
+
+---
+
+![](images/09_CellsSinglets.png)
+
+---
+
+![](images/10_CellsScatter.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And then checking/editing the individual gates across individual specimens via `gs_apply_gate_check()`. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+gs_apply_gate_check(gs=CellsSC_GatingSet, gate="singlets")
+```
+
+:::
+
+---
+
+![](images/11_CellsSingletsMajor.png)
+
+---
+
+![](images/12_CellSingletsMajor2.png)
+
+---
+
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+gs_apply_gate_check(gs=CellsSC_GatingSet, gate="scatter")
+```
+
+:::
+
+---
+
+![](images/13_CellsScatterAdjust.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And with that, the cell single-color controls are also now correctly gated for each gate at the individual level. 
+:::
+:::
+
+---
+
+#### Cells Unstained
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And last (but definitely not least), lets repeat the process for our cell unstained controls. Lets apply gates via `gs_apply_gating_strategy()`
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+flowGate::gs_apply_gating_strategy(CellsUnstained_GatingSet, gating_strategy = CellGatingTable)
+```
+
+:::
+
+---
+
+![](images/13_UnstainedSinglets.png)
+
+---
+
+![](images/14_UnstainedScatter.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And check the positioning of the individual gates via `gs_apply_gate_check()`, modifying as needed. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+gs_apply_gate_check(gs=CellsUnstained_GatingSet, gate="singlets")
+```
+
+:::
+
+---
+
+![](images/15_UnstainedSingletsAdjust.png)
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+gs_apply_gate_check(gs=CellsUnstained_GatingSet, gate="scatter")
+```
+
+:::
+
+---
+
+![](images/16_UnstainedScatterAdjust.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And hurray! All gates have been applied correctly for all our unmixing controls across their respective GatingSets. 
+:::
+:::
+
+---
+
+### Metadata
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With the clean-up gates implemented, lets wrap up the set up process by adding some additional metadata columns. This will make subsetting the GatingSet for individual unmixing controls easier to implement later today. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Currently, the only column in metadata is the name column, containing the long filename we saw in the file paths above. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Bead_FCS[5]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+However, within this filename we also have information related to the antigen, fluorophore, and control type (beads or cells). Since [Regular Expressions](https://en.wikipedia.org/wiki/Regular_expression) (RegEx) is not generally people's forte, we can ask an LLM to provide us the correct syntax (see example within `str_extract()` next to "name") needed to extract these bits of information from the current filenames, and integrate this as new columns in concert with the `dplyr` packages `mutate()` and `case_when()` functions, as well as some of string clean-up functions from the `stringr` package. 
+:::
+:::
+
+---
+
+####  Beads Single Colors
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets start first with the single-color beads, and see if the LLM gave us the correct RegEx pattern, or just hallucinated garbage. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+bead_pd <- pData(BeadsSC_GatingSet)
+
+Updated_bead_pd <- bead_pd |> mutate(
+    raw = str_extract(name, "(?<=DR_)[^(]+(?=\\()"), 
+    Antigen = raw |>
+      str_trim() |>
+      str_extract("^\\S+"), 
+    Fluorophore = raw |>
+      str_trim() |>
+      str_remove("^\\S+\\s+"), 
+    Type = name |>
+      str_extract("(?<=\\()([^)]+)(?=\\))"),
+    raw = NULL
+  )
+
+Updated_bead_pd <- Updated_bead_pd |> relocate(Fluorophore, Antigen, Type, .after="name")
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+StoreHere <- file.path(OutputLocation, "InitialBeadMetadata.csv")
+write.csv(Updated_bead_pd, StoreHere, row.names=FALSE)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| include: FALSE
+StoreHere <- file.path(OutputLocation, "InitialBeadMetadata.csv")
+Updated_bead_pd <- read.csv(StoreHere, check.names=FALSE)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Updated_bead_pd |> select(Fluorophore, Antigen, Type)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+All in all, not horrid, so appears the LLM gave us the correct RegEx pattern. If not, the internet has some rather interesting [suggestions](https://www.reddit.com/r/OpenAI/comments/1lcwc4f/do_llms_work_better_if_you_threaten_them_not/) on ways to achieve better results
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+One thing to consider, especially when you are using instruments at a shared resource facility core, is that sometimes the fluorophore names as originally inputed into the instrument itself may not exactly match the names as formatted by the manufacturer. At our core, this typically is due to the original user who inputted them having added/removed a hyphen, space, etc. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Since we will be using `Luciernaga` package later for signature comparisons, it might be worthwhile switching over any of these cases to match the corresponding naming conventions for its references.  We can first identify our particular instrument's "NumberDetectors" value by checking the help file for `QC_ReferenceLibrary()`. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+?Luciernaga::QC_ReferenceLibrary #NumberDetectors argument
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next, lets grab the fluorophore names from from our panel via the intermediate metadata data.frame
+:::
+:::
+
+::: {.fragment}
+```{r}
+OurControlNames <- Updated_bead_pd |> pull(Fluorophore)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next, we can compare these against the naming convention for that instrument (denoted by NumberDetectors argument) via `Luciernaga` to see if there are fluorophores that don't make an appearance (sugggesting a naming conflict) via the base `setdiff()` function
+:::
+:::
+
+::: {.fragment}
+```{r}
+ReferenceNames <- Luciernaga:::InstrumentReferences(NumberDetectors=64) |> pull(Fluorophore) |> unique()
+setdiff(OurControlNames, ReferenceNames)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For this particular panel, it looks like two of the PE tandem dyes have different naming syntax from the cytometer vs. `Luciernaga`. We can attempt to identify their equivalents via the `QC_ReferenceLibrary()` function, which will return list of fluorophores that contain a match for a particular character string. Let's provide it with "770" to start.
+:::
+:::
+
+::: {.fragment}
+```{r}
+Vio <- Luciernaga::QC_ReferenceLibrary(FluorNameContains="770", returnPlots=TRUE, NumberDetectors=64)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Vio[[1]]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And given we are also getting back a ggplot2 object with the plotted signatures, we might as well as play around with `plotly` `ggplotly()` function to see an interactive version of the difference between the individual fluorophore reference signatures
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+plotly::ggplotly(Vio[[2]])
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this case, looks like we just need to incorporate a space between "Vio" and "770" to match what `Luciernaga` is expecting in terms of naming convention. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets follow up with checking for "Dazzle"
+:::
+:::
+
+::: {.fragment}
+```{r}
+Dazzle <- Luciernaga::QC_ReferenceLibrary(FluorNameContains="Dazzle", returnPlots=TRUE, NumberDetectors=64)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Dazzle[[1]]
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+plotly::ggplotly(Dazzle[[2]])
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And the missing space appears to be the cause for the mismatch for this fluorophore as well. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Note, this method doesn't always work, since not all fluorophore references are present in `Luciernaga` for all instruments. For example, if we tried searching "Real Red" for BD S8 (78 detectors per `QC_ReferenceLibrary()`)
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+Luciernaga::QC_ReferenceLibrary(FluorNameContains="Real Red", returnPlots=TRUE, NumberDetectors=78)
+```
+
+:::
+
+---
+
+![](images/17_RealRedError.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we exit this rabbit-hole into naming syntax, it looks like we just need to add a space to the existing metadata entry to make sure it works seemlessly with the `Luciernaga` reference lookup. The simplest way to implement this programatically would be to edit our existing data.frame using the `dplyr` `mutate()` and `case_when()` function combo. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Updated_bead_pd <- Updated_bead_pd |> 
+  mutate(Fluorophore = case_when(
+    Fluorophore == "PE-Vio770" ~ "PE-Vio 770",
+    Fluorophore == "PE-Dazzle594" ~ "PE-Dazzle 594",
+    TRUE ~ Fluorophore
+  ))
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can also tackled the "BeadUnstained" sample that ended up producing the NA values in our dataframe since its file name didn't follow the naming convention of the other .fcs files, Because of this, `stringr` didn't extract the pattern, and returned NA values. We can set Antigen to "NA_character", and Fluorophore to "BeadUnstained" for now.
+:::
+:::
+
+::: {.fragment}
+```{r}
+Updated_bead_pd <- Updated_bead_pd |> mutate(
+    Antigen = case_when(
+      str_detect(name, "BeadsUnstained") ~ NA_character_,
+      .default = Antigen
+    ),
+    
+    Fluorophore = case_when(
+      str_detect(name, "BeadsUnstained") ~ "BeadUnstained",
+      .default = Fluorophore
+    )
+  )
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And checking quickly
+:::
+:::
+
+::: {.fragment}
+```{r}
+Updated_bead_pd
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Everything looks good, so we can go ahead and swap in the metadata for our Bead GatingSet.
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+pData(BeadsSC_GatingSet) <- Updated_bead_pd
+pData(BeadsSC_GatingSet)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| echo: FALSE
+Updated_bead_pd
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With Metadata now set for our Bead Single Colors, lets quickly repeat these same steps for our Cell Single Colors. 
+:::
+:::
+
+
+---
+
+#### Cells Single Colors
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+cell_pd <- pData(CellsSC_GatingSet)
+
+Updated_cell_pd <- cell_pd |> mutate(
+    raw = str_extract(name, "(?<=DR_)[^(]+(?=\\()"), 
+    Antigen = raw |>
+      str_trim() |>
+      str_extract("^\\S+"), 
+    Fluorophore = raw |>
+      str_trim() |>
+      str_remove("^\\S+\\s+"), 
+    Type = name |>
+      str_extract("(?<=\\()([^)]+)(?=\\))"),
+    raw = NULL
+  )
+
+Updated_cell_pd <- Updated_cell_pd |> relocate(Fluorophore, Antigen, Type, .after="name")
+
+Updated_cell_pd
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+StoreHere <- file.path(OutputLocation, "InitialCellMetadata.csv")
+write.csv(Updated_cell_pd, StoreHere, row.names=FALSE)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| include: FALSE
+StoreHere <- file.path(OutputLocation, "InitialCellMetadata.csv")
+Updated_cell_pd <- read.csv(StoreHere, check.names=FALSE)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Updated_cell_pd
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Updated_cell_pd <- Updated_cell_pd |> 
+  mutate(Fluorophore = case_when(
+    Fluorophore == "PE-Vio770" ~ "PE-Vio 770",
+    Fluorophore == "PE-Dazzle594" ~ "PE-Dazzle 594",
+    TRUE ~ Fluorophore
+  ))
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Since there is no "BeadUnstained" specimen for our cell single-color controls, we don't have any NAs that need to be tackled. We can therefore skip that code chunk and go straight to swapping in the new metadata for our CellsSC_GatingSet. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+pData(CellsSC_GatingSet) <- Updated_cell_pd
+pData(CellsSC_GatingSet)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| echo: FALSE
+Updated_cell_pd
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And we are now done updating metadata for the single color GatingSets. Since the Cell Unstained GatingSet only contains 3 specimens, we can consider it as optional for metadata adjustment, so I will skip it for this particular walk-through. 
+:::
+:::
+
+---
+
+### Saving GatingSets
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With the Gating Sets created, transformations applied, cleanup gates created, and metadata updated, we are at a good pause point in the workflow, so we should save our progress. Lets save each GatingSet to its own .gs sub folder in the outputs folder, which will allow us to rapidly reload to this point later on as needed. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+BeadsSCSaveHere <- file.path(OutputLocation, "BeadsSCs_GS.gs")
+
+save_gs(BeadsSC_GatingSet, BeadsSCSaveHere)
+
+# BeadsSC_GatingSet <- load_gs(BeadsSCSaveHere )
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+SaveUpdatedCellSCHere <- file.path(OutputLocation, "CellsSC_GS.gs")
+
+save_gs(CellsSC_GatingSet, SaveUpdatedCellSCHere)
+# CellsSC_GatingSet <- load_gs(SaveUpdatedCellSCHere)
+```
+
+:::
+
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+SaveUpdatedCellUnstainedHere <- file.path(OutputLocation, "CellsUnstained_GS.gs")
+
+save_gs(CellsUnstained_GatingSet, SaveUpdatedCellUnstainedHere)
+# CellsUnstained_GatingSet <- load_gs(SaveUpdatedCellSCHere)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And with that, we are finally through Set Up, and we can move on to learning how to tackle extraction of fluorescent signatures
+:::
+:::
+
+---
+
+## Fluorescent Signatures - Averaged 
+
+### APC-Fire 810
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets start working with our CellsSC_GatingSet and CellsUnstained. If we were working from the save point above, we would load the intermediate .gs back in via the `load_gs()` function
+:::
+:::
+
+::: {.fragment}
+```{r}
+SaveUpdatedCellSCHere <- file.path(OutputLocation, "CellsSC_GS.gs")
+CellsSC_GatingSet <- load_gs(SaveUpdatedCellSCHere)
+
+SaveUpdatedCellUnstainedHere <- file.path(OutputLocation, "CellsUnstained_GS.gs")
+CellsUnstained_GatingSet <- load_gs(SaveUpdatedCellSCHere)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+plot(CellsSC_GatingSet)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For this first example, lets work with just our "APC-Fire 810" fluorophore. We can separate it from the larger GatingSet into its own GatingSet using the `subset()` function, taking advantage of the metadata to `filter()` for it from the "Fluorophore" column. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+APCFire810_GS <- subset(CellsSC_GatingSet, Fluorophore == "APC-Fire 810", realize_view == TRUE)
+
+APCFire810_GS
+```
+
+:::
+
+---
+
+### Span Gates
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Now having a smaller GatingSet with which to work with, lets create a span gate to isolate out cells that are positive for our particular fluorophore. We will need to determine the peak detector. While we can either do this via fluorophore browsers from the [instrument manufacturer](https://spectrum.cytekbio.com/) or [Fluorofinder](https://app.fluorofinder.com/), if the fluorophore is present in the `Luciernaga` references for that instrument, we can also do so via R. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plots <- Luciernaga::QC_ReferenceLibrary(FluorNameContains="APC-Fire 810", returnPlots=TRUE, NumberDetectors=64) #5-laser Aurora #64 detectors
+plotly::ggplotly(Plots[[2]])
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So for APC-Fire 810, looks like we need the "R8" detector for a Cytek Aurora. Depending on the initial instrument configuration settings, we could have multiple variants present (for Area (-A), Height (-H) or Width (-W)), so lets double check what is present for our GatingSet. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+colnames(APCFire810_GS)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Alright, so we need to gate based of the "R8-A" detector. Lets create a new span gate via `flowGate` via `gs_gate_interactive()`
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+flowGate::gs_gate_interactive(gs=APCFire810_GS, filterId="APCFire810", sample=1,
+dims=list("R8-A"), subset="scatter")
+```
+
+:::
+
+---
+
+![](images/18_SpanGate.png)
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+plot(APCFire810_GS)
+```
+
+:::
+
+---
+
+![](images/19_NewGate.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And remember, if we need to adjust the gate after the fact, we can do so via the new `gs_gate_interative_adjust()` function. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+flowGate::gs_gate_interactive_adjust(gs=APCFire810_GS, gate="APCFire810", sample=1, AdjustAll=FALSE)
+```
+
+:::
+
+---
+
+![](images/20_Adjusted.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We will also need an internal "negative" gate for a couple examples, so lets draw its own span gate. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+flowGate::gs_gate_interactive(gs=APCFire810_GS, filterId="InternalNegative", sample=1,
+dims=list("R8-A"), subset="scatter")
+```
+
+:::
+
+---
+
+![](images/21_InternalNegative.png)
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: FALSE
+
+SaveUpdatedAPCFire810Here <- file.path(OutputLocation, "APCFire810.gs")
+
+save_gs(APCFire810_GS, SaveUpdatedAPCFire810Here)
+# APCFire810_GS <- load_gs(SaveUpdatedAPCFire810Here)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| include: FALSE
+
+SaveUpdatedAPCFire810Here <- file.path(OutputLocation, "APCFire810.gs")
+
+APCFire810_GS <- load_gs(SaveUpdatedAPCFire810Here)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+plot(APCFire810_GS)
+```
+
+:::
+
+---
+
+### Extracting Exprs
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With our span gates created, we are now at the point that we can extract the `exprs` matrices. To do this, we first need to retrieve from the GatingSet a cytoset corresponding to just our gated cells (via the `gs_pop_get_data()` function). Remember, this is the step where we need to specify the "inverse.transform=TRUE" argument, so that we reverse the applied transformation from earlier. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+At this point, we can use the `exprs()` helper function to retrieve the underlying data being stored under the "exprs" slot. We can also make our lives simpler by converting from a matrix over to a data.frame, enabling use of the `dplyr` package functions for several of the subsequent steps.
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+PositiveCytoSet <- gs_pop_get_data(APCFire810_GS, "APCFire810", inverse.transform=TRUE)
+PositiveMatrix <- exprs(PositiveCytoSet[[1]]) #[[1]] used to remove list item, allowing access
+PositiveData <- data.frame(PositiveMatrix, check.names=FALSE)
+head(PositiveData, 3)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Before moving too far ahead, having been burned by transforms that failed to untransform in the past, lets double check to make sure these retrieved values look "raw" and are not still biexponentially-transformed. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+summary(PositiveData)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So far so good! (since I am seeing negative values on lower end, ranging up through biexponential, all varying by fluorophore). We can then proceed and repeat the process of extracting out the underlying data for our internal negative as well.
+:::
+:::
+
+::: {.fragment}
+```{r}
+NegativeCytoSet <- gs_pop_get_data(APCFire810_GS, "InternalNegative", inverse.transform=TRUE)
+NegativeMatrix <- exprs(NegativeCytoSet[[1]]) #[[1]] used to remove list item, allowing access
+NegativeData <- data.frame(NegativeMatrix, check.names=FALSE)
+head(NegativeData, 3)
+``` 
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+summary(NegativeData)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Glancing at the `summary()` data for our InternalNegative, we can see that the R8 detector is definitely lower than where we expect to see the autofluorescence peaks (typically UV7, V7 or B3), so for this particular control it doesn't look like we are dealing with non-specific staining substantially affecting our internal negative cells. This is not always the case for individual fluorophores, so it is worth checking.  
+:::
+:::
+
+---
+
+### Removing FSC SSC Time
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Before we can get to the fluorescent signature itself, we first need to remove from our data.frames the columns that do not correspond to fluorescent detectors.  In this case, these will be the FSC, SSC and Time columns (and their -A, -H and -W variants). 
+:::
+:::
+
+::: {.fragment}
+```{r}
+colnames(PositiveData)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can repurpose the code we used at the transformation step (alongside use of `stringr` `str_detect()`) to select for columns that don't match the character strings that contain "FSC", "SSC" or "Time", which will leave us with just the fluorescent detectors
+:::
+:::
+
+::: {.fragment}
+```{r}
+SFC_Parameters <- colnames(PositiveData)
+PositiveDataSignature <- PositiveData[!stringr::str_detect(colnames(PositiveData), "FSC|SSC|Time")]
+
+head(PositiveDataSignature, 3)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can then repeat this process for our negative background data, so that both data.frame objects are comparable to each other. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+NegativeDataSignature<- NegativeData[!stringr::str_detect(colnames(NegativeData), "FSC|SSC|Time")]
+
+head(NegativeDataSignature, 3)
+```
+
+:::
+
+---
+
+### Median
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next up, for each detector column, we need to take a middle measurement (typically median, occasionally mean) to derive the initial raw signature values. Since all our columns are numeric, this can be mediated by passing our data.frame object through `dplyr`'s `summarize_all()` function. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+PositiveSignature <- PositiveDataSignature |> summarize_all("median") #Alternate: "mean"
+PositiveSignature
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+NegativeSignature <- NegativeDataSignature |> summarize_all("median") #Alternate: "mean"
+NegativeSignature
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We are now left with a single row, showing the median values present across all detectors. This is our pre-processed signature. 
+:::
+:::
+
+---
+
+### Visualize Signatures
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets go ahead and visualize these pre-processed raw signatures as we currently see them. We can use the `Luciernaga` packages `VisualizeSignatures()` function to accomplish this, but we will need to create a "Fluorophore" column to hold the signature name first (or alternatively, [take and modify](https://github.com/DavidRach/Luciernaga/blob/8c44e1fb9e2b1d26b5035e993c4c08a7a8bb8eec/R/QC_ViewSignature.R#L169) the function for our own use case) 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For our APCFire810 gate, we get back a raw signature that looks like this. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+PositivePlotData <- PositiveSignature |> mutate(Fluorophore="APCFire810") |> relocate(Fluorophore, .before=1)
+
+Plots <- VisualizeSignatures(data=PositivePlotData, columnname="Fluorophore", Normalize = FALSE)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+plotly::ggplotly(Plots)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can see the peak detector is where it should be, but also some underlying autofluorescence contributions to UV7, V7 and B3 detectors since we have not yet extracted the background.  
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Additionally, its worth remembering that cells may vary in different levels of marker/molecule expression (which will correspond to different signature brightness being recorded), but the relatively proportion of signal across detectors will proportionally increase as additional antigen-fluorophore binds to the surface. This is one of the main reasons why we normalize the values from 0 - 1 when comparing fluorophores to each other
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next up, we can repeat the process for our InternalUnstained, to characterize the autofluorescence signature. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+NegativePlotData <- NegativeSignature |> mutate(Fluorophore="Background") |> relocate(Fluorophore, .before=1)
+
+Plots <- VisualizeSignatures(data=NegativePlotData, columnname="Fluorophore", Normalize = FALSE)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+plotly::ggplotly(Plots)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Alright, so that is what our autofluorescence looks like.  In this case, looking at the y-axis, we can see the autofluorescence signature values are substantially dimmer compared to the APC-Fire 810 raw values. 
+:::
+:::
+
+---
+
+### Whats This
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In terms of how do we compare fluorophore signatures to each other, that will be focus of [next week](/Schedule.qmd#similarities-and-hotspots). However, before we move on and subtract out the background autofluorescence, lets compare how this pre-processed signature still containing the background autofluorescence compares to the published reference signatures for APC-Fire 810 and other fluorophores. We can querry against the existing references via the `QC_WhatsThis()` function. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Outputs <- QC_WhatsThis(x="APCFire810", columnname="Fluorophore", data=PositivePlotData, NumberDetectors = 64,
+ returnPlots=TRUE, NumberHits = 5)
+
+Outputs[[1]]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Based on the cosine (i.e. similarity for Cytek users), we can see that our signature with existing background while similar to the reference, is still quite a bit off (cosine value of 0.8). Generally, the community views signatures < 0.98 as different enough to have the potential to introduce an unmixing error. We can see this in a clearer view when visualizing the ggplot plot that we get back when 'returnPlots' argument is set to TRUE. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+plotly::ggplotly(Outputs[[2]])
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we compare the signatures, we can see we have substantially more UV7, V7 and B3, but interestingly also YG4 and R1. We will put a pin in this for now, and move on to background subtraction. 
+:::
+:::
+
+---
+
+### Background Subtraction
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets go ahead and subtract the background. Since both our data.frames are the same dimensions (and are consiting entirely of numeric columns), we can do this directly by just adding a "-" between the two objects. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+# dim(PositiveSignature) == dim(NegativeSignature)
+# str(PositiveSignature)
+JustTheFluorophore <- PositiveSignature - NegativeSignature
+JustTheFluorophore
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can then repeat the addition of the "Fluorophore" column so that we can quickly visualize the resulting signatures via `VisualizeSignatures()`. We can repeat this for both the with and without background subtraction to see the effect (binding both data.frames together via the `bind_rows()` function). 
+:::
+:::
+
+::: {.fragment}
+```{r}
+JustTheFluorophorePlot <- JustTheFluorophore |>
+   mutate(Fluorophore="APCFire810_Post") |>
+    relocate(Fluorophore, .before=1)
+
+Intermediate <- PositiveSignature |>
+   mutate(Fluorophore="APCFire810_Pre") |> 
+   relocate(Fluorophore, .before=1)
+
+JustTheFluorophorePlot2 <- bind_rows(Intermediate, JustTheFluorophorePlot)
+
+Plots <- VisualizeSignatures(data=JustTheFluorophorePlot2,
+ columnname="Fluorophore", Normalize = FALSE)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+plotly::ggplotly(Plots)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we can see visualize, we look to have gotten rid of most of the autofluorescence peak contributions. Lets check via `QC_WhatsThis()` and see how it compares to the reference APC-Fire 810 now. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Outputs <- QC_WhatsThis(x="APCFire810_Post", columnname="Fluorophore", data=JustTheFluorophorePlot, NumberDetectors = 64,
+ returnPlots=TRUE, NumberHits = 5)
+
+Outputs[[1]]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Our comparison to APC-Fire 810 is now up to a cosine of 0.85, so moving in the right direction, but still fairly off from the expected. When we check our signature vs. the references, this is also apparent. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+plotly::ggplotly(Outputs[[2]])
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So R1 and YG4 remain unexpected mysterys we will need to try to get to the bottom of as we go. 
+:::
+:::
+
+
+---
+
+### Normalized
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So far, we have extracted the underlying data, summarized the data across fluorescent detectors, and then subtracted the background signal. The last remaining step is to normalize the data (bringing the values across detectors from 0 to 1). For the various `Luciernaga` plotting functions, this was being handled in the background, but lets check to see how to mediate this with our JustTheFluorophore object. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+First up, we can essentially iterate across the columns using the base R `do.call()` function. Via this call, we can specify use of the `pmax()` function, and our JustTheFluorophore object. This will end identifying the column with the greatest value, which will be returned to our IdentifiedPeakValue object/variable. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+IdentifiedPeakValue <- do.call(pmax,JustTheFluorophore)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+At this point, to normalize, we just need to divide each column by our identified max, which will result in the values being scaled/normalized from 0 to 1 (or potentially 0 to -1 if any negative values were present). 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Normalized <- JustTheFluorophore/IdentifiedPeakValue
+Normalized <- round(Normalized, 1)
+Normalized
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Why do we normalize? Well, if we compared the APC-Fire 810 raw data value signatures to the autofluorescence signature, the sheer scale difference ends up being what we primarily visualize in the plot
+:::
+:::
+
+::: {.fragment}
+```{r}
+Comparison <- bind_rows(NegativePlotData, JustTheFluorophorePlot2)
+
+Plots <- VisualizeSignatures(data=Comparison, columnname="Fluorophore", Normalize = FALSE)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+plotly::ggplotly(Plots)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+By contrast, when each fluorophore is scaled/normalized, we can contrast how the individual fluorophore responds in terms of the distribution of its emission across the detectors compared to other fluorophore
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plots <- VisualizeSignatures(data=Comparison, columnname="Fluorophore", Normalize = TRUE)
+plotly::ggplotly(Plots)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With that, at the simplest level, we have seen how to extract and visualize the normalized fluorescence signature for both an APC-Fire 810 and unstained autofluorescence signature. Congratulations, you have broken through the first layer of what is a confusing black box of spectral flow cytometry for much of the community!
+:::
+:::
+
+---
+
+### External vs Internal Unstained
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In the example above, we used the internal unstained when subtracting out the background. This is not always advisable, especially in situations where a fluorophore results in a substantial amount of non-specific staining. So for completionist sake, lets see how the signature might have differed had we used the external unstained. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Based on the [metadata](https://immport.org/shared/study/SDY3080/download/Protocols?page=1) and [lab notebook](https://github.com/DavidRach/LabNotebook/blob/main/2023/2023-05-12.pdf), it looks like this APC-Fire 810 molecule used CBMCs from the control condition, so lets use the corresponding scatter gate from the INF052Ctrl specimen for the extraction of the external background autofluorescence values. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's load back in our intermediate CellUnstained GatingSet from it's .gs intermediate folder
+:::
+:::
+
+::: {.fragment}
+```{r}
+SaveUpdatedCellUnstainedHere <- file.path(OutputLocation, "CellsUnstained_GS.gs")
+
+CellsUnstained_GatingSet <- load_gs(SaveUpdatedCellUnstainedHere)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Quickly call `pData()` to identify the index for INF052_Ctrl
+:::
+:::
+
+::: {.fragment}
+```{r}
+pData(CellsUnstained_GatingSet)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And verify what the last gate we have already created, which we will use for the actual data extraction step. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+plot(CellsUnstained_GatingSet)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And with these bits of information gatherered, we can proceed with extracting the data for the gated region
+:::
+:::
+
+::: {.fragment}
+```{r}
+ExternalNegativeCytoSet <- gs_pop_get_data(CellsUnstained_GatingSet[1], "scatter", inverse.transform=TRUE)
+ExternalNegativeMatrix <- exprs(ExternalNegativeCytoSet[[1]]) #[[1]] used to remove list item, allowing access
+ExternalNegativeData <- data.frame(ExternalNegativeMatrix, check.names=FALSE)
+head(ExternalNegativeData, 3)
+``` 
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With this done, we can remove the non-detector columns, summarize by median, and do the data tidying needed for the visualization. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+ExternalNegativeDataSignature <- ExternalNegativeData[!stringr::str_detect(colnames(ExternalNegativeData), "FSC|SSC|Time")]
+
+ExternalNegativeSignature <- ExternalNegativeDataSignature |> summarize_all("median")
+
+ExternalNegativePlotData <- ExternalNegativeSignature |>
+   mutate(Fluorophore="ExternalBackground") |> relocate(Fluorophore, .before=1)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And lets go ahead and combine in the data we have for the InternalNegative so we can do a direct comparison between them. Lets start off by first visualizing just the raw MFI values using `VisualizeSignature()`
+:::
+:::
+
+::: {.fragment}
+```{r}
+CombinedAutofluorescences <- bind_rows(NegativePlotData, ExternalNegativePlotData)
+
+Plots <- VisualizeSignatures(data=CombinedAutofluorescences,
+ columnname="Fluorophore", Normalize = FALSE)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+plotly::ggplotly(Plots)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we can see, the external background signature is a little dimmer in terms of MFI compared to the internal controls raw signature values. Let's check for the normalized signature. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plots <- VisualizeSignatures(data=CombinedAutofluorescences,
+ columnname="Fluorophore", Normalize = TRUE)
+
+plotly::ggplotly(Plots)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we can see, while the main autofluorescence peaks are similar, we do have some additive contribution to the red detectors for the internal negative compared to the external negative, likely due to a bit of underlying APC-Fire 810 staining occuring. Lets see how this would have impacted the overall signature.
+:::
+:::
+
+::: {.fragment}
+```{r}
+InternalFluorophore <- PositiveSignature - NegativeSignature
+InternalFluorophoreData <- InternalFluorophore |>
+   mutate(Fluorophore="APCFire810minusInternal") |>relocate(Fluorophore, .before=1)
+
+ExternalFluoruophore <- PositiveSignature - ExternalNegativeSignature
+ExternalFluorophoreData <- ExternalFluoruophore |>
+   mutate(Fluorophore="APCFire810minusExternal") |>relocate(Fluorophore, .before=1)
+
+CombinedAPCFire810 <- bind_rows(InternalFluorophoreData, ExternalFluorophoreData)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+At which point, visualizing difference in raw values for the background subtracted APC-Fire 810
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plots <- VisualizeSignatures(data=CombinedAPCFire810,
+ columnname="Fluorophore", Normalize = FALSE)
+
+plotly::ggplotly(Plots)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can see some minor differences present for the Violet detectors. Let's check for the normalized signature
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plots <- VisualizeSignatures(data=CombinedAPCFire810,
+ columnname="Fluorophore", Normalize = TRUE)
+
+plotly::ggplotly(Plots)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So for this particular antigen-Fluorophore combination, the overall signature didn't change dramatically depending on whether we used the internal or external autofluorescence for background subtracction, outside some differences in the autofluorescence peak detectors (V8 and B3) due to the differences due to the external unstained being less bright compared with the internal unstained. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The differences that had observed between the unstained likely arising from non-specific staining in the red detectors ultimately didn't seem to dramatically shift anything in the extracted fluorophore signature. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+This is likely due to the actual positive signal present on those detectors for the single-color being substantially greater MFI to begin with than the little bit of non-specific signal present on the unstained cells, which although present was ultimately neglible at the time of subtraction. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As with everything in flow, this is for this particular fluorophore-antigen combination, on this particular specimen, and this pattern has no guarantees to hold up for other fluorophores (or even this same florophore on other experimental days). But it is a good illustration of the things to consider when carrying out the process of characterizing a fluorescent signature from our unmixing controls. 
+:::
+:::
+
+
+---
+
+
+## Signatures by Percentiles
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having now had some experience with the basic mechanics of extracting fluorescent signatures (after subtracting out either internal or external background), let's carry out one of my time-honored traditions, going down a rabbit-hole!
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When I was first learning how to unmix back in late 2021, I was always curious how placing a gate on the positive peak just 1 mm to the left or right might affect the unmixing result. Unfortunately, short of rather tedious re-unmixing, there was no easy way to answer this question at the time. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With our exisiting code above, we could obviously attempt to implement something similar using `flowGate`, however, we could also take a different approach. This would be for our gated region, we could separate on basis of the peak detector cells based on their MFI into a series of percentile bins. By looking across these 10% (or whatever range bins), we could repeat the process above for fluorescent signature extraction, and visualize the differences that occur. 
+:::
+:::
+
+---
+
+![](images/BUV615Cuts.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As there are multiple moving pieces, the code to do the above is part of the `Luciernaga_LinearSlices()` function from `Luciernaga`. However, since the implementation can be rather fine-tuned, it is not great to suddenly introduce towards the end of a walk-through. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We will rely on the `LuciernagaIntegration()` wrapper function to instead pass the contents of a particular gate to `Luciernaga`, and return the corresponding data.frames and plots that we might be interested in as a list object. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In addition to our GatingSet, we need to provide a pData template that also contains a Detector and Negative column to match the expected data.frame syntax, which we can do throyugh some data tidying with `dplyr`. Additionally, the particular fluorophore and particular gate name need to match. So we will use the `gs_pop_set_name()` function to rename our existing GatingSet gate to match the syntax by adding in a space. With that done, we can run the `LuciernagaIntegration()` wrapper, and save the list to a "APCFire810" variable object. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Template <- pData(APCFire810_GS) |>
+   relocate(Fluorophore, Antigen, Type) |>
+   mutate(Detector="R8-A", Negative="")
+
+gs_pop_set_name(APCFire810_GS, "APCFire810", "APC-Fire 810") # Rename Gate to Match FluorophoreName
+
+APCFire810 <- LuciernagaIntegration(template=Template, gs=APCFire810_GS, GuessSimilar=TRUE)[[1]]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The return of this function is a list, with various data.frames and plots being retrieved for the cells in the gate in one go.
+:::
+:::
+
+::: {.fragment}
+```{r}
+class(APCFire810)
+names(APCFire810)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For this particular example, to compare across narrow slices of the positive peak, we will need to look at the LinearSlices_Plot. Lets see what effect gating in 10% bins across the R8-A detector would have had on the normalized fluorescent signature of our APC-Fire 810.
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- APCFire810$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In this case, the primary peak (R8) remains the same. However, for the dimmer bins, we have a step-ladder appearence on the V7-A detector. This pattern is similar on the R1-A detector. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We showed similar data for our [Cyto 2025](https://davidrach.github.io/SingleColorsTalk_Cyto2025/DavidRach_CYTO2025.pdf) presentations, where we attributed this pattern to leftover residual autofluorescence, since not all cells are equally bright for autofluorescent molecules. When gating for dimmer cells, while the peak-detector remains the same, any residual autofluorescence leftover after the background subtraction makes up a greater proportion of the signature compared to the brighter staining cells, where the residual autofluorescence contribution is particularly neglible. This in turn results in the step-ladder appearance that we end up seeing on the autofluorescence detectors. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When this residual is substantial, it can [substantially impact](https://davidrach.github.io/SingleColors_Cyto2025/SingleColorsPoster.pdf) unmixing, which is why for the final unmixing of this panel, we had to replace BUV615 CCR4 and PE-Cy5 CD25 cell controls with single-stained beads to address some of the unmixing issues that were encountered.  
+:::
+:::
+
+---
+
+![](images/BUV615NormalizedSlices.png)
+
+---
+
+## Single-Color Signatures from Individual Cells
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So far, when looking at normalized fluorescent signatures, these have been on the basis of a gated region of cells that were positive for a particular marker (or further subdivided into 10% brighness bins in the case of the last example). Both of these approaches functions essentially the same, with the median measurement of those cells taken across each detector to derive the signature values. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+However, there is also value in looking beyond the average signature, and seeing what information can be gleaned from the normalized signatures of individual cells. Within `Luciernaga`, various functions that are needed to orchestrate this are present (primarily via the `LuciernagaQC()` function). 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The way this [works in practice](https://davidrach.github.io/Luciernaga/articles/FluorescenceSignatures.html#luciernaga_qc), is individual cells that have a primary peak detector for the staining fluorophore have the autofluorescent background subtracted. At this point, the individual cells signature is normalized, the peaks identified, and then cells that have normalized signatures at the same locations, of relatively similar heights end up grouped together, outputted as either summary data.frame or subsetted .fcs files that only contain cells with the same fluorescent signature (just differing by brightness)
+:::
+:::
+
+---
+
+![](images/LuciernagaMechanism.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+For now, rather than implement each plot separately, we will rely on the the `LuciernagaIntegration()` wrapper function. This returned list includes both the underlying data.frame and pots, so we can quickly glean information about the fluorescent signatures of individual cells that might otherwise be lost in the average signature. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Diving further into the returned list object, we can visualize all the identified normalized fluorescent signatures for our gated region of the APC-Fire 810 cell single-color control. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- APCFire810$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Unlike the previous characterization approaches, we end up with a lot more substantial variance for our normalized signatures from this APC-Fire 810 fluorophore. This is primarily manifested by the step-ladder like appearance for both the YG4 and R1 detectors. These were the same detectors that were unaccounted for when comparing the background subtracted signatures vs. those from the reference library. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So what is going on with this cell single-color control? Well, lets pull up the APC-Fire 810 reference signature, as well as that of the parent fluorophore APC which is part of the tandem dye. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plots <- QC_ReferenceLibrary("APC$|APC-Fire 810", 64, returnPlots = TRUE)
+plotly::ggplotly(Plots[[2]])
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So it turns out, the peak detectors for APC are both R1 and YG4. Therefore, for this particular single-color control, the deviations we have been seeing in the overall normalized signature is being drived partly by tandem degradation from APC-Fire 810 back to APC. This is clearly not complete, as R8 remains the primary detector, but there is a gradient of co-expression on the surface of individual cells which is contributing to the step-ladder pattern we are seeing. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So while visually striking, we need to know to what extent is this occuring. We can check the `Luciernaga` proportion plots which will display the proportion on a ggplot2 heatmap grid based on the individual signature variant. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- APCFire810$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Referencing the APC-Fire 810 signature, there shouldn't be all that much signal on R1 or R2. However, from our proportion plot, we see that for a lot of cells in our gated region, the  APC-Fire 810 variant signatures have greater amounts of R1/R2 present. Those with a R1/R2 detector measurement under 0.3 of the R8 detector are less than 2%. Around 72% of the cells have R1/R2 detectors values between 0.4 and 0.5, and then the other 25% of cells have substantial amounts of fully-degraded APC present on the surface of these individual cells. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+When we step back and think about it, antibody-fluorophores exposed to reactive oxygen species may degrade individually rather than at the whole vial level. So at the cell surface, for highly expressed antigens, some will be bound by intact APC-Fire 810, while others may still end up bound by an antibody with only APC present. 
+The balance between is what ends up being reflected in terms of the height of the R1/R2 peak, which is what is being captured by the grouping of individual cells by their normalized cell signatures. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So for this cell single-color control, the impact seems to be widespread. If we want to see how the proportion of the relative signature variants contributes towards the overall signature (ala what we would have seen by taking the averaged), we can check the AmalgamatedPlot output (`Luciernaga_Amalgamate()`)
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- APCFire810$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So in terms of the overall signature, still substantially different enough from the reference APC-Fire 810 to affect the comparison, but not as impacted by the cells that have heavily degraded down to APC to the point of being nearly the same height as the APC-Fire 810 peak (ex. R8-10_R2-09_YG4_05). 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- APCFire810$GuessSimilar_Plot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We will prelude next weeks topic by visualizing a cosine matrix, to get an idea of how different these individual signature variants are from each other (and start the imagine the amount of spreading/loss marker resolution/overcalculating APC fraction that might be occuring at the time of unmixing). 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- APCFire810$CosineSimilarityPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+## Autofluorescence Signatures from Individual Cells
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In the example above, we saw an useful use case of characterizing cell single-color controls on the basis of their individual cell signatures in order to identify tandem degradation. But at that point, you might be wondering, can we use the same tools to characterize autofluorescence signatures (and maybe even export them out for use as reference signatures for unmixing). Why yes, we can.
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's go ahead and load back in our saved intermediate for the CellUnstained.gs 
+:::
+:::
+
+::: {.fragment}
+```{r}
+SaveUpdatedCellUnstainedHere <- file.path(OutputLocation, "CellsUnstained_GS.gs")
+
+CellsUnstained_GatingSet <- load_gs(SaveUpdatedCellUnstainedHere)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With this done, we will need to create a modified template to mimic what we had for the cell single controls to be able to utilize the `LuciernagaIntegration()` wrapper. We will need to remembber to set the "Unstained" argument to TRUE in order to skip the background subtraction step entirely. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Updated <- pData(CellsUnstained_GatingSet) |>
+    mutate(Type="Cells", Fluorophore="scatter",
+    Antigen="Autofluorescence", Detector="V7", Negative="NoSubtraction")
+
+INF052Ctrl <- LuciernagaIntegration(template=Updated[1,],
+ gs=CellsUnstained_GatingSet, GuessSimilar=FALSE, Unstained=TRUE)[[1]]
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+After `LuciernagaIntegration()` finishes its run, we can querry the returned list for the returned data.frames and plots individually. For the plots, we can again use the `plotly` packages `ggplotly()` function for more interpretability via the interactive elements. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Starting off, lets see whether if we had broken the gating region into bins of 10% based on the UV7-A detector brightness whether we would have seen much difference in the normalized signature
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- INF052Ctrl$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Similar to what we saw with APC-Fire 810, this approach didn't induce much signature variation, outside slightly higher peaks for V7 and B3. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Let's go ahead and check what the `LuciernagaQC()` output returned as far as grouped individually normalized signatures returned. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- INF052Ctrl$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As is immediately apparent, everything appears a bit fuzzy! Although most of the variation is around the UV7-A and B3-A detectors. In everyday practice, if we unmixed using a unstained signature that didn't capture this variability, for those cells that did fit those patterns [would end unmixing incorrectly](https://davidrach.github.io/Autofluorescence_Cyto2025/AutofluorescencePoster.pdf) (and fluorophores that had contributions with those detectors would end up similarly affected).
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets go ahead and check the proportion plot output, to help determine which of these fuzzy signatures retrieved from our gating region make up a subtantial proportion of cells, and which ones might be rare enough to pass over. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- INF052Ctrl$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Glancing at the data, V7 peak (1.0), B3 (0.5 of peak, ~50%), UV8 (0.4 of peak, ~ 40%) was the signature of 27% of the cells within our gated region. This was followed by adjacent signatures for V7 peak (1.0), B3 (0.6), UV8 (0.4) at 16%, and V7 peak (1.0), B3 (0.5), UV8 (0.3) that only differed by a slightly brighter or dimmer bin. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+While cells with signatures where the secondary UV8  peak was higher than the B3 peak were present, for INF052 they were relatively rare not making up a substantial portion of the individual cell signatures.  This is not always the case for CBMC, which led to this [Cyto 2025 poster](https://davidrach.github.io/Autofluorescence_Cyto2025/AutofluorescencePoster.pdf) where we looked at what effect these variants had on unmixing. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets go ahead and visualize how these proportions when averaged would impact the overall fluorescent signature. Checking the amalgamated plot, we can see the peaks shared by the unstained signatures, as well as where substantial variance is present.
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- INF052Ctrl$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Please note, in our experience, some of the quirkier unmixing errors that we encounter are often tied to those individual cells having autofluorescences in the UV8 or B3 regions that don't follow what other cells are doing. Since unmixing occurs at the individual cell level, these can matter as we will see in two weeks for the [unmixing](/Schedule.qmd#unmixing-in-r) walk-through. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And previewing next time, lets see how these cell signatures differ from each other in terms of cosine value (i.e. similarity for those who speak Cytek Aurora)
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- INF052Ctrl$CosineSimilarityPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Not just a single autofluorescence signature after all it turns out, no wonder some specimens have odd unmixing patterns for random small cell populations. 
+:::
+:::
+
+---
+
+## Signature Matrices
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Today in this primary course material, we did a thorough walk-through of the process by which we can extract normalized fluorescent signatures from our unmixing controls (both single-colored and unstained). However, as is not lost to many of you, we did this for just a single fluorophore, and have 28 remaining to go. Do we need to repeat all the above code for each???
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+One option would be to try to scale-up, repeating the gating process acrooss the individual single-color controls, before breaking out `flowGate` to write a template to create fluorophore-specific positive gates on the correct detector based on their respective single-color control within the GatingSet. It would be a pain to write out all that code the first time around, but it could be used. Subsequently, after we extract the signatures, we could cobble them together to get to signature matrix we would need for unmixing. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+However, that process as described above, sound more painful than it needs to be, especially when we have the power to write functions that can mediate all these steps we would need to implement for us behind the scenes. You can see how the new `flowGate` and `Luciernaga` functions were used to make our lives way way way easier in the bonus walkthorugh for [Signature Matrices](/course/SDY3080/SignatureMatrices.qmd). 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+The signature matrices from this bonus walk-through can be found below. For cells
+:::
+:::
+
+::: {.fragment}
+```{r}
+StoreHere <- file.path(OutputLocation, "CellInitialSignatureMatrix.csv")
+CellFluorophoreSignatures <- read.csv(StoreHere, check.names=FALSE)
+head(CellFluorophoreSignatures, 3)
+```
+
+:::
+
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- VisualizeSignatures(columnname="Fluorophore", data=CellFluorophoreSignatures,
+ Normalize=FALSE, characterColumns="Fluorophore")
+
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And for beads
+:::
+:::
+
+::: {.fragment}
+```{r}
+StoreHere <- file.path(OutputLocation, "BeadInitialSignatureMatrix.csv")
+BeadFluorophoreSignatures <- read.csv(StoreHere, check.names=FALSE)
+head(BeadFluorophoreSignatures, 3)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- VisualizeSignatures(columnname="Fluorophore", data=BeadFluorophoreSignatures,
+ Normalize=FALSE, characterColumns="Fluorophore")
+
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Ultimately, once we have these signature matrices, we can use them for signature comparisons (which we will go into next time) as well as leverage them to unmix raw full-stained samples (as we will cover in a couple weeks).
+:::
+:::
+
+---
+
+# Take Away
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Over the course of this walk-through, we started with the set up that was needed to clean up our GatingSets in order to get at the cells that would provide the best signatures without introducing additional interpretation challenges. From there, we learned how to retrieve the cytoset for the gated cells, retrieve the exprs matrix, and isolate out the fluorescent detectors. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+At this point, we orchestrated our way through summarizing for median, background subtraction, and normalization. We additionally learned various new functions that can help us visualize the signatures (both raw and normalized) and used these to screen an APC-Fire 810 to get a better understanding of what is going on when we set up our experiments for unmixing. We also took advantage of the `LuciernagaIntegration()` wrapper in order to get some additional insight about tandem degradation and autoflorescence variation in our unmixing controls. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Overall, I hope this walk-through, despite its length, was helpful. And I would like to end on circling back to how it can help us re-contextualize what the community as a whole has through various means converged on in terms of best practices for singl-color unmixing controls. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+1. Single-color cells need to be as bright or brighter than the full-stained sample.
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+From our dividing things up by percentile, we did observe that antigen-fluorophores with dimmer staining have greater proprotion of residual autofluorescence contribution to the signatures. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Likewise, for APC-Fire 810, for the cells where more of the tandem has been degraded, the dimmer staining cells for that detector are likelier to have more APC present in the overall signature. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+This still leaves open the question of why beads when only out to 10^4 when full-stained cells are at 10^6 unmix horridly in some cases, but that is for another day. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+2. Matching autofluorescences
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we saw, there can be substantial variation in terms of brightness and signature for cells even within one gated region. This makes sense in light of its not just one single biological molecule causing the autofluorescence signature, rather it is the combination of all of them that falls within certain signature shapes. Activate or add insult to these cells, and the relative ratio of these biomolecules shifts far enough, we end up with a new variant that may need to be accounted for. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Likewise, when not extracting out the corresponding amount of background, these leftover autofluorescence residuals can end up incorporated into the overall fluorophore signature, complicating analysis. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+3. Same Fluorophore
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Beyond why no, we just can't substitute in BV510 for Zombie Aqua, the observed variation we saw for APC-Fire 810 following tandem degradation opens a bunch of questions that we will tackle in the next couple sessions. Is it better to use the degraded tandem as is? Or provide a proper APC-Fire 810 signature? What if APC is also already present in the panel. More questions than answers, but fascinating none the less. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+4. Enough events
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Clearly important part, given the fuzzyness of the individual cell normalized signatures. Likewise, cytometers are noisy, there are additional variation that is not due to biology, having sufficient events can smooth those sharp curves out. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We will revisit some of these points (and try to answer some of these questions) as we move through both the next two sessions, as well as the bonus content. Until then, thanks for persevering through my spectral signature nerd out. Next up, signature comparison and unmixing-dependent spreading!
+:::
+:::
+
+---
+
+![](images/TakeAway.jpg)
+
+# Additional Resources
+
+::: {.fragment}
+::: {.callout-tip title="."}
+In general, due to the nature of the topic, for this section, the additional resources is kind of intermingled, so you will encounter both spectral signatures, comparisons and unmixing often in the same paper or talk. Here are a few of many exceptional resources tht I have found worthwile over the years. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+[Spectral cytometry have you feeling all mixed up? Let's get unmixed!](https://youtu.be/kqc700kBtHg?si=vQApl_gSCEgk283G) Peter Mage's CytoBytes short explanation. His FlowTex talk from a couple years ago is also well worthwhile
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+[Advanced Unmixing](https://youtu.be/YAVl2bcoEyE?si=6vZ1r48JjNb8N8dx) Laura Johnston covers some of the same concepts in this Aurora tutorial, but having walked through the examples above, it takes on a whole new light of things to consider.  
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+[A comparison of spectral unmixing to conventional compensation for the calculation of fluorochrome abundances from flow cytometric data](https://onlinelibrary.wiley.com/doi/10.1002/cyto.a.24669) One of David Novo's papers, well worthwhile (although the math-panic is real on my end). 
+:::
+:::
+
+---
+
+# Take-home Problems
+
+:::{.callout-tip title="Problem 1"}
+
+In the example above, we deep dived the APC-Fire 810 single-color control. Since this is just one of the 29-single colors in the panel, check the pData, identify a fluorophore and marker of interest and repeat the process detailed above for your selected fluorophore. Report whether your chosen fluorophore behaved similarly or otherwise in terms of fluorescent signature variants as was the case for APC-Fire 810.  
+
+:::
+
+---
+
+:::{.callout-tip title="Problem 2"}
+For this example, we gated the positive cells according to the "as bright or brighter" guideline. But what would we have seen if we had included the rest of the positive staining cells? Using `flowGate`, adjust the gate to include the less bright cells, and report whether this affected the overall signature profiles for the APC-Fire 810 control.
+:::
+
+---
+
+:::{.callout-tip title="Problem 3"}
+An important part of retrieving the fluorescent signature is to subtract the background autofluorescence. This could vary based on donor, cell type or treatment condition. With the tools provided in this walkthrough, compare the autofluorescent signatures for the 3 cell unstained controls, and whether their use as background would have affected the overall APC-Fire 810 extracted signature or not. 
+:::
+
+---
+
+![](images/TakeAway.jpg)
+
+---
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
