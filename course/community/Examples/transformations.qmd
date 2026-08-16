@@ -1,0 +1,282 @@
+---
+title: "DimViz vs. Transformation"
+author: "David Rach"
+date: 26-06-2026
+format: html
+toc: true
+toc-depth: 5
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+Toy example
+
+# Set Up
+
+```{r}
+library(flowWorkspace)
+library(dplyr)
+library(ggplot2)
+library(ggcyto)
+library(flowGate)
+library(purrr)
+library(uwot) # CRAN # install.packages("uwot")
+```
+
+```{r}
+#| eval: TRUE
+
+# RFolder <- file.path("community", "ejemplos", "R") # For Interactive
+RFolder <- file.path("R") # For Quarto Rendering
+MyFunctions <- list.files(RFolder, full.names=TRUE)
+purrr::walk(.x=MyFunctions, .f=source)
+```
+
+```{r}
+StorageLocation <- file.path("data") # For Quarto Rendering
+#StorageLocation <- file.path("community", "ejemplos", "data")
+
+OutputFolder <- file.path("outputs") # For Quarto Rendering
+#OutputFolder <- file.path("community", "ejemplos", "outputs")
+
+fcs_files <- list.files(StorageLocation, pattern=".fcs", full.names=TRUE)
+```
+
+## Transformations
+
+## Biexponential 1
+
+```{r}
+Biexponential1_cytoset <- load_cytoset_from_fcs(fcs_files, truncate_max_range=FALSE, transformation=FALSE)
+Biexponential1_GatingSet <- GatingSet(Biexponential1_cytoset)
+
+Biexponential1_Parameters <- colnames(Biexponential1_GatingSet)
+FluorophoresOnly <- Biexponential1_Parameters[!stringr::str_detect(Biexponential1_Parameters, "FSC|SSC|Time")]
+
+Biexponential1 <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=2, widthBasis=-750)
+MyBiexTransform_1 <- transformerList(FluorophoresOnly, Biexponential1)
+transform(Biexponential1_GatingSet, MyBiexTransform_1)
+```
+
+```{r}
+# pData(Biexponential1_GatingSet)
+# markernames(Biexponential1_GatingSet)
+
+# remotes::install_github("DavidRach/Luciernaga")
+
+SinglePlot <- Luciernaga::Utility_RidgePlots(gs=Biexponential1_GatingSet, subset="root", 
+     TheFill="name", TheX = "BUV805-A", TheY="name",returntype="patchwork",
+     outpath=OutputFolder, filename="CD4RidgePlot_Biexponential1")
+
+SinglePlot
+```
+
+
+
+## Biexponential 2
+
+```{r}
+Biexponential2_cytoset <- load_cytoset_from_fcs(fcs_files, truncate_max_range=FALSE, transformation=FALSE)
+Biexponential2_GatingSet <- GatingSet(Biexponential2_cytoset)
+
+Biexponential2_Parameters <- colnames(Biexponential2_GatingSet)
+FluorophoresOnly <- Biexponential2_Parameters[!stringr::str_detect(Biexponential2_Parameters, "FSC|SSC|Time")]
+
+Biexponential2 <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=5.5, neg=2, widthBasis=-1000)
+MyBiexTransform_2 <- transformerList(FluorophoresOnly, Biexponential2)
+transform(Biexponential2_GatingSet, MyBiexTransform_2)
+```
+
+```{r}
+# pData(Biexponential1_GatingSet)
+# markernames(Biexponential1_GatingSet)
+
+# remotes::install_github("DavidRach/Luciernaga")
+
+SinglePlot <- Luciernaga::Utility_RidgePlots(gs=Biexponential2_GatingSet, subset="root", 
+     TheFill="name", TheX = "BUV805-A", TheY="name",returntype="patchwork",
+     outpath=OutputFolder, filename="CD4RidgePlot_Biexponential2")
+
+SinglePlot
+```
+
+## Arcsinh 1
+
+```{r}
+Arcsinh1_cytoset <- load_cytoset_from_fcs(fcs_files, truncate_max_range=FALSE, transformation=FALSE)
+Arcsinh1_GatingSet <- GatingSet(Arcsinh1_cytoset)
+
+Arcsinh1_Parameters <- colnames(Arcsinh1_GatingSet)
+FluorophoresOnly <- Arcsinh1_Parameters[!stringr::str_detect(Arcsinh1_Parameters, "FSC|SSC|Time")]
+Arcsinh_1 <- flowjo_fasinh_trans(t = 262144, m = 4.5, a = 0)
+MyArcsinhTransform_1 <- transformerList(FluorophoresOnly, Arcsinh_1)
+transform(Arcsinh1_GatingSet, MyArcsinhTransform_1)
+```
+
+```{r}
+# pData(Biexponential1_GatingSet)
+# markernames(Biexponential1_GatingSet)
+
+# remotes::install_github("DavidRach/Luciernaga")
+
+SinglePlot <- Luciernaga::Utility_RidgePlots(gs=Arcsinh1_GatingSet, subset="root", 
+     TheFill="name", TheX = "BUV805-A", TheY="name",returntype="patchwork",
+     outpath=OutputFolder, filename="CD4RidgePlot_Arcsinh1")
+
+SinglePlot
+```
+
+
+
+## Arcsinh 2
+
+```{r}
+Arcsinh2_cytoset <- load_cytoset_from_fcs(fcs_files, truncate_max_range=FALSE, transformation=FALSE)
+Arcsinh2_GatingSet <- GatingSet(Arcsinh2_cytoset)
+
+Arcsinh2_Parameters <- colnames(Arcsinh2_GatingSet)
+FluorophoresOnly <- Arcsinh2_Parameters[!stringr::str_detect(Arcsinh2_Parameters, "FSC|SSC|Time")]
+Arcsinh_2 <- flowjo_fasinh_trans(t = 13172, m = 5.5, a=0)
+MyArcsinhTransform_2 <- transformerList(FluorophoresOnly, Arcsinh_2)
+transform(Arcsinh2_GatingSet, MyArcsinhTransform_2)
+```
+
+```{r}
+# pData(Biexponential1_GatingSet)
+# markernames(Biexponential1_GatingSet)
+
+# remotes::install_github("DavidRach/Luciernaga")
+
+SinglePlot <- Luciernaga::Utility_RidgePlots(gs=Arcsinh2_GatingSet, subset="root", 
+     TheFill="name", TheX = "BUV805-A", TheY="name",returntype="patchwork",
+     outpath=OutputFolder, filename="CD4RidgePlot_Arcsinh2")
+
+SinglePlot
+```
+
+# UMAP
+
+```{r}
+# markernames(Biexponential1_GatingSet)
+TheseMarkers <- c("BUV805-A", "BV650-A", "APC-Fire 750-A", "APC-Fire 810-A", "BUV395-A", "BV605-A")
+```
+
+## Biexponential1
+
+```{r}
+Dataset <- Concatenate(gs=Biexponential1_GatingSet, inverse.transform=FALSE,
+ returnType="data.frame", desiredCols=c("name"), subset="root",
+ DownsampleCount = 10000, addon="Tcells")
+
+
+set.seed(1989)
+Toy_UMAP <- umap(
+  Dataset[, TheseMarkers],
+  n_neighbors = 15,
+  min_dist    = 0.2,
+  metric      = "euclidean",
+  verbose     = TRUE
+)
+
+Dataset$UMAP1 <- Toy_UMAP[, 1]
+Dataset$UMAP2 <- Toy_UMAP[, 2]
+
+# Plot
+ggplot(Dataset, aes(x = UMAP1, y = UMAP2, color = `BUV805-A`)) +
+  geom_point(size = 0.4, alpha = 0.5) +
+  scale_color_viridis_c() +
+  theme_bw() +
+  labs(title = "UMAP — T cells - Biexponential1", color = "BUV805-A")
+```
+
+## Biexponential2
+
+```{r}
+Dataset <- Concatenate(gs=Biexponential2_GatingSet, inverse.transform=FALSE,
+ returnType="data.frame", desiredCols=c("name"), subset="root",
+ DownsampleCount = 10000, addon="Tcells")
+
+set.seed(1989)
+Toy_UMAP <- umap(
+  Dataset[, TheseMarkers],
+  n_neighbors = 15,
+  min_dist    = 0.2,
+  metric      = "euclidean",
+  verbose     = TRUE
+)
+
+Dataset$UMAP1 <- Toy_UMAP[, 1]
+Dataset$UMAP2 <- Toy_UMAP[, 2]
+
+# Plot
+ggplot(Dataset, aes(x = UMAP1, y = UMAP2, color = `BUV805-A`)) +
+  geom_point(size = 0.4, alpha = 0.5) +
+  scale_color_viridis_c() +
+  theme_bw() +
+  labs(title = "UMAP — T cells - Biexponential2", color = "BUV805-A")
+```
+
+## Arcsinh1
+
+```{r}
+Dataset <- Concatenate(gs=Arcsinh1_GatingSet, inverse.transform=FALSE,
+ returnType="data.frame", desiredCols=c("name"), subset="root",
+ DownsampleCount = 10000, addon="Tcells")
+
+set.seed(1989)
+Toy_UMAP <- umap(
+  Dataset[, TheseMarkers],
+  n_neighbors = 15,
+  min_dist    = 0.2,
+  metric      = "euclidean",
+  verbose     = TRUE
+)
+
+Dataset$UMAP1 <- Toy_UMAP[, 1]
+Dataset$UMAP2 <- Toy_UMAP[, 2]
+
+# Plot
+ggplot(Dataset, aes(x = UMAP1, y = UMAP2, color = `BUV805-A`)) +
+  geom_point(size = 0.4, alpha = 0.5) +
+  scale_color_viridis_c() +
+  theme_bw() +
+  labs(title = "UMAP — T cells - ArcSinh1", color = "BUV805-A")
+```
+
+## Arcsinh2
+
+```{r}
+Dataset <- Concatenate(gs=Arcsinh2_GatingSet, inverse.transform=FALSE,
+ returnType="data.frame", desiredCols=c("name"), subset="root",
+ DownsampleCount = 10000, addon="Tcells")
+
+set.seed(1989)
+Toy_UMAP <- umap(
+  Dataset[, TheseMarkers],
+  n_neighbors = 15,
+  min_dist    = 0.2,
+  metric      = "euclidean",
+  verbose     = TRUE
+)
+
+Dataset$UMAP1 <- Toy_UMAP[, 1]
+Dataset$UMAP2 <- Toy_UMAP[, 2]
+
+# Plot
+ggplot(Dataset, aes(x = UMAP1, y = UMAP2, color = `BUV805-A`)) +
+  geom_point(size = 0.4, alpha = 0.5) +
+  scale_color_viridis_c() +
+  theme_bw() +
+  labs(title = "UMAP — T cells - ArcSinh2", color = "BUV805-A")
+```
+
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
