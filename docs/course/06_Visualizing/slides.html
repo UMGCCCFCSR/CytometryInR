@@ -6,8 +6,8 @@
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.32">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.38">
 
   <meta name="author" content="David Rach">
   <meta name="dcterms.date" content="2026-03-17">
@@ -18,6 +18,9 @@
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -96,7 +99,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
   <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
 
   <script type="text/javascript">
@@ -323,7 +326,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -410,13 +413,13 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co">#StorageLocation &lt;- file.path("course", "06_Visualizing", "data") # When interactively writing the code </span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co">#StorageLocation &lt;- file.path("course", "06_Visualizing", "data") # When interactively writing the code </span></span>
 <span id="cb2-2"><a></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co">#When Quarto Rendering</span></span>
 <span id="cb2-3"><a></a></span>
 <span id="cb2-4"><a></a>TheCSV <span class="ot">&lt;-</span> <span class="fu">list.files</span>(StorageLocation, <span class="at">pattern=</span><span class="st">".csv"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)</span>
 <span id="cb2-5"><a></a>Data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(TheCSV, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
 <span id="cb2-6"><a></a></span>
-<span id="cb2-7"><a></a><span class="fu">head</span>(Data, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a></a><span class="fu">head</span>(Data, <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      bid timepoint Condition       Date infant_sex  ptype    root singletsFSC
 1 INF0052         0      Ctrl 2025-07-26       Male HEU-hi 2098368     1894070
@@ -464,7 +467,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">str</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">str</span>(Data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   196 obs. of  31 variables:
  $ bid              : chr  "INF0052" "INF0100" "INF0100" "INF0100" ...
@@ -523,7 +526,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(bid, Condition, Date, infant_sex, ptype) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">6</span>) <span class="sc">|&gt;</span> <span class="fu">str</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(bid, Condition, Date, infant_sex, ptype) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">6</span>) <span class="sc">|&gt;</span> <span class="fu">str</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   6 obs. of  5 variables:
  $ bid       : chr  "INF0052" "INF0100" "INF0100" "INF0100" ...
@@ -556,7 +559,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.character)) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">6</span>) <span class="sc">|&gt;</span> <span class="fu">str</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.character)) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">6</span>) <span class="sc">|&gt;</span> <span class="fu">str</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   6 obs. of  5 variables:
  $ bid       : chr  "INF0052" "INF0100" "INF0100" "INF0100" ...
@@ -573,7 +576,7 @@ David Rach
 <p>We can switch out <code>is.character()</code> to identify columns containing other value types</p>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">6</span>) <span class="sc">|&gt;</span> <span class="fu">str</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">6</span>) <span class="sc">|&gt;</span> <span class="fu">str</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   6 obs. of  26 variables:
  $ timepoint        : int  0 0 4 9 0 4
@@ -610,7 +613,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.logical)) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">6</span>) <span class="sc">|&gt;</span> <span class="fu">str</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="fu">where</span>(is.logical)) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">6</span>) <span class="sc">|&gt;</span> <span class="fu">str</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   6 obs. of  0 variables</code></pre>
 </div>
@@ -639,7 +642,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(Date) <span class="sc">|&gt;</span> <span class="fu">str</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(Date) <span class="sc">|&gt;</span> <span class="fu">str</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   196 obs. of  1 variable:
  $ Date: chr  "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26" ...</code></pre>
@@ -668,7 +671,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(Date) <span class="sc">|&gt;</span> <span class="fu">sort</span>() <span class="sc">|&gt;</span> <span class="fu">unique</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(Date) <span class="sc">|&gt;</span> <span class="fu">sort</span>() <span class="sc">|&gt;</span> <span class="fu">unique</span>() </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "2025-07-26" "2025-07-29" "2025-07-31" "2025-08-05" "2025-08-07"
 [6] "2025-08-22" "2025-08-28" "2025-08-30"</code></pre>
@@ -697,8 +700,8 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>AlternateFormat <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"26-07-2025"</span>, <span class="st">"27-08-2019"</span>, <span class="st">"09-09-2025"</span>, <span class="st">"16-03-2026"</span>)</span>
-<span id="cb18-2"><a></a>AlternateFormat <span class="sc">|&gt;</span> <span class="fu">sort</span>() <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a></a>AlternateFormat <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"26-07-2025"</span>, <span class="st">"27-08-2019"</span>, <span class="st">"09-09-2025"</span>, <span class="st">"16-03-2026"</span>)</span>
+<span id="cb18-2"><a></a>AlternateFormat <span class="sc">|&gt;</span> <span class="fu">sort</span>() <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "09-09-2025" "16-03-2026" "26-07-2025" "27-08-2019"</code></pre>
 </div>
@@ -726,13 +729,13 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">library</span>(lubridate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a><span class="fu">library</span>(lubridate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>Data<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">ymd</span>(Data<span class="sc">$</span>Date)</span>
-<span id="cb21-2"><a></a><span class="fu">str</span>(Data[,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a></a>Data<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">ymd</span>(Data<span class="sc">$</span>Date)</span>
+<span id="cb21-2"><a></a><span class="fu">str</span>(Data[,<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   196 obs. of  5 variables:
  $ bid       : chr  "INF0052" "INF0100" "INF0100" "INF0100" ...
@@ -806,7 +809,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(timepoint) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(timepoint) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0 4 9</code></pre>
 </div>
@@ -834,9 +837,9 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>Data1 <span class="ot">&lt;-</span> Data</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>Data1 <span class="ot">&lt;-</span> Data</span>
 <span id="cb25-2"><a></a>Data1<span class="sc">$</span>timepoint <span class="ot">&lt;-</span> <span class="fu">factor</span>(Data1<span class="sc">$</span>timepoint)</span>
-<span id="cb25-3"><a></a><span class="fu">str</span>(Data1[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-3"><a></a><span class="fu">str</span>(Data1[,<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   196 obs. of  3 variables:
  $ bid      : chr  "INF0052" "INF0100" "INF0100" "INF0100" ...
@@ -924,12 +927,12 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>Data <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>Data <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> </span>
 <span id="cb27-2"><a></a>    <span class="fu">mutate</span>(<span class="at">TcellProportion=</span>Tcells_count<span class="sc">/</span>CD45_count) <span class="sc">|&gt;</span></span>
 <span id="cb27-3"><a></a>    <span class="fu">mutate</span>(<span class="at">TcellFrequency=</span>TcellProportion <span class="sc">*</span><span class="dv">100</span>) <span class="sc">|&gt;</span></span>
 <span id="cb27-4"><a></a>    <span class="fu">mutate</span>(<span class="at">TcellFrequency=</span><span class="fu">round</span>(TcellFrequency, <span class="dv">1</span>))</span>
 <span id="cb27-5"><a></a></span>
-<span id="cb27-6"><a></a>Data<span class="sc">$</span>timepoint <span class="ot">&lt;-</span> <span class="fu">factor</span>(Data<span class="sc">$</span>timepoint)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-6"><a></a>Data<span class="sc">$</span>timepoint <span class="ot">&lt;-</span> <span class="fu">factor</span>(Data<span class="sc">$</span>timepoint)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -954,7 +957,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a><span class="fu">library</span>(ggplot2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -963,8 +966,8 @@ David Rach
 <h3 id="data">Data</h3>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Data)</span>
-<span id="cb29-2"><a></a>Plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Data)</span>
+<span id="cb29-2"><a></a>Plot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -999,7 +1002,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">str</span>(Plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a><span class="fu">str</span>(Plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1076,8 +1079,8 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency)</span>
-<span id="cb31-2"><a></a>Plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency)</span>
+<span id="cb31-2"><a></a>Plot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1129,7 +1132,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">str</span>(Plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a></a><span class="fu">str</span>(Plot)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1161,7 +1164,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">ggplot</span>(Data, <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a><span class="fu">ggplot</span>(Data, <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1197,7 +1200,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"timepoint"</span>, <span class="at">y=</span><span class="st">"TcellFrequency"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"timepoint"</span>, <span class="at">y=</span><span class="st">"TcellFrequency"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1273,7 +1276,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1292,7 +1295,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1308,7 +1311,7 @@ David Rach
 <p>or <code>geom_violin()</code></p>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_violin</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_violin</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1324,7 +1327,7 @@ David Rach
 <p>We could also add two geometries</p>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1359,9 +1362,9 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">library</span>(ggbeeswarm)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a><span class="fu">library</span>(ggbeeswarm)</span>
 <span id="cb39-2"><a></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>()</span>
-<span id="cb39-3"><a></a>Plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-3"><a></a>Plot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1417,12 +1420,12 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>AlternateData <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(TheCSV, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a>AlternateData <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(TheCSV, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
 <span id="cb40-2"><a></a>AlternateData <span class="ot">&lt;-</span> AlternateData <span class="sc">|&gt;</span> </span>
 <span id="cb40-3"><a></a>    <span class="fu">mutate</span>(<span class="at">TcellProportion=</span>Tcells_count<span class="sc">/</span>CD45_count) <span class="sc">|&gt;</span></span>
 <span id="cb40-4"><a></a>    <span class="fu">mutate</span>(<span class="at">TcellFrequency=</span>TcellProportion <span class="sc">*</span><span class="dv">100</span>) <span class="sc">|&gt;</span></span>
 <span id="cb40-5"><a></a>    <span class="fu">mutate</span>(<span class="at">TcellFrequency=</span><span class="fu">round</span>(TcellFrequency, <span class="dv">1</span>))</span>
-<span id="cb40-6"><a></a><span class="fu">ggplot</span>(AlternateData) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_beeswarm</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb40-6"><a></a><span class="fu">ggplot</span>(AlternateData) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_beeswarm</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1477,7 +1480,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">ggplot</span>(AlternateData) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a></a><span class="fu">ggplot</span>(AlternateData) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1512,7 +1515,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a><span class="fu">ggplot</span>(AlternateData) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency, <span class="at">group=</span>timepoint) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a></a><span class="fu">ggplot</span>(AlternateData) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency, <span class="at">group=</span>timepoint) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1568,7 +1571,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_histogram</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_histogram</span>() </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in `geom_histogram()`:
 ! Problem while computing stat.
@@ -1587,7 +1590,7 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_histogram</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_histogram</span>() </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1603,7 +1606,7 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 <p>This would similarly be the case for <code>geom_density()</code></p>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_density</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_density</span>() </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1639,8 +1642,8 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>()</span>
-<span id="cb47-2"><a></a>Plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>()</span>
+<span id="cb47-2"><a></a>Plot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1672,12 +1675,12 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a>?geom_boxplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a></a>?geom_boxplot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a>?geom_beeswarm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a></a>?geom_beeswarm</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1705,8 +1708,8 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
-<span id="cb50-2"><a></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<span id="cb50-2"><a></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1722,8 +1725,8 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 <p>Waaaaay toooo large. Let’s tone it back.</p>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
-<span id="cb51-2"><a></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<span id="cb51-2"><a></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1758,8 +1761,8 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
-<span id="cb52-2"><a></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<span id="cb52-2"><a></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1791,8 +1794,8 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
-<span id="cb53-2"><a></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<span id="cb53-2"><a></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1848,7 +1851,7 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(infant_sex) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(infant_sex) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Male"   "Female"</code></pre>
 </div>
@@ -1876,8 +1879,8 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a>shape_sex <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Female"</span> <span class="ot">=</span> <span class="dv">22</span>, <span class="st">"Male"</span> <span class="ot">=</span> <span class="dv">21</span>)</span>
-<span id="cb56-2"><a></a>fill_sex <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Female"</span> <span class="ot">=</span> <span class="st">"white"</span>, <span class="st">"Male"</span> <span class="ot">=</span> <span class="st">"black"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a></a>shape_sex <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Female"</span> <span class="ot">=</span> <span class="dv">22</span>, <span class="st">"Male"</span> <span class="ot">=</span> <span class="dv">21</span>)</span>
+<span id="cb56-2"><a></a>fill_sex <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Female"</span> <span class="ot">=</span> <span class="st">"white"</span>, <span class="st">"Male"</span> <span class="ot">=</span> <span class="st">"black"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1902,9 +1905,9 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
 <span id="cb57-2"><a></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>) <span class="sc">+</span></span>
-<span id="cb57-3"><a></a>    <span class="fu">scale_shape_manual</span>(<span class="at">shape=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">fill=</span>fill_sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb57-3"><a></a>    <span class="fu">scale_shape_manual</span>(<span class="at">shape=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">fill=</span>fill_sex)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in `discrete_scale()`:
 ! unused argument (shape = c(22, 21))</code></pre>
@@ -1936,9 +1939,9 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
 <span id="cb59-2"><a></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
-<span id="cb59-3"><a></a>    <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb59-3"><a></a>    <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -1974,10 +1977,10 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
 <span id="cb60-2"><a></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
 <span id="cb60-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex)</span>
-<span id="cb60-4"><a></a>Plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb60-4"><a></a>Plot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2012,9 +2015,9 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
 <span id="cb61-2"><a></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
-<span id="cb61-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span> infant_sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb61-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span> infant_sex)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2049,9 +2052,9 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
 <span id="cb62-2"><a></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
-<span id="cb62-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span> Condition)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb62-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span> Condition)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2086,9 +2089,9 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
 <span id="cb63-2"><a></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
-<span id="cb63-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">facet_grid</span>(infant_sex <span class="sc">~</span> Condition)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb63-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">facet_grid</span>(infant_sex <span class="sc">~</span> Condition)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2124,9 +2127,9 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
 <span id="cb64-2"><a></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
-<span id="cb64-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb64-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2161,9 +2164,9 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
 <span id="cb65-2"><a></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
-<span id="cb65-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">coord_cartesian</span>(<span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb65-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">coord_cartesian</span>(<span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2220,9 +2223,9 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
 <span id="cb66-2"><a></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
-<span id="cb66-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb66-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2237,9 +2240,9 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
 <span id="cb67-2"><a></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
-<span id="cb67-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb67-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2254,9 +2257,9 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
 <span id="cb68-2"><a></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
-<span id="cb68-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb68-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span> <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2292,11 +2295,11 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
 <span id="cb69-2"><a></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
 <span id="cb69-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span></span>
 <span id="cb69-4"><a></a><span class="fu">theme</span>(</span>
-<span id="cb69-5"><a></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb69-5"><a></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2331,12 +2334,12 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span> </span>
 <span id="cb70-2"><a></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
 <span id="cb70-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span></span>
 <span id="cb70-4"><a></a><span class="fu">theme</span>(</span>
 <span id="cb70-5"><a></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb70-6"><a></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb70-6"><a></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2371,13 +2374,13 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
 <span id="cb71-2"><a></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
 <span id="cb71-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span></span>
 <span id="cb71-4"><a></a><span class="fu">theme</span>(</span>
 <span id="cb71-5"><a></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(),</span>
 <span id="cb71-6"><a></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb71-7"><a></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>, <span class="at">size =</span> <span class="dv">16</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb71-7"><a></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>, <span class="at">size =</span> <span class="dv">16</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2412,14 +2415,14 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a></a><span class="fu">ggplot</span>(Data) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>timepoint, <span class="at">y=</span>TcellFrequency) <span class="sc">+</span></span>
 <span id="cb72-2"><a></a>     <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">geom_beeswarm</span>(<span class="at">size=</span><span class="fl">2.5</span>, <span class="at">cex=</span><span class="fl">2.5</span>, <span class="fu">aes</span>(<span class="at">shape=</span>infant_sex, <span class="at">fill=</span>infant_sex)) <span class="sc">+</span></span>
 <span id="cb72-3"><a></a>     <span class="fu">scale_shape_manual</span>(<span class="at">values=</span>shape_sex) <span class="sc">+</span> <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>fill_sex) <span class="sc">+</span></span>
 <span id="cb72-4"><a></a><span class="fu">theme</span>(</span>
 <span id="cb72-5"><a></a>    <span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(),</span>
 <span id="cb72-6"><a></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
 <span id="cb72-7"><a></a>    <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>, <span class="at">size =</span> <span class="dv">12</span>),</span>
-<span id="cb72-8"><a></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb72-8"><a></a>    <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">12</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2471,11 +2474,11 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a></a><span class="fu">packageVersion</span>(<span class="st">"ggplot2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a></a><span class="fu">packageVersion</span>(<span class="st">"ggplot2"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] '4.0.3'</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a></a><span class="fu">packageVersion</span>(<span class="st">"ggcyto"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a></a><span class="fu">packageVersion</span>(<span class="st">"ggcyto"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] '1.39.4'</code></pre>
 </div>
@@ -2520,8 +2523,8 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a></a><span class="fu">library</span>(CytoML)</span>
-<span id="cb77-2"><a></a><span class="fu">library</span>(ggcyto)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a></a><span class="fu">library</span>(CytoML)</span>
+<span id="cb77-2"><a></a><span class="fu">library</span>(ggcyto)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2546,10 +2549,10 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a><span class="co"># StorageLocation # Defined Above</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a></a><span class="co"># StorageLocation # Defined Above</span></span>
 <span id="cb78-2"><a></a>FlowJoWsp <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path =</span> StorageLocation, <span class="at">pattern =</span> <span class="st">".wsp"</span>, <span class="at">full =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb78-3"><a></a>ws <span class="ot">&lt;-</span> <span class="fu">open_flowjo_xml</span>(FlowJoWsp)</span>
-<span id="cb78-4"><a></a>gs <span class="ot">&lt;-</span> <span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> StorageLocation, <span class="at">additional.keys =</span> <span class="st">"GROUPNAME"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb78-4"><a></a>gs <span class="ot">&lt;-</span> <span class="fu">flowjo_to_gatingset</span>(<span class="at">ws=</span>ws, <span class="at">name=</span><span class="dv">1</span>, <span class="at">path =</span> StorageLocation, <span class="at">additional.keys =</span> <span class="st">"GROUPNAME"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2577,7 +2580,7 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggcyto</span>(gs[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"CD8"</span>, <span class="at">y=</span><span class="st">"CD4"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a></a>Plot <span class="ot">&lt;-</span> <span class="fu">ggcyto</span>(gs[<span class="dv">6</span>], <span class="at">subset=</span><span class="st">"Tcells"</span>, <span class="fu">aes</span>(<span class="at">x=</span><span class="st">"CD8"</span>, <span class="at">y=</span><span class="st">"CD4"</span>)) <span class="sc">+</span> <span class="fu">geom_hex</span>(<span class="at">bins=</span><span class="dv">100</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2605,7 +2608,7 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
 
 <div class="fragment">
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a>Plot <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a></a>Plot <span class="sc">+</span> <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure>
@@ -2998,7 +3001,7 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -3110,13 +3113,14 @@ Caused by error in `setup_params()` at ggplot2/R/ggproto.R:196:17:
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.9.38">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -11,6 +11,9 @@
 
 <title>04 - Introduction to Tidyverse – Cytometry in R</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -75,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-8eaec6b9941db0f18eecf13b95a46332.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-5c153bb687ce49b6c6529d158b94fe28.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -128,7 +131,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../../images/hex.svg" alt="" class="navbar-logo">
+    <img src="../../images/hex.svg" alt="" class="navbar-logo light-content">
+    <img src="../../images/hex.svg" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Cytometry in R</span>
@@ -196,8 +200,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
         </a>
     </div>
   </nav>
-  <div id="quarto-announcement" data-announcement-id="517fd7fd2923fd64fe81c4cc75c6fa55" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
-<p>See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
+  <div id="quarto-announcement" data-announcement-id="dc2d9c7bdc53471fb4a7564dd51e6a50" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>Welcome Back! See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
 </div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
 </header>
 <!-- content -->
@@ -345,6 +349,24 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
  <span class="menu-text">11 - Data for Statistics</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/12_SpectralSignatures/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">12 - Spectral Signatures</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/13_SpectralSimilarities/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">13 - Spectral Similarities</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/14_Unmixing/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">14 - Unmixing in R</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -354,6 +376,81 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
         <li class="sidebar-item sidebar-item-section">
       <span class="sidebar-item-text sidebar-link text-start">
  <span class="menu-text">The World is your Oyster</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Bonus Content</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/10_Downsampling/concatenate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Concatenate - Extended Cut</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/14_Unmixing/unmixing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Unmixing - Extended Cut</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Spectral Flow Cytometry</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/SDY3080/ImmPort.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Retrieving ImmPort data</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/SDY3080/SetUp.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Cleanup Gates</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/SDY3080/SignatureMatrices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Signature Matrices</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">Community</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/community/AutoSpectral/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">AutoSpectral</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/community/TRU-OLS/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">TRU-OLS</span></a>
+  </div>
+</li>
+      </ul>
   </li>
     </ul>
     </div>
@@ -449,7 +546,7 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Housekeeping
+<span class="screen-reader-only">Important</span>Housekeeping
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -464,9 +561,9 @@ Housekeeping
 <h2 class="anchored" data-anchor-id="read.csv">read.csv</h2>
 <p>We will start by first loading in our copied over dataset (Dataset.csv) from it’s location in the project folder. If you are following the organization scheme we have been using throughout the course, your file path will look something like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>thefilepath <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"Dataset.csv"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>thefilepath <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, <span class="st">"Dataset.csv"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>thefilepath</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>thefilepath</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data/Dataset.csv"</code></pre>
 </div>
@@ -477,7 +574,7 @@ Housekeeping
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Reminder
+<span class="screen-reader-only">Tip</span>Reminder
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -487,8 +584,8 @@ Reminder
 <p>Above, we directly specified the name (Dataset) and filetype (.csv) of the file we wanted in the last argument of the file.path (“Dataset.csv”). This allows us to skip the <code>list.files()</code> step we used last week as we have provided the full file path. While this approach can be faster, if we accidentally mistype the file name, we could end up with an error at the next step due to no files being found with the mistyped name.</p>
 <p>Since our dataset is stored as a .csv file, we will be using the <code>read.csv()</code> function from the <code>utils</code> package (included in our base R software installation) to read it into R. We will also use the <code>colnames()</code> function from last week to get a read-out of the column names.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file=</span>thefilepath, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="at">file=</span>thefilepath, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "bid"               "timepoint"         "Condition"        
  [4] "Date"              "infant_sex"        "ptype"            
@@ -506,8 +603,8 @@ Reminder
 <p>As we look at the line of code, we now have enough context to decipher that the “file” argument is where we provide a file path to an individual file, but what does the “check.names” argument do?</p>
 <p>Let’s see what happens to the column names when we set “check.names” argument to TRUE:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Data_Alternative <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(thefilepath, <span class="at">check.names=</span><span class="cn">TRUE</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Data_Alternative)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Data_Alternative <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(thefilepath, <span class="at">check.names=</span><span class="cn">TRUE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Data_Alternative)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "bid"               "timepoint"         "Condition"        
  [4] "Date"              "infant_sex"        "ptype"            
@@ -527,7 +624,7 @@ Reminder
 <p>Because of this, it is often better to rename columns individually after import, which we will learn how to do later today.</p>
 <p>Following up with what we practiced last week, lets use the <code>head()</code> function to visualize the first few rows of data.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Data, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Data, <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      bid timepoint Condition       Date infant_sex  ptype    root singletsFSC
 1 INF0052         0      Ctrl 2025-07-26       Male HEU-hi 2098368     1894070
@@ -555,17 +652,17 @@ Reminder
 <p><img src="images/01_DataView.png" class="img-fluid"></p>
 <p>We could also achieve the same window to open using the <code>View()</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(Data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Wrapping up our brief recap of <a href="../../course/03_InsideFCSFile/index.html">last week</a> functions, we can check an objects type using both the <code>class()</code> and <code>str()</code> functions.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(Data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data.frame"</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>'data.frame':   196 obs. of  31 variables:
  $ bid              : chr  "INF0052" "INF0100" "INF0100" "INF0100" ...
@@ -606,7 +703,7 @@ Reminder
 <h2 class="anchored" data-anchor-id="data.frame">data.frame</h2>
 <p>Or alternatively using the new-to-us <code>glimpse()</code> function</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(Data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in `glimpse()`:
 ! could not find function "glimpse"</code></pre>
@@ -618,7 +715,7 @@ Reminder
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Checkpoint 1
+<span class="screen-reader-only">Tip</span>Checkpoint 1
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -628,7 +725,7 @@ Checkpoint 1
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We haven't attached/loaded the package in which the function glimpse is within</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We haven't attached/loaded the package in which the function glimpse is within</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Checkpoint 2">
@@ -637,7 +734,7 @@ Checkpoint 1
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Checkpoint 2
+<span class="screen-reader-only">Tip</span>Checkpoint 2
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -647,17 +744,17 @@ Checkpoint 2
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We can use double ? to search all installed packages for a function, regardless</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We can use double ? to search all installed packages for a function, regardless</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># if the package is attached to the environment or not</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>??glimpse</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>??glimpse</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p><img src="images/02_Glimpse.png" class="img-fluid"></p>
 <p>From the list of search matches (in the right secondary sidebar), it looks likely that the <code>glimpse()</code> function in the <code>dplyr</code> package was the one we were looking for. This is one the main tidyverse packages we will be using throughout the course. Let’s attach it to our environment via the <code>library()</code> call first and try running <code>glimpse()</code> again.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(Data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 196
 Columns: 31
@@ -696,7 +793,7 @@ $ CD45_count        &lt;int&gt; 915203, 1438047, 820570, 271304, 940733, 675857,
 </div>
 <p>We notice that while similar to the <code>str()</code> output, <code>glimpse()</code> handles spacing a little differently, and includes the dimensions at the top. However, we can also retrieve the dimensions directly using the <code>dim()</code> function (which maintains the row followed by column position convention of base R (ex. [196,31]))</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(Data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(Data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 196  31</code></pre>
 </div>
@@ -708,40 +805,40 @@ $ CD45_count        &lt;int&gt; 915203, 1438047, 820570, 271304, 940733, 675857,
 <p><img src="images/03_ColumnClass.png" class="img-fluid"></p>
 <p>If we were trying to verify type of values contained within a data.frame column, we could employ several similarly-named functions (<code>is.character()</code>, <code>is.numeric()</code> or <code>is.logical()</code>) to check</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># colnames(Data)  # To recheck the column names</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># colnames(Data)  # To recheck the column names</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">is.character</span>(Data<span class="sc">$</span>bid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">is.character</span>(Data<span class="sc">$</span>bid)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is.numeric</span>(Data<span class="sc">$</span>bid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is.numeric</span>(Data<span class="sc">$</span>bid)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] FALSE</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># colnames(Data)  # To recheck the column names</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># colnames(Data)  # To recheck the column names</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">is.character</span>(Data<span class="sc">$</span>Tcells_count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">is.character</span>(Data<span class="sc">$</span>Tcells_count)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] FALSE</code></pre>
 </div>
 </div>
 <p>For numeric columns using the <code>is.numeric()</code> function, we can also be <a href="https://www.r-bloggers.com/2023/09/understanding-data-types-in-r/">subtype</a> specific using either <code>is.integer()</code> or <code>is.double()</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># colnames(Data)  # To recheck the column names</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># colnames(Data)  # To recheck the column names</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">is.numeric</span>(Data<span class="sc">$</span>Tcells_count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">is.numeric</span>(Data<span class="sc">$</span>Tcells_count)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is.integer</span>(Data<span class="sc">$</span>Tcells_count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is.integer</span>(Data<span class="sc">$</span>Tcells_count)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is.double</span>(Data<span class="sc">$</span>Tcells_count)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">is.double</span>(Data<span class="sc">$</span>Tcells_count)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] FALSE</code></pre>
 </div>
@@ -752,7 +849,7 @@ $ CD45_count        &lt;int&gt; 915203, 1438047, 820570, 271304, 940733, 675857,
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Reminder
+<span class="screen-reader-only">Tip</span>Reminder
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -760,8 +857,8 @@ Reminder
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># colnames(Data)  # To recheck the column names</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is.numeric</span>(Data<span class="sc">$</span>CD8<span class="sc">-</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># colnames(Data)  # To recheck the column names</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is.numeric</span>(Data<span class="sc">$</span>CD8<span class="sc">-</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in parse(text = input): &lt;text&gt;:2:21: unexpected ')'
 1: # colnames(Data)  # To recheck the column names
@@ -770,8 +867,8 @@ Reminder
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># colnames(Data)  # To recheck the column names</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is.numeric</span>(Data<span class="sc">$</span><span class="st">`</span><span class="at">CD8-</span><span class="st">`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># colnames(Data)  # To recheck the column names</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">is.numeric</span>(Data<span class="sc">$</span><span class="st">`</span><span class="at">CD8-</span><span class="st">`</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>
@@ -781,12 +878,12 @@ Reminder
 <h2 class="anchored" data-anchor-id="select-columns">select (Columns)</h2>
 <p>Now that we have read in our data, and have a general picture of the structure and contents, lets start learning the main <code>dplyr</code> functions we will be using throughout the course. To do this, lets go ahead and attach <code>dplyr</code> to our local environment via the <code>library()</code> call.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We will start with the <code>select()</code> function. It is used to “select” a column from a data.frame type object. In the simplest usage, we provide the name of our data.frame variable/object as the first argument after the opening parenthesis. This is then followed by the name of the column we want to select as the second argument (let’s place around the “” around the column name for now)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>DateColumn <span class="ot">&lt;-</span> <span class="fu">select</span>(Data, <span class="st">"Date"</span>)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>DateColumn[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>DateColumn <span class="ot">&lt;-</span> <span class="fu">select</span>(Data, <span class="st">"Date"</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>DateColumn[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26"
  [6] "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26"</code></pre>
@@ -797,8 +894,8 @@ Reminder
 <h3 class="anchored" data-anchor-id="pipe-operators">Pipe Operators</h3>
 <p>While the above line of code works to select a column, when you encounter <code>select()</code> out in the wild, it will more often be in a line of code that looks like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>DateColumn <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Date"</span>)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>DateColumn[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>DateColumn <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Date"</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>DateColumn[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26"
  [6] "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26"</code></pre>
@@ -807,37 +904,37 @@ Reminder
 <p>… <strong>“What in the world is that thing |&gt; ?”</strong> …</p>
 <p>Glad you asked! An useful feature of the tidyverse packages is their use of <a href="https://r4ds.had.co.nz/pipes.html">pipes</a> (either the original <code>magrittr</code> package’s “%&gt;%” or <code>base R version &gt;4.1.0's</code> “|&gt;”“), usually appearing like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># magrittr %&gt;% pipe</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># magrittr %&gt;% pipe</span></span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>DateColumn <span class="ot">&lt;-</span> Data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="st">"Date"</span>)</span>
 <span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="co"># base R |&gt; pipe</span></span>
-<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>DateColumn <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Date"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>DateColumn <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Date"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>… <strong>“How do we interpret/read that line of code?”</strong> …</p>
 <p>Let’s break it down, starting off just to the right of the assignment arrow (&lt;-) with our data.frame “Data”.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>Data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>Data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We then proceed to read to the right, adding in our pipe operator. The pipe essentially serves as an intermediate passing the contents of data onward to the subsequent function.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In our case, this subsequent function is the <code>select()</code> function, which will select a particular column from the available data. When using the pipe, the first argument slot we saw for “select(Data,”Date”)” is occupied by the contents Data that are being passed by the pipe.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>To complete the transfer, we provide the desired column name to <code>select()</code> to act on (“Date” in this case)</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Date"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Date"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In summary, contents of Data are passed to the pipe, and select runs on those contents to select the Date column</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Date"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Date"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>One of the main advantages for using pipes, is they can be linked together, passing resulting objects of one operation on to the next pipe and subsequent function. We can see this in operation in the example below where we hand off the isolated “Date” column to the <code>nrow()</code> function to determine number of rows. We will use pipes throughout the course, so you will gradually gain familiarity as you encounter them.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Date"</span>) <span class="sc">|&gt;</span> <span class="fu">nrow</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="st">"Date"</span>) <span class="sc">|&gt;</span> <span class="fu">nrow</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 196</code></pre>
 </div>
@@ -852,7 +949,7 @@ Reminder
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Odd R Behavior # 1
+<span class="screen-reader-only">Note</span>Odd R Behavior # 1
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -860,7 +957,7 @@ Odd R Behavior # 1
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(Date) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">select</span>(Date) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        Date
 1 2025-07-26
@@ -874,7 +971,7 @@ Odd R Behavior # 1
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-.
+<span class="screen-reader-only">Note</span>.
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -886,9 +983,9 @@ Odd R Behavior # 1
 <h3 class="anchored" data-anchor-id="selecting-multiple-columns">Selecting multiple columns</h3>
 <p>Since we are able to select one column, can we select multiple (similar to a [Data[,2:5]] approach in base R)? We can, and they can be positioned anywhere within the data.frame:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>Subset <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(bid, timepoint, Condition, Tcells, <span class="st">`</span><span class="at">CD8+</span><span class="st">`</span>, <span class="st">`</span><span class="at">CD4+</span><span class="st">`</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>Subset <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(bid, timepoint, Condition, Tcells, <span class="st">`</span><span class="at">CD8+</span><span class="st">`</span>, <span class="st">`</span><span class="at">CD4+</span><span class="st">`</span>)</span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Subset, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Subset, <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      bid timepoint Condition    Tcells      CD8+      CD4+
 1 INF0052         0      Ctrl 0.2804264 0.2734826 0.6341164
@@ -898,9 +995,9 @@ Odd R Behavior # 1
 </div>
 <p>You will notice that the order in which we selected the columns will dictate their position in the subsetted data.frame object:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>Subset <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(bid, Tcells, <span class="st">`</span><span class="at">CD8+</span><span class="st">`</span>, <span class="st">`</span><span class="at">CD4+</span><span class="st">`</span>, timepoint, Condition, )</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>Subset <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(bid, Tcells, <span class="st">`</span><span class="at">CD8+</span><span class="st">`</span>, <span class="st">`</span><span class="at">CD4+</span><span class="st">`</span>, timepoint, Condition, )</span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Subset, <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Subset, <span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      bid    Tcells      CD8+      CD4+ timepoint Condition
 1 INF0052 0.2804264 0.2734826 0.6341164         0      Ctrl
@@ -915,7 +1012,7 @@ Odd R Behavior # 1
 <p>Alternatively, we occasionally want to move one column. While we could respecify the location using <code>select()</code>, specifying the names of all the other columns out in a line of code to just to rearrange one does not sound like a good use of time. For this reason, the second <code>dplyr</code> function we will be learning is the <code>relocate()</code> function.</p>
 <p>Looking at our Data object, let’s say we wanted to move the Tcells column from its current location to the second column position (right after the bid column). The line of code to do so would look like:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Tcells, <span class="at">.after=</span>bid) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Tcells, <span class="at">.after=</span>bid) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      bid    Tcells timepoint Condition       Date infant_sex  ptype    root
 1 INF0052 0.2804264         0      Ctrl 2025-07-26       Male HEU-hi 2098368
@@ -938,11 +1035,11 @@ Odd R Behavior # 1
 2            308583 0.09477437 0.13973396    1438047
 3            607477 0.01545999 0.04212072     820570</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># |&gt; head(3) is used only to make the website output visualization manageable :D</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># |&gt; head(3) is used only to make the website output visualization manageable :D</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Similar to what we saw with <code>select()</code>, this approach can also be used for more than 1 column:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Tcells, Monocytes, <span class="at">.after=</span>bid) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Tcells, Monocytes, <span class="at">.after=</span>bid) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      bid    Tcells  Monocytes timepoint Condition       Date infant_sex  ptype
 1 INF0052 0.2804264 0.11796509         0      Ctrl 2025-07-26       Male HEU-hi
@@ -965,11 +1062,11 @@ Odd R Behavior # 1
 2            308583 0.13973396    1438047
 3            607477 0.04212072     820570</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># |&gt; head(3) is used only to make the website output visualization manageable :D</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># |&gt; head(3) is used only to make the website output visualization manageable :D</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We can also modify the argument so that columns are placed before a certain column</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Tcells, <span class="at">.before=</span>Date) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Tcells, <span class="at">.before=</span>Date) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      bid timepoint Condition    Tcells       Date infant_sex  ptype    root
 1 INF0052         0      Ctrl 0.2804264 2025-07-26       Male HEU-hi 2098368
@@ -992,11 +1089,11 @@ Odd R Behavior # 1
 2            308583 0.09477437 0.13973396    1438047
 3            607477 0.01545999 0.04212072     820570</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># |&gt; head(3) is used only to make the website output visualization manageable :D</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># |&gt; head(3) is used only to make the website output visualization manageable :D</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>And as we might suspect, we could specify a column index location rather than using a column name.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Date, <span class="at">.before=</span><span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Date, <span class="at">.before=</span><span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        Date     bid timepoint Condition infant_sex  ptype    root singletsFSC
 1 2025-07-26 INF0052         0      Ctrl       Male HEU-hi 2098368     1894070
@@ -1019,7 +1116,7 @@ Odd R Behavior # 1
 2            308583 0.09477437 0.13973396    1438047
 3            607477 0.01545999 0.04212072     820570</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># |&gt; head(3) is used only to make the website output visualization manageable :D</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># |&gt; head(3) is used only to make the website output visualization manageable :D</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="rename" class="level2">
@@ -1027,18 +1124,18 @@ Odd R Behavior # 1
 <p>At this point, we are able to both move and select particular columns, allowing us to rearrange and subset a larger data.frame object however we want it to appear. However, as we encountered, some of the names contain special characters and spaces, requiring use of tick marks (``) to avoid issues. How can we change a column name?</p>
 <p>In base R, we could change individual column names by assigning a new value with the assignment arrow to the corresponding column name index. For example, looking at our Subset object, wen could rename CD8+ as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Subset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "bid"       "Tcells"    "CD8+"      "CD4+"      "timepoint" "Condition"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Subset)[<span class="dv">3</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Subset)[<span class="dv">3</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "CD8+"</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Subset)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">"CD8Positive"</span></span>
-<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Subset)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Subset)[<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="st">"CD8Positive"</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Subset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "bid"         "Tcells"      "CD8Positive" "CD4+"        "timepoint"  
 [6] "Condition"  </code></pre>
@@ -1046,8 +1143,8 @@ Odd R Behavior # 1
 </div>
 <p>With the tidyverse, we can use the <code>rename()</code> function which removes the need to look up the column index number. The way we write the argument is placing within the parenthesis the old name to the right of the equals sign, with the new name to the left</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>Renamed <span class="ot">&lt;-</span> Subset <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">CD4_Positive =</span> <span class="st">`</span><span class="at">CD4+</span><span class="st">`</span>)</span>
-<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Renamed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>Renamed <span class="ot">&lt;-</span> Subset <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">CD4_Positive =</span> <span class="st">`</span><span class="at">CD4+</span><span class="st">`</span>)</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Renamed)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "bid"          "Tcells"       "CD8Positive"  "CD4_Positive" "timepoint"   
 [6] "Condition"   </code></pre>
@@ -1055,8 +1152,8 @@ Odd R Behavior # 1
 </div>
 <p>If we wanted to rename multiple column names at once, we would just need to include a comma between the individual rename arguments within the parenthesis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>Renamed_Multiple <span class="ot">&lt;-</span> Subset <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">specimen =</span> bid, <span class="at">timepoint_months =</span> timepoint, <span class="at">stimulation =</span> Condition, <span class="at">CD4Positive=</span><span class="st">`</span><span class="at">CD4+</span><span class="st">`</span>)</span>
-<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Renamed_Multiple)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>Renamed_Multiple <span class="ot">&lt;-</span> Subset <span class="sc">|&gt;</span> <span class="fu">rename</span>(<span class="at">specimen =</span> bid, <span class="at">timepoint_months =</span> timepoint, <span class="at">stimulation =</span> Condition, <span class="at">CD4Positive=</span><span class="st">`</span><span class="at">CD4+</span><span class="st">`</span>)</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(Renamed_Multiple)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "specimen"         "Tcells"           "CD8Positive"      "CD4Positive"     
 [5] "timepoint_months" "stimulation"     </code></pre>
@@ -1067,14 +1164,14 @@ Odd R Behavior # 1
 <h2 class="anchored" data-anchor-id="pull">pull</h2>
 <p>Sometimes, we may want to retrieve individual values present in a column, to use within either a vector or a list. We can do this using the <code>pull()</code> function, which will retrieve the column contents and strip the column formatting</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(Date) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(Date) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26" "2025-07-26"</code></pre>
 </div>
 </div>
 <p>This can be useful when we are doing data exploration, and trying to determine how many unique variants might be present. For example, if we wanted to see what days individual samples were acquired, we could <code>pull()</code> the data and pass it to the <code>unique()</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(Date) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(Date) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "2025-07-26" "2025-07-29" "2025-07-31" "2025-08-05" "2025-08-07"
 [6] "2025-08-22" "2025-08-28" "2025-08-30"</code></pre>
@@ -1086,7 +1183,7 @@ Odd R Behavior # 1
 <p>So far, we have been working with <code>dplyr</code> functions primarily used when working with and subsetting columns (including <code>select()</code>, <code>pull()</code>, <code>rename()</code> and <code>relocate()</code>). What if we wanted to work with rows of a data.frame? This is where the <code>filter()</code> function is used.</p>
 <p>The Condition column in this Dataset appears to be indicating whether the samples were stimulated. Let’s see how many unique values are contained within that column</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(Condition) <span class="sc">|&gt;</span> <span class="fu">unique</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">pull</span>(Condition) <span class="sc">|&gt;</span> <span class="fu">unique</span>() </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Ctrl" "PPD"  "SEB" </code></pre>
 </div>
@@ -1094,8 +1191,8 @@ Odd R Behavior # 1
 <p>In the case of this dataset, looks like the .fcs files where treated with either left alone, treated with <a href="https://en.wikipedia.org/wiki/Tuberculin">PPD (Purified Protein Derrivative)</a> or <a href="https://en.wikipedia.org/wiki/Enterotoxin_type_B">SEB</a>. What if we wanted to subset only those treated with PPD?</p>
 <p>Within <code>filter()</code>, we would specify the column name as the first argument, and ask that only values equal to (==) “PPD” be returned. Notice in this case, “” are needed, as we are asking for a matching character value.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>PPDOnly <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(Condition <span class="sc">==</span> <span class="st">"PPD"</span>)</span>
-<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(PPDOnly, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>PPDOnly <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(Condition <span class="sc">==</span> <span class="st">"PPD"</span>)</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(PPDOnly, <span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      bid timepoint Condition       Date infant_sex  ptype    root singletsFSC
 1 INF0052         0       PPD 2025-07-26       Male HEU-hi 2363512     2136616
@@ -1131,7 +1228,7 @@ Odd R Behavior # 1
 </div>
 <p>While this works, using “==” to match can glitch, especially with character values. Using the %in% operator is a better way of identifying and extracting only the rows whose Condition column contains “PPD”</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(Condition <span class="sc">%in%</span> <span class="st">"PPD"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(Condition <span class="sc">%in%</span> <span class="st">"PPD"</span>) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      bid timepoint Condition       Date infant_sex  ptype    root singletsFSC
 1 INF0052         0       PPD 2025-07-26       Male HEU-hi 2363512     2136616
@@ -1167,7 +1264,7 @@ Odd R Behavior # 1
 </div>
 <p>Similar to what we saw for <code>select()</code>, we can grab rows that contain various values at once. We would just need to modify the second part of the argument. If we wanted to grab rows whose Condition column contained either PPD or SEB, we would need to provide that argument as a vector, placing both within <code>c()</code>/</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(Condition <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"PPD"</span>, <span class="st">"SEB"</span>)) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(Condition <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"PPD"</span>, <span class="st">"SEB"</span>)) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      bid timepoint Condition       Date infant_sex  ptype    root singletsFSC
 1 INF0052         0       PPD 2025-07-26       Male HEU-hi 2363512     2136616
@@ -1203,8 +1300,8 @@ Odd R Behavior # 1
 </div>
 <p>Alternatively, we could have set up the vector externally, and then provided it to <code>filter()</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>TheseConditions <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PPD"</span>, <span class="st">"SEB"</span>)</span>
-<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(Condition <span class="sc">%in%</span> TheseConditions) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>TheseConditions <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"PPD"</span>, <span class="st">"SEB"</span>)</span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(Condition <span class="sc">%in%</span> TheseConditions) <span class="sc">|&gt;</span> <span class="fu">head</span>(<span class="dv">5</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      bid timepoint Condition       Date infant_sex  ptype    root singletsFSC
 1 INF0052         0       PPD 2025-07-26       Male HEU-hi 2363512     2136616
@@ -1240,25 +1337,25 @@ Odd R Behavior # 1
 </div>
 <p>While this works when we have a limited number of variant condition values, what if had many more but only wanted to exclude one value? As we saw when learning about <a href="../../course/02_FilePaths/index.html">Conditionals</a>, when we add a ! in front of a logical value, we get the opposite logical value returned</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>IsThisASpectralInstrument <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>IsThisASpectralInstrument <span class="ot">&lt;-</span> <span class="cn">TRUE</span></span>
 <span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="sc">!</span>IsThisASpectralInstrument</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="sc">!</span>IsThisASpectralInstrument</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] FALSE</code></pre>
 </div>
 </div>
 <p>In the context of the <code>dplyr</code> package, we can use ! within the <code>filter()</code> to remove rows that contain a certain value</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>Subset <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span>Condition <span class="sc">%in%</span> <span class="st">"SEB"</span>)</span>
-<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>Subset <span class="sc">|&gt;</span> <span class="fu">pull</span>(Condition) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a>Subset <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span>Condition <span class="sc">%in%</span> <span class="st">"SEB"</span>)</span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>Subset <span class="sc">|&gt;</span> <span class="fu">pull</span>(Condition) <span class="sc">|&gt;</span> <span class="fu">unique</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Ctrl" "PPD" </code></pre>
 </div>
 </div>
 <p>Likewise, we can also use it with the <code>select()</code> to exclude columns we don’t want to include</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>Subset <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">!</span>timepoint)</span>
-<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>Subset[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>Subset <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">select</span>(<span class="sc">!</span>timepoint)</span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>Subset[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      bid Condition       Date infant_sex  ptype    root singletsFSC
 1 INF0052      Ctrl 2025-07-26       Male HEU-hi 2098368     1894070
@@ -1288,12 +1385,12 @@ Odd R Behavior # 1
 <p>As we can see, with just these handful of functions, we have the building blocks to rearrange and subset a larger data.frame into a format that we prefer. But what if we wanted to alter the content of a column, or add new columns to an existing data.frame? This is where the <code>mutate()</code> function can be used.</p>
 <p>Let’s start by slimming down our current Data to a smaller workable example, highlighting the functions and pipes we learned about today</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>TidyData <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(Condition <span class="sc">%in%</span> <span class="st">"Ctrl"</span>) <span class="sc">|&gt;</span> <span class="fu">filter</span>(timepoint <span class="sc">%in%</span> <span class="st">"0"</span>) <span class="sc">|&gt;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>TidyData <span class="ot">&lt;-</span> Data <span class="sc">|&gt;</span> <span class="fu">filter</span>(Condition <span class="sc">%in%</span> <span class="st">"Ctrl"</span>) <span class="sc">|&gt;</span> <span class="fu">filter</span>(timepoint <span class="sc">%in%</span> <span class="st">"0"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>     <span class="fu">select</span>(bid, timepoint, Condition, Date, Tcells_count, CD45_count) <span class="sc">|&gt;</span></span>
-<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rename</span>(<span class="at">specimen=</span>bid, <span class="at">condition=</span>Condition) <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Date, <span class="at">.after=</span>specimen)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rename</span>(<span class="at">specimen=</span>bid, <span class="at">condition=</span>Condition) <span class="sc">|&gt;</span> <span class="fu">relocate</span>(Date, <span class="at">.after=</span>specimen)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>TidyData</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>TidyData</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   specimen       Date timepoint condition Tcells_count CD45_count
 1   INF0052 2025-07-26         0      Ctrl       164771     915203
@@ -1323,8 +1420,8 @@ Odd R Behavior # 1
 </div>
 <p>The <code>mutate()</code> function can be used to modify existing columns, as well as to create new ones. For example, let’s derrive the proportion of T cells from the overall CD45 gate. To do so, within the parenthesis, we would specify a new column name, and then divide the original columns:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>TidyData <span class="ot">&lt;-</span> TidyData <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Tcells_ProportionCD45 =</span> Tcells_count <span class="sc">/</span> CD45_count)</span>
-<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>TidyData</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>TidyData <span class="ot">&lt;-</span> TidyData <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">Tcells_ProportionCD45 =</span> Tcells_count <span class="sc">/</span> CD45_count)</span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>TidyData</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   specimen       Date timepoint condition Tcells_count CD45_count
 1   INF0052 2025-07-26         0      Ctrl       164771     915203
@@ -1378,8 +1475,8 @@ Odd R Behavior # 1
 </div>
 <p>We can see that we have many significant digits being returned. Let’s round this new column to 2 significant digits by applying the <code>round()</code> function</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>TidyData <span class="ot">&lt;-</span> TidyData <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">TcellsRounded =</span> <span class="fu">round</span>(Tcells_ProportionCD45, <span class="dv">2</span>))</span>
-<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>TidyData </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>TidyData <span class="ot">&lt;-</span> TidyData <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">TcellsRounded =</span> <span class="fu">round</span>(Tcells_ProportionCD45, <span class="dv">2</span>))</span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>TidyData </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   specimen       Date timepoint condition Tcells_count CD45_count
 1   INF0052 2025-07-26         0      Ctrl       164771     915203
@@ -1436,11 +1533,11 @@ Odd R Behavior # 1
 <h2 class="anchored" data-anchor-id="arrange">arrange</h2>
 <p>And while we are here, let’s rearrange the rows so that they are descending based on the Tcell proportion. We can use this by using the <code>desc()</code> and <code>arrange()</code> functions from <code>dplyr</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>TidyData <span class="ot">&lt;-</span> TidyData <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(TcellsRounded))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>TidyData <span class="ot">&lt;-</span> TidyData <span class="sc">|&gt;</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(TcellsRounded))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>And let’s go ahead and <code>filter()</code> and identify the specimens that had more than 30% T cells as part of the overall CD45 gate (context, these samples were Cord Blood):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>TidyData <span class="sc">|&gt;</span> <span class="fu">filter</span>(TcellsRounded <span class="sc">&gt;</span> <span class="fl">0.3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a>TidyData <span class="sc">|&gt;</span> <span class="fu">filter</span>(TcellsRounded <span class="sc">&gt;</span> <span class="fl">0.3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  specimen       Date timepoint condition Tcells_count CD45_count
 1  INF0032 2025-08-05         0      Ctrl       361034     753064
@@ -1456,22 +1553,22 @@ Odd R Behavior # 1
 </div>
 <p>Which is we had wanted to just retrieve the specimen IDs, we could add <code>pull()</code> after a new pipe argument.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>TidyData <span class="sc">|&gt;</span> <span class="fu">filter</span>(TcellsRounded <span class="sc">&gt;</span> <span class="fl">0.3</span>) <span class="sc">|&gt;</span> <span class="fu">pull</span>(specimen)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a>TidyData <span class="sc">|&gt;</span> <span class="fu">filter</span>(TcellsRounded <span class="sc">&gt;</span> <span class="fl">0.3</span>) <span class="sc">|&gt;</span> <span class="fu">pull</span>(specimen)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "INF0032" "INF0159" "INF0179" "INF0166"</code></pre>
 </div>
 </div>
 <p>And finally, since I may want to send the data to a supervisor, let’s go ahead and export this “tidyed” version of our data.frame out to it’s own .csv file. Working within our project folder, this would look like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>NewName <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"MyNewDataset"</span>, <span class="st">".csv"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a>NewName <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"MyNewDataset"</span>, <span class="st">".csv"</span>)</span>
 <span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, NewName)</span>
-<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>StorageLocation</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>StorageLocation</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "data/MyNewDataset.csv"</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(TidyData, StorageLocation, <span class="at">row.names=</span><span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(TidyData, StorageLocation, <span class="at">row.names=</span><span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 </section>
@@ -1497,7 +1594,7 @@ Odd R Behavior # 1
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Problem 1
+<span class="screen-reader-only">Tip</span>Problem 1
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1510,7 +1607,7 @@ Problem 1
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Problem 2
+<span class="screen-reader-only">Tip</span>Problem 2
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1523,7 +1620,7 @@ Problem 2
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Problem 3
+<span class="screen-reader-only">Tip</span>Problem 3
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -1589,13 +1686,14 @@ Problem 3
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
