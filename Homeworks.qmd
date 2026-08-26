@@ -356,3 +356,27 @@ In our unmixing-dependent spread (UDS) hotspot, we used only our panel fluoropho
 Click [here](https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+13%22) to see previous community attempts at answering these optional take-home problems.
 
 Stay tuned for our [walk-through]() answers on Course section completion. 
+
+# Week 14 - Unmixing in R
+
+![](/course/14_Unmixing/images/TakeAway1.jpg)
+
+Redirect to [Week 14](course/14_Unmixing/index.qmd) content. 
+
+:::{.callout-tip title="Problem 1"}
+Modify `OldFashionedUnmix()`'s returnType argument to instead of returning a ".fcs" file or a "residual" plot, to also returned the Unmixed data.frame, as well as the flowFrame (since both can be useful!). Add any conditional statements or arguments as you deem necessary. 
+:::
+
+:::{.callout-tip title="Problem 2"}
+We briefly looked at the residual plots, including a case where we left out BUV805 CD4 and saw corresponding increase on those detectors in the residual plot. Rerun this example with a signature matrix missing one of the fluorophores, selecting returnType = "residual" to get back the residual plot. At this point, rerun with returnType = "fcs", and generate a badly unmixed .fcs file. Then repeat this process with a signature matrix that contains all the signature references. Visualizing the two .fcs files, which fluorophores ended up having messed up unmixing due to the exclusion, and which ones were mostly unaffected?
+:::
+
+:::{.callout-tip title="Problem 3"}
+One of the first packages that I encountered that implemented unmixing in R was Christopher Hall's [flowUnmix](https://github.com/hally166/flowUnmix) package. Since, several additional R packages have also implemented ways to unmix using various methods.  While how they process their unmixing controls to get their signature matrices often vary wildly, at the heart the basic unmixing steps are similar, with choice of unmixing method often just needing to swtich out `lsfit()` for another function that implements the other method. Since you may be interested in implementing one of these methods on your own in the future, lets go on a treasure hunt. 
+
+For these 2 packages ([flowUnmix](https://github.com/hally166/flowUnmix/tree/main/R), and [Autospectral](https://github.com/DrCytometer/AutoSpectral/tree/master/R)), dive into their GitHub repositories and open their R folder. Check the .R files for any with an "unmixing-something-or-order" style name and examine it. Try reading your way through the code until you encounter the function that actually carries out the unmixing. Look up that functions original package, and check the help file. Take a screenshot, and report back. Feel free to repeat for any unmixing methods of interest (OLS, NNLS, WLS, etc.) 
+:::
+
+Click [here](https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+14%22) to see previous community attempts at answering these optional take-home problems.
+
+Stay tuned for our [walk-through]() answers on Course section completion. 

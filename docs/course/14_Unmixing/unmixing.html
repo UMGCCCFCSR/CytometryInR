@@ -2,22 +2,25 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="David Rach">
-<meta name="dcterms.date" content="2026-08-04">
+<meta name="dcterms.date" content="2026-08-05">
 
 <title>Walk-through: Unmixing – Cytometry in R</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -78,10 +81,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-5c153bb687ce49b6c6529d158b94fe28.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-6f6aba0dcc0820cd94830540b68c7d73.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -119,35 +122,6 @@ gtag('js', new Date());
 gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -390,6 +364,12 @@ window.Quarto = {
  <span class="menu-text">13 - Spectral Similarities</span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/14_Unmixing/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">14 - Unmixing in R</span></a>
+  </div>
+</li>
       </ul>
   </li>
         <li class="sidebar-item sidebar-item-section">
@@ -448,6 +428,12 @@ window.Quarto = {
   <div class="sidebar-item-container"> 
   <a href="../../course/SDY3080/SignatureMatrices.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Signature Matrices</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/SDY3080/LuciernagaIntegration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">LuciernagaIntegration</span></a>
   </div>
 </li>
       </ul>
@@ -511,7 +497,6 @@ window.Quarto = {
   </ul></li>
   </ul></li>
   <li><a href="#take-away" id="toc-take-away" class="nav-link" data-scroll-target="#take-away">Take Away</a></li>
-  <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources">Additional Resources</a></li>
   </ul>
 </nav>
     </div>
@@ -537,7 +522,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 4, 2026</p>
+      <p class="date">August 5, 2026</p>
     </div>
   </div>
   
@@ -553,21 +538,25 @@ window.Quarto = {
 <div style="text-align: right;">
 <p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://img.shields.io/badge/license-AGPLv3-blue.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
 </div>
-<p>For the YouTube livestream schedule, see <a href="https://www.youtube.com/@cytometryinr">here</a></p>
-<p>For screen-shot slides, click <a href="../../course/10_Downsampling/slides.html">here</a></p>
+<p>For the YouTube livestream recordings, see <a href="https://www.youtube.com/live/lirMHQLVnnU?si=1oTXTH0NWR46L4aa&amp;t=80">here</a></p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/lirMHQLVnnU?si=1oTXTH0NWR46L4aa&amp;start=80" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen="">
+</iframe>
+<p>For screen-shot slides, click <a href="../../course/14_Unmixing/unmixing_slides.html">here</a></p>
 <p><br></p>
 <hr>
 <section id="background" class="level1">
 <h1>Background</h1>
 <section id="rationale" class="level2">
 <h2 class="anchored" data-anchor-id="rationale">Rationale</h2>
-<p>This walk-through is an extension of the <a href="../../course/14_Unmixing/index.qmd">Week 14</a> lesson, documenting how the <code>UnmixingInternals()</code> function was cobbled together from start to finish. This walk-through is optional, and has been separated out from the main <a href="../../course/14_Unmixing/index.qmd">Unmixing</a> lesson in a desire to avoid burning out those who would rather not know the tiny details of how to reformat the <a href="../../course/03_InsideFCSFile/index.html">flowFrame internals</a> to convert from a raw to an unmixed .fcs file.</p>
+<p>This walk-through is an extension of the <a href="../../course/14_Unmixing/index.html">Week 14</a> lesson, documenting how the <code>UnmixingInternals()</code> function was cobbled together from start to finish. This walk-through is optional, and has been separated out from the main <a href="../../course/14_Unmixing/index.html">Unmixing</a> lesson in a desire to avoid burning out those who would rather not know the tiny details of how to reformat the <a href="../../course/03_InsideFCSFile/index.html">flowFrame internals</a> to convert from a raw to an unmixed .fcs file.</p>
 <p>However, if <a href="../../course/10_Downsampling/concatenate.html">deep-diving</a> how .fcs file internals are formatted in R is your thing, then this walk-through is definitely for you, so feel free to continue reading :D</p>
 </section>
 <section id="journey-thus-far" class="level2">
 <h2 class="anchored" data-anchor-id="journey-thus-far">Journey Thus Far</h2>
-<p>At this point in the <a href="../../course/14_Unmixing/index.qmd">Week 14</a> lesson, our <code>OldFashionedUnmixing()</code> function is fairly far along, taking as inputs a file.path to our raw full-stained .fcs file, and also a <a href="">signature matrix</a>, and currently returning as an output a data.frame containing the newly unmixed fluorophore columns.</p>
+<p>At this point in the <a href="../../course/14_Unmixing/index.html">Week 14</a> lesson, our <code>OldFashionedUnmixing()</code> function is fairly far along, taking as inputs a file.path to our raw full-stained .fcs file, and also a <a href="">signature matrix</a>, and currently returning as an output a data.frame containing the newly unmixed fluorophore columns.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' This function unmixes our raw full-stained .fcs files using the signature matrix we provide.</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param x A file.path to a raw full-stained .fcs file we want to unmix. </span></span>
@@ -654,6 +643,7 @@ window.Quarto = {
 <span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(UnmixedData)</span>
 <span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <p>Now that we have the unmixed fluorophore data, we need to integrate this data.frame object back into the <code>exprs()</code> matrix slot. However, as we encountered in the <a href="../../course/10_Downsampling/concatenate.html">Week 10</a> bonus material when adding metadata columns pre-concatenation, addition or removal of a column in the exprs starts a cascade of changes. Consequently, for both the <code>parameter()</code> and <code>keyword()</code> slots we will need to remove any column name that is no longer present (in this case, the detector columns), and then follow up by adding the corresponding equivalent columns for each of the new fluorophore columns that are now present.</p>
 <p>As we might anticipate, this means a lot of moving pieces, so this “Unmixing” bonus-walkthrough is going to be failry similar to the the “Concatenate” bonus-walkthrough from <a href="../../course/10_Downsampling/concatenate.html">Week 10</a> in scope.</p>
@@ -909,7 +899,7 @@ Attaching package: 'dplyr'</code></pre>
 <h2 class="anchored" data-anchor-id="sketching-a-plan">Sketching a Plan</h2>
 <p>At this point in <code>OldFashionedUnmix()</code>, we get back our unmixed fluorophore data as a “data.frame” object. As this is handed to <code>UnmixInternal()</code>, other than converting it to a <code>matrix</code> object, we don’t really need to do any additional changes before we can put it back into the “flowFrame”’s <code>exprs()</code> slot.</p>
 <p>However, as mentioned in the <a href="../../course/14_Unmixing/unmixing.html#journey-thus-far">Journey Thus Far</a>, since the current “flowFrame” <code>parameter()</code> and <code>keyword()</code> slots contain values originally corresponding to the “Detector” columns that are no longer present, we will need to start off by identifying and removing these.</p>
-<p>Once these have been cleaned out, the <code>parameter()</code> “data” object, which contains the “<span class="math inline">\(P1", "\)</span>P10” notation for the row numbers is likely to be out of sequence for the remaining Time, SSC and FSC columns that are retained going from the raw to the unmixed .fcs files. This will require recalculating their new row number, before updating the original <code>keyword()</code> to reflect these number changes.</p>
+<p>Once these have been cleaned out, the <code>parameter()</code> “data” object, which contains the “$P1”, “$P10” notation for the row numbers is likely to be out of sequence for the remaining Time, SSC and FSC columns that are retained going from the raw to the unmixed .fcs files. This will require recalculating their new row number, before updating the original <code>keyword()</code> to reflect these number changes.</p>
 <p>At this point, everything would be correctly formatted for the retained columns, and we can start adding in the new unmixed fluorophore columns. These would end up occupying new row entries in <code>paramater()</code> “data”, and taking their new “$P11”-style row number, new <code>keyword()</code>s would be created.</p>
 <p>Likewise, we would then need to do an additional bit of cleanup (switching the “$SPILLOVER” matrix from one using detectors to Fluorophores, modifying filenames, etc.) before taking the updated <code>exprs()</code>, <code>parameter()</code> and <code>keyword()</code> slots and using <code>new()</code> to reassemble a new unmixed flowFrame.</p>
 <p>At this point, this new unmixed flowFrame could be returned from <code>UnmixInternal()</code> to <code>OldFashionedUnmix()</code>, where the last conditional changes about what to call the file, and where to save/return it to can be specified.</p>
@@ -937,7 +927,9 @@ Attaching package: 'dplyr'</code></pre>
 <h3 class="anchored" data-anchor-id="building-blocks">Building Blocks</h3>
 <p>To avoid having to work two levels down inside a nested function, we can temporatily modify <code>OldFashionedUnmix()</code> to return to us these 3 objects (“ff”, “data”, “panel”) via a <code>list()</code>, which will allow us to work with then directly in <code>UnmixInternal()</code>, simplifying the function writing process. After modifying the function, we need to re-run the code-block to make sure those changes are reflected in our local environment.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' This function unmixes our raw full-stained .fcs files using the signature</span></span>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#'  This function unmixes our raw full-stained .fcs files using the signature</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' matrix we provide.</span></span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' @param x A file.path to a raw full-stained .fcs file we want to unmix. </span></span>
@@ -1034,6 +1026,7 @@ Attaching package: 'dplyr'</code></pre>
 <span id="cb28-95"><a href="#cb28-95" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-96"><a href="#cb28-96" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(TheList)</span>
 <span id="cb28-97"><a href="#cb28-97" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <p>At this point, we can run the function (for just the first .fcs file, as denoted by “fcs_files[1]”), escape out of the list format (via the “[[1]]”), and since the object is a “named list”, used <code>names()</code> to see what we are working with.</p>
 <div class="cell">
@@ -1164,9 +1157,11 @@ $P74   R8-A     NA   4194304      -111   4194304
 </div>
 <p>At first glance, it appears the ordering for “Time”, “SSC”, “FSC” and “SSC-B” was maintained. After these, we have the individual newly unmixed fluorophore columns.</p>
 <p>As mentioned in our <a href="../../course/14_Unmixing/unmixing.html#sketching-a-plan">sketching a plan notes</a>, we fortunately do not need to modify much to be able to swap “data” into the <code>exprs()</code> matrix slot.</p>
-<p>However, we will need to modify <code>parameter()</code> and <code>keyword()</code> slots rather extensively. For the <strong>retained columns</strong> (“SSC”, “FSC”, etc.) all their associated values would remain the same, but the names they are stored under will need to be updated to reflect their new “<span class="math inline">\(P" row number.  For the **new fluorophore columns**, they will need to be assigned new "\)</span>P” numeric values, and the associated <code>parameter()</code> and <code>keyword()</code> components generated. And for the <strong>detector columns</strong> that were removed from <code>exprs()</code>, we will need to also remove their associated <code>parameter()</code> and <code>keyword()</code> entries.</p>
+<p>However, we will need to modify <code>parameter()</code> and <code>keyword()</code> slots rather extensively. For the <strong>retained columns</strong> (“SSC”, “FSC”, etc.) all their associated values would remain the same, but the names they are stored under will need to be updated to reflect their new “$P” row number. For the <strong>new fluorophore columns</strong>, they will need to be assigned new “$P” numeric values, and the associated <code>parameter()</code> and <code>keyword()</code> components generated. And for the <strong>detector columns</strong> that were removed from <code>exprs()</code>, we will need to also remove their associated <code>parameter()</code> and <code>keyword()</code> entries.</p>
 <p>To go about this, we can identify which columns were retained between our raw and unmixed data using <code>intersect()</code>.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co">#'  formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -1185,6 +1180,7 @@ $P74   R8-A     NA   4194304      -111   4194304
 <span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(RetainedColumns)</span>
 <span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1195,6 +1191,8 @@ $P74   R8-A     NA   4194304      -111   4194304
 </div>
 <p>As anticipated, we get back the “Time”, “SSC”, “FSC” and “SSC-B” columns. Next up, lets retrieve the original <code>parameters()</code> “data” object. Since this will use the <code>flowCore</code> packages <code>paramaters()</code> function, we add it to the roxygen2 skeleton under the “importFrom” tag for <a href="../../course/09_Functions/index.html">documentation</a>, and add the package name plus “:::” before the function itself, which enables it to be correctly assigned at this point in the course (in the absence of a Namespace file, which we will cover later).</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co">#'  formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -1219,6 +1217,7 @@ $P74   R8-A     NA   4194304      -111   4194304
 <span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(TheOriginalParameters)</span>
 <span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1302,6 +1301,8 @@ $P74    R8-A &lt;NA&gt; 4194304 -111.0004  4194304</code></pre>
 </div>
 <p>As we can see, all the detectors are still showing as their own row entries. We can <code>filter()</code> the “name” column to isolate just the rows corresponding to our retained columns, so that we know based on the <code>row.names()</code> what keywords should be kept/renamed instead of deleted.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -1332,6 +1333,7 @@ $P74    R8-A &lt;NA&gt; 4194304 -111.0004  4194304</code></pre>
 <span id="cb47-28"><a href="#cb47-28" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb47-29"><a href="#cb47-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(KeepThese)</span>
 <span id="cb47-30"><a href="#cb47-30" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1351,6 +1353,8 @@ $P42 SSC-B-A &lt;NA&gt; 4194304        0  4194303</code></pre>
 </div>
 <p>By modifying that line of code in adding an “!”, we can also <code>filter()</code> for the column names that were not retained, which allows us to target their respective <code>keyword()</code> entries for deletion later on.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -1383,6 +1387,7 @@ $P42 SSC-B-A &lt;NA&gt; 4194304        0  4194303</code></pre>
 <span id="cb50-30"><a href="#cb50-30" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb50-31"><a href="#cb50-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(GetRidThese)</span>
 <span id="cb50-32"><a href="#cb50-32" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1401,6 +1406,8 @@ $P42 SSC-B-A &lt;NA&gt; 4194304        0  4194303</code></pre>
 <h2 class="anchored" data-anchor-id="removing-excess-keywords">Removing Excess Keywords</h2>
 <p>We are now ready to go ahead and retrieve from the raw “flowFrame” the <code>keyword()</code> slot, so that we can start modifying the existing description list accordingly.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -1437,6 +1444,7 @@ $P42 SSC-B-A &lt;NA&gt; 4194304        0  4194303</code></pre>
 <span id="cb53-34"><a href="#cb53-34" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb53-35"><a href="#cb53-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(TheOriginalDescription)</span>
 <span id="cb53-36"><a href="#cb53-36" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>OriginalList <span class="ot">&lt;-</span> <span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span>
@@ -1505,6 +1513,8 @@ $`$P10B`
 </div>
 <p>Within <code>UnmixInternal()</code>, we have the “GetRidThese” variable, which stores the “$P” <code>row.names()</code> values that we will be matching for (and subsequently removing) from the description list. To do this matching, lets run <code>names()</code> to get back the keyword names. Because of the <a href="https://youtu.be/NAqPg31fn80?si=QNnW2gXKUcGFclZ6">special character</a> nature of the dollar sign followed by variable numbers, we will need to also create a <a href="https://en.wikipedia.org/wiki/Regular_expression">regex</a> pattern to match for. We can do this via <code>gsub()</code> and <code>paste()</code>.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -1547,6 +1557,7 @@ $`$P10B`
 <span id="cb56-40"><a href="#cb56-40" aria-hidden="true" tabindex="-1"></a> </span>
 <span id="cb56-41"><a href="#cb56-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(RegexCombinatorial)</span>
 <span id="cb56-42"><a href="#cb56-42" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1556,6 +1567,8 @@ $`$P10B`
 </div>
 <p>At this point, using <code>grepl()</code> to pattern match, we can subset out the matches using the base R [] approach to get back a vector of keyword names from the list that need to be excluded.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -1602,6 +1615,7 @@ $`$P10B`
 <span id="cb59-44"><a href="#cb59-44" aria-hidden="true" tabindex="-1"></a> </span>
 <span id="cb59-45"><a href="#cb59-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(IdentifiedElimination)</span>
 <span id="cb59-46"><a href="#cb59-46" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1674,6 +1688,8 @@ $`$P10B`
 </div>
 <p>Likewise, with a well-placed “!” we can also denote those being retained.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -1722,6 +1738,7 @@ $`$P10B`
 <span id="cb62-46"><a href="#cb62-46" aria-hidden="true" tabindex="-1"></a> </span>
 <span id="cb62-47"><a href="#cb62-47" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(IdentifiedRetention)</span>
 <span id="cb62-48"><a href="#cb62-48" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1840,9 +1857,11 @@ $`$P10B`
 [334] "WINDOW EXTENSION"   "ORIGINALGUID"      </code></pre>
 </div>
 </div>
-<p>Looking at the respective vectors of names to exclude/retain, we can see that the keywords containing “<span class="math inline">\(P" in their names have been correctly designated. However, we stll have keyword names corresponding to the "flowCore_" and "PDISPLAY" varieties that contain equivalent rowname "\)</span>P72” or “P72” values that didn’t pattern match, and were not appropiately handled.</p>
+<p>Looking at the respective vectors of names to exclude/retain, we can see that the keywords containing “$P” in their names have been correctly designated. However, we stll have keyword names corresponding to the “flowCore_” and “PDISPLAY” varieties that contain equivalent rowname “$P72” or “P72” values that didn’t pattern match, and were not appropiately handled.</p>
 <p>Rather than try to write an all-encompassing argument (and end up in the 7th circle of RegEx hell), we can instead run our intermediate retrieved vector through subsequent pattern matching rounds for these sequentially. This will ensure that cleanup is carried out correctly, and also provide ability to troubleshoot more effectively if needed.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -1901,6 +1920,7 @@ $`$P10B`
 <span id="cb65-56"><a href="#cb65-56" aria-hidden="true" tabindex="-1"></a> </span>
 <span id="cb65-57"><a href="#cb65-57" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(SecondRetention)</span>
 <span id="cb65-58"><a href="#cb65-58" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1978,6 +1998,8 @@ $`$P10B`
 </div>
 <p>The extra “flowCore_$P” keywords leftover from the original “Detector” columns have now been removed. Now, we just need to repeat the process for the “PDisplay” style keywords.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -2047,6 +2069,7 @@ $`$P10B`
 <span id="cb68-67"><a href="#cb68-67" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb68-68"><a href="#cb68-68" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(ThirdRetention)</span>
 <span id="cb68-69"><a href="#cb68-69" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2103,6 +2126,8 @@ $`$P10B`
 </div>
 <p>And with this, we are left with a vector of names containing just the keywords we are interested in retaining. We can go ahead and subset these out from the original description list using the [] approach.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -2176,68 +2201,13 @@ $`$P10B`
 <span id="cb71-71"><a href="#cb71-71" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb71-72"><a href="#cb71-72" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(IntermediateDescription)</span>
 <span id="cb71-73"><a href="#cb71-73" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>DescriptionIntermediate <span class="ot">&lt;-</span> <span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>DescriptionIntermediate[<span class="dv">20</span><span class="sc">:</span><span class="dv">30</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>$`$BEGINANALYSIS`
-[1] "0"
-
-$`$BEGINDATA`
-[1] "49820"
-
-$`$BEGINSTEXT`
-[1] "0"
-
-$`$BTIM`
-[1] " "
-
-$`$BYTEORD`
-[1] "4,3,2,1"
-
-$`$CYT`
-[1] "Aurora"
-
-$`$CYTOLIB_VERSION`
-[1] "2.22.0"
-
-$`$CYTSN`
-[1] "U1368"
-
-$`$DATATYPE`
-[1] "F"
-
-$`$DATE`
-[1] " "
-
-$`$ENDANALYSIS`
-[1] "0"
-
-$`$ENDDATA`
-[1] "3009819"
-
-$`$ENDSTEXT`
-[1] "0"
-
-$`$ETIM`
-[1] " "
-
-$`$FIL`
-[1] "DTR_2023_ILT_01-INF052-Ctrl_Antibody.fcs"
-
-$`$INST`
-[1] "Cytekbio"
-
-$`$MODE`
-[1] "L"
-
-$`$NEXTDATA`
-[1] "0"
-
-$`$OP`
-[1] " "
-
-$`$P18B`
+<pre><code>$`$P18B`
 [1] "32"
 
 $`$P18E`
@@ -2268,735 +2238,7 @@ $`$P19R`
 [1] "4194304"
 
 $`$P19TYPE`
-[1] "Side_Scatter"
-
-$`$P19V`
-[1] "337"
-
-$`$P1B`
-[1] "32"
-
-$`$P1E`
-[1] "0,0"
-
-$`$P1N`
-[1] "Time"
-
-$`$P1R`
-[1] "1428432"
-
-$`$P1TYPE`
-[1] "Time"
-
-$`$P20B`
-[1] "32"
-
-$`$P20E`
-[1] "0,0"
-
-$`$P20N`
-[1] "SSC-A"
-
-$`$P20R`
-[1] "4194304"
-
-$`$P20TYPE`
-[1] "Side_Scatter"
-
-$`$P20V`
-[1] "337"
-
-$`$P37B`
-[1] "32"
-
-$`$P37E`
-[1] "0,0"
-
-$`$P37N`
-[1] "FSC-W"
-
-$`$P37R`
-[1] "4194304"
-
-$`$P37TYPE`
-[1] "Forward_Scatter"
-
-$`$P37V`
-[1] "61"
-
-$`$P38B`
-[1] "32"
-
-$`$P38E`
-[1] "0,0"
-
-$`$P38N`
-[1] "FSC-H"
-
-$`$P38R`
-[1] "4194304"
-
-$`$P38TYPE`
-[1] "Forward_Scatter"
-
-$`$P38V`
-[1] "61"
-
-$`$P39B`
-[1] "32"
-
-$`$P39E`
-[1] "0,0"
-
-$`$P39N`
-[1] "FSC-A"
-
-$`$P39R`
-[1] "4194304"
-
-$`$P39TYPE`
-[1] "Forward_Scatter"
-
-$`$P39V`
-[1] "61"
-
-$`$P40B`
-[1] "32"
-
-$`$P40E`
-[1] "0,0"
-
-$`$P40N`
-[1] "SSC-B-W"
-
-$`$P40R`
-[1] "4194304"
-
-$`$P40TYPE`
-[1] "Side_Scatter"
-
-$`$P40V`
-[1] "335"
-
-$`$P41B`
-[1] "32"
-
-$`$P41E`
-[1] "0,0"
-
-$`$P41N`
-[1] "SSC-B-H"
-
-$`$P41R`
-[1] "4194304"
-
-$`$P41TYPE`
-[1] "Side_Scatter"
-
-$`$P41V`
-[1] "335"
-
-$`$P42B`
-[1] "32"
-
-$`$P42E`
-[1] "0,0"
-
-$`$P42N`
-[1] "SSC-B-A"
-
-$`$P42R`
-[1] "4194304"
-
-$`$P42TYPE`
-[1] "Side_Scatter"
-
-$`$P42V`
-[1] "335"
-
-$`$PAR`
-[1] "74"
-
-$`$PROJ`
-[1] "DTR_2023_ILT_01"
-
-$`$SPILLOVER`
-      UV1-A UV2-A UV3-A UV4-A UV5-A UV6-A UV7-A UV8-A UV9-A UV10-A UV11-A
- [1,] 1e+00     0     0     0     0     0     0     0     0      0      0
- [2,] 1e-06     1     0     0     0     0     0     0     0      0      0
- [3,] 0e+00     0     1     0     0     0     0     0     0      0      0
- [4,] 0e+00     0     0     1     0     0     0     0     0      0      0
- [5,] 0e+00     0     0     0     1     0     0     0     0      0      0
- [6,] 0e+00     0     0     0     0     1     0     0     0      0      0
- [7,] 0e+00     0     0     0     0     0     1     0     0      0      0
- [8,] 0e+00     0     0     0     0     0     0     1     0      0      0
- [9,] 0e+00     0     0     0     0     0     0     0     1      0      0
-[10,] 0e+00     0     0     0     0     0     0     0     0      1      0
-[11,] 0e+00     0     0     0     0     0     0     0     0      0      1
-[12,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[13,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[14,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[15,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[16,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[17,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[18,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[19,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[20,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[21,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[22,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[23,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[24,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[25,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[26,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[27,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[28,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[29,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[30,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[31,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[32,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[33,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[34,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[35,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[36,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[37,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[38,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[39,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[40,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[41,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[42,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[43,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[44,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[45,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[46,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[47,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[48,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[49,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[50,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[51,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[52,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[53,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[54,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[55,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[56,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[57,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[58,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[59,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[60,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[61,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[62,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[63,] 0e+00     0     0     0     0     0     0     0     0      0      0
-[64,] 0e+00     0     0     0     0     0     0     0     0      0      0
-      UV12-A UV13-A UV14-A UV15-A UV16-A V1-A V2-A V3-A V4-A V5-A V6-A V7-A
- [1,]      0      0      0      0      0    0    0    0    0    0    0    0
- [2,]      0      0      0      0      0    0    0    0    0    0    0    0
- [3,]      0      0      0      0      0    0    0    0    0    0    0    0
- [4,]      0      0      0      0      0    0    0    0    0    0    0    0
- [5,]      0      0      0      0      0    0    0    0    0    0    0    0
- [6,]      0      0      0      0      0    0    0    0    0    0    0    0
- [7,]      0      0      0      0      0    0    0    0    0    0    0    0
- [8,]      0      0      0      0      0    0    0    0    0    0    0    0
- [9,]      0      0      0      0      0    0    0    0    0    0    0    0
-[10,]      0      0      0      0      0    0    0    0    0    0    0    0
-[11,]      0      0      0      0      0    0    0    0    0    0    0    0
-[12,]      1      0      0      0      0    0    0    0    0    0    0    0
-[13,]      0      1      0      0      0    0    0    0    0    0    0    0
-[14,]      0      0      1      0      0    0    0    0    0    0    0    0
-[15,]      0      0      0      1      0    0    0    0    0    0    0    0
-[16,]      0      0      0      0      1    0    0    0    0    0    0    0
-[17,]      0      0      0      0      0    1    0    0    0    0    0    0
-[18,]      0      0      0      0      0    0    1    0    0    0    0    0
-[19,]      0      0      0      0      0    0    0    1    0    0    0    0
-[20,]      0      0      0      0      0    0    0    0    1    0    0    0
-[21,]      0      0      0      0      0    0    0    0    0    1    0    0
-[22,]      0      0      0      0      0    0    0    0    0    0    1    0
-[23,]      0      0      0      0      0    0    0    0    0    0    0    1
-[24,]      0      0      0      0      0    0    0    0    0    0    0    0
-[25,]      0      0      0      0      0    0    0    0    0    0    0    0
-[26,]      0      0      0      0      0    0    0    0    0    0    0    0
-[27,]      0      0      0      0      0    0    0    0    0    0    0    0
-[28,]      0      0      0      0      0    0    0    0    0    0    0    0
-[29,]      0      0      0      0      0    0    0    0    0    0    0    0
-[30,]      0      0      0      0      0    0    0    0    0    0    0    0
-[31,]      0      0      0      0      0    0    0    0    0    0    0    0
-[32,]      0      0      0      0      0    0    0    0    0    0    0    0
-[33,]      0      0      0      0      0    0    0    0    0    0    0    0
-[34,]      0      0      0      0      0    0    0    0    0    0    0    0
-[35,]      0      0      0      0      0    0    0    0    0    0    0    0
-[36,]      0      0      0      0      0    0    0    0    0    0    0    0
-[37,]      0      0      0      0      0    0    0    0    0    0    0    0
-[38,]      0      0      0      0      0    0    0    0    0    0    0    0
-[39,]      0      0      0      0      0    0    0    0    0    0    0    0
-[40,]      0      0      0      0      0    0    0    0    0    0    0    0
-[41,]      0      0      0      0      0    0    0    0    0    0    0    0
-[42,]      0      0      0      0      0    0    0    0    0    0    0    0
-[43,]      0      0      0      0      0    0    0    0    0    0    0    0
-[44,]      0      0      0      0      0    0    0    0    0    0    0    0
-[45,]      0      0      0      0      0    0    0    0    0    0    0    0
-[46,]      0      0      0      0      0    0    0    0    0    0    0    0
-[47,]      0      0      0      0      0    0    0    0    0    0    0    0
-[48,]      0      0      0      0      0    0    0    0    0    0    0    0
-[49,]      0      0      0      0      0    0    0    0    0    0    0    0
-[50,]      0      0      0      0      0    0    0    0    0    0    0    0
-[51,]      0      0      0      0      0    0    0    0    0    0    0    0
-[52,]      0      0      0      0      0    0    0    0    0    0    0    0
-[53,]      0      0      0      0      0    0    0    0    0    0    0    0
-[54,]      0      0      0      0      0    0    0    0    0    0    0    0
-[55,]      0      0      0      0      0    0    0    0    0    0    0    0
-[56,]      0      0      0      0      0    0    0    0    0    0    0    0
-[57,]      0      0      0      0      0    0    0    0    0    0    0    0
-[58,]      0      0      0      0      0    0    0    0    0    0    0    0
-[59,]      0      0      0      0      0    0    0    0    0    0    0    0
-[60,]      0      0      0      0      0    0    0    0    0    0    0    0
-[61,]      0      0      0      0      0    0    0    0    0    0    0    0
-[62,]      0      0      0      0      0    0    0    0    0    0    0    0
-[63,]      0      0      0      0      0    0    0    0    0    0    0    0
-[64,]      0      0      0      0      0    0    0    0    0    0    0    0
-      V8-A V9-A V10-A V11-A V12-A V13-A V14-A V15-A V16-A B1-A B2-A B3-A B4-A
- [1,]    0    0     0     0     0     0     0     0     0    0    0    0    0
- [2,]    0    0     0     0     0     0     0     0     0    0    0    0    0
- [3,]    0    0     0     0     0     0     0     0     0    0    0    0    0
- [4,]    0    0     0     0     0     0     0     0     0    0    0    0    0
- [5,]    0    0     0     0     0     0     0     0     0    0    0    0    0
- [6,]    0    0     0     0     0     0     0     0     0    0    0    0    0
- [7,]    0    0     0     0     0     0     0     0     0    0    0    0    0
- [8,]    0    0     0     0     0     0     0     0     0    0    0    0    0
- [9,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[10,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[11,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[12,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[13,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[14,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[15,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[16,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[17,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[18,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[19,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[20,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[21,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[22,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[23,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[24,]    1    0     0     0     0     0     0     0     0    0    0    0    0
-[25,]    0    1     0     0     0     0     0     0     0    0    0    0    0
-[26,]    0    0     1     0     0     0     0     0     0    0    0    0    0
-[27,]    0    0     0     1     0     0     0     0     0    0    0    0    0
-[28,]    0    0     0     0     1     0     0     0     0    0    0    0    0
-[29,]    0    0     0     0     0     1     0     0     0    0    0    0    0
-[30,]    0    0     0     0     0     0     1     0     0    0    0    0    0
-[31,]    0    0     0     0     0     0     0     1     0    0    0    0    0
-[32,]    0    0     0     0     0     0     0     0     1    0    0    0    0
-[33,]    0    0     0     0     0     0     0     0     0    1    0    0    0
-[34,]    0    0     0     0     0     0     0     0     0    0    1    0    0
-[35,]    0    0     0     0     0     0     0     0     0    0    0    1    0
-[36,]    0    0     0     0     0     0     0     0     0    0    0    0    1
-[37,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[38,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[39,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[40,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[41,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[42,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[43,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[44,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[45,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[46,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[47,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[48,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[49,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[50,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[51,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[52,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[53,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[54,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[55,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[56,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[57,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[58,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[59,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[60,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[61,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[62,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[63,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-[64,]    0    0     0     0     0     0     0     0     0    0    0    0    0
-      B5-A B6-A B7-A B8-A B9-A B10-A B11-A B12-A B13-A B14-A YG1-A YG2-A YG3-A
- [1,]    0    0    0    0    0     0     0     0     0     0     0     0     0
- [2,]    0    0    0    0    0     0     0     0     0     0     0     0     0
- [3,]    0    0    0    0    0     0     0     0     0     0     0     0     0
- [4,]    0    0    0    0    0     0     0     0     0     0     0     0     0
- [5,]    0    0    0    0    0     0     0     0     0     0     0     0     0
- [6,]    0    0    0    0    0     0     0     0     0     0     0     0     0
- [7,]    0    0    0    0    0     0     0     0     0     0     0     0     0
- [8,]    0    0    0    0    0     0     0     0     0     0     0     0     0
- [9,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[10,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[11,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[12,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[13,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[14,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[15,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[16,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[17,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[18,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[19,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[20,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[21,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[22,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[23,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[24,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[25,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[26,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[27,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[28,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[29,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[30,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[31,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[32,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[33,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[34,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[35,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[36,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[37,]    1    0    0    0    0     0     0     0     0     0     0     0     0
-[38,]    0    1    0    0    0     0     0     0     0     0     0     0     0
-[39,]    0    0    1    0    0     0     0     0     0     0     0     0     0
-[40,]    0    0    0    1    0     0     0     0     0     0     0     0     0
-[41,]    0    0    0    0    1     0     0     0     0     0     0     0     0
-[42,]    0    0    0    0    0     1     0     0     0     0     0     0     0
-[43,]    0    0    0    0    0     0     1     0     0     0     0     0     0
-[44,]    0    0    0    0    0     0     0     1     0     0     0     0     0
-[45,]    0    0    0    0    0     0     0     0     1     0     0     0     0
-[46,]    0    0    0    0    0     0     0     0     0     1     0     0     0
-[47,]    0    0    0    0    0     0     0     0     0     0     1     0     0
-[48,]    0    0    0    0    0     0     0     0     0     0     0     1     0
-[49,]    0    0    0    0    0     0     0     0     0     0     0     0     1
-[50,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[51,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[52,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[53,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[54,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[55,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[56,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[57,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[58,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[59,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[60,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[61,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[62,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[63,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-[64,]    0    0    0    0    0     0     0     0     0     0     0     0     0
-      YG4-A YG5-A YG6-A YG7-A YG8-A YG9-A YG10-A R1-A R2-A R3-A R4-A R5-A R6-A
- [1,]     0     0     0     0     0     0      0    0    0    0    0    0    0
- [2,]     0     0     0     0     0     0      0    0    0    0    0    0    0
- [3,]     0     0     0     0     0     0      0    0    0    0    0    0    0
- [4,]     0     0     0     0     0     0      0    0    0    0    0    0    0
- [5,]     0     0     0     0     0     0      0    0    0    0    0    0    0
- [6,]     0     0     0     0     0     0      0    0    0    0    0    0    0
- [7,]     0     0     0     0     0     0      0    0    0    0    0    0    0
- [8,]     0     0     0     0     0     0      0    0    0    0    0    0    0
- [9,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[10,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[11,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[12,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[13,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[14,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[15,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[16,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[17,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[18,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[19,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[20,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[21,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[22,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[23,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[24,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[25,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[26,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[27,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[28,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[29,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[30,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[31,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[32,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[33,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[34,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[35,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[36,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[37,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[38,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[39,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[40,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[41,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[42,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[43,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[44,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[45,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[46,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[47,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[48,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[49,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[50,]     1     0     0     0     0     0      0    0    0    0    0    0    0
-[51,]     0     1     0     0     0     0      0    0    0    0    0    0    0
-[52,]     0     0     1     0     0     0      0    0    0    0    0    0    0
-[53,]     0     0     0     1     0     0      0    0    0    0    0    0    0
-[54,]     0     0     0     0     1     0      0    0    0    0    0    0    0
-[55,]     0     0     0     0     0     1      0    0    0    0    0    0    0
-[56,]     0     0     0     0     0     0      1    0    0    0    0    0    0
-[57,]     0     0     0     0     0     0      0    1    0    0    0    0    0
-[58,]     0     0     0     0     0     0      0    0    1    0    0    0    0
-[59,]     0     0     0     0     0     0      0    0    0    1    0    0    0
-[60,]     0     0     0     0     0     0      0    0    0    0    1    0    0
-[61,]     0     0     0     0     0     0      0    0    0    0    0    1    0
-[62,]     0     0     0     0     0     0      0    0    0    0    0    0    1
-[63,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-[64,]     0     0     0     0     0     0      0    0    0    0    0    0    0
-      R7-A R8-A
- [1,]    0    0
- [2,]    0    0
- [3,]    0    0
- [4,]    0    0
- [5,]    0    0
- [6,]    0    0
- [7,]    0    0
- [8,]    0    0
- [9,]    0    0
-[10,]    0    0
-[11,]    0    0
-[12,]    0    0
-[13,]    0    0
-[14,]    0    0
-[15,]    0    0
-[16,]    0    0
-[17,]    0    0
-[18,]    0    0
-[19,]    0    0
-[20,]    0    0
-[21,]    0    0
-[22,]    0    0
-[23,]    0    0
-[24,]    0    0
-[25,]    0    0
-[26,]    0    0
-[27,]    0    0
-[28,]    0    0
-[29,]    0    0
-[30,]    0    0
-[31,]    0    0
-[32,]    0    0
-[33,]    0    0
-[34,]    0    0
-[35,]    0    0
-[36,]    0    0
-[37,]    0    0
-[38,]    0    0
-[39,]    0    0
-[40,]    0    0
-[41,]    0    0
-[42,]    0    0
-[43,]    0    0
-[44,]    0    0
-[45,]    0    0
-[46,]    0    0
-[47,]    0    0
-[48,]    0    0
-[49,]    0    0
-[50,]    0    0
-[51,]    0    0
-[52,]    0    0
-[53,]    0    0
-[54,]    0    0
-[55,]    0    0
-[56,]    0    0
-[57,]    0    0
-[58,]    0    0
-[59,]    0    0
-[60,]    0    0
-[61,]    0    0
-[62,]    0    0
-[63,]    1    0
-[64,]    0    1
-
-$`$TIMESTEP`
-[1] "0.0001"
-
-$`$TOT`
-[1] "10000"
-
-$`$VOL`
-[1] "70.11"
-
-$`APPLY COMPENSATION`
-[1] "FALSE"
-
-$CHARSET
-[1] "utf-8"
-
-$CREATOR
-[1] "SpectroFlo 3.3.0"
-
-$FCSversion
-[1] "3"
-
-$FILENAME
-[1] "data/DTR_2023_ILT_01-INF052-Ctrl_Antibody.1235515.fcs"
-
-$`flowCore_$P18Rmax`
-[1] "4194303"
-
-$`flowCore_$P18Rmin`
-[1] "0"
-
-$`flowCore_$P19Rmax`
-[1] "4194303"
-
-$`flowCore_$P19Rmin`
-[1] "0"
-
-$`flowCore_$P1Rmax`
-[1] "1428431"
-
-$`flowCore_$P1Rmin`
-[1] "0"
-
-$`flowCore_$P20Rmax`
-[1] "4194303"
-
-$`flowCore_$P20Rmin`
-[1] "0"
-
-$`flowCore_$P37Rmax`
-[1] "4194303"
-
-$`flowCore_$P37Rmin`
-[1] "0"
-
-$`flowCore_$P38Rmax`
-[1] "4194303"
-
-$`flowCore_$P38Rmin`
-[1] "0"
-
-$`flowCore_$P39Rmax`
-[1] "4194303"
-
-$`flowCore_$P39Rmin`
-[1] "0"
-
-$`flowCore_$P40Rmax`
-[1] "4194303"
-
-$`flowCore_$P40Rmin`
-[1] "0"
-
-$`flowCore_$P41Rmax`
-[1] "4194303"
-
-$`flowCore_$P41Rmin`
-[1] "0"
-
-$`flowCore_$P42Rmax`
-[1] "4194303"
-
-$`flowCore_$P42Rmin`
-[1] "0"
-
-$`FSC ASF`
-[1] "1.04"
-
-$GROUPNAME
-[1] "INF052"
-
-$GUID
-[1] "DTR_2023_ILT_01-INF052-Ctrl_Antibody.1235515.fcs"
-
-$LASER1ASF
-[1] "1.12"
-
-$LASER1DELAY
-[1] "-40.95"
-
-$LASER1NAME
-[1] "YellowGreen"
-
-$LASER2ASF
-[1] "1.1"
-
-$LASER2DELAY
-[1] "-20.625"
-
-$LASER2NAME
-[1] "Violet"
-
-$LASER3ASF
-[1] "1.04"
-
-$LASER3DELAY
-[1] "0"
-
-$LASER3NAME
-[1] "Blue"
-
-$LASER4ASF
-[1] "1.12"
-
-$LASER4DELAY
-[1] "19.125"
-
-$LASER4NAME
-[1] "Red"
-
-$LASER5ASF
-[1] "1.19"
-
-$LASER5DELAY
-[1] "38.625"
-
-$LASER5NAME
-[1] "UV"
-
-$P18DISPLAY
-[1] "LIN"
-
-$P19DISPLAY
-[1] "LIN"
-
-$P1DISPLAY
-[1] "LOG"
-
-$P20DISPLAY
-[1] "LIN"
-
-$P37DISPLAY
-[1] "LIN"
-
-$P38DISPLAY
-[1] "LIN"
-
-$P39DISPLAY
-[1] "LIN"
-
-$P40DISPLAY
-[1] "LIN"
-
-$P41DISPLAY
-[1] "LIN"
-
-$P42DISPLAY
-[1] "LIN"
-
-$THRESHOLD
-[1] "(FSC,150000)"
-
-$transformation
-[1] "custom"
-
-$TUBENAME
-[1] "Ctrl_Antibody"
-
-$USERSETTINGNAME
-[1] "DTR_2023_ILT"
-
-$`WINDOW EXTENSION`
-[1] "3"
-
-$ORIGINALGUID
-[1] "DTR_2023_ILT_01-INF052-Ctrl_Antibody.1235515.fcs"</code></pre>
+[1] "Side_Scatter"</code></pre>
 </div>
 </div>
 </section>
@@ -3007,6 +2249,8 @@ $ORIGINALGUID
 <h3 class="anchored" data-anchor-id="renumbering-parameters-data">Renumbering parameters data</h3>
 <p>We can start using <code>tibble</code> packages <code>rownames_to_column()</code> function to shift the <code>rownames()</code> containing the current “$P” to their own column (“OriginalRowNumber”). We can then pipe through to <code>dplyr</code>’s <code>mutate()</code> function, and identifying what the new “NewRowNumber” value would be through the combination of <code>paste0()</code> and <code>row_number()</code> functions. We can then <code>relocate()</code> “NewRowNumber” to the first column position. We update the <code>roxygen2</code> skeleton and add appropiate “::” entries as we go.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -3088,6 +2332,7 @@ $ORIGINALGUID
 <span id="cb74-79"><a href="#cb74-79" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb74-80"><a href="#cb74-80" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(IntermediateParameters)</span>
 <span id="cb74-81"><a href="#cb74-81" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -3108,6 +2353,8 @@ $ORIGINALGUID
 <p>Having generated the new “$P” rownumbers, we will need need to match for the “OriginalRowNumber” entries is the <code>keyword()</code> description list, and swap in the new rownumber name without changing the underlying data. Since there are two moving pieces (old rownumber, new row number), and they are actively modifying names in a single list, this is more suited for the use of a “for-loop”.</p>
 <p>We can first <code>pull()</code> both the old and new row numbers and save them to their own vectors. To avoid accidents while coding out the for-loop, lets also duplicate the current list.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -3198,6 +2445,7 @@ $ORIGINALGUID
 <span id="cb77-88"><a href="#cb77-88" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb77-89"><a href="#cb77-89" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(NewRowNumbers)</span>
 <span id="cb77-90"><a href="#cb77-90" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -3208,6 +2456,8 @@ $ORIGINALGUID
 <p>Unlike other cases of iteration we have seen with <code>map2()</code>, for-loops typically iterate through a single vector. We can work around this by having the for-loop iterate through index positions using the <code>seq_along()</code> function which identifies the length of our vector. For these retrieved index positions (“i”), we can then inside the for-loop subset the vectors for NewRowNumbers and OldRowNumbers via the [i] approach. We can set up an equivalent value without the “$P” component for later use.</p>
 <p>Since this can be complicated, we can run an output <code>print()</code> line to check that everything is working as expected at this stage.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -3312,6 +2562,7 @@ $ORIGINALGUID
 <span id="cb80-102"><a href="#cb80-102" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb80-103"><a href="#cb80-103" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(NewRowNumbers)</span>
 <span id="cb80-104"><a href="#cb80-104" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -3334,6 +2585,8 @@ $ORIGINALGUID
 <p>From our output to the console window, we can see the for-loop is grabbing the New and Old Row Number values as we were expecting it to. Now it is time to check the names in our list, and match any that have the corresponding values present (similar to how we did our eliminate/retain matching earlier). We can take advantage of our previous code, and set it with the goal of renaming the matches instead of removing them.</p>
 <p>We can do this by first setting up a “RegEx” pattern via <code>paste0()</code> and <code>gsub()</code>, before matching using retrieved <code>names()</code> through the use of [] and <code>grepl()</code> pattern matching (with the perl argument set to TRUE)</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -3448,6 +2701,7 @@ $ORIGINALGUID
 <span id="cb84-112"><a href="#cb84-112" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb84-113"><a href="#cb84-113" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(InternalIdentifiedRename)</span>
 <span id="cb84-114"><a href="#cb84-114" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -3457,8 +2711,10 @@ $ORIGINALGUID
 [7] "flowCore_$P42Rmax" "flowCore_$P42Rmin"</code></pre>
 </div>
 </div>
-<p>Looking at the last output line, the for-loop identified both the “<span class="math inline">\(P" and "flowCore_\)</span>P” keywords that matched the old row number “<span class="math inline">\(P". Now that these keywords are identified, we can use a combination of `names()`, `match()` and "[]" to identify the "\)</span>P” portion, which will be overwritten by the new value held within “InternalRenamed”</p>
+<p>Looking at the last output line, the for-loop identified both the “$P” and “flowCore_$P” keywords that matched the old row number “$P”. Now that these keywords are identified, we can use a combination of <code>names()</code>, <code>match()</code> and “[]” to identify the “$P” portion, which will be overwritten by the new value held within “InternalRenamed”</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -3581,6 +2837,7 @@ $ORIGINALGUID
 <span id="cb87-120"><a href="#cb87-120" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb87-121"><a href="#cb87-121" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">names</span>(ForLoopDescription))</span>
 <span id="cb87-122"><a href="#cb87-122" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -3637,6 +2894,8 @@ $ORIGINALGUID
 </div>
 <p>From our returned <code>names()</code>, the retained “$P” and “flowCore” style keywords have had their original row number values updated with the new ones. This leaves only the “PDisplay” style ones left to rename. We can modify our previous code example to try to similar match the existing keywords with the old rownumber values in this format.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -3769,6 +3028,7 @@ $ORIGINALGUID
 <span id="cb90-130"><a href="#cb90-130" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb90-131"><a href="#cb90-131" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(ThirdRename)</span>
 <span id="cb90-132"><a href="#cb90-132" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -3778,6 +3038,8 @@ $ORIGINALGUID
 </div>
 <p>With the respective keywords correctly identified, we can extend the same <code>names()</code>, <code>match()</code> and “[]” strategy to replace the old row number with the corresponding new value.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -3918,6 +3180,7 @@ $ORIGINALGUID
 <span id="cb93-138"><a href="#cb93-138" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb93-139"><a href="#cb93-139" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">names</span>(ForLoopDescription))</span>
 <span id="cb93-140"><a href="#cb93-140" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -3980,6 +3243,8 @@ $ORIGINALGUID
 <p>We can now switch gears and tackle adding new row entries to the <code>parameters()</code> “data”, corresponding to each of the new fluorophore columns that can be found in our unmixed data.frame.</p>
 <p>Since we no longer need to keep the old row number entries, lets remove them from the data.frame using <code>select()</code> and return the new row numbers to <code>rownames()</code> location using the <code>tibble()</code> packages <code>column_to_rownames()</code> function.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -4126,6 +3391,7 @@ $ORIGINALGUID
 <span id="cb96-144"><a href="#cb96-144" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb96-145"><a href="#cb96-145" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(IntermediateParameters)</span>
 <span id="cb96-146"><a href="#cb96-146" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -4145,6 +3411,8 @@ $P10 SSC-B-A &lt;NA&gt; 4194304        0  4194303</code></pre>
 </div>
 <p>At this point, we just need to add the new fluorophore entries as new columns. If you completed the <a href="../../course/10_Downsampling/concatenate.html#helper-function---parameterupdate">Week 10</a> bonus walk-through, you may remember that the <code>ParameterUpdate()</code> function roughly took over at this point in adding new row entries for the metadata columns that we are adding in as part of <code>Concatenate()</code>. While we are trying to add “Fluorophore” rows, we can pull this previous function to refresh our memory of how it worked.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal for Concatenate, creates the new parameter</span></span>
 <span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' data rows needed to properly integrate new keyword columns</span></span>
 <span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' in exprs matrix</span></span>
@@ -4179,10 +3447,13 @@ $P10 SSC-B-A &lt;NA&gt; 4194304        0  4194303</code></pre>
 <span id="cb99-32"><a href="#cb99-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames</span>(UpdatedParameters) <span class="ot">&lt;-</span> NewParameter</span>
 <span id="cb99-33"><a href="#cb99-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(UpdatedParameters)</span>
 <span id="cb99-34"><a href="#cb99-34" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <p>In the case <code>ParameterUpdate()</code>, it looks like it was calculating from scratch the range entries that were placed within the <code>parameters()</code> data. Given the variable number of entries that would be associated with individual metadata columns, this made sense in that context.</p>
 <p>Let’s go ahead and duplicate, and rename it to <code>UnmixedParameterUpdate()</code>, in this case taking two arguments, the OldParameters (with modified names) and the unmixed data.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal for UnmixInternal, creates the new parameter</span></span>
 <span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' data rows needed to properly integrate new fluorophore columns</span></span>
 <span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' in exprs matrix</span></span>
@@ -4214,9 +3485,12 @@ $P10 SSC-B-A &lt;NA&gt; 4194304        0  4194303</code></pre>
 <span id="cb100-29"><a href="#cb100-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames</span>(UpdatedParameters) <span class="ot">&lt;-</span> NewParameter</span>
 <span id="cb100-30"><a href="#cb100-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(UpdatedParameters)</span>
 <span id="cb100-31"><a href="#cb100-31" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <p>We can then run <code>UnmixedParameterUpdate()</code> as the next line in <code>UnmixInternal()</code>, allowing us to reuse the existing testing code line to see if our modifications work or not.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -4367,6 +3641,7 @@ $P10 SSC-B-A &lt;NA&gt; 4194304        0  4194303</code></pre>
 <span id="cb101-148"><a href="#cb101-148" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb101-149"><a href="#cb101-149" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(UpdatedParameters)</span>
 <span id="cb101-150"><a href="#cb101-150" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -4416,6 +3691,8 @@ $P50              AF-A   NA   54109.65  -15178.174   38930.47</code></pre>
 </div>
 <p>While we get back the fluorophore rows, our <code>rownames()</code> start off at “$P11”. So close, but looks like we will need to modify <code>UnmixedParameterUpdate()</code> to first exclude retained column names (Time through SSC-B) from consideration.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal for UnmixInternal, creates the new parameter</span></span>
 <span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' data rows needed to properly integrate new fluorophore columns</span></span>
 <span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' in exprs matrix</span></span>
@@ -4460,6 +3737,7 @@ $P50              AF-A   NA   54109.65  -15178.174   38930.47</code></pre>
 <span id="cb104-42"><a href="#cb104-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames</span>(UpdatedParameters) <span class="ot">&lt;-</span> NewParameter</span>
 <span id="cb104-43"><a href="#cb104-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(UpdatedParameters)</span>
 <span id="cb104-44"><a href="#cb104-44" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <p>After re-running the code block to refresh the function in our local environment, lets try the output line of code again.</p>
 <div class="cell">
@@ -4519,6 +3797,8 @@ $P40              AF-A   NA  54109.65 -15178.174  38930.47</code></pre>
 <p><img src="images/AuroraUnmixedExampleParameters.png" class="img-fluid"></p>
 <p>Parsing what we can see, range appears to be the same for both the scatters and the fluorophores (4194304). minRange however is lower for the Fluorophores (-111.0001), as is the maxRange (4192505.7500). While our approach to dynamically calculate these worked well for the metadata columns, lets not rock the boat too much on this unmixing attempt (since we want to be able to take these files back into commercial software if we want, and don’t want <a href="https://umgcccfcsr.github.io/CytometryInR/course/community/AutoSpectral/#ols">unexpected bugs</a> on the visualization). Since we are trying to faithfully replicate for now, lets adjust those internal assignments so that we don’t calculate out range, minRange and maxRange, but instead append the expected values.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal for UnmixInternal, creates the new parameter</span></span>
 <span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' data rows needed to properly integrate new fluorophore columns</span></span>
 <span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' in exprs matrix</span></span>
@@ -4565,6 +3845,7 @@ $P40              AF-A   NA  54109.65 -15178.174  38930.47</code></pre>
 <span id="cb110-44"><a href="#cb110-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rownames</span>(UpdatedParameters) <span class="ot">&lt;-</span> NewParameter</span>
 <span id="cb110-45"><a href="#cb110-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(UpdatedParameters)</span>
 <span id="cb110-46"><a href="#cb110-46" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -4604,6 +3885,8 @@ $P40              AF-A   NA 4194304 -111.0001  4192506</code></pre>
 </div>
 <p>Close enough for this attempt. One thing to note, for “desc”, we don’t have any of the antigen names listed yet. We can get these corresponding values from the third “panel” argument for <code>UnmixInternal</code>, which so far we have specified and not yet used. Let’s go ahead and change that.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -4758,6 +4041,7 @@ $P40              AF-A   NA 4194304 -111.0001  4192506</code></pre>
 <span id="cb113-152"><a href="#cb113-152" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb113-153"><a href="#cb113-153" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(UpdatedParameters)</span>
 <span id="cb113-154"><a href="#cb113-154" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -4797,6 +4081,8 @@ $P40              AF-A           4194304 -111.0001  4192506</code></pre>
 </div>
 <p>Alright, the new <code>parameter()</code> data rows corresponding to the unmixed fluorophores have been generated, which we can bind with the old parameters (containing “Time”, “SSC”, “FSC”, and “SSC-B”) using either <code>rbind()</code> or <code>bind_rows()</code>. We can now move forward and for each row generate out the corresponding sets of <code>keyword()</code> that will go into the description list. For <a href="../../course/10_Downsampling/index.html">Week 10</a> when writing <code>Concatenate()</code>, we handled this through the use of a for-loop that would create these in sequence for each “$P” rownumber provided. We can copy this existing code over, and modify it so that the outputs match what is expected for the unmixed .fcs file.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -4970,6 +4256,7 @@ $P40              AF-A           4194304 -111.0001  4192506</code></pre>
 <span id="cb116-171"><a href="#cb116-171" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb116-172"><a href="#cb116-172" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">names</span>(new_kw))</span>
 <span id="cb116-173"><a href="#cb116-173" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -5126,6 +4413,8 @@ $P40              AF-A           4194304 -111.0001  4192506</code></pre>
 </div>
 <p>One thing we can do now that the new <code>keyword()</code> entries have been generated, is to use the <code>order()</code> and “[]” functions to rearrange them. We can also overwrite the existing <code>parameters()</code> “data” slot with our updated parameters data.frame, and convert the unmixed data to a matrix for eventual incorporation into <code>exprs()</code></p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb119-3"><a href="#cb119-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -5310,6 +4599,7 @@ $P40              AF-A           4194304 -111.0001  4192506</code></pre>
 <span id="cb119-182"><a href="#cb119-182" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb119-183"><a href="#cb119-183" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(UnmixedMatrix)</span>
 <span id="cb119-184"><a href="#cb119-184" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>Matrix <span class="ot">&lt;-</span> <span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span>
@@ -5320,6 +4610,8 @@ $P40              AF-A           4194304 -111.0001  4192506</code></pre>
 </div>
 <p>One last major thing, within <code>keyword()</code>, we have a “$SPILLOVER” keyword that contains a spillover matrix. While we are unlikely to need it, we should go ahead and convert it from the current entry which has detector columns to one that has fluorophore columns to ensure compatability.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -5515,6 +4807,7 @@ $P40              AF-A           4194304 -111.0001  4192506</code></pre>
 <span id="cb122-193"><a href="#cb122-193" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb122-194"><a href="#cb122-194" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(new_kw<span class="sc">$</span><span class="st">`</span><span class="at">$SPILLOVER</span><span class="st">`</span>)</span>
 <span id="cb122-195"><a href="#cb122-195" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb123"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb123-1"><a href="#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -5678,6 +4971,8 @@ $P40              AF-A           4194304 -111.0001  4192506</code></pre>
 </div>
 <p>And with that, everything in the <code>exprs()</code>, <code>parameters()</code> and <code>keyword()</code> slots has been converted over to match the expected unmixed .fcs file format. All that we need to do is cobble them together into a new flowFrame, which we can do via <code>new()</code>. At that point, at long last, we can return the new unmixed flowFrame back to <code>OldFashionedUnmix()</code>, where any last customization steps (as well as decisions where to store the .fcs file to) can occur without having a nested function layer to deal with.</p>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb125"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb125-1"><a href="#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Internal function for OldFashinedUnmix, handles fixing the </span></span>
 <span id="cb125-2"><a href="#cb125-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' formatting going from raw to unmixed .fcs file</span></span>
 <span id="cb125-3"><a href="#cb125-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' </span></span>
@@ -5876,6 +5171,7 @@ $P40              AF-A           4194304 -111.0001  4192506</code></pre>
 <span id="cb125-196"><a href="#cb125-196" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb125-197"><a href="#cb125-197" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(new_fcs)</span>
 <span id="cb125-198"><a href="#cb125-198" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
 </div>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="fu">UnmixInternal</span>(<span class="at">ff=</span>ff, <span class="at">data=</span>data, <span class="at">panel=</span>panel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -5903,16 +5199,9 @@ $P40           AF-A             4194304      -111   4192506
 </section>
 <section id="take-away" class="level1">
 <h1>Take Away</h1>
-<p>In this bonus-walkthrough, we have seen how to take the unmixed fluorophore outputs, and modify the existing raw .fcs file so that the parameters and keywords slots contain only the unmixed data.</p>
-<p>Couple last blurb wrap up sentences</p>
-<p>To go back to the main unmixing walk-through, click <a href="../../course/14_Unmixing/index.qmd#internal-extravaganza">here</a></p>
+<p>In this bonus-walkthrough, we took our unmixed fluorophore outputs, and figured out how to modify the original raw .fcs file to remove the no longer needed elements related to the detector columns, reformat those elements that were retained, and then add in new elements related to each of the new fluorophores. This resulted in the creation of a new .fcs file that matched the typical formatting of an unmixed .fcs file.</p>
+<p>To return to the main unmixing walk-through, click <a href="../../course/14_Unmixing/index.html#internal-extravaganza">here</a></p>
 <p><img src="images/TakeAway2.jpg" class="img-fluid"></p>
-</section>
-<section id="additional-resources" class="level1">
-<h1>Additional Resources</h1>
-<p><a href="">Here</a></p>
-<p><a href="">Here</a></p>
-<p><a href="">Here</a></p>
 <div style="text-align: right;">
 <p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://www.gnu.org/graphics/agplv3-with-text-162x68.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
 </div>

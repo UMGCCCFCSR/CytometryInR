@@ -1,0 +1,311 @@
+---
+title: "Luciernaga Integration - Unstained"
+author: "David Rach"
+date: 08-19-2026
+format:
+  html:
+    toc: true
+    toc-depth: 5
+execute:
+  echo: true
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
+
+For screen-shot slides, click [here]()
+
+<br>
+
+---
+
+
+# Background
+
+Due to the sheer number of `plotly` `ggplotly()` plots that would need to be loaded by the website if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one webpage, we have broken the exploration of the fluorophore outputs by laser. This walk-through if for the Unstained controls. 
+
+- To return to the main walk-through (including UV fluorophores), click [here](/course/SDY3080/LuciernagaIntegration.qmd)
+- For the violet fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd)
+- For the blue fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Blue.qmd)
+- For the yellow-green fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_YellowGreen.qmd)
+- For the red fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Red.qmd)
+- For the unstained samples walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Unstained.qmd)
+
+# Walk-through
+
+## Set Up
+
+```{r}
+library(dplyr)
+library(purrr)
+library(flowWorkspace)
+library(Luciernaga)
+library(ggplot2)
+```
+
+```{r}
+#StorageLocation <- file.path("course", "SDY3080", "data", "SDY3080")
+StorageLocation <- file.path("data", "SDY3080")
+
+#OutputLocation <- file.path("course", "SDY3080", "outputs")
+OutputLocation <- file.path("outputs")
+```
+
+```{r}
+CellSCPath <- file.path(OutputLocation, "CellsSC_GS_Amplified.gs")
+CellsSC_GatingSet <- load_gs(CellSCPath)
+```
+
+```{r}
+#| echo: FALSE
+SaveThisTemplateHere <- file.path(OutputLocation, "KeptCells.csv")
+KeptCells <- read.csv(SaveThisTemplateHere, check.names=FALSE)
+```
+
+## Unstained Controls
+
+```{r}
+UnstainedHere <- file.path(OutputLocation, "CellsUnstained_GS_Amplified.gs")
+Unstained_GatingSet <- load_gs(UnstainedHere)
+
+Updated <- pData(Unstained_GatingSet) |>  mutate(Type="Cells", Fluorophore="scatter",
+ Antigen="Autofluorescence", Detector="V7", Negative="NoSubtraction")
+```
+
+
+### CBMC
+
+```{r}
+INF052Ctrl <- LuciernagaIntegration(template=Updated[1,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
+  Unstained=TRUE, inverse.transform=FALSE)
+
+INF052Ctrl$LuciernagaQC_Signatures
+
+INF052Ctrl$LuciernagaQC_AmalgamatedPlot
+
+INF052Ctrl$GuessSimilar_Plot
+
+INF052Ctrl$ProportionPlot
+
+INF052Ctrl$CosineSimilarityPlot
+
+INF052Ctrl$LinearSlices_Plot
+```
+
+```{r}
+INF052PMA <- LuciernagaIntegration(template=Updated[2,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
+  Unstained=TRUE, inverse.transform=FALSE)
+
+INF052PMA$LuciernagaQC_Signatures
+
+INF052PMA$LuciernagaQC_AmalgamatedPlot
+
+INF052PMA$GuessSimilar_Plot
+
+INF052PMA$ProportionPlot
+
+INF052PMA$CosineSimilarityPlot
+
+INF052PMA$LinearSlices_Plot
+```
+
+```{r}
+INF171Ctrl <- LuciernagaIntegration(template=Updated[3,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
+  Unstained=TRUE, inverse.transform=FALSE)
+
+INF171Ctrl$LuciernagaQC_Signatures
+
+INF171Ctrl$LuciernagaQC_AmalgamatedPlot
+
+INF171Ctrl$GuessSimilar_Plot
+
+INF171Ctrl$ProportionPlot
+
+INF171Ctrl$CosineSimilarityPlot
+
+INF171Ctrl$LinearSlices_Plot
+```
+
+```{r}
+INF171PMA <- LuciernagaIntegration(template=Updated[4,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
+  Unstained=TRUE, inverse.transform=FALSE)
+
+INF171PMA$LuciernagaQC_Signatures
+
+INF171PMA$LuciernagaQC_AmalgamatedPlot
+
+INF171PMA$GuessSimilar_Plot
+
+INF171PMA$ProportionPlot
+
+INF171PMA$CosineSimilarityPlot
+
+INF171PMA$LinearSlices_Plot
+```
+
+```{r}
+INF182Ctrl <- LuciernagaIntegration(template=Updated[5,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
+  Unstained=TRUE, inverse.transform=FALSE)
+
+INF182Ctrl$LuciernagaQC_Signatures
+
+INF182Ctrl$LuciernagaQC_AmalgamatedPlot
+
+INF182Ctrl$GuessSimilar_Plot
+
+INF182Ctrl$ProportionPlot
+
+INF182Ctrl$CosineSimilarityPlot
+
+INF182Ctrl$LinearSlices_Plot
+```
+
+```{r}
+INF182PMA <- LuciernagaIntegration(template=Updated[6,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
+  Unstained=TRUE, inverse.transform=FALSE)
+
+INF182PMA$LuciernagaQC_Signatures
+
+INF182PMA$LuciernagaQC_AmalgamatedPlot
+
+INF182PMA$GuessSimilar_Plot
+
+INF182PMA$ProportionPlot
+
+INF182PMA$CosineSimilarityPlot
+
+INF182PMA$LinearSlices_Plot
+```
+
+```{r}
+INF281Ctrl <- LuciernagaIntegration(template=Updated[7,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
+  Unstained=TRUE, inverse.transform=FALSE)
+
+INF281Ctrl$LuciernagaQC_Signatures
+
+INF281Ctrl$LuciernagaQC_AmalgamatedPlot
+
+INF281Ctrl$GuessSimilar_Plot
+
+INF281Ctrl$ProportionPlot
+
+INF281Ctrl$CosineSimilarityPlot
+
+INF281Ctrl$LinearSlices_Plot
+```
+
+```{r}
+INF281PMA <- LuciernagaIntegration(template=Updated[8,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
+  Unstained=TRUE, inverse.transform=FALSE)
+
+INF281PMA$LuciernagaQC_Signatures
+
+INF281PMA$LuciernagaQC_AmalgamatedPlot
+
+INF281PMA$GuessSimilar_Plot
+
+INF281PMA$ProportionPlot
+
+INF281PMA$CosineSimilarityPlot
+
+INF281PMA$LinearSlices_Plot
+```
+
+### PBMC
+
+```{r}
+ND006Ctrl <- LuciernagaIntegration(template=Updated[9,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
+  Unstained=TRUE, inverse.transform=FALSE)
+
+ND006Ctrl$LuciernagaQC_Signatures
+
+ND006Ctrl$LuciernagaQC_AmalgamatedPlot
+
+ND006Ctrl$GuessSimilar_Plot
+
+ND006Ctrl$ProportionPlot
+
+ND006Ctrl$CosineSimilarityPlot
+
+ND006Ctrl$LinearSlices_Plot
+```
+
+```{r}
+ND006PMA <- LuciernagaIntegration(template=Updated[10,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
+  Unstained=TRUE, inverse.transform=FALSE)
+
+ND006PMA$LuciernagaQC_Signatures
+
+ND006PMA$LuciernagaQC_AmalgamatedPlot
+
+ND006PMA$GuessSimilar_Plot
+
+ND006PMA$ProportionPlot
+
+ND006PMA$CosineSimilarityPlot
+
+ND006PMA$LinearSlices_Plot
+```
+
+```{r}
+ND050Ctrl <- LuciernagaIntegration(template=Updated[11,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
+  Unstained=TRUE, inverse.transform=FALSE)
+
+ND050Ctrl$LuciernagaQC_Signatures
+
+ND050Ctrl$LuciernagaQC_AmalgamatedPlot
+
+ND050Ctrl$GuessSimilar_Plot
+
+ND050Ctrl$ProportionPlot
+
+ND050Ctrl$CosineSimilarityPlot
+
+ND050Ctrl$LinearSlices_Plot
+```
+
+
+```{r}
+ND050PMA <- LuciernagaIntegration(template=Updated[12,], gs=Unstained_GatingSet, GuessSimilar=FALSE,
+  Unstained=TRUE, inverse.transform=FALSE)
+
+ND050PMA$LuciernagaQC_Signatures
+
+ND050PMA$LuciernagaQC_AmalgamatedPlot
+
+ND050PMA$GuessSimilar_Plot
+
+ND050PMA$ProportionPlot
+
+ND050PMA$CosineSimilarityPlot
+
+ND050PMA$LinearSlices_Plot
+```
+
+# Redirects
+
+Due to the sheer number of `plotly` `ggplotly()` plots that would need to be loaded by the website if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one webpage, we have broken the exploration of the fluorophore outputs by laser. This walk-through if for the Unstained controls. 
+
+- To return to the main walk-through (including UV fluorophores), click [here](/course/SDY3080/LuciernagaIntegration.qmd)
+- For the violet fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd)
+- For the blue fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Blue.qmd)
+- For the yellow-green fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_YellowGreen.qmd)
+- For the red fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Red.qmd)
+- For the unstained samples walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Unstained.qmd)
+
+![](images/TakeAway4.jpg)
+
+# Additional Resources
+
+[Luciernaga Vignette - Reference Library](https://davidrach.github.io/Luciernaga/articles/QualityControl.html#comparing-normalized-signatures)
+
+[Luciernaga Vignette - Fluorescent Signatures](https://davidrach.github.io/Luciernaga/articles/FluorescenceSignatures.html)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::

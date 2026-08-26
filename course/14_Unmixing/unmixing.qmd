@@ -1,7 +1,7 @@
 ---
 title: "Walk-through: Unmixing"
 author: "David Rach"
-date: 08-04-2026
+date: 08-05-2026
 format: html
 toc: true
 toc-depth: 5
@@ -13,9 +13,11 @@ toc-depth: 5
 [![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 :::
 
-For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
+For the YouTube livestream recordings, see [here](https://www.youtube.com/live/lirMHQLVnnU?si=1oTXTH0NWR46L4aa&t=80)
 
-For screen-shot slides, click [here](/course/10_Downsampling/slides.qmd)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/lirMHQLVnnU?si=1oTXTH0NWR46L4aa&amp;start=80" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+For screen-shot slides, click [here](/course/14_Unmixing/unmixing_slides.qmd)
 
 <br>
 
@@ -34,7 +36,7 @@ However, if [deep-diving](/course/10_Downsampling/concatenate.qmd) how .fcs file
 At this point in the [Week 14](/course/14_Unmixing/index.qmd) lesson, our `OldFashionedUnmixing()` function is fairly far along, taking as inputs a file.path to our raw full-stained .fcs file, and also a [signature matrix](), and currently returning as an output a data.frame containing the newly unmixed fluorophore columns.
 
 ```{r}
-#| code-fold: FALSE
+#| code-fold: TRUE
 
 #' This function unmixes our raw full-stained .fcs files using the signature matrix we provide.
 #' 
@@ -243,9 +245,9 @@ At this point in `OldFashionedUnmix()`, we get back our unmixed fluorophore data
 
 However, as mentioned in the [Journey Thus Far](/course/14_Unmixing/unmixing.qmd#journey-thus-far), since the current "flowFrame" `parameter()` and `keyword()` slots contain values originally corresponding to the "Detector" columns that are no longer present, we will need to start off by identifying and removing these. 
 
-Once these have been cleaned out, the `parameter()` "data" object, which contains the "$P1", "$P10" notation for the row numbers is likely to be out of sequence for the remaining Time, SSC and FSC columns that are retained going from the raw to the unmixed .fcs files. This will require recalculating their new row number, before updating the original `keyword()` to reflect these number changes. 
+Once these have been cleaned out, the `parameter()` "data" object, which contains the "\$P1", "\$P10" notation for the row numbers is likely to be out of sequence for the remaining Time, SSC and FSC columns that are retained going from the raw to the unmixed .fcs files. This will require recalculating their new row number, before updating the original `keyword()` to reflect these number changes. 
 
-At this point, everything would be correctly formatted for the retained columns, and we can start adding in the new unmixed fluorophore columns. These would end up occupying new row entries in `paramater()` "data", and taking their new "$P11"-style row number, new `keyword()`s would be created. 
+At this point, everything would be correctly formatted for the retained columns, and we can start adding in the new unmixed fluorophore columns. These would end up occupying new row entries in `paramater()` "data", and taking their new "\$P11"-style row number, new `keyword()`s would be created. 
 
 Likewise, we would then need to do an additional bit of cleanup (switching the "$SPILLOVER" matrix from one using detectors to Fluorophores, modifying filenames, etc.) before taking the updated `exprs()`, `parameter()` and `keyword()` slots and using `new()` to reassemble a new unmixed flowFrame. 
 
@@ -278,7 +280,9 @@ UnmixInternal <- function(ff, data, panel){
 To avoid having to work two levels down inside a nested function, we can temporatily modify `OldFashionedUnmix()` to return to us these 3 objects ("ff", "data", "panel") via a `list()`, which will allow us to work with then directly in `UnmixInternal()`, simplifying the function writing process. After modifying the function, we need to re-run the code-block to make sure those changes are reflected in our local environment. 
 
 ```{r}
-#' This function unmixes our raw full-stained .fcs files using the signature
+#| code-fold: TRUE
+
+#'  This function unmixes our raw full-stained .fcs files using the signature
 #' matrix we provide.
 #' 
 #' @param x A file.path to a raw full-stained .fcs file we want to unmix. 
@@ -475,11 +479,13 @@ At first glance, it appears the ordering for "Time", "SSC", "FSC" and "SSC-B" wa
 
 As mentioned in our [sketching a plan notes](/course/14_Unmixing/unmixing.qmd#sketching-a-plan), we fortunately do not need to modify much to be able to swap "data" into the `exprs()` matrix slot.
 
-However, we will need to modify `parameter()` and `keyword()` slots rather extensively. For the **retained columns** ("SSC", "FSC", etc.) all their associated values would remain the same, but the names they are stored under will need to be updated to reflect their new "$P" row number.  For the **new fluorophore columns**, they will need to be assigned new "$P" numeric values, and the associated `parameter()` and `keyword()` components generated. And for the **detector columns** that were removed from `exprs()`, we will need to also remove their associated `parameter()` and `keyword()` entries. 
+However, we will need to modify `parameter()` and `keyword()` slots rather extensively. For the **retained columns** ("SSC", "FSC", etc.) all their associated values would remain the same, but the names they are stored under will need to be updated to reflect their new "\$P" row number.  For the **new fluorophore columns**, they will need to be assigned new "\$P" numeric values, and the associated `parameter()` and `keyword()` components generated. And for the **detector columns** that were removed from `exprs()`, we will need to also remove their associated `parameter()` and `keyword()` entries. 
 
 To go about this, we can identify which columns were retained between our raw and unmixed data using `intersect()`. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the
 #'  formatting going from raw to unmixed .fcs file
 #' 
@@ -507,6 +513,8 @@ UnmixInternal(ff=ff, data=data, panel=panel)
 As anticipated, we get back the "Time", "SSC", "FSC" and "SSC-B" columns. Next up, lets retrieve the original `parameters()` "data" object. Since this will use the `flowCore` packages `paramaters()` function, we add it to the roxygen2 skeleton under the "importFrom" tag for [documentation](/course/09_Functions/index.qmd), and add the package name plus ":::" before the function itself, which enables it to be correctly assigned at this point in the course (in the absence of a Namespace file, which we will cover later).
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the
 #'  formatting going from raw to unmixed .fcs file
 #' 
@@ -540,6 +548,8 @@ UnmixInternal(ff=ff, data=data, panel=panel)
 As we can see, all the detectors are still showing as their own row entries. We can `filter()` the "name" column to isolate just the rows corresponding to our retained columns, so that we know based on the `row.names()` what keywords should be kept/renamed instead of deleted.
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -579,6 +589,8 @@ UnmixInternal(ff=ff, data=data, panel=panel)
 By modifying that line of code in adding an "!", we can also `filter()` for the column names that were not retained, which allows us to target their respective `keyword()` entries for deletion later on.  
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -622,6 +634,8 @@ UnmixInternal(ff=ff, data=data, panel=panel)
 We are now ready to go ahead and retrieve from the raw "flowFrame" the `keyword()` slot, so that we can start modifying the existing description list accordingly. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -665,10 +679,12 @@ OriginalList <- UnmixInternal(ff=ff, data=data, panel=panel)
 OriginalList[1:20]
 ```
 
-Within `UnmixInternal()`, we have the "GetRidThese" variable, which stores the "$P" `row.names()` values that we will be matching for (and subsequently removing) from the description list. To do this matching, lets run `names()` to get back the keyword names. Because of the [special character](https://youtu.be/NAqPg31fn80?si=QNnW2gXKUcGFclZ6) nature of the dollar sign followed by variable numbers, we will need to also create a [regex](https://en.wikipedia.org/wiki/Regular_expression) pattern to match for. We can do this via `gsub()` and `paste()`.
+Within `UnmixInternal()`, we have the "GetRidThese" variable, which stores the "\$P" `row.names()` values that we will be matching for (and subsequently removing) from the description list. To do this matching, lets run `names()` to get back the keyword names. Because of the [special character](https://youtu.be/NAqPg31fn80?si=QNnW2gXKUcGFclZ6) nature of the dollar sign followed by variable numbers, we will need to also create a [regex](https://en.wikipedia.org/wiki/Regular_expression) pattern to match for. We can do this via `gsub()` and `paste()`.
  
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -720,6 +736,8 @@ UnmixInternal(ff=ff, data=data, panel=panel)
 At this point, using `grepl()` to pattern match, we can subset out the matches using the base R [] approach to get back a vector of keyword names from the list that need to be excluded. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -775,6 +793,8 @@ UnmixInternal(ff=ff, data=data, panel=panel)
 Likewise, with a well-placed "!" we can also denote those being retained. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -829,11 +849,13 @@ UnmixInternal <- function(ff, data, panel){
 UnmixInternal(ff=ff, data=data, panel=panel)
 ```
 
-Looking at the respective vectors of names to exclude/retain, we can see that the keywords containing "$P" in their names have been correctly designated. However, we stll have keyword names corresponding to the "flowCore_" and "PDISPLAY" varieties that contain equivalent rowname "$P72" or "P72" values that didn't pattern match, and were not appropiately handled. 
+Looking at the respective vectors of names to exclude/retain, we can see that the keywords containing "\$P" in their names have been correctly designated. However, we stll have keyword names corresponding to the "flowCore_" and "PDISPLAY" varieties that contain equivalent rowname "\$P72" or "P72" values that didn't pattern match, and were not appropiately handled. 
 
 Rather than try to write an all-encompassing argument (and end up in the 7th circle of RegEx hell), we can instead run our intermediate retrieved vector through subsequent pattern matching rounds for these sequentially. This will ensure that cleanup is carried out correctly, and also provide ability to troubleshoot more effectively if needed. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -901,6 +923,8 @@ UnmixInternal(ff=ff, data=data, panel=panel)
 The extra "flowCore_$P" keywords leftover from the original "Detector" columns have now been removed. Now, we just need to repeat the process for the "PDisplay" style keywords. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -979,6 +1003,8 @@ UnmixInternal(ff=ff, data=data, panel=panel)
 And with this, we are left with a vector of names containing just the keywords we are interested in retaining. We can go ahead and subset these out from the original description list using the [] approach. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -1055,7 +1081,8 @@ UnmixInternal <- function(ff, data, panel){
 ```
 
 ```{r}
-UnmixInternal(ff=ff, data=data, panel=panel)
+DescriptionIntermediate <- UnmixInternal(ff=ff, data=data, panel=panel)
+DescriptionIntermediate[20:30]
 ```
 
 ## Renaming retained keywords
@@ -1064,9 +1091,11 @@ With the "detector" `parameter()` and `keyword()` entries now removed, we still 
 
 ### Renumbering parameters data
 
-We can start using `tibble` packages `rownames_to_column()` function to shift the `rownames()` containing the current "$P" to their own column ("OriginalRowNumber"). We can then pipe through to `dplyr`'s `mutate()` function, and identifying what the new "NewRowNumber" value would be through the combination of `paste0()` and `row_number()` functions. We can then `relocate()` "NewRowNumber" to the first column position. We update the `roxygen2` skeleton and add appropiate "::" entries as we go. 
+We can start using `tibble` packages `rownames_to_column()` function to shift the `rownames()` containing the current "\$P" to their own column ("OriginalRowNumber"). We can then pipe through to `dplyr`'s `mutate()` function, and identifying what the new "NewRowNumber" value would be through the combination of `paste0()` and `row_number()` functions. We can then `relocate()` "NewRowNumber" to the first column position. We update the `roxygen2` skeleton and add appropiate "::" entries as we go. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -1154,11 +1183,13 @@ UnmixInternal <- function(ff, data, panel){
 UnmixInternal(ff=ff, data=data, panel=panel)
 ```
 
-Having generated the new "$P" rownumbers, we will need need to match for the "OriginalRowNumber" entries is the `keyword()` description list, and swap in the new rownumber name without changing the underlying data. Since there are two moving pieces (old rownumber, new row number), and they are actively modifying names in a single list, this is more suited for the use of a "for-loop". 
+Having generated the new "\$P" rownumbers, we will need need to match for the "OriginalRowNumber" entries is the `keyword()` description list, and swap in the new rownumber name without changing the underlying data. Since there are two moving pieces (old rownumber, new row number), and they are actively modifying names in a single list, this is more suited for the use of a "for-loop". 
 
 We can first `pull()` both the old and new row numbers and save them to their own vectors. To avoid accidents while coding out the for-loop, lets also duplicate the current list. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -1255,11 +1286,13 @@ UnmixInternal <- function(ff, data, panel){
 UnmixInternal(ff=ff, data=data, panel=panel)
 ```
 
-Unlike other cases of iteration we have seen with `map2()`, for-loops typically iterate through a single vector. We can work around this by having the for-loop iterate through index positions using the `seq_along()` function which identifies the length of our vector. For these retrieved index positions ("i"), we can then inside the for-loop subset the vectors for NewRowNumbers and OldRowNumbers via the [i] approach. We can set up an equivalent value without the "$P" component for later use. 
+Unlike other cases of iteration we have seen with `map2()`, for-loops typically iterate through a single vector. We can work around this by having the for-loop iterate through index positions using the `seq_along()` function which identifies the length of our vector. For these retrieved index positions ("i"), we can then inside the for-loop subset the vectors for NewRowNumbers and OldRowNumbers via the [i] approach. We can set up an equivalent value without the "\$P" component for later use. 
 
 Since this can be complicated, we can run an output `print()` line to check that everything is working as expected at this stage. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -1375,6 +1408,8 @@ From our output to the console window, we can see the for-loop is grabbing the N
 We can do this by first setting up a "RegEx" pattern via `paste0()` and `gsub()`, before matching using retrieved `names()` through the use of [] and `grepl()` pattern matching (with the perl argument set to TRUE) 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -1495,10 +1530,12 @@ UnmixInternal <- function(ff, data, panel){
 UnmixInternal(ff=ff, data=data, panel=panel)
 ```
 
-Looking at the last output line, the for-loop identified both the "$P" and "flowCore_$P" keywords that matched the old row number "$P". Now that these keywords are identified, we can use a combination of `names()`, `match()` and "[]" to identify the "$P" portion, which will be overwritten by the new value held within "InternalRenamed"
+Looking at the last output line, the for-loop identified both the "\$P" and "flowCore_$P" keywords that matched the old row number "\$P". Now that these keywords are identified, we can use a combination of `names()`, `match()` and "[]" to identify the "\$P" portion, which will be overwritten by the new value held within "InternalRenamed"
 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -1627,9 +1664,11 @@ UnmixInternal <- function(ff, data, panel){
 UnmixInternal(ff=ff, data=data, panel=panel)
 ```
 
-From our returned `names()`, the retained "$P" and "flowCore" style keywords have had their original row number values updated with the new ones. This leaves only the "PDisplay" style ones left to rename. We can modify our previous code example to try to similar match the existing keywords with the old rownumber values in this format. 
+From our returned `names()`, the retained "\$P" and "flowCore" style keywords have had their original row number values updated with the new ones. This leaves only the "PDisplay" style ones left to rename. We can modify our previous code example to try to similar match the existing keywords with the old rownumber values in this format. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -1771,6 +1810,8 @@ UnmixInternal(ff=ff, data=data, panel=panel)
 With the respective keywords correctly identified, we can extend the same `names()`, `match()` and "[]" strategy to replace the old row number with the corresponding new value. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -1926,6 +1967,8 @@ We can now switch gears and tackle adding new row entries to the `parameters()` 
 Since we no longer need to keep the old row number entries, lets remove them from the data.frame using `select()` and return the new row numbers to `rownames()` location using the `tibble()` packages `column_to_rownames()`  function.
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -2082,6 +2125,8 @@ At this point, we just need to add the new fluorophore entries as new columns. I
 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal for Concatenate, creates the new parameter
 #' data rows needed to properly integrate new keyword columns
 #' in exprs matrix
@@ -2124,6 +2169,8 @@ Let's go ahead and duplicate, and rename it to `UnmixedParameterUpdate()`, in th
 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal for UnmixInternal, creates the new parameter
 #' data rows needed to properly integrate new fluorophore columns
 #' in exprs matrix
@@ -2160,6 +2207,8 @@ UnmixedParameterUpdate <- function(OldParameters, NewExprs){
 We can then run `UnmixedParameterUpdate()` as the next line in `UnmixInternal()`, allowing us to reuse the existing testing code line to see if our modifications work or not. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -2316,9 +2365,11 @@ UnmixInternal <- function(ff, data, panel){
 UnmixInternal(ff=ff, data=data, panel=panel)
 ```
 
-While we get back the fluorophore rows, our `rownames()` start off at "$P11". So close, but looks like we will need to modify `UnmixedParameterUpdate()` to first exclude retained column names (Time through SSC-B) from consideration. 
+While we get back the fluorophore rows, our `rownames()` start off at "\$P11". So close, but looks like we will need to modify `UnmixedParameterUpdate()` to first exclude retained column names (Time through SSC-B) from consideration. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal for UnmixInternal, creates the new parameter
 #' data rows needed to properly integrate new fluorophore columns
 #' in exprs matrix
@@ -2371,7 +2422,7 @@ After re-running the code block to refresh the function in our local environment
 UnmixInternal(ff=ff, data=data, panel=panel)
 ```
 
-In this case, the retained are no longer included, so the first fluorophore is listed at the expected starting row number ("$P11", right after the last "SSC-B" column in "OldParameters"). 
+In this case, the retained are no longer included, so the first fluorophore is listed at the expected starting row number ("\$P11", right after the last "SSC-B" column in "OldParameters"). 
 
 ### Comparison to Instrument Unmixed
 
@@ -2404,6 +2455,8 @@ Looking at these examples, we can see that for the unmixed fluorophores, we get 
 Parsing what we can see, range appears to be the same for both the scatters and the fluorophores (4194304). minRange however is lower for the Fluorophores (-111.0001), as is the maxRange (4192505.7500). While our approach to dynamically calculate these worked well for the metadata columns, lets not rock the boat too much on this unmixing attempt (since we want to be able to take these files back into commercial software if we want, and don't want [unexpected bugs](https://umgcccfcsr.github.io/CytometryInR/course/community/AutoSpectral/#ols) on the visualization). Since we are trying to faithfully replicate for now, lets adjust those internal assignments so that we don't calculate out range, minRange and maxRange, but instead append the expected values. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal for UnmixInternal, creates the new parameter
 #' data rows needed to properly integrate new fluorophore columns
 #' in exprs matrix
@@ -2459,6 +2512,8 @@ UnmixInternal(ff=ff, data=data, panel=panel)
 Close enough for this attempt. One thing to note, for "desc", we don't have any of the antigen names listed yet. We can get these corresponding values from the third "panel" argument for `UnmixInternal`, which so far we have specified and not yet used. Let's go ahead and change that. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -2619,9 +2674,11 @@ UnmixInternal <- function(ff, data, panel){
 UnmixInternal(ff=ff, data=data, panel=panel)
 ```
 
-Alright, the new `parameter()` data rows corresponding to the unmixed fluorophores have been generated, which we can bind with the old parameters (containing "Time", "SSC", "FSC", and "SSC-B") using either `rbind()` or `bind_rows()`. We can now move forward and for each row generate out the corresponding sets of `keyword()` that will go into the description list. For [Week 10](/course/10_Downsampling/index.qmd) when writing `Concatenate()`, we handled this through the use of a for-loop that would create these in sequence for each "$P" rownumber provided. We can copy this existing code over, and modify it so that the outputs match what is expected for the unmixed .fcs file. 
+Alright, the new `parameter()` data rows corresponding to the unmixed fluorophores have been generated, which we can bind with the old parameters (containing "Time", "SSC", "FSC", and "SSC-B") using either `rbind()` or `bind_rows()`. We can now move forward and for each row generate out the corresponding sets of `keyword()` that will go into the description list. For [Week 10](/course/10_Downsampling/index.qmd) when writing `Concatenate()`, we handled this through the use of a for-loop that would create these in sequence for each "\$P" rownumber provided. We can copy this existing code over, and modify it so that the outputs match what is expected for the unmixed .fcs file. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -2804,6 +2861,8 @@ UnmixInternal(ff=ff, data=data, panel=panel)
 One thing we can do now that the new `keyword()` entries have been generated, is to use the `order()` and "[]" functions to rearrange them. We can also overwrite the existing `parameters()` "data" slot with our updated parameters data.frame, and convert the unmixed data to a matrix for eventual incorporation into `exprs()`
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -2998,6 +3057,8 @@ class(Matrix)
 One last major thing, within `keyword()`, we have a "$SPILLOVER" keyword that contains a spillover matrix. While we are unlikely to need it, we should go ahead and convert it from the current entry which has detector columns to one that has fluorophore columns to ensure compatability. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -3202,6 +3263,8 @@ UnmixInternal(ff=ff, data=data, panel=panel)
 And with that, everything in the `exprs()`, `parameters()` and `keyword()` slots has been converted over to match the expected unmixed .fcs file format. All that we need to do is cobble them together into a new flowFrame, which we can do via `new()`. At that point, at long last, we can return the new unmixed flowFrame back to `OldFashionedUnmix()`, where any last customization steps (as well as decisions where to store the .fcs file to)  can occur without having a nested function layer to deal with. 
 
 ```{r}
+#| code-fold: TRUE
+
 #' Internal function for OldFashinedUnmix, handles fixing the 
 #' formatting going from raw to unmixed .fcs file
 #' 
@@ -3410,22 +3473,11 @@ And with that, everything in the `exprs()`, `parameters()` and `keyword()` slots
 
 # Take Away
 
-In this bonus-walkthrough, we have seen how to take the unmixed fluorophore outputs, and modify the existing raw .fcs file so that the parameters and keywords slots contain only the unmixed data. 
+In this bonus-walkthrough, we took our unmixed fluorophore outputs, and figured out how to modify the original raw .fcs file to remove the no longer needed elements related to the detector columns, reformat those elements that were retained, and then add in new elements related to each of the new fluorophores. This resulted in the creation of a new .fcs file that matched the typical formatting of an unmixed .fcs file. 
 
-Couple last blurb wrap up sentences
-
-To go back to the main unmixing walk-through, click [here](/course/14_Unmixing/index.qmd#internal-extravaganza)
+To return to the main unmixing walk-through, click [here](/course/14_Unmixing/index.qmd#internal-extravaganza)
 
 ![](images/TakeAway2.jpg)
-
-# Additional Resources
-
-[Here]()
-
-[Here]()
-
-[Here]()
-
 
 ::: {style="text-align: right;"}
 [![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
