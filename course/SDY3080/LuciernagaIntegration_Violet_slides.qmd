@@ -1,0 +1,1631 @@
+---
+title: "Luciernaga Integration - Violet"
+author: "David Rach"
+date: 08-28-2026
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    incremental: true
+page-layout: full
+execute:
+  echo: true
+  warning: false
+  message: true
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
+
+For screen-shot slides, click [here](/course/SDY3080/LuciernagaIntegration_Violet_slides.qmd)
+
+<br>
+
+---
+
+# Background
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. This walk-through if for the "Violet" laser.
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+- To return to the main walk-through (including UV fluorophores), click [here](/course/SDY3080/LuciernagaIntegration.qmd)
+- For the violet fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd)
+- For the blue fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Blue.qmd)
+- For the yellow-green fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_YellowGreen.qmd)
+- For the red fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Red.qmd)
+- For the unstained samples walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Unstained.qmd)
+:::
+:::
+
+---
+
+# Walk-through
+
+## Set Up
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Attach your R packages to the local environment via the `library()` call. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+library(dplyr)
+library(purrr)
+library(flowWorkspace)
+library(Luciernaga)
+library(ggplot2)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Designate your file paths to the storage and output folder locations. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#StorageLocation <- file.path("course", "SDY3080", "data", "SDY3080")
+StorageLocation <- file.path("data", "SDY3080")
+
+#OutputLocation <- file.path("course", "SDY3080", "outputs")
+OutputLocation <- file.path("outputs")
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Bring in the pre-gated GatingSet object (which was carried out as part of the [Signature Matrices](/course/SDY3080/SignatureMatrices.qmd) walkthrough).
+:::
+:::
+
+::: {.fragment}
+```{r}
+CellSCPath <- file.path(OutputLocation, "CellsSC_GS_Amplified.gs")
+CellsSC_GatingSet <- load_gs(CellSCPath)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And bring in the template needed to run the `LuciernagaIntegration()` wrapper function (which we generated [here](/course/SDY3080/LuciernagaIntegration.qmd#assembling-template)). 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| echo: FALSE
+SaveThisTemplateHere <- file.path(OutputLocation, "KeptCells.csv")
+KeptCells <- read.csv(SaveThisTemplateHere, check.names=FALSE)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And with that, we are set! 
+:::
+:::
+
+---
+
+### Violet
+
+![](images/Violet_Laser.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having completed looking at the fluorophores with primary detectors on the Ultra Violet laser, we can now move on to the Violet laser. For many cells (especially after fixation), autofluorescence typically peaks around the "V7-A" or "V8-A" detector.  This is worth keeping in mind, because behind the scenes `LuciernagaIntegration()` just processes normalized signatures of individual cells, groups them based on peak detector and additional peaks with relatively similar heights by detector. 
+:::
+:::
+
+---
+
+![](images/LuciernagaMechanism.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Since not all cells will stain for the fluorophore (lacking the antigen the corresponding antibody would bind to), for a random cell single-color unmixing control the `Luciernaga` output might return signatures featuring different primary peaks (for both the fluorophore and autofluorescence). Since the goal is to get back the fluorophore signatures (and especially identify antibody vials where the tandem has broken down into individual components), `Luciernaga` needs a way to exclude out the usual autofluorescence peak detectors from the returned signatures. This is handled by the 'AFOverlap' argument
+:::
+:::
+
+::: {.fragment}
+```{r}
+AFOverlap <- data.frame(Fluorophore=c("Unstained"),
+                        MainDetector=c("UV7-A, V7-A, B3-A"))
+
+AFOverlap
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+While this works quite well to return only the interesting signatures for most fluorophores, for the autofluorescence-similar fluorophores (BUV496, BV510, etc.) that share the same peak as the autofluorescence, this exclusion via the "AFOverlap" list can result in even the fluorophore signatures being excluded. To handle this, we can update the 'AFOverlap' data.frame to handle these known edge cases. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+AFOverlap <- data.frame(Fluorophore=c("Unstained", "BUV496", "BV510"),
+                               MainDetector=c("UV7-A, V7-A, B3-A", "UV7-A", "V7-A"))
+
+AFOverlap
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we use `system.file()`, we can check `Luciernaga` 'extdata' folder for the .csv that contains the default version
+:::
+:::
+
+::: {.fragment}
+```{r}
+ThePackageLocation <- system.file("extdata", package='Luciernaga')
+TheCSV <- list.files(ThePackageLocation,
+ pattern="AutofluorescentOverlaps.csv", full.names=TRUE)
+LuciernagaDefaults <- read.csv(TheCSV, check.names=FALSE)
+
+LuciernagaDefaults
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+While these defaults work for most cases, you might need to modify the 'AFOverlap' data.frame for your panel. This can be both in cases where you are encountering rarer autofluorescences (usually around "V3-A" and "V10-A" for our panels), or when you are using a fluorophore on the same peak that has a different name (despite having the same signature, thank you manufacturers!)
+:::
+:::
+
+::: {.fragment}
+```{r}
+Luciernaga::QC_SimilarFluorophores("BV480", 64)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With this bit of background needed in case we encounter any odd signatures in the process, we can now begin. 
+:::
+:::
+
+---
+
+#### BV421
+
+::: {.fragment}
+::: {.callout-tip title="."}
+First up on the violet laser we have the [BV421](https://www.biolegend.com/en-us/products/brilliant-violet-421-anti-human-cd127-il-7ralpha-antibody-7155) fluorophore, conjugated to [CD127](https://en.wikipedia.org/wiki/Interleukin-7_receptor-%CE%B1) for this panel. While the fluorophore can be bright, the antigen expression will be a little less dense compared to CD3, CD4, CD8, etc., so my initial expectation is the overall MFI will end up somewhere in the middle. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Getting started, lets attempt to run using the default 'AFOverlap'
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| eval: TRUE
+#| error: TRUE
+
+BV421 <- LuciernagaIntegration(template=KeptCells[8,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+This kind of error is the one I typically encounter when the 'AFOverlap' ends up excluding all the primary detectors. Before starting, we can double check what BV421 should look like. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plots <- QC_ReferenceLibrary("BV421|Pacific Blue", 64, returnPlots=TRUE)[[2]]
+plotly::ggplotly(Plots)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we can see, the main fluorophore should be "V1-A", but it is possible in this case the fluorophore might have degraded a tad and we are ending up with a co-equal with "V3-A" peak. We can modify the "AFOverlap" data.frame to account for this.
+:::
+:::
+
+::: {.fragment}
+```{r}
+UpdatedAFOverlap <- data.frame(Fluorophore=c("Unstained", "BV421"),
+                               MainDetector=c("UV7-A, V7-A, B3-A", "V3-A"))
+UpdatedAFOverlap                               
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can now re-run `LuciernagaIntegration()`, but point "AFOverlap" to our "UpdatedAFOverlap"
+:::
+:::
+
+::: {.fragment}
+```{r}
+BV421 <- LuciernagaIntegration(template=KeptCells[8,], gs=CellsSC_GatingSet,
+ GuessSimilar=TRUE, AFOverlap=UpdatedAFOverlap)[[1]] # Square brackets to loose list notation
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Alright, as we have done previously, we can check the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region we had grabbed in our "positive" gate into 10% bins across. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+plotly::ggplotly(BV421$LinearSlices_Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Overall, similar signatures for the main fluorophore detectors, but there is a bit of a step-ladder visible around the "UV7-A" and "V7-A" detectors, suggesting our antigen-fluorophore combination is a bit dim. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets break out `LuciernagaQC()` output and see what the grouped individual cell normalized signature variants are up to.
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV421$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we might have anticipated having seen step-ladders from 'LinearSlices', we have a mess on our hands. When looking at the normalized signatures, we are getting back step-ladders for both autofluorescence detectors. We can also see that instead of the "V1-A" peak detector that would be expected for "BV421" on the basis of the reference control, all signatures are coming back with primary peak detector as "V3-A" (co-equal to "V2-A" in some cases). 
+:::
+:::
+
+---
+
+![](images/BV421_Degraded.png)
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+This might be instrument-specific (something being off on the laser or detector array), manufacturer variation, or the fluorophore is in rough-shape and degrading for some reason. To try to get a sense of the extent, lets run make out the main signature appearance by checking the `QC_AmalgamatedPlot()` output
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV421$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So our "Average" signature is similar to "V3_10-V2_10-UV7_02". We can examine the "ProportionPlot" output and identify the signatures that represent the majority of the cells present. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV421$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So "V3_10-V2_10-UV7_02" is representative of 36% of the individual cell signatures, with the slight variant for third peak 'UV7_03' being an additional 17%. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets retrieve the underlying data for this plot for these signatures, and one of those that has more of the step-ladder presence on "UV7"
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data <- BV421$AveragedSignature_Data |>
+   filter(Cluster %in% c("V3_10-V2_10-UV7_05", "Average", "V3_10-V2_10-UV6_02"))
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets pass these individually to `QC_SimilarFluorophores()` and gage the difference for the cosine values vs. the reference. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+QC_WhatsThis(x="V3_10-V2_10-UV7_05", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) # 0.89
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) # 0.95
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+QC_WhatsThis(x="V3_10-V2_10-UV6_02", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) # 0.99
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Overall, anywhere from from 0.89 to 0.99 in terms of their cosine. Lets plot these angles for reference
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| code-fold: TRUE
+cos_vals <- c(1, 0.99, 0.95, 0.89)
+theta <- acos(cos_vals)
+
+df <- data.frame(
+  label = paste0("cos = ", cos_vals),
+  angle_deg = round(theta * 180 / pi, 1),
+  x = sin(theta),
+  y = cos(theta)
+)
+
+ggplot(df) +
+  geom_segment(aes(x = 0, y = 0, xend = x, yend = y, color = label),
+               arrow = arrow(length = unit(0.25, "cm")),
+               linewidth = 1) +
+  coord_fixed(xlim = c(-0.1, 1), ylim = c(-0.1, 1.1)) +
+  geom_hline(yintercept = 0, color = "grey80") +
+  geom_vline(xintercept = 0, color = "grey80") +
+  labs(x = NULL, y = NULL, color = "Vector",
+       title = NULL) +
+  theme_bw()
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Ultimately, still looks like just a mess. 
+:::
+:::
+
+---
+
+:::{.callout-warning title="Fail"}
+
+For BV421, we are not getting any of the expected "V1-A" peak detector from any of the signatures. While around 20% of the cells still have signal similar to the reference, around 53% have signal with a cosine value of 0.95, with substantial autofluorescence residuals.
+
+Moreover, "V3-A" is actually intended for our Pacific Blue fluorophore, so even in case we can still discriminate between the two, we will end up with more uncertainty/spreading in the unmixing than what would occur if the BV421 kept with it's "V1-A" peak detector. 
+
+In this case, temporarily, I would severely move the gate to the right to try to exclude the variants, only keeping the brighter cells with hopefully less degraded fluorophore contributing to the overall signature. But I would also take a closer look at the antibody vial, since this might be a fluorophore in the vial breaking down level issue, in which case replacement might be the easier solution (and less overall headache long term). 
+:::
+
+---
+
+#### Pacific Blue
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next up, we have [Pacific Blue](https://www.biolegend.com/en-us/products/pacific-blue-anti-human-cd14-antibody-2853), which serves as the dump channel. For this particular unmixing control, it is conjugated with [CD14](https://en.wikipedia.org/wiki/CD14). Consequently, expression would be primarily on the monocytes. 
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Given we are relying on the internal gate default for unmixing (which excludes the fluorophore positive cells), we might end up in a situation where we break rule # 2 of good unmixing controls, and are trying to subtract non-monocyte autofluorescence (B cells, T cells, CD14- non-classical Monocytes, CD14- Dendritic Cells, etc) from the CD14+ monocytes. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If the difference in autofluorescence is just brightness, since monocytes are brighter, this could result in taller autofluorescence residual peaks. However, if the monocytes are expressing different autofluorescent molecules that contribute to additional peaks, these would also not get subtracted out. These are a couple things we will need to keep an eye out for should we encounter them (and swap in an external unstained for background subtraction if needed).
+:::
+:::
+
+::: {.fragment}
+::: {.callout-tip title="."}
+With these notes of caution, we can attempt to run `LuciernagaIntegration()` after updating our "AFOverlap" data.frame (since Pacific Blue's peak is supposed to be "V3-A")
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plots <- QC_ReferenceLibrary("BV421|Pacific Blue", 64, returnPlots=TRUE)[[2]]
+plotly::ggplotly(Plots)
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+UpdatedAFOverlap <- data.frame(Fluorophore=c("Unstained", "BV421", "Pacific Blue"),
+                               MainDetector=c("UV7-A, V7-A, B3-A", "V3-A", "V3-A"))
+UpdatedAFOverlap                               
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+#| eval: TRUE
+PacificBlue <- LuciernagaIntegration(template=KeptCells[9,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE, AFOverlap = UpdatedAFOverlap)[[1]] # Square brackets to loose list notation
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Alright, as we have done previously, we can check the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region we had grabbed in our "positive" gate into 10% bins across. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+plotly::ggplotly(PacificBlue$LinearSlices_Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+All differences for the signatures across the bins are pretty much undistinguishable from each other. Lets break out `LuciernagaQC()` output and see if this is also the case for the grouped individual cell normalized signature variants are up to.
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- PacificBlue$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Only one signature present, so the antigen-fluorophore combination is bright enough to drown out any variation. Lets pass these individually to `QC_SimilarFluorophores()` and gage the difference for the cosine values vs. the reference. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data <- PacificBlue$AveragedSignature_Data |>
+   filter(Cluster %in% c("Average"))
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=21, NumberDetectors=64, returnPlots=FALSE) # 0.89
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Wow, that's a lot of manufacturer synonyms for exactly the same fluorophore! But yeah, our Pacific Blue matches its reference, so no additional steps are needed in this cae. 
+:::
+:::
+
+---
+
+:::{.callout-tip title="Pass"}
+
+Only one signature variant was present for Pacific Blue, which matched the reference signature, so all is good for this particular combination. Next!
+
+:::
+
+---
+
+#### BV480
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Up next, we reach [BV480](bdbiosciences.com/en-us/products/reagents/flow-cytometry-reagents/research-reagents/single-color-antibodies-ruo/bv480-mouse-anti-human-cd161.748279), which was direct conjugated to [CD161](https://en.wikipedia.org/wiki/KLRB1). Many T and NK cells will be positive for CD161, but it will be especially bright on Mucosal-associated Invariant Cells (MAITs). However, similar to other Innate-like T cell subsets, their abundance might vary from donor-to-donor, so without additional information, we are not entirely sure how many we will encounter for the PBMCs of this adult donor. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+BV480 <- LuciernagaIntegration(template=KeptCells[10,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets first take a look at the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region we had grabbed in our "positive" gate into 10% bins across. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV480$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Few minor shifts here and there across the signatures from each 10% bins, but nothing horrid compared to some of the other fluorophores we have checked. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We can next check out the `LuciernagaQC()` output to see how many signature variants we encounter when we group normalized signatures of the individual cells 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV480$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+We end up getting back two relatively similar signatures. Some of these small differences may result from how `LuciernagaQC()` rounds up, and may not be all that meaninful in actual practice. We can check if there is a main signature by checking the `QC_AmalgamatedPlot()` output
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV480$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Glancing at the 'ProportionPlot' output, this aligns with where the "Average" signature is ending up. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV480$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Before calling it, we can check to see how the "Average" signature compares to the reference signature using `QC_WhatsThis()`
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data <- BV480$AveragedSignature_Data 
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+QC_WhatsThis(x="V5_10-UV7_03", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #1.0
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #1.0
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+QC_WhatsThis(x="V5_10-UV7_04", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #.99
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And lets plot the cosine difference vs. the reference 
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| code-fold: TRUE
+cos_vals <- c(1, 0.99)
+theta <- acos(cos_vals)
+
+df <- data.frame(
+  label = paste0("cos = ", cos_vals),
+  angle_deg = round(theta * 180 / pi, 1),
+  x = sin(theta),
+  y = cos(theta)
+)
+
+ggplot(df) +
+  geom_segment(aes(x = 0, y = 0, xend = x, yend = y, color = label),
+               arrow = arrow(length = unit(0.25, "cm")),
+               linewidth = 1) +
+  coord_fixed(xlim = c(-0.1, 1), ylim = c(-0.1, 1.1)) +
+  geom_hline(yintercept = 0, color = "grey80") +
+  geom_vline(xintercept = 0, color = "grey80") +
+  labs(x = NULL, y = NULL, color = "Vector",
+       title = NULL) +
+  theme_bw()
+```
+
+:::
+
+---
+
+:::{.callout-tip title="Pass"}
+
+For BV480, both signatures are highly similar to each other, and the more abundant of the two matches the reference signatures in cosine. We can keep the gate as is and proceed to the next fluorophore.
+
+:::
+
+---
+
+#### BV510
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Reaching the middle of the laser peak emissions, we have [BV510](https://www.biolegend.com/en-us/products/brilliant-violet-510-anti-human-cd45ra-antibody-8007), conjugated to [CD45RA](https://en.wikipedia.org/wiki/PTPRC).This typically is one of the fluorophores most similar to autofluorescence (alongside BUV496). However, being paired with CD45RA, staining on cord blood blood mononuclear cells, the signal will likely be fairly bright across the board. We can go ahead and run `LuciernagaIntegration()` to generate out the respective outputs. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+BV510 <- LuciernagaIntegration(template=KeptCells[11,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets first take a look at the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region we had grabbed in our "positive" gate into 10% bins across. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV510$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Pretty much no difference in signature across the bins. To confirm this, we can next check out the `LuciernagaQC()` output to see how many signature variants we encounter when we group normalized signatures of the individual cells 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV510$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+And yup, as expected, only one signature variant is found. We can next compare it vs. the reference signature. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data <- BV510$AveragedSignature_Data 
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #1.0
+```
+
+:::
+
+---
+
+:::{.callout-tip title="Pass"}
+
+For BV510, the antibody-fluorophore combination resulted in signature bright enough that any variation was minimal, so only one signature was retrieved. Since this matches the reference control, we are good to proceed. 
+
+:::
+
+---
+
+#### BV605
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Continuing on, we reach [BV605](https://www.biolegend.com/en-us/products/brilliant-violet-605-anti-human-cd56-ncam-antibody-12019), which is conjugated to [CD56](https://en.wikipedia.org/wiki/Neural_cell_adhesion_molecule). This marker should be present on Natural Killer (NK) cells in the samples, with a subset appearing bright. This proportion of "bright" CD56 cells might vary across individual donors. Since this cell single-color unmixing control was prepared using cord blood mononuclear cells, which can range from 30-60% NK cells, if nothing else, we should have enough events :D 
+:::
+:::
+
+::: {.fragment}
+```{r}
+BV605 <- LuciernagaIntegration(template=KeptCells[12,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+First up, lets glance at the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region we had grabbed in our "positive" gate into 10% bins across. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV605$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+From the signatures we retrieve from the 10% bins, we can see a bit of a step-ladder peaking around "V3-A". This is not the usual location for an autofluorescence residual shoulder, but given the fluorophore's main peak at "V10-A" is drowning out the usual location of "V7-A", its possible we are only seeing part of the story. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having noted this, lets check out the `LuciernagaQC()` grouped individual cell normalized signatures output stored under "LuciernagaQC_Signatures". 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV605$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Glancing at the retrieved signatures, they all look relatively similar, with the little variation encountered being minor differences in the peak height (with splits between signatures likely driven by how `Luciernaga_QC()` is rounding the original values)
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets visualize this same plot in an alternative fashion, checking to see where the median signature ends up by comparison. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV605$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Outside of small differences in "YG3-A", everything is fairly uniform. Lets check the proportion plot to see how these signature variants are distributed across the gated cell population. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV605$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So overall, the brighter "YG3-A" variants are around 15% of the total gated cells, with the dimmer versions present for all the other cells. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets retrieve the underlying data for this plot, and keep the Average, as well as variants with minimal and maxinum autofluorescence contribution of the autofluorescence peak. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data <- BV605$AveragedSignature_Data |>
+   filter(Cluster %in% c("V10_10-YG3_05-UV10_03", "Average", "V10_10-YG3_04-UV10_02"))
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets pass these individually to `QC_SimilarFluorophores()` and gage the difference. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+QC_WhatsThis(x="V10_10-YG3_05-UV10_03", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) # 0.99
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #1.0
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+QC_WhatsThis(x="V10_10-YG3_04-UV10_02", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #1.0
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So pretty similar, lets remember how tiny the difference is
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| code-fold: TRUE
+cos_vals <- c(1, 0.99)
+theta <- acos(cos_vals)
+
+df <- data.frame(
+  label = paste0("cos = ", cos_vals),
+  angle_deg = round(theta * 180 / pi, 1),
+  x = sin(theta),
+  y = cos(theta)
+)
+
+ggplot(df) +
+  geom_segment(aes(x = 0, y = 0, xend = x, yend = y, color = label),
+               arrow = arrow(length = unit(0.25, "cm")),
+               linewidth = 1) +
+  coord_fixed(xlim = c(-0.1, 1), ylim = c(-0.1, 1.1)) +
+  geom_hline(yintercept = 0, color = "grey80") +
+  geom_vline(xintercept = 0, color = "grey80") +
+  labs(x = NULL, y = NULL, color = "Vector",
+       title = NULL) +
+  theme_bw()
+```
+
+:::
+
+---
+
+:::{.callout-tip title="Pass"}
+Overall, our BV605 single-color unmixing control is in good shape, with the retrieved signature variants being minor, and not overly represented in the gating population. If I really wanted to, we could move the gate 1 mm to the right to likely eliminate them, but for now, next fluorophore!
+:::
+
+---
+
+#### BV650
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Next up on the hot-seat, we have [BV650](https://www.biolegend.com/en-us/products/brilliant-violet-650-anti-human-cd197-ccr7-antibody-8509), conjugated to [CCR7](https://en.wikipedia.org/wiki/C-C_chemokine_receptor_type_7). With this fluorophores primary peak being on "V11-A", it is unlikely to overlap directly on the main autofluorescence peaks, which means we might start seeing the autofluorescence residual peaks more clearly going forward.
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+BV650 <- LuciernagaIntegration(template=KeptCells[13,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets first take a look at the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region we had grabbed in our "positive" gate into 10% bins across. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV650$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Glancing at the signatures retrieved across the bins, fairly consistent around the fluorophore peaks, but a bit of uncertainty/step-ladder appearance around the "V7-A" (consistent with autofluorescence residuals). With this noted, we can check the `LuciernagaQC()` output for the grouped individual cell normalized signatures being stored under "LuciernagaQC_Signatures". 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV650$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+All things said and done, fairly similar signatures, minor wobble around the "V7-A" detector. Lets see where the main signature ends up at by checking the `QC_AmalgamatedPlot()` output
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV650$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Which in turn, reflects the proportion of cells within our positive gate that were grouped together on the basis of shared signature at the individual cell level. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV650$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So overall, 97% of the cells are in the not picking up significant autofluorescence residual camp. 
+Next up, lets compare the "Average and two other signature variants vs. each other using `QC_WhatsThis()`. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data <- BV650$AveragedSignature_Data |> 
+  filter(Cluster %in% c("V11_10-YG4_02-R2_02", "Average", "V11_10-YG4_03-R2_01"))
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #1.0
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+QC_WhatsThis(x="V11_10-YG4_03-R2_01", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #.99
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+QC_WhatsThis(x="V11_10-YG4_02-R2_02", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #1.0
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If we visualized the difference in the cosines, we would see the following
+:::
+:::
+
+::: {.fragment}
+```{r}
+#| code-fold: TRUE
+cos_vals <- c(1, 0.99)
+theta <- acos(cos_vals)
+
+df <- data.frame(
+  label = paste0("cos = ", cos_vals),
+  angle_deg = round(theta * 180 / pi, 1),
+  x = sin(theta),
+  y = cos(theta)
+)
+
+ggplot(df) +
+  geom_segment(aes(x = 0, y = 0, xend = x, yend = y, color = label),
+               arrow = arrow(length = unit(0.25, "cm")),
+               linewidth = 1) +
+  coord_fixed(xlim = c(-0.1, 1), ylim = c(-0.1, 1.1)) +
+  geom_hline(yintercept = 0, color = "grey80") +
+  geom_vline(xintercept = 0, color = "grey80") +
+  labs(x = NULL, y = NULL, color = "Vector",
+       title = NULL) +
+  theme_bw()
+```
+
+:::
+
+---
+
+:::{.callout-tip title="Pass"}
+Overall, BV650 is in good shape, with the main signature variants being identical to the reference, and the one with a bit of autofluorescence residual only representing a few percentage points of the total cells within the gated region. We can safely proceed to the next fluorophore. 
+:::
+
+---
+
+#### BV711
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Continuing our exploration of Violet tandem land, we reach [BV711](bdbiosciences.com/en-us/products/reagents/flow-cytometry-reagents/research-reagents/single-color-antibodies-ruo/bv711-mouse-anti-human-cd7.564018), which is conjugated to [CD7](https://en.wikipedia.org/wiki/CD7). Since CD7 is found on both T cells and NK cells, we should anticipate that this combination will likely be bright. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+BV711 <- LuciernagaIntegration(template=KeptCells[14,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets first take a look at the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region defined by our "positive" gate into 10% bins across. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV711$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+As we would anticipate for this antigen-by-fluorophore combination, the fluorophore peaks are pretty uniform, with the only variation being seen as a smidge around "V8-A" (it is a bright combination overall). Having noted this, lets check out the `LuciernagaQC()` output to see what signature variants we retrieve when we group individual cell normalized signatures stored under "LuciernagaQC_Signatures". 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV711$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Once again, bright antigen-fluorophore combination, so the little autofluorescence variation present gets drowned out as minor contributions to the overall signature. For the two variant signatures retrieved, they differ only by the height of the "R4-A" detector, which is likely result of the rounding approach taken by `LuciernagaQC()`. If we check the `QC_Amalgamate()` output we see a similar picture
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV711$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets still compare the two signatures vs. the reference signature using `QC_WhatsThis()`
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data <- BV711$AveragedSignature_Data
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plots <- QC_WhatsThis(x="V13_10-R4_04-UV14_02", columnname="Cluster",
+ data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)
+Plots[[1]]
+plotly::ggplotly(Plots[[2]])
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plots <- QC_WhatsThis(x="V13_10-R4_03-UV14_02", columnname="Cluster",
+ data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)
+Plots[[1]]
+plotly::ggplotly(Plots[[2]])
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Both signature variants return with cosine values of 1 vs. the reference.
+:::
+:::
+
+---
+
+:::{.callout-tip title="Pass"}
+For BV711, only minor signature variations were observed, with both retrieved signatures matching the reference signature. We are okay to move on to the next fluorophore. 
+:::
+
+---
+
+#### BV750
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Up next, we have [BV750](https://www.bdbiosciences.com/en-us/products/reagents/flow-cytometry-reagents/research-reagents/single-color-antibodies-ruo/bv750-mouse-anti-human-ifn.566357?tab=product_details), which is conjugated to [IFNg](https://en.wikipedia.org/wiki/Interferon_gamma). Given that this cell single-color control was prepared with adult donor PBMCs, stimulated with PMA-ionomycin for 6-hours before intracellular staining, we expect the signal to be bright. 
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+BV750 <- LuciernagaIntegration(template=KeptCells[15,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets first take a look at the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region in our "positive" gate into 10% bins across. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV750$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Minimal variation acrosss the board. We can follow up by checking the `LuciernagaQC()` outputs to see how the grouped individual cell normalized signatures stored under "LuciernagaQC_Signatures" are behaving. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV750$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+If I squint, I still don't really see much variation to justify three separate signatures in this case. But for completionist sake, lets compare vs. the reference signature. 
+:::
+:::
+ 
+::: {.fragment}
+```{r}
+Data <- BV750$AveragedSignature_Data
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)
+Plot[[1]]
+plotly::ggplotly(Plot[[2]])
+```
+
+:::
+
+---
+
+:::{.callout-tip title="Pass"}
+The signature for our BV750 matches the reference, and any variant signatures are practically indistinguishable from each other to not make a major difference. So this fluorophore is in good condition, and we can move on. 
+:::
+
+---
+
+#### BV786
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Last, but not least, for our Violet laser fluorophores, we have [BV786](https://www.bdbiosciences.com/en-us/products/reagents/flow-cytometry-reagents/research-reagents/single-color-antibodies-ruo/bv786-mouse-anti-human-cd196-ccr6.563704), conjugated with [CCR6](https://en.wikipedia.org/wiki/C-C_chemokine_receptor_type_6). While CCR6 is not as high density as other markers, will still be bright for the cells that express it (subsets of T cells and B cells respectively), although the proportion of cells positive for it will likely vary depending on the donor.
+:::
+:::
+
+---
+
+::: {.fragment}
+```{r}
+BV786 <- LuciernagaIntegration(template=KeptCells[16,], gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Lets first take a look at the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region defined by our "positive" gate into 10% bins across. 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV786$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+From the 10% bins, we can see a bit of variation around the "V7-A" detector from residual autofluorescence, but overall still minor compared to other fluorophores we have encountered. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Having noted this, lets check out the `LuciernagaQC()` grouped individual cell normalized signatures output stored under "LuciernagaQC_Signatures". 
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV786$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Finally, a non-consistent fluorophore! (it has been a while since we had some variation *laugh*). We can see there is some residual autofluorescence for the "V15_10-UV15_02-V7_02" signature. To determine overall impact, we can check the `QC_Amalgamate()` output to see where the median signature ends up.
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV786$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+So overall, median signature tacks towards the signature variant without the autofluorescence residual. Quickly checking our proportion plot
+:::
+:::
+
+::: {.fragment}
+```{r}
+Plot <- BV786$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+I have seen enough, but for completionist sake, lets pass "Average" to `QC_SimilarFluorophores()` and gage the difference vs. the reference.  
+:::
+:::
+
+::: {.fragment}
+```{r}
+Data <- BV786$AveragedSignature_Data 
+```
+
+:::
+
+---
+
+::: {.fragment}
+```{r}
+Plot <- QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)
+Plot[[1]]
+plotly::ggplotly(Plot[[2]])
+```
+
+:::
+
+---
+
+:::{.callout-tip title="Pass"}
+Our BV786 fluorophore is in good condition, with main signature without autofluorescence leftovers found on 99% of the cells that are present. We are safe to continue on to the Blue laser fluorophores. 
+:::
+
+---
+
+# Redirects
+
+::: {.fragment}
+::: {.callout-tip title="."}
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. This walk-through was for the Violet laser fluorophores. 
+:::
+:::
+
+---
+
+::: {.fragment}
+::: {.callout-tip title="."}
+- To return to the main walk-through (including UV fluorophores), click [here](/course/SDY3080/LuciernagaIntegration.qmd)
+- For the violet fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd)
+- For the blue fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Blue.qmd)
+- For the yellow-green fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_YellowGreen.qmd)
+- For the red fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Red.qmd)
+- For the unstained samples walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Unstained.qmd)
+:::
+:::
+
+---
+
+![](images/TakeAway4.jpg)
+
+---
+
+# Additional Resources
+
+[Luciernaga Vignette - Reference Library](https://davidrach.github.io/Luciernaga/articles/QualityControl.html#comparing-normalized-signatures)
+
+[Luciernaga Vignette - Fluorescent Signatures](https://davidrach.github.io/Luciernaga/articles/FluorescenceSignatures.html)
+
+---
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::

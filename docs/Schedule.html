@@ -2,17 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>schedule – Cytometry in R</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -30,18 +36,18 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./course/community/AutoSpectral/index.html" rel="next">
-<link href="./course/11_DataForStats/index.html" rel="prev">
+<link href="./course/10_Downsampling/concatenate.html" rel="next">
+<link href="./course/14_Unmixing/index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-8eaec6b9941db0f18eecf13b95a46332.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-6f6aba0dcc0820cd94830540b68c7d73.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -91,7 +97,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    <img src="./images/hex.svg" alt="" class="navbar-logo">
+    <img src="./images/hex.svg" alt="" class="navbar-logo light-content">
+    <img src="./images/hex.svg" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">Cytometry in R</span>
@@ -149,8 +156,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 </div>
       </div> <!-- /container-fluid -->
     </nav>
-  <div id="quarto-announcement" data-announcement-id="517fd7fd2923fd64fe81c4cc75c6fa55" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
-<p>See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
+  <div id="quarto-announcement" data-announcement-id="dc2d9c7bdc53471fb4a7564dd51e6a50" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>Welcome Back! See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
 </div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
 </header>
 <!-- content -->
@@ -175,13 +182,15 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
   <li><a href="#manual-and-automated-gating" id="toc-manual-and-automated-gating" class="nav-link" data-scroll-target="#manual-and-automated-gating">Manual and Automated Gating</a></li>
   <li><a href="#its-raining-functions" id="toc-its-raining-functions" class="nav-link" data-scroll-target="#its-raining-functions">It’s Raining Functions!</a></li>
   <li><a href="#downsampling-and-concatenation" id="toc-downsampling-and-concatenation" class="nav-link" data-scroll-target="#downsampling-and-concatenation">Downsampling and Concatenation</a></li>
-  <li><a href="#retrieving-data-for-statistics" id="toc-retrieving-data-for-statistics" class="nav-link" data-scroll-target="#retrieving-data-for-statistics">Retrieving data for Statistics</a></li>
+  <li><a href="#retrieving-data-for-statistics" id="toc-retrieving-data-for-statistics" class="nav-link" data-scroll-target="#retrieving-data-for-statistics">Retrieving Data for Statistics</a></li>
+  <li><a href="#conference-break-2-and-thesis-defense" id="toc-conference-break-2-and-thesis-defense" class="nav-link" data-scroll-target="#conference-break-2-and-thesis-defense">Conference Break 2 and Thesis Defense</a></li>
   <li><a href="#spectral-signatures" id="toc-spectral-signatures" class="nav-link" data-scroll-target="#spectral-signatures">Spectral Signatures</a></li>
   <li><a href="#similarities-and-hotspots" id="toc-similarities-and-hotspots" class="nav-link" data-scroll-target="#similarities-and-hotspots">Similarities and Hotspots</a></li>
+  <li><a href="#conference-break-3" id="toc-conference-break-3" class="nav-link" data-scroll-target="#conference-break-3">Conference Break 3</a></li>
   <li><a href="#unmixing-in-r" id="toc-unmixing-in-r" class="nav-link" data-scroll-target="#unmixing-in-r">Unmixing in R</a></li>
+  <li><a href="#evaluating-unmixing" id="toc-evaluating-unmixing" class="nav-link" data-scroll-target="#evaluating-unmixing">Evaluating Unmixing</a></li>
   <li><a href="#cleaning-algorithms" id="toc-cleaning-algorithms" class="nav-link" data-scroll-target="#cleaning-algorithms">Cleaning Algorithms</a></li>
   <li><a href="#clustering-algorithms" id="toc-clustering-algorithms" class="nav-link" data-scroll-target="#clustering-algorithms">Clustering Algorithms</a></li>
-  <li><a href="#conference-break-2" id="toc-conference-break-2" class="nav-link" data-scroll-target="#conference-break-2">Conference Break 2</a></li>
   <li><a href="#normalization-batch-effect-or-real-biology" id="toc-normalization-batch-effect-or-real-biology" class="nav-link" data-scroll-target="#normalization-batch-effect-or-real-biology">Normalization: Batch Effect or Real Biology</a></li>
   <li><a href="#dimensionality-visualization" id="toc-dimensionality-visualization" class="nav-link" data-scroll-target="#dimensionality-visualization">Dimensionality Visualization</a></li>
   <li><a href="#annotating-unsupervised-clusters" id="toc-annotating-unsupervised-clusters" class="nav-link" data-scroll-target="#annotating-unsupervised-clusters">Annotating Unsupervised Clusters</a></li>
@@ -190,7 +199,6 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
   <li><a href="#utilizing-bioconductor-packages" id="toc-utilizing-bioconductor-packages" class="nav-link" data-scroll-target="#utilizing-bioconductor-packages">Utilizing Bioconductor packages</a></li>
   <li><a href="#building-your-first-r-package" id="toc-building-your-first-r-package" class="nav-link" data-scroll-target="#building-your-first-r-package">Building your First R package</a></li>
   <li><a href="#everyone-gets-a-quarto-website" id="toc-everyone-gets-a-quarto-website" class="nav-link" data-scroll-target="#everyone-gets-a-quarto-website">Everyone Get’s a Quarto Website</a></li>
-  <li><a href="#conference-break-3" id="toc-conference-break-3" class="nav-link" data-scroll-target="#conference-break-3">Conference Break 3</a></li>
   <li><a href="#reproducibility-and-replicability" id="toc-reproducibility-and-replicability" class="nav-link" data-scroll-target="#reproducibility-and-replicability">Reproducibility and Replicability</a></li>
   <li><a href="#open-source-licenses" id="toc-open-source-licenses" class="nav-link" data-scroll-target="#open-source-licenses">Open Source Licenses</a></li>
   <li><a href="#validating-algorthmic-tools" id="toc-validating-algorthmic-tools" class="nav-link" data-scroll-target="#validating-algorthmic-tools">Validating Algorthmic Tools</a></li>
@@ -220,6 +228,29 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 <h3 class="anchored" data-anchor-id="pre-course-walkthroughs">Pre-Course Walkthroughs</h3>
 <p><img src="images/01_GitHub.png" class="img-fluid" style="width:25.0%"></p>
 <p><u><strong>Week 0: January 26, 2026</strong></u> In these pre-course <a href="./course/00_GitHub/index.html">walk-throughs</a>, we ensure that everyone creates a <a href="https://github.com/">GitHub</a> account, and has their computer properly set up with the required software (including <a href="https://cran.rstudio.com/">R</a>, <a href="https://positron.posit.co/">Positron</a>, and <a href="https://git-scm.com/">Git</a>). We then start to build individual participants familiarity with the software infrastructure that they will be using throughout the rest of the course.</p>
+<ul>
+<li><ul>
+<li><a href="https://umgcccfcsr.github.io/CytometryInR/course/00_GitHub/">Using GitHub</a></li>
+</ul></li>
+<li><ul>
+<li><a href="https://umgcccfcsr.github.io/CytometryInR/course/00_WorkstationSetup/">Work Station Set Up</a></li>
+</ul></li>
+<li><ul>
+<li><a href="https://umgcccfcsr.github.io/CytometryInR/course/00_Positron/">Using Positron</a></li>
+</ul></li>
+<li><ul>
+<li><a href="https://umgcccfcsr.github.io/CytometryInR/course/00_Git/">Version Control with Git</a></li>
+</ul></li>
+<li><ul>
+<li><a href="https://umgcccfcsr.github.io/CytometryInR/course/00_Quarto/">Introduction to Quarto</a></li>
+</ul></li>
+<li><ul>
+<li><a href="https://umgcccfcsr.github.io/CytometryInR/course/00_Homeworks/">Getting Help</a></li>
+</ul></li>
+<li><ul>
+<li><a href="https://umgcccfcsr.github.io/CytometryInR/course/00_Floreada/">Using Floreada</a></li>
+</ul></li>
+</ul>
 <p><br> <br></p>
 </section>
 <section id="installing-r-packages" class="level3">
@@ -266,7 +297,7 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 </section>
 <section id="conference-break-1" class="level3">
 <h3 class="anchored" data-anchor-id="conference-break-1">Conference Break 1</h3>
-<p>No class week of March 30, 2026. If you are attending the <a href="https://web.cvent.com/event/6aeb3907-0f0b-418d-a0d5-91f4de72c144/summary?RefId=ABRF%202026%20Annual%20Meeting%20Home%20Page">ABRF conference</a>, track me down at the <a href="https://web.cvent.com/event/6aeb3907-0f0b-418d-a0d5-91f4de72c144/websitePage:89d4bbd7-0f7c-4235-a335-97866af9506b">Complex Data Analysis in Flow Cytometry: Navigating the Landscape</a> talk on Monday, March 30th at 4:30 PM.</p>
+<p>If you are attending the <a href="https://web.cvent.com/event/6aeb3907-0f0b-418d-a0d5-91f4de72c144/summary?RefId=ABRF%202026%20Annual%20Meeting%20Home%20Page">ABRF conference</a>, track me down at the <a href="https://youtu.be/l9LQZ52gv3k?t=3678">Complex Data Analysis in Flow Cytometry: Navigating the Landscape</a> session on Monday, March 30th at 4:30 PM. <a href="https://davidrach.github.io/ABRF_2026.pdf">Slides</a> <a href="https://youtu.be/l9LQZ52gv3k?t=3699">Recording</a></p>
 <p><br> <br></p>
 </section>
 <section id="manual-and-automated-gating" class="level3">
@@ -284,25 +315,39 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 <section id="downsampling-and-concatenation" class="level3">
 <h3 class="anchored" data-anchor-id="downsampling-and-concatenation">Downsampling and Concatenation</h3>
 <p><img src="https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/creative-assets/s-migr/ul/g/7d/10/downsampling-near-miss-v3.png" class="img-fluid" style="width:50.0%"></p>
-<p><u><strong>Week 10: April 20, 2026</strong></u> Within this <a href="./course/10_Downsampling/index.html">tenth</a> session, we will expand on our growing understanding of GatingSets, functions and fcs file internals to write a function to downsample your fcs files to a desired number (or percentage) of cells for a given cell population. We will additionally learn how to concatenate these downsampled files together, and save them to a new .fcs file in ways that the metadata can be read by commercial software without the scaling being widely thrown off.</p>
+<p><u><strong>Week 10: April 27, 2026</strong></u> Within this <a href="./course/10_Downsampling/index.html">tenth</a> session, we will expand on our growing understanding of GatingSets, functions and fcs file internals to write a function to downsample your fcs files to a desired number (or percentage) of cells for a given cell population. We will additionally learn how to concatenate these downsampled files together, and save them to a new .fcs file in ways that the metadata can be read by commercial software without the scaling being widely thrown off.</p>
 <p><br> <br></p>
 </section>
 <section id="retrieving-data-for-statistics" class="level3">
-<h3 class="anchored" data-anchor-id="retrieving-data-for-statistics">Retrieving data for Statistics</h3>
+<h3 class="anchored" data-anchor-id="retrieving-data-for-statistics">Retrieving Data for Statistics</h3>
 <p><img src="images/TidyData.png" class="img-fluid" style="width:33.0%"></p>
-<p><u><strong>Week 11: April 27, 2026</strong></u> Leveraging the increased familiarity working with the various packages this far in the course, in this <a href="./course/11_DataForStats/index.html">eleventh</a> session we will retrieve summary statistics for the gates within our GatingSet, and programmatically derrive out tidy data.frames for use in statistical analyses typically used by many Immunologist. In the process, we add a couple additional plot types to our ggplot2 arsenal to hold in reserve should Prism prices go up again.</p>
+<p><u><strong>Week 11: May 04, 2026</strong></u> Leveraging the increased familiarity working with the various packages this far in the course, in this <a href="./course/11_DataForStats/index.html">eleventh</a> session we will retrieve summary statistics for the gates within our GatingSet, and programmatically derrive out tidy data.frames for use in statistical analyses typically used by many Immunologist. In the process, we add a couple additional plot types to our ggplot2 arsenal to hold in reserve should Prism prices go up again.</p>
+<p><br> <br></p>
+</section>
+<section id="conference-break-2-and-thesis-defense" class="level3">
+<h3 class="anchored" data-anchor-id="conference-break-2-and-thesis-defense">Conference Break 2 and Thesis Defense</h3>
+<p>If you are attending the <a href="https://www.cytoconference.org/?gad_source=1&amp;gad_campaignid=20633392465&amp;gbraid=0AAAAADoJzsvHaLZAq9tqn_aTAQGEzIk_V&amp;gclid=CjwKCAiA-sXMBhAOEiwAGGw6LJFFV69xaAU3s7bElL86RdnRNFwAYqOQO78MrIYQuG1qvRU6HTN3ZRoCGmAQAvD_BwE">Cyto conference</a>, track me down at my talks or poster (grab some Cytometry in R course hex stickers!)</p>
+<p>– <a href="https://davidrach.github.io/abstracts.html#cyto-2026---flow-awarenesss">Open-Source automation</a> on June 7, 10:30-11:30AM at Grand Ballroom; <a href="https://davidrach.github.io/FlowAwareness_Cyto2026/Rach_EverythingEverywhereAllAtOnce_Cyto2026.pdf">Slides</a> <a href="https://youtu.be/gq8D05KjSsU?si=fBURqJYP8dYg0Hyf">Recording</a></p>
+<p>– <a href="https://davidrach.github.io/abstracts.html#cyto-2026---alpha-beta">Semi-supervised pipeline</a> on June 9, 10:30-11:45AM at Room 2DEF; <a href="https://davidrach.github.io/AlphaBeta_Cyto2026/Rach_SemiSupervised_Cyto2026.pdf">Slides</a> <a href="https://youtu.be/yvcdKR1QbIo?si=EHcP34Vi5cueK7E2">Recording</a></p>
+<p>– <a href="https://davidrach.github.io/abstracts.html#cyto-2026---cytometry-in-r">Cytometry in R</a> on June 8, 5:00 - 6:00 PM at Grand Ballroom; <a href="https://davidrach.github.io/CytometryInR_Cyto2026/DavidRach_FinalCyto2026.pdf">Poster</a> <a href="https://youtu.be/dmuI-FguAsY?si=W6T6VtysBMRPVBT0">Recording</a></p>
+<p>– <a href="https://youtu.be/h_G-UR-BmS4?si=RJXEQaFFgqxIzF-W">PhD Dissertation Defense</a> on June 17, 12:00-1:00 PM <a href="https://youtu.be/h_G-UR-BmS4?si=RJXEQaFFgqxIzF-W">Slides</a> <a href="https://youtu.be/h_G-UR-BmS4?si=RJXEQaFFgqxIzF-W">Recording</a></p>
 <p><br> <br></p>
 </section>
 <section id="spectral-signatures" class="level3">
 <h3 class="anchored" data-anchor-id="spectral-signatures">Spectral Signatures</h3>
 <p><img src="images/Signatures.png" class="img-fluid" style="width:75.0%"></p>
-<p><u><strong>Week 12:</strong></u> As part of this session, we will explore how to extract fluorescent signatures from our raw spectral flow cytometry reference controls. Building on prior concepts, we will learn to isolate median signatures from positive and negative gates, and how to derrive and plot normalized signatures. We also introduce <a href="https://plotly.com/r/">plotly</a> package and it’s interactive plotting features, before showcasing various packages attempts at facilitating signature retrieval.</p>
+<p><u><strong>Week 12: July 14, 2026</strong></u> As part of this <a href="./course/12_SpectralSignatures/index.html">twelfth session</a>, we will explore how to extract fluorescent signatures from our raw spectral flow cytometry reference controls. Building on prior concepts, we will learn to isolate median signatures from positive and negative gates, and how to derrive and plot normalized signatures. We also introduce <a href="https://plotly.com/r/">plotly</a> package and it’s interactive plotting features, before showcasing various packages attempts at facilitating signature retrieval.</p>
 <p><br> <br></p>
 </section>
 <section id="similarities-and-hotspots" class="level3">
 <h3 class="anchored" data-anchor-id="similarities-and-hotspots">Similarities and Hotspots</h3>
 <p><img src="images/Hotspot.png" class="img-fluid" style="width:75.0%"></p>
-<p><u><strong>Week 13:</strong></u> During this session, we will utilize the spectral signature matrix isolated from raw spectral flow cytometry controls and evaluate different ways of evaluating how similar different fluorescent signatures are to each other. In the process, we will gain better understanding of the metrics behind similarity (cosine), panel complexity (kappa), and unmixing-dependent spreading (collinearity).</p>
+<p><u><strong>Week 13:</strong></u> During this <a href="./course/13_SpectralSimilarities/index.html">thirteenth session</a>, we will utilize the spectral signature matrix isolated from raw spectral flow cytometry controls and evaluate different ways of evaluating how similar different fluorescent signatures are to each other. In the process, we will gain better understanding of the metrics behind similarity (cosine), panel complexity (kappa), and unmixing-dependent spreading (collinearity).</p>
+<p><br> <br></p>
+</section>
+<section id="conference-break-3" class="level3">
+<h3 class="anchored" data-anchor-id="conference-break-3">Conference Break 3</h3>
+<p>No class week of August 10, 2026. If you are attending the <a href="https://bioc2026.bioconductor.org/">BioC conference</a>, track me down at my <a href="https://bioc2026.bioconductor.org/schedule/">short talk</a> on Monday, August 10th from 11:00-12:15pm.</p>
 <p><br> <br></p>
 </section>
 <section id="unmixing-in-r" class="level3">
@@ -311,110 +356,106 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 <p><u><strong>Week 14:</strong></u> In the course of this session, we will attempt a reach goal of many, namely carry out unmixing of raw .fcs files using the spectral signatures we have isolated from our unmixing controls, and write to new .fcs files. After evaluating the necessary internals, we will explore how various current cytometry R packages have implemented their own unmixing functions, and the various limitations that each approach has encountered.</p>
 <p><br> <br></p>
 </section>
+<section id="evaluating-unmixing" class="level3">
+<h3 class="anchored" data-anchor-id="evaluating-unmixing">Evaluating Unmixing</h3>
+<p><img src="images/Unmixing.png" class="img-fluid" style="width:75.0%"></p>
+<p><u><strong>Week 15:</strong></u> In the course of this session, we will figure out way to efficiently screen our unmixed .fcs files to ensure that they have unmixed properly. We will also revisit how our various choices of signatures have impacted the final unmixing results and how to effectively iterate through the various unmixings with variant signatures.</p>
+<p><br> <br></p>
+</section>
 <section id="cleaning-algorithms" class="level3">
 <h3 class="anchored" data-anchor-id="cleaning-algorithms">Cleaning Algorithms</h3>
 <p><img src="images/DegradingAPCFire810Signatures.png" class="img-fluid" style="width:75.0%"></p>
-<p><u><strong>Week 15:</strong></u> In the span of this session, we will directly compare how various Bioconductor data cleanup algorithms (namely <a href="https://www.bioconductor.org/packages/release/bioc/vignettes/PeacoQC/inst/doc/PeacoQC_Vignette.pdf">PeacoQC</a>, <a href="https://www.bioconductor.org/packages/release/bioc/vignettes/flowAI/inst/doc/flowAI.html">FlowAI</a>, <a href="https://www.bioconductor.org/packages/release/bioc/vignettes/flowCut/inst/doc/flowCut.html">FlowCut</a>, and <a href="https://www.bioconductor.org/packages/release/bioc/vignettes/flowClean/inst/doc/flowClean.pdf">FlowClean</a>) tackle distinguishing and removing bad quality events. We will see how they perform with previously identified good quality and horrific quality .fcs files. We will whether the implemented algorithmic decisions made sense, and how to customize them within our workflows to achieve our own desired goals.</p>
+<p><u><strong>Week 16:</strong></u> In the span of this session, we will directly compare how various Bioconductor data cleanup algorithms (namely <a href="https://www.bioconductor.org/packages/release/bioc/vignettes/PeacoQC/inst/doc/PeacoQC_Vignette.pdf">PeacoQC</a>, <a href="https://www.bioconductor.org/packages/release/bioc/vignettes/flowAI/inst/doc/flowAI.html">FlowAI</a>, <a href="https://www.bioconductor.org/packages/release/bioc/vignettes/flowCut/inst/doc/flowCut.html">FlowCut</a>, and <a href="https://www.bioconductor.org/packages/release/bioc/vignettes/flowClean/inst/doc/flowClean.pdf">FlowClean</a>) tackle distinguishing and removing bad quality events. We will see how they perform with previously identified good quality and horrific quality .fcs files. We will whether the implemented algorithmic decisions made sense, and how to customize them within our workflows to achieve our own desired goals.</p>
 <p><br> <br></p>
 </section>
 <section id="clustering-algorithms" class="level3">
 <h3 class="anchored" data-anchor-id="clustering-algorithms">Clustering Algorithms</h3>
 <p><img src="https://docs.flowjo.com/wp-content/uploads/2023/03/image-6-1024x1024.png" class="img-fluid" style="width:50.0%"></p>
-<p><u><strong>Week 16:</strong></u> As part of this session, we venture away from supervised and semi-supervised analyses to explore unsupervised clustering approaches, namely <a href="https://onlinelibrary.wiley.com/doi/10.1002/cyto.a.22625">FlowSOM</a> and <a href="https://www.colibri-cytometry.com/post/the-peculiarities-of-phenograph">Phenograph</a>. We will compare outcomes depending markers included, transformations applied, and panel used to gain a greater familiarity with how they work. We wrap up by investigating ways to visualize marker expression of cells ending up in each cluster, and how to backgate them to our manual gates.</p>
-<p><br> <br></p>
-</section>
-<section id="conference-break-2" class="level3">
-<h3 class="anchored" data-anchor-id="conference-break-2">Conference Break 2</h3>
-<p>No class week of June 8, 2026. If you are attending the <a href="https://www.cytoconference.org/?gad_source=1&amp;gad_campaignid=20633392465&amp;gbraid=0AAAAADoJzsvHaLZAq9tqn_aTAQGEzIk_V&amp;gclid=CjwKCAiA-sXMBhAOEiwAGGw6LJFFV69xaAU3s7bElL86RdnRNFwAYqOQO78MrIYQuG1qvRU6HTN3ZRoCGmAQAvD_BwE">Cyto conference</a>, track me down at my talks (<a href="https://davidrach.github.io/abstracts.html#cyto-2026---flow-awarenesss">Open-Source automation</a> on June 7, 10:30-11:30AM at Grand Ballroom; and <a href="https://davidrach.github.io/abstracts.html#cyto-2026---alpha-beta">Semi-supervised pipeline</a> on June 9, 10:30-11:45AM atRoom 2DEF) or poster (grab some Cytometry in R course hex stickers!)</p>
+<p><u><strong>Week 17:</strong></u> As part of this session, we venture away from supervised and semi-supervised analyses to explore unsupervised clustering approaches, namely <a href="https://onlinelibrary.wiley.com/doi/10.1002/cyto.a.22625">FlowSOM</a> and <a href="https://www.colibri-cytometry.com/post/the-peculiarities-of-phenograph">Phenograph</a>. We will compare outcomes depending markers included, transformations applied, and panel used to gain a greater familiarity with how they work. We wrap up by investigating ways to visualize marker expression of cells ending up in each cluster, and how to backgate them to our manual gates.</p>
 <p><br> <br></p>
 </section>
 <section id="normalization-batch-effect-or-real-biology" class="level3">
 <h3 class="anchored" data-anchor-id="normalization-batch-effect-or-real-biology">Normalization: Batch Effect or Real Biology</h3>
 <p><img src="images/ridgeplots.png" class="img-fluid" style="width:75.0%"></p>
-<p><u><strong>Week 17:</strong></u> During this session, we will dive into evaluating the performance of two commonly used normalization algorithms, <a href="https://github.com/saeyslab/CytoNorm">CytoNorm</a> and <a href="https://github.com/biosurf/cyCombine">CyCombine</a>. We will utilize our ggplot2 and functional programming toolkits to create a customized workflow to visualize the differences for our respective cell populations before and after normalization, to better evaluate how the respective parameter choices can affect the process.</p>
+<p><u><strong>Week 18:</strong></u> During this session, we will dive into evaluating the performance of two commonly used normalization algorithms, <a href="https://github.com/saeyslab/CytoNorm">CytoNorm</a> and <a href="https://github.com/biosurf/cyCombine">CyCombine</a>. We will utilize our ggplot2 and functional programming toolkits to create a customized workflow to visualize the differences for our respective cell populations before and after normalization, to better evaluate how the respective parameter choices can affect the process.</p>
 <p><br> <br></p>
 </section>
 <section id="dimensionality-visualization" class="level3">
 <h3 class="anchored" data-anchor-id="dimensionality-visualization">Dimensionality Visualization</h3>
 <p><img src="images/DimViz.png" class="img-fluid" style="width:75.0%"></p>
-<p><u><strong>Week 18:</strong></u> For this session, we explore how dimensionality visualization algorithms perform <a href="https://github.com/lvdmaaten/bhtsne/">tSNE</a> and <a href="https://github.com/jlmelville/uwot">UMAP</a> in R using our raw and unmixed samples. In the process, we will explore how markers included, number of cells, and presence of bad quality events can impact the <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011288">final</a> visualizations. Finally, we will provide an overview of how to link to Python to additionally run <a href="https://github.com/YingfanWang/PaCMAP">PaCMAP</a> and <a href="https://github.com/KrishnaswamyLab/PHATE">PHATE</a> visualizations for use in R.</p>
+<p><u><strong>Week 19:</strong></u> For this session, we explore how dimensionality visualization algorithms perform <a href="https://github.com/lvdmaaten/bhtsne/">tSNE</a> and <a href="https://github.com/jlmelville/uwot">UMAP</a> in R using our raw and unmixed samples. In the process, we will explore how markers included, number of cells, and presence of bad quality events can impact the <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1011288">final</a> visualizations. Finally, we will provide an overview of how to link to Python to additionally run <a href="https://github.com/YingfanWang/PaCMAP">PaCMAP</a> and <a href="https://github.com/KrishnaswamyLab/PHATE">PHATE</a> visualizations for use in R.</p>
 <p><br> <br></p>
 </section>
 <section id="annotating-unsupervised-clusters" class="level3">
 <h3 class="anchored" data-anchor-id="annotating-unsupervised-clusters">Annotating Unsupervised Clusters</h3>
 <p><img src="https://media.geeksforgeeks.org/wp-content/uploads/20230731175958/Bagging-classifier.png" class="img-fluid" style="width:50.0%"></p>
-<p><u><strong>Week 19:</strong></u> In the course of this session, we explore ways to scale our efficiency in figuring out what an unsupervised cluster of cells may be, by employing several annotation packages. We explore how these work under the hood in their decision making process, and how to link them to reference data from external repositories for additional evaluation.</p>
+<p><u><strong>Week 20:</strong></u> In the course of this session, we explore ways to scale our efficiency in figuring out what an unsupervised cluster of cells may be, by employing several annotation packages. We explore how these work under the hood in their decision making process, and how to link them to reference data from external repositories for additional evaluation.</p>
 <p><br> <br></p>
 </section>
 <section id="the-art-of-github-diving" class="level3">
 <h3 class="anchored" data-anchor-id="the-art-of-github-diving">The Art of GitHub Diving</h3>
 <p><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTE3IHi5Y2itTmH60RF81y5b8JnSeeJvTTATA&amp;s.png" class="img-fluid" style="width:100.0%"></p>
-<p><u><strong>Week 20:</strong></u> Within this session, we delve into the art of investigating a new-to-you GitHub repository. We discuss the overall structure of R packages stored as source files within GitHub repositories, and how to leverage this knowledge when troubleshooting errors thrown by underdocumented R packages. We discuss how to modify identified functions, evaluate them, and process to submit helpful bug reports back to the original project to help fix the issue.</p>
+<p><u><strong>Week 21:</strong></u> Within this session, we delve into the art of investigating a new-to-you GitHub repository. We discuss the overall structure of R packages stored as source files within GitHub repositories, and how to leverage this knowledge when troubleshooting errors thrown by underdocumented R packages. We discuss how to modify identified functions, evaluate them, and process to submit helpful bug reports back to the original project to help fix the issue.</p>
 <p><br> <br></p>
 </section>
 <section id="xml-files-all-the-way-down" class="level3">
 <h3 class="anchored" data-anchor-id="xml-files-all-the-way-down">XML Files All The Way Down</h3>
 <p><img src="https://www.mssqltips.com/wp-content/images-tips/2899_img5.jpg" class="img-fluid" style="width:50.0%"></p>
-<p><u><strong>Week 21:</strong></u> Breaking news alert, most of the experiment templates and worksheet layouts we work with as cytometrist are .xml files. In this session, we learn some additional coding tools to allow us to work with these types of files to extract useful data. In this session, we test out our new problem solving abilities to retrieve data from SpectroFlo and Diva .xml files to monitor how our core’s flow cytometers behaved for various users last week.</p>
+<p><u><strong>Week 22:</strong></u> Breaking news alert, most of the experiment templates and worksheet layouts we work with as cytometrist are .xml files. In this session, we learn some additional coding tools to allow us to work with these types of files to extract useful data. In this session, we test out our new problem solving abilities to retrieve data from SpectroFlo and Diva .xml files to monitor how our core’s flow cytometers behaved for various users last week.</p>
 <p><br> <br></p>
 </section>
 <section id="utilizing-bioconductor-packages" class="level3">
 <h3 class="anchored" data-anchor-id="utilizing-bioconductor-packages">Utilizing Bioconductor packages</h3>
 <p><img src="images/Bioconductor.svg" class="img-fluid" style="width:75.0%"></p>
-<p><u><strong>Week 22:</strong></u> Many of the R packages for Flow Cytometry we have utilized in this course were packages from the <a href="https://www.bioconductor.org/">Bioconductor</a> project. We take a look at what makes Bioconductor packages unique compared to packages found on GitHub and CRAN, explore some of their specific infrastructure types for flow cytometry data, and highlight some useful packages for downstream analysis that we haven’t had time to properly explore.</p>
+<p><u><strong>Week 23:</strong></u> Many of the R packages for Flow Cytometry we have utilized in this course were packages from the <a href="https://www.bioconductor.org/">Bioconductor</a> project. We take a look at what makes Bioconductor packages unique compared to packages found on GitHub and CRAN, explore some of their specific infrastructure types for flow cytometry data, and highlight some useful packages for downstream analysis that we haven’t had time to properly explore.</p>
 <p><br> <br></p>
 </section>
 <section id="building-your-first-r-package" class="level3">
 <h3 class="anchored" data-anchor-id="building-your-first-r-package">Building your First R package</h3>
 <p><img src="images/R.png" class="img-fluid" style="width:33.0%"></p>
-<p><u><strong>Week 23:</strong></u> For most of the course, we have been working with R packages that other individuals built and maintained. In this session, we leverage all your hard work from the rest of the course and corral the unwieldly arsenal of functions you wrote into your <a href="https://r-pkgs.org/introduction.html">first R package</a> for easier use. We will discuss the individual pieces of an R package, the importance of a well-setup namespace file, and how to generate help page manuals to refer future-you back to what your individual function arguments actually do.</p>
+<p><u><strong>Week 24:</strong></u> For most of the course, we have been working with R packages that other individuals built and maintained. In this session, we leverage all your hard work from the rest of the course and corral the unwieldly arsenal of functions you wrote into your <a href="https://r-pkgs.org/introduction.html">first R package</a> for easier use. We will discuss the individual pieces of an R package, the importance of a well-setup namespace file, and how to generate help page manuals to refer future-you back to what your individual function arguments actually do.</p>
 <p><br> <br></p>
 </section>
 <section id="everyone-gets-a-quarto-website" class="level3">
 <h3 class="anchored" data-anchor-id="everyone-gets-a-quarto-website">Everyone Get’s a Quarto Website</h3>
 <p><img src="images/3L_V1_Gain_2024.png" class="img-fluid" style="width:75.0%"></p>
-<p><u><strong>Week 24:</strong></u> In this session, we will extend the knowledge of .R and .qmd files you have gained from the course and extend them to create your own website using <a href="">Quarto</a>. We discuss the additional files that are required, how to customize and render the website locally, and finally set up <a href="https://quartopub.com/">Quarto Pub</a> or <a href="https://docs.github.com/en/pages">GitHub Pages</a> website that we are to access online.</p>
-<p><br> <br></p>
-</section>
-<section id="conference-break-3" class="level3">
-<h3 class="anchored" data-anchor-id="conference-break-3">Conference Break 3</h3>
-<p>No class week of August 10, 2026. If you are attending the <a href="https://bioc2026.bioconductor.org/">BioC conference</a>, track me down at my talk/poster.</p>
+<p><u><strong>Week 25:</strong></u> In this session, we will extend the knowledge of .R and .qmd files you have gained from the course and extend them to create your own website using <a href="">Quarto</a>. We discuss the additional files that are required, how to customize and render the website locally, and finally set up <a href="https://quartopub.com/">Quarto Pub</a> or <a href="https://docs.github.com/en/pages">GitHub Pages</a> website that we are to access online.</p>
 <p><br> <br></p>
 </section>
 <section id="reproducibility-and-replicability" class="level3">
 <h3 class="anchored" data-anchor-id="reproducibility-and-replicability">Reproducibility and Replicability</h3>
 <p><img src="https://media.springernature.com/lw1200/springer-static/image/art%3A10.1038%2F533452a/MediaObjects/41586_2016_BF533452a_Fige_HTML.jpg" class="img-fluid" style="width:50.0%"></p>
-<p><u><strong>Week 25:</strong></u> Throughout the course, we emphasized the importance of making your workspaces and code reproducible and replicable. But what do we mean by these terms, and are there best practices we could add to our existing workflow to do this more efficiently? We explore a couple community-led efforts within the cytometry space and troubleshoot their implementation into a previously published pipeline.</p>
+<p><u><strong>Week 26:</strong></u> Throughout the course, we emphasized the importance of making your workspaces and code reproducible and replicable. But what do we mean by these terms, and are there best practices we could add to our existing workflow to do this more efficiently? We explore a couple community-led efforts within the cytometry space and troubleshoot their implementation into a previously published pipeline.</p>
 <p><br> <br></p>
 </section>
 <section id="open-source-licenses" class="level3">
 <h3 class="anchored" data-anchor-id="open-source-licenses">Open Source Licenses</h3>
 <p><img src="https://cdn.media.amplience.net/i/epammarketplace/Software_Licenses_1?maxW=1200&amp;qlt=80&amp;fmt=jpg&amp;bg=rgb(255,255,255)&amp;v=1365581685114.png" class="img-fluid" style="width:50.0%"></p>
-<p><u><strong>Week 26:</strong></u> For this course, we have relied extensively on open-source software to create our own data analysis pipelines. In the process, you may have some recollection of the various license names. But what impact do all these different names have in the end? We take a brief deep-dive into the ecosystem of <a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">free and open-source licenses</a>, and evaluate what their respective license terms mean for us as individual users of the code, as well as potential developers extending existing codebases.</p>
+<p><u><strong>Week 27:</strong></u> For this course, we have relied extensively on open-source software to create our own data analysis pipelines. In the process, you may have some recollection of the various license names. But what impact do all these different names have in the end? We take a brief deep-dive into the ecosystem of <a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">free and open-source licenses</a>, and evaluate what their respective license terms mean for us as individual users of the code, as well as potential developers extending existing codebases.</p>
 <p><br> <br></p>
 </section>
 <section id="validating-algorthmic-tools" class="level3">
 <h3 class="anchored" data-anchor-id="validating-algorthmic-tools">Validating Algorthmic Tools</h3>
 <p><img src="https://ecx.images-amazon.com/images/I/41f9FvgwgzL.jpg" class="img-fluid" style="width:50.0%"></p>
-<p><u><strong>Week 27:</strong></u> We will be the first to admit, new implementations of algorithms as R packages are awesome! We appreciate the effort that went into them and making them available to the community at large. But what is the best way of evaluating whether they behave as promised, or work for our dataset? During this session, we share tips and tricks to gain better understanding of how a new R package works, and things to watch out for when evaluating complicated algortithms. We wrap with walkthrough of how to generate simulated datasets with known distributions for use in testing.</p>
+<p><u><strong>Week 28:</strong></u> We will be the first to admit, new implementations of algorithms as R packages are awesome! We appreciate the effort that went into them and making them available to the community at large. But what is the best way of evaluating whether they behave as promised, or work for our dataset? During this session, we share tips and tricks to gain better understanding of how a new R package works, and things to watch out for when evaluating complicated algortithms. We wrap with walkthrough of how to generate simulated datasets with known distributions for use in testing.</p>
 <p><br> <br></p>
 </section>
 <section id="databases-and-repositories" class="level3">
 <h3 class="anchored" data-anchor-id="databases-and-repositories">Databases and Repositories</h3>
 <p><img src="images/Database.png" class="img-fluid" style="width:50.0%"></p>
-<p><u><strong>Week 28:</strong></u> During this session, we will learn how to identify and retrieve .fcs files from databases. While many of us are accustomed to working with large datasets of our own making, many of us are increasingly encountering larger-than-memory datasets, as well as files stored in large repositories. In this session, we will explore several database focused R <a href="https://arrow.apache.org/docs/r/">packages</a>, before investigating how to identify and retrieve .fcs files and associated metadata of interest from repositories, namely <a href="https://www.immport.org/shared/">ImmPort</a> (and maybe <a href="https://flowrepository.org/">FlowRepository</a> if it can be pinged that afternoon).</p>
+<p><u><strong>Week 29:</strong></u> During this session, we will learn how to identify and retrieve .fcs files from databases. While many of us are accustomed to working with large datasets of our own making, many of us are increasingly encountering larger-than-memory datasets, as well as files stored in large repositories. In this session, we will explore several database focused R <a href="https://arrow.apache.org/docs/r/">packages</a>, before investigating how to identify and retrieve .fcs files and associated metadata of interest from repositories, namely <a href="https://www.immport.org/shared/">ImmPort</a> (and maybe <a href="https://flowrepository.org/">FlowRepository</a> if it can be pinged that afternoon).</p>
 <p><br> <br></p>
 </section>
 <section id="assembling-web-data" class="level3">
 <h3 class="anchored" data-anchor-id="assembling-web-data">Assembling Web Data</h3>
 <p><img src="https://media.brightdata.com/2023/01/Web-scraping-with-R.png" class="img-fluid" style="width:50.0%"></p>
-<p><u><strong>Week 29:</strong></u> In this session, we briefly delve into the concepts of web-scraping and APIs in general. We highlight useful packages, namely <a href="https://httr2.r-lib.org/">httr2</a> and <a href="https://rvest.tidyverse.org/">rvest</a>, and best practices implemented to allow respectful retrieval of useful data without crashing someone’s server like some AI startup bot. We finish by providing a list of additional useful resources for those interested in learning more.</p>
+<p><u><strong>Week 30:</strong></u> In this session, we briefly delve into the concepts of web-scraping and APIs in general. We highlight useful packages, namely <a href="https://httr2.r-lib.org/">httr2</a> and <a href="https://rvest.tidyverse.org/">rvest</a>, and best practices implemented to allow respectful retrieval of useful data without crashing someone’s server like some AI startup bot. We finish by providing a list of additional useful resources for those interested in learning more.</p>
 <p><br> <br></p>
 </section>
 <section id="future-directions" class="level3">
 <h3 class="anchored" data-anchor-id="future-directions">Future Directions</h3>
 <p><img src="images/Future.jpg" class="img-fluid" style="width:75.0%"></p>
-<p><u><strong>Week 30:</strong></u> In this final of the planned sessions, we revisit our solutions to the challenge problems set out during the beginning of the course. We also discuss potential future topics to visit in the future, and any additional resources that proved helpful throughout the course.</p>
+<p><u><strong>Week 31:</strong></u> In this final of the planned sessions, we revisit our solutions to the challenge problems set out during the beginning of the course. We also discuss potential future topics to visit in the future, and any additional resources that proved helpful throughout the course.</p>
 <p><br> <br></p>
 <div style="text-align: right;">
 <p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://www.gnu.org/graphics/agplv3-with-text-162x68.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
@@ -475,13 +516,14 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
@@ -825,13 +867,13 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./course/11_DataForStats/index.html" class="pagination-link" aria-label="11 - Data for Statistics">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">11 - Data for Statistics</span>
+      <a href="./course/14_Unmixing/index.html" class="pagination-link" aria-label="14 - Unmixing in R">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">14 - Unmixing in R</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./course/community/AutoSpectral/index.html" class="pagination-link" aria-label="AutoSpectral">
-        <span class="nav-page-text">AutoSpectral</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./course/10_Downsampling/concatenate.html" class="pagination-link" aria-label="Concatenate - Extended Cut">
+        <span class="nav-page-text">Concatenate - Extended Cut</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

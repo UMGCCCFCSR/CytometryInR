@@ -1,0 +1,3169 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
+
+  <meta name="author" content="David Rach">
+  <meta name="dcterms.date" content="2026-05-24">
+  <title>Cytometry in R – Package Walkthrough: AutoSpectral</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../../../site_libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
+
+  <script type="text/javascript">
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
+  </script>
+  <link href="../../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Package Walkthrough: AutoSpectral</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+David Rach
+</div>
+</div>
+</div>
+
+  <p class="date">2026-05-24</p>
+</section>
+<section class="slide level2">
+
+<p><img data-src="../../../images/WebsiteBanner.png"></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img data-src="https://img.shields.io/badge/license-AGPLv3-blue.png" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img data-src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" alt="CC BY-SA 4.0"></a></p>
+</div>
+<p>For the YouTube livestream schedule, see <a href="https://www.youtube.com/@cytometryinr">here</a></p>
+<p>For screen-shot slides, click <a href="">here</a></p>
+</section>
+<section class="slide level2">
+
+
+<img data-src="../../../images/YouTubeHex.png" style="width:50.0%" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+</section>
+<section>
+<section id="background" class="title-slide slide level1 center">
+<h1>Background</h1>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>There are different ways to unmix spectral flow cytometry data. <a href="https://github.com/DrCytometer/AutoSpectral">Autospectral</a> is one of them, with the methodology behind the approach explained in this 2025 <a href="https://www.biorxiv.org/content/10.1101/2025.10.27.684855v1">pre-print</a> by <a href="https://github.com/DrCytometer">Oliver Burton</a> et al.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="logistics" class="slide level2">
+<h2>Logistics</h2>
+</section>
+<section id="method" class="slide level2">
+<h2>Method</h2>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="walk-through" class="title-slide slide level1 center">
+<h1>Walk-through</h1>
+
+</section>
+<section id="installation" class="slide level2">
+<h2>Installation</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>I recommend starting off by <a href="../../../course/01_InstallingRPackages/index.html#install-from-github">installing</a> both the <code>AutoSpectral</code> and its associated <code>AutoSpectalRcpp</code> package (which allows for accelerated unmixing via C++ code) at the same time. Since both are available via <a href="https://github.com/DrCytometer">GitHub</a>, they can be installed using either the <code>remotes</code> or <code>pak</code> packages.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"DrCytometer/AutoSpectral"</span>)</span>
+<span id="cb1-2"><a aria-label="2"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"DrCytometer/AutoSpectralRcpp"</span>)</span>
+<span id="cb1-3"><a aria-label="3"></a></span>
+<span id="cb1-4"><a aria-label="4"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"DrCytometer/AutoSpectral"</span>)</span>
+<span id="cb1-5"><a aria-label="5"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"DrCytometer/AutoSpectralRcpp"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Please note, if you are on a <strong>MacOS</strong> or <strong>Linux</strong> operating system, to install <code>AutoSpectralRcpp</code> you will likely need to configure some system settings first to allow you to make full use of <code>OpenMP</code> (as mentioned by Oliver in the <code>AutoSpectralRcpp</code> <a href="https://github.com/DrCytometer/AutoSpectralRcpp#installation">README</a>).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>On Debian Linux (Trixie), the steps to are summarized below</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>First, create and open a personal ~/.R/Makevars file via your terminal</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-label="1"></a><span class="co"># bash/shell code</span></span>
+<span id="cb2-2"><a aria-label="2"></a>mkdir .p <span class="sc">~</span><span class="er">/</span>.R</span>
+<span id="cb2-3"><a aria-label="3"></a>nano <span class="sc">~</span><span class="er">/</span>.R<span class="sc">/</span>Makevars</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Edit the file by entering the file, before saving the changes and exiting.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a><span class="co"># bash/shell code</span></span>
+<span id="cb3-2"><a aria-label="2"></a>CXX_STD <span class="ot">=</span> CXX17</span>
+<span id="cb3-3"><a aria-label="3"></a>PKG_CXXFLAGS <span class="ot">=</span> <span class="sc">-</span>fopenmp</span>
+<span id="cb3-4"><a aria-label="4"></a>PKG_LIBS <span class="ot">=</span> <span class="sc">-</span>fopenmp <span class="sc">-</span>llapack <span class="sc">-</span>lblas</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Once the Makevars file has been updated, proceed with installing <code>AutoSpectralRcpp</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="dataset" class="slide level2">
+<h2>Dataset</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>For this walkthrough, the spectral flow cytometry .fcs files being used were generated in 2025 as part of the yearly <a href="https://umgccfcss.github.io/BISCC_2025/Day1_5L.html">5-day training workshop</a> here at <a href="https://www.medschool.umaryland.edu/cibr/core/umgccc_flow/">UMGCCC FCSR</a>. The panel consisted of 5 markers (CD45, CD3, CD4, CD8 and Viability). This panel was used to stain mouse splenocytes, which were then acquired on a 5-laser Cytek Aurora. These .fcs files were <a href="../../../course/community/TRU-OLS/FCSCleanUp.html">substantially downsampled</a> in order to pass the GitHub size limits for sharing as part of this example.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="set-up" class="slide level2">
+<h2>Set Up</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Similar to it’s <a href="https://github.com/carlosproca/autospill">predecessor</a> <code>autospill</code>, some of the <code>AutoSpectral</code> functions are a bit opinionated on where folders and files should be in relation to the working directory. Rather than encountering a bug that might be difficult to troubleshoot, I recommend just creating a new project folder in which you will primarily be carrying out the unmixing. In this scenario, all created folders and files end up at the top-level of your projects working directory.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>To get started, first attach <code>AutoSpectral</code> to your local environment the required R packages via the <code>library()</code> call</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-label="1"></a><span class="fu">library</span>(AutoSpectral)</span>
+<span id="cb4-2"><a aria-label="2"></a><span class="fu">library</span>(AutoSpectralRcpp)</span>
+<span id="cb4-3"><a aria-label="3"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section id="locate-.fcs-files" class="slide level2">
+<h2>Locate .fcs files</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Next off, specify the storage location of the .fcs files. In the case of todays example data, the unmixing controls and full-stained samples are present in their own respective subfolders within “data”. Additionally, provide a file.path to a folder where you want the unmixed .fcs files to be saved to.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a><span class="co"># StorageLocation &lt;- file.path("course", "community", "AutoSpectral", "data") </span></span>
+<span id="cb5-2"><a aria-label="2"></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co"># For Quarto Render</span></span>
+<span id="cb5-3"><a aria-label="3"></a></span>
+<span id="cb5-4"><a aria-label="4"></a><span class="co"># OutputLocation &lt;- file.path("course", "community", "AutoSpectral", "outputs")</span></span>
+<span id="cb5-5"><a aria-label="5"></a>OutputLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"outputs"</span>) <span class="co"># For Quarto Render</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section id="asp" class="slide level2">
+<h2>asp</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p><code>AutoSpectral</code>, like its <a href="https://github.com/carlosproca/autospill">predecessor</a> package <code>autospill</code>, primarily utilizes an “asp” list object for use in specifying default arguments for subsequent unmixing.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Main things to specify is the spectral cytometer used (currently consisting of “aurora”, “auroraNL”, “id7000”, “a8”, “s8”, “a5se”, “opteon”, “mosaic” and “xenith”) and whether you want the plots to be saved as figures within their respective folders.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Since this dataset was from a Cytek Aurora, and generally the more visual data we have to ensure the gates were set properly the better, we will go with</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a aria-label="1"></a>asp <span class="ot">&lt;-</span> <span class="fu">get.autospectral.param</span>(</span>
+<span id="cb6-2"><a aria-label="2"></a>  <span class="at">cytometer =</span> <span class="st">"aurora"</span>,</span>
+<span id="cb6-3"><a aria-label="3"></a>  <span class="at">figures =</span> <span class="cn">TRUE</span> </span>
+<span id="cb6-4"><a aria-label="4"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/Asp1_10.png" class="r-stretch"></section>
+<section id="control-file" class="slide level2">
+<h2>Control File</h2>
+<h3 id="creating-the-control-file">Creating the Control File</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Next up, we will assemble the Control File, which is the .csv file that allows us to dictate what background is substracted from each of the singe-color controls.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>To get started, we need to provide the file.path to the directory that contains our unmixing controls (primarily single-color + 1 unstained).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-label="1"></a>control.dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, <span class="st">"unmixing_controls"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Alongside our already generated “asp” list, we can pass these as arguments to the <code>create.control.file()</code> to create the “fcs_control_file.csv”</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a aria-label="1"></a><span class="fu">create.control.file</span>(control.dir, asp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As the code runs, <code>AutoSpectral</code> checks the fluorophore names against a reference database. If it matches a known fluorophore name, this will be used to prefill in some of the columns in the control file. If a fluorophore is not present in the database, a warning message will be outputted to the console window. In case of a new fluorophore that is not present in the database, you would then need to manually fill the corresponding information.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In our case, it didn’t find a matching name for our unstained, which is expected, as it is not a fluorophore to begin with.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/01_ControlFileMessages.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The resulting control file ends up being written directly to the top-level of our working directory (similar to how it was done with <code>autospill</code>).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/02_DefaultWorkingDirectoryRoot.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Since we created a new project folder for unmixing, this is expected and the files should remain at the top-level of the working directory.</p>
+<p>In the case of the wesite example, I copied these outputs over to the “outputs” folder for documentation and to allow the website to build correctly</p>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Lets quickly visualize the contents of the Control File</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a aria-label="1"></a>CSVFile <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">pattern=</span><span class="st">"fcs_control_file.csv"</span>,</span>
+<span id="cb9-2"><a aria-label="2"></a>  <span class="at">full.names=</span><span class="cn">TRUE</span>) <span class="co"># For You</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a aria-label="1"></a>ControlFile</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                        filename     fluorophore    marker
+1            PD_AD_CD8 BV510 (Cells)_scatter.fcs           BV510       CD8
+2            PD_AD_CD4 BV605 (Cells)_scatter.fcs           BV605       CD4
+3   PD_AD_CD3 Spark Blue 550 (Cells)_scatter.fcs  Spark Blue 550       CD3
+4 PD_AD_CD45 Alexa Fluor 700 (Cells)_scatter.fcs Alexa Fluor 700      CD45
+5      PD_AD_Viability 7-AAD (Cells)_scatter.fcs           7-AAD Viability
+6                  Unstained (Cells)_scatter.fcs              AF          
+  channel control.type universal.negative large.gate       gate.name
+1    V7-A        cells                 NA      FALSE     smallGate_1
+2   V10-A        cells                 NA      FALSE     smallGate_1
+3    B3-A        cells                 NA      FALSE     smallGate_1
+4    R4-A        cells                 NA      FALSE     smallGate_1
+5    YG-4        cells                 NA      FALSE viabilityGate_2
+6                cells                 NA      FALSE     smallGate_1
+  gate.define is.viability
+1        TRUE        FALSE
+2        TRUE        FALSE
+3        TRUE        FALSE
+4        TRUE        FALSE
+5        TRUE         TRUE
+6        TRUE        FALSE</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The main structural elements to the control file are the following columns</p>
+<ul>
+<li class="fragment">filename: The actual .fcs filename</li>
+<li class="fragment">fluorophore: The name of the fluorophore (or AF in case of the unstained)</li>
+<li class="fragment">marker: The name of the marker (or left empty in the case of the unstained)</li>
+<li class="fragment">channel: The peak detector channel of the fluorophore (left empty for the unstained). In case the fluorophore is not present in the reference library, you will need to specify this manually</li>
+<li class="fragment">control.type: Whether the unmixing control is cells or beads (used for matching positive and negatives for background subtraction)</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li class="fragment">universal.negative: By default empty, if you want to use an universal negative, copy the filename of the corresponding unstained into this spot on a per fluorophore basis</li>
+<li class="fragment">large.gate: Logical value, by default FALSE, set to TRUE to expand the gating area (more details later)</li>
+<li class="fragment">gate.name: Gate name for use in signature retrievel (more details later)</li>
+<li class="fragment">gate.define: Logical, permits you to set the general gate region as defined by gate.name</li>
+<li class="fragment">is.viability: Whether your control is a viability dye. In this case, correctly identified 7-AAD from reference database so is already set to TRUE.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="editing-the-control-file">Editing the Control File</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In this case, the reference databse correctly set most things at setup, so only a handful of manual interventions are needed. Primarily, we will be using the universal.negative option, so we will need to copy the filename of our Unstained (“Unstained (Cells)_scatter.fcs”) to fill the empty slots in the universal.negative column. If you were editing the data.frame in R, you could do this for the entire column as follows</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a aria-label="1"></a>ControlFile<span class="sc">$</span>universal.negative <span class="ot">&lt;-</span> <span class="st">"Unstained (Cells)_scatter.fcs"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>At the time of this walk-through, <code>AutoSpectral</code> failed to parse the channel information correctly for 7-AAD (showing up only as YG4 instead of YG4-A), so we will go ahead and also correct this</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/03_Oh7AAD.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-label="1"></a>ControlFile <span class="ot">&lt;-</span> ControlFile <span class="sc">|&gt;</span> </span>
+<span id="cb13-2"><a aria-label="2"></a>  <span class="fu">mutate</span>(<span class="at">channel =</span> <span class="fu">case_when</span>(</span>
+<span id="cb13-3"><a aria-label="3"></a>    fluorophore <span class="sc">==</span> <span class="st">"7-AAD"</span> <span class="sc">~</span> <span class="st">"YG4-A"</span>,</span>
+<span id="cb13-4"><a aria-label="4"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> channel</span>
+<span id="cb13-5"><a aria-label="5"></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a aria-label="1"></a>ControlFile</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                        filename     fluorophore    marker
+1            PD_AD_CD8 BV510 (Cells)_scatter.fcs           BV510       CD8
+2            PD_AD_CD4 BV605 (Cells)_scatter.fcs           BV605       CD4
+3   PD_AD_CD3 Spark Blue 550 (Cells)_scatter.fcs  Spark Blue 550       CD3
+4 PD_AD_CD45 Alexa Fluor 700 (Cells)_scatter.fcs Alexa Fluor 700      CD45
+5      PD_AD_Viability 7-AAD (Cells)_scatter.fcs           7-AAD Viability
+6                  Unstained (Cells)_scatter.fcs              AF          
+  channel control.type            universal.negative large.gate       gate.name
+1    V7-A        cells Unstained (Cells)_scatter.fcs      FALSE     smallGate_1
+2   V10-A        cells Unstained (Cells)_scatter.fcs      FALSE     smallGate_1
+3    B3-A        cells Unstained (Cells)_scatter.fcs      FALSE     smallGate_1
+4    R4-A        cells Unstained (Cells)_scatter.fcs      FALSE     smallGate_1
+5   YG4-A        cells Unstained (Cells)_scatter.fcs      FALSE viabilityGate_2
+6                cells Unstained (Cells)_scatter.fcs      FALSE     smallGate_1
+  gate.define is.viability
+1        TRUE        FALSE
+2        TRUE        FALSE
+3        TRUE        FALSE
+4        TRUE        FALSE
+5        TRUE         TRUE
+6        TRUE        FALSE</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>For both the Unstained and CD45, I will also set the gate.define argument to FALSE for now.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a aria-label="1"></a>ControlFile <span class="ot">&lt;-</span> ControlFile <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a aria-label="2"></a>  <span class="fu">mutate</span>(<span class="at">gate.define =</span> <span class="fu">case_when</span>(</span>
+<span id="cb16-3"><a aria-label="3"></a>    marker <span class="sc">==</span> <span class="st">"CD45"</span> <span class="sc">~</span> <span class="cn">FALSE</span>,</span>
+<span id="cb16-4"><a aria-label="4"></a>    fluorophore <span class="sc">==</span> <span class="st">"AF"</span> <span class="sc">~</span> <span class="cn">FALSE</span>,</span>
+<span id="cb16-5"><a aria-label="5"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> gate.define</span>
+<span id="cb16-6"><a aria-label="6"></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-label="1"></a>ControlFile</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                        filename     fluorophore    marker
+1            PD_AD_CD8 BV510 (Cells)_scatter.fcs           BV510       CD8
+2            PD_AD_CD4 BV605 (Cells)_scatter.fcs           BV605       CD4
+3   PD_AD_CD3 Spark Blue 550 (Cells)_scatter.fcs  Spark Blue 550       CD3
+4 PD_AD_CD45 Alexa Fluor 700 (Cells)_scatter.fcs Alexa Fluor 700      CD45
+5      PD_AD_Viability 7-AAD (Cells)_scatter.fcs           7-AAD Viability
+6                  Unstained (Cells)_scatter.fcs              AF          
+  channel control.type            universal.negative large.gate       gate.name
+1    V7-A        cells Unstained (Cells)_scatter.fcs      FALSE     smallGate_1
+2   V10-A        cells Unstained (Cells)_scatter.fcs      FALSE     smallGate_1
+3    B3-A        cells Unstained (Cells)_scatter.fcs      FALSE     smallGate_1
+4    R4-A        cells Unstained (Cells)_scatter.fcs      FALSE     smallGate_1
+5   YG4-A        cells Unstained (Cells)_scatter.fcs      FALSE viabilityGate_2
+6                cells Unstained (Cells)_scatter.fcs      FALSE     smallGate_1
+  gate.define is.viability
+1        TRUE        FALSE
+2        TRUE        FALSE
+3        TRUE        FALSE
+4       FALSE        FALSE
+5        TRUE         TRUE
+6       FALSE        FALSE</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Lastly, I wish to rename the gate.names, preferring to use “lymphocytes” and “dead” as terms vs.&nbsp;“smallGate”, “viabilityGate” respectively. Since all these markers are primarily lymphocyte markers, I will overwrite everthing as “lymphocytes”, before using <code>dplyr</code>’s <code>case_when()</code> function to selectively set 7-AAD’s value for gate.name to “dead”</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a aria-label="1"></a>ControlFile<span class="sc">$</span>gate.name <span class="ot">&lt;-</span> <span class="st">"lymphocytes"</span></span>
+<span id="cb19-2"><a aria-label="2"></a></span>
+<span id="cb19-3"><a aria-label="3"></a>ControlFile <span class="ot">&lt;-</span> ControlFile <span class="sc">|&gt;</span> </span>
+<span id="cb19-4"><a aria-label="4"></a>  <span class="fu">mutate</span>(<span class="at">gate.name =</span> <span class="fu">case_when</span>(</span>
+<span id="cb19-5"><a aria-label="5"></a>    fluorophore <span class="sc">==</span> <span class="st">"7-AAD"</span> <span class="sc">~</span> <span class="st">"dead"</span>,</span>
+<span id="cb19-6"><a aria-label="6"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> gate.name</span>
+<span id="cb19-7"><a aria-label="7"></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a aria-label="1"></a>ControlFile</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                        filename     fluorophore    marker
+1            PD_AD_CD8 BV510 (Cells)_scatter.fcs           BV510       CD8
+2            PD_AD_CD4 BV605 (Cells)_scatter.fcs           BV605       CD4
+3   PD_AD_CD3 Spark Blue 550 (Cells)_scatter.fcs  Spark Blue 550       CD3
+4 PD_AD_CD45 Alexa Fluor 700 (Cells)_scatter.fcs Alexa Fluor 700      CD45
+5      PD_AD_Viability 7-AAD (Cells)_scatter.fcs           7-AAD Viability
+6                  Unstained (Cells)_scatter.fcs              AF          
+  channel control.type            universal.negative large.gate   gate.name
+1    V7-A        cells Unstained (Cells)_scatter.fcs      FALSE lymphocytes
+2   V10-A        cells Unstained (Cells)_scatter.fcs      FALSE lymphocytes
+3    B3-A        cells Unstained (Cells)_scatter.fcs      FALSE lymphocytes
+4    R4-A        cells Unstained (Cells)_scatter.fcs      FALSE lymphocytes
+5   YG4-A        cells Unstained (Cells)_scatter.fcs      FALSE        dead
+6                cells Unstained (Cells)_scatter.fcs      FALSE lymphocytes
+  gate.define is.viability
+1        TRUE        FALSE
+2        TRUE        FALSE
+3        TRUE        FALSE
+4       FALSE        FALSE
+5        TRUE         TRUE
+6       FALSE        FALSE</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="saving-the-control-file">Saving the Control File</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Unfortunately, we are not currently able to pass the data.frame object directly to the <code>AutoSpectral</code> functions, so we will need to save our changes as an updated .csv file. This does have the benefit of permitting us to reuse the Control File again in the future. As always, saving under a new name to the working directory is recommended</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a aria-label="1"></a>UpdatedName <span class="ot">&lt;-</span> <span class="st">"fcs_control_file_updated.csv"</span></span>
+<span id="cb22-2"><a aria-label="2"></a></span>
+<span id="cb22-3"><a aria-label="3"></a></span>
+<span id="cb22-4"><a aria-label="4"></a>StoreHere <span class="ot">&lt;-</span> UpdatedName <span class="co"># For You</span></span>
+<span id="cb22-5"><a aria-label="5"></a><span class="fu">write.csv</span>(ControlFile, StoreHere, <span class="at">row.names=</span><span class="cn">FALSE</span>) <span class="co"># For You</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="checking-the-control-file">Checking the Control File</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>With the Control File now generated and edited, we can pass it to the <code>check.control.file()</code> function to verify that it is correctly formatted so that we can proceed to the next step. In our case, once we fixed the 7-AAD YG4 column, we had no issues and could proceed.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a aria-label="1"></a>control.file <span class="ot">&lt;-</span> StoreHere</span>
+<span id="cb23-2"><a aria-label="2"></a></span>
+<span id="cb23-3"><a aria-label="3"></a><span class="fu">check.control.file</span>(control.dir, <span class="at">control.def.file=</span>control.file, asp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/04_NoCriticalErrors.png" class="r-stretch"></section>
+<section id="gate-landmarks" class="slide level2">
+<h2>Gate Landmarks</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p><code>Autospectral</code> utilizes the same approach for automated gating as <code>autospill</code>, simply, fracturing the plot area, identifying areas of density, and iteratively honing in. While this can often work, as is always the case with flow cytometry, there are exeptions.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>One way to work around this issue is to use the <code>define.gate.landmarks()</code> function, which references the Control File, identifies the peak detectors of fluorophores that are set to use a particular gate.name, and identifies the FSC-SSC location for cells with the brightest MFI for these designated detectors. This functionally serves as a landmark around which the gate is then placed.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>For our example below, gate.name=“lymphocytes” is used by most of the fluorophores, which are utilized in the cross-check. Consequently, when we run <code>define.gate.landmarks()</code> for “lymphocytes”, we see the following</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a aria-label="1"></a>gate.lymphocyte <span class="ot">&lt;-</span> <span class="fu">define.gate.landmarks</span>(</span>
+<span id="cb24-2"><a aria-label="2"></a>  <span class="at">control.file =</span> control.file,</span>
+<span id="cb24-3"><a aria-label="3"></a>  <span class="at">control.dir =</span> control.dir,</span>
+<span id="cb24-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb24-5"><a aria-label="5"></a>  <span class="at">n.cells =</span> <span class="dv">2000</span>,</span>
+<span id="cb24-6"><a aria-label="6"></a>  <span class="at">percentile =</span> <span class="dv">70</span>,</span>
+<span id="cb24-7"><a aria-label="7"></a>  <span class="at">gate.name =</span> <span class="st">"lymphocytes"</span></span>
+<span id="cb24-8"><a aria-label="8"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>This results in a new folder being created in the working directory, containing both the gating landmark parameters</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/05_GatesDefined.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As well as the corresponding plot for each gate.name</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/landmark_gate_definition_lymphocytes.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Similarly, 7-AAD is the only fluorophore used with gate.name=“dead”, so the location of the brightest YG4-A cells ends up serving as the the landmark.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a aria-label="1"></a>gate.dead <span class="ot">&lt;-</span> <span class="fu">define.gate.landmarks</span>(</span>
+<span id="cb25-2"><a aria-label="2"></a>  <span class="at">control.file =</span> control.file,</span>
+<span id="cb25-3"><a aria-label="3"></a>  <span class="at">control.dir =</span> control.dir,</span>
+<span id="cb25-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb25-5"><a aria-label="5"></a>  <span class="at">n.cells =</span> <span class="dv">2000</span>,</span>
+<span id="cb25-6"><a aria-label="6"></a>  <span class="at">percentile =</span> <span class="dv">70</span>,</span>
+<span id="cb25-7"><a aria-label="7"></a>  <span class="at">gate.name =</span> <span class="st">"dead"</span></span>
+<span id="cb25-8"><a aria-label="8"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/landmark_gate_definition_dead.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Since both plots match my expectations of the location of “lymphocyte” and “dead” cells for this dataset, we can proceed to the next step.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="define-flow-control" class="slide level2">
+<h2>Define Flow Control</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>With these initial structural elements assembled, <code>AutoSpectral</code> focus shift to the process of preparing the single-colors for signature isolation. Two important pre-processing steps that are utilized to ensure this is carried out properly. One of these is to match the gated area of the positive single-color control with the corresponding gating area in the negative unstained control. This “hopefully” would ensure that the background autofluorescence being substracted comes from the same cell type(s) and is more-similar-than-not.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>To do this, we first need to assemble a list of the gate.names that are present for our panel. In our case, we only defined “lymphocytes” and “dead”, so we will only include those. Vice versa, if you also had a “monocyte” and “bead” gated region, you would include these as well.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a aria-label="1"></a>my.gates <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb26-2"><a aria-label="2"></a>  <span class="st">"lymphocytes"</span> <span class="ot">=</span> gate.lymphocyte,</span>
+<span id="cb26-3"><a aria-label="3"></a>  <span class="st">"dead"</span> <span class="ot">=</span> gate.dead</span>
+<span id="cb26-4"><a aria-label="4"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We then pass this “my.gates” list, our “asp” list, and the edited Control File to the <code>define.flow.control()</code> function. This then orchestrates the matching and drawing of gates for each fluorophore.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a aria-label="1"></a>flow.control <span class="ot">&lt;-</span> <span class="fu">define.flow.control</span>(</span>
+<span id="cb27-2"><a aria-label="2"></a>  <span class="at">control.dir =</span> control.dir,</span>
+<span id="cb27-3"><a aria-label="3"></a>  <span class="at">control.def.file =</span> control.file,</span>
+<span id="cb27-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb27-5"><a aria-label="5"></a>  <span class="at">gate.list =</span> my.gates,</span>
+<span id="cb27-6"><a aria-label="6"></a>  <span class="at">color.palette =</span> <span class="st">"rainbow"</span></span>
+<span id="cb27-7"><a aria-label="7"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/06_PlottingGates.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We end up with a flow.control variable, which consist of . Additionally, we also have a figure_gate folder containing the visualized plots for the individual fluorophores. Lets take a closer look</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>7-AAD</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/7-AAD.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="outputs/7-AAD_universal_negative_scatter_plot.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>BV510</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/BV510.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="outputs/BV510_universal_negative_scatter_plot.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>BV605</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/BV605.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="outputs/BV605_universal_negative_scatter_plot.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Alexa Fluor 700</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/Alexa Fluor 700.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="outputs/Alexa Fluor 700_universal_negative_scatter_plot.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Spark Blue 550</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/Spark Blue 550.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="outputs/Spark Blue 550_universal_negative_scatter_plot.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And autofluorescence for live cells</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<img data-src="outputs/AF.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And autofluorescence for dead cells</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<img data-src="outputs/AF Negative dead.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As you may notice, the FSC-SSC coordinates being used by both the positive single-color and negative unstained are matching for subsequent use in the signature isolation.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="clean-control" class="slide level2">
+<h2>Clean Control</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The other important step in preparing the single-colors for signature isolation is identifying and separating out from the fluorophore-stained cells any variant autofluorescence that might be present in the .fcs files. This is an especially important step for cells where multiple mixed autofluorescence signatures may be present (ex. lung)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>This is mediated through the use of the <code>clean.controls</code> function, to which we pass our flow.control and asp objects.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a aria-label="1"></a>flow.control <span class="ot">&lt;-</span> <span class="fu">clean.controls</span>(flow.control, asp) <span class="co"># Figure Clean Controls</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/07_ControlCleanUp.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>As we can see from the output, <code>clean.controls()</code> first identifies and removes the variant autofluorescence, before generating the visual plots. It then gathers the scattered-matched negatives for the respective fluorophore to calculate out the signature now that potential variant autofluorescence is no longer present.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In the case of this dataset (originating from spleen), the effect was not as obvious for many of the fluorophores, although we can see the effect for BV510. From the plotted region, we can see the variant autofluorescence cells that were removed present in the gated region</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/cleaned/AF_removal_BV510_.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And looking at the resulting impact on the signature, we see we end up with less outlier contributions for the Blue, Yellow-Green and Red detectors.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/cleaned/AF_removal_BV510_spectral_ribbon_plot.jpg" class="r-stretch"></section>
+<section id="spectra" class="slide level2">
+<h2>Spectra</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Now that the single-color unmixing controls are matched to the corresponding FSC-SSC coordinates of the unstained, and variant autofluorescences are removed, <code>AutoSpectral</code> proceeds to calculate the fluorescent spectral signatures for each, before assembling them into a signature matrix.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a aria-label="1"></a>spectra <span class="ot">&lt;-</span> <span class="fu">get.fluorophore.spectra</span>(flow.control, asp) <span class="co">#Figure Scatter #Figure Spectra</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/08_SpectralReturns.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>If the signature is available via the reference database, a quick QC is carried out to make sure the signature is comparable to the reference (helping to screen for mistaken identity issues, etc).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>If we check our spectra object, we can see the underlying data for each signature. This is also saved to the “table_spectra” folder containing the .csv file</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a aria-label="1"></a>SpectraTablePath <span class="ot">&lt;-</span> <span class="st">"table_spectra"</span> <span class="co"># For You</span></span>
+<span id="cb30-2"><a aria-label="2"></a></span>
+<span id="cb30-3"><a aria-label="3"></a>SpectraCSV <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path=</span>SpectraTablePath,</span>
+<span id="cb30-4"><a aria-label="4"></a>  <span class="at">pattern=</span><span class="st">"Clean_autospectral_spectra.csv"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)  <span class="co"># For You</span></span>
+<span id="cb30-5"><a aria-label="5"></a></span>
+<span id="cb30-6"><a aria-label="6"></a>SpectraCSVData <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(SpectraCSV, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a aria-label="1"></a>SpectraCSVData</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                          UV1-A         UV2-A         UV3-A         UV4-A
+1           BV510 -2.727532e-04 -3.382485e-05  0.0005592826  0.0025985403
+2           BV605 -9.023060e-05  3.482036e-05  0.0023647498  0.0023766431
+3  Spark Blue 550 -4.664226e-04 -1.621486e-04  0.0002002816  0.0007858372
+4 Alexa Fluor 700 -1.881958e-04  9.158592e-06  0.0003507010  0.0007739788
+5           7-AAD  4.479615e-05 -1.048530e-04 -0.0002540220 -0.0009888354
+6              AF  9.285824e-03  8.175719e-02  0.2065093191  0.2575801443
+         UV5-A        UV6-A        UV7-A        UV8-A        UV9-A       UV10-A
+1  0.014476551  0.076312149  0.430678378  0.367125047  0.301704576 1.103656e-01
+2  0.002549538  0.003343821  0.003284651  0.002022860  0.084943349 1.845648e-01
+3  0.001238263  0.001390762  0.006568148  0.039078735  0.031286668 9.298637e-03
+4  0.001455320  0.002269078  0.003395253  0.002123983  0.000990292 8.522156e-05
+5 -0.001007894 -0.001126721 -0.002050312 -0.002276733 -0.001133780 8.736220e-03
+6  0.354575952  0.603038095  1.000000000  0.531879836  0.331300916 1.051245e-01
+        UV11-A      UV12-A      UV13-A       UV14-A      UV15-A      UV16-A
+1 0.0400750959 0.019110130 0.013358563 0.0126528138 0.008946730 0.006540448
+2 0.0929183866 0.038783175 0.029543802 0.0276185552 0.016988040 0.012089164
+3 0.0033786183 0.001956591 0.001129301 0.0007983474 0.001182297 0.001294245
+4 0.0003459306 0.007837035 0.037884246 0.0384602303 0.020973033 0.016098384
+5 0.0239083922 0.016201002 0.013551166 0.0145070516 0.009922581 0.007450461
+6 0.0176952153 0.010238330 0.005517397 0.0253328847 0.009068066 0.010576350
+           V1-A          V2-A          V3-A          V4-A          V5-A
+1  1.847474e-03  0.0285723458  0.1196928499  0.2621554667  0.7017670004
+2  7.264362e-02  0.0956278322  0.0802056499  0.0422455390  0.0208040332
+3 -5.172626e-04  0.0007443447  0.0012103227  0.0014828872  0.0059244613
+4  4.176814e-05  0.0003840570  0.0007235936  0.0008636901  0.0007257344
+5 -8.005486e-04 -0.0007276090 -0.0008410830 -0.0001500675 -0.0007979136
+6 -2.964998e-02  0.0182520797  0.0821702478  0.0855044828  0.0958970237
+           V6-A         V7-A         V8-A          V9-A         V10-A
+1  0.7312399855  1.000000000 0.6933307372  0.4419144303  0.4440643313
+2  0.0114675843  0.011798299 0.2003354839  0.8012451754  1.0000000000
+3  0.0866516438  0.309186127 0.1828432668  0.1154995436  0.1031594150
+4  0.0008416681  0.001297961 0.0002556033  0.0004298069  0.0003652906
+5 -0.0010652055 -0.001397394 0.0029886726  0.0174935965  0.0902533906
+6  0.0902867878  0.132868883 0.0635116152 -0.0182831414 -0.0305545839
+         V11-A       V12-A       V13-A       V14-A        V15-A        V16-A
+1  0.150744333  0.06931156  0.05128300  0.03504908  0.024946168  0.010957289
+2  0.478537431  0.19407234  0.15238730  0.10253031  0.062249683  0.026565075
+3  0.036138494  0.01743748  0.01451429  0.01104910  0.008375119  0.004085326
+4  0.001719819  0.03212282  0.17949690  0.12830301  0.072554405  0.035549615
+5  0.157054702  0.10394702  0.09250501  0.07167309  0.051951973  0.024509230
+6 -0.048581519 -0.03750351 -0.02644606 -0.01535003 -0.019775754 -0.015461524
+           B1-A          B2-A          B3-A         B4-A          B5-A
+1  0.0039019699  0.0035053550  0.0042274099 0.0018772712  0.0019232280
+2  0.0008293361  0.0007234285  0.0010411823 0.0071584263  0.0389957545
+3  0.0411008138  0.3615758919  1.0000000000 0.4102007805  0.3033972624
+4  0.0009120344  0.0009217702  0.0008765814 0.0002866149  0.0005778189
+5 -0.0014361667 -0.0010063697 -0.0012726204 0.0081649415  0.0444815039
+6  0.0164939325  0.0070549490  0.0031785595 0.0106914127 -0.0223944522
+           B6-A          B7-A          B8-A          B9-A         B10-A
+1  0.0009962270  0.0008127311  3.940405e-05  7.079352e-05 -3.218395e-05
+2  0.0378572526  0.0276081132  1.757415e-02  1.366615e-02  8.307650e-03
+3  0.1835399256  0.0966141674  6.630054e-02  6.210236e-02  3.556668e-02
+4  0.0001344901  0.0001341962  7.820139e-04  8.880020e-03  2.289341e-02
+5  0.1647852305  0.4321371020  3.676796e-01  3.914654e-01  2.421080e-01
+6 -0.0357521689 -0.0191535072 -1.062635e-02 -3.160266e-02 -2.199200e-02
+          B11-A         B12-A         B13-A         B14-A         YG1-A
+1  1.489764e-05 -8.466971e-05  3.118002e-05 -0.0002547132  0.0003706523
+2  5.040537e-03  3.541526e-03  2.248089e-03  0.0027513159  0.0714330985
+3  2.273251e-02  1.909118e-02  1.384848e-02  0.0165223523  0.0175283393
+4  1.697353e-02  9.851103e-03  6.718159e-03  0.0078501671  0.0001749518
+5  1.556714e-01  1.347122e-01  9.894565e-02  0.1103599829  0.0269825093
+6 -1.167955e-02  1.951347e-03 -5.360082e-03 -0.0190680221 -0.0129333498
+          YG2-A         YG3-A        YG4-A         YG5-A         YG6-A
+1  3.181876e-04  0.0002811334  0.000132580 -0.0001742363 -0.0001239778
+2  3.471537e-01  0.3573060937  0.228378511  0.1373171497  0.0931814627
+3  1.048847e-02  0.0073584483  0.002753506  0.0016306145  0.0016885876
+4  4.390731e-05  0.0004871955  0.001068177  0.0062230267  0.0479852083
+5  1.022791e-01  0.3225571974  1.000000000  0.8107526645  0.7465303727
+6 -2.698419e-02 -0.0413665828 -0.045529362 -0.0288697062 -0.0343305659
+         YG7-A         YG8-A         YG9-A        YG10-A         R1-A
+1 -0.000334327  0.0002804432 -0.0002453722 -0.0003688434 5.359081e-05
+2  0.103676774  0.0405542259  0.0240471093  0.0137332944 9.999626e-04
+3  0.001162221  0.0007593936 -0.0007598628  0.0001050383 7.382258e-05
+4  0.280107280  0.1230369156  0.0702979614  0.0465641625 2.949726e-03
+5  0.897883288  0.4140019657  0.3063294830  0.1890652140 1.388792e-02
+6 -0.044537130 -0.0176013392 -0.0123816675 -0.0041210102 2.991331e-03
+           R2-A          R3-A          R4-A          R5-A          R6-A
+1  5.759475e-05 -2.368085e-05  0.0001559280  7.930201e-05  1.512069e-05
+2  7.856179e-04  7.895259e-04  0.0006935048  3.872853e-04  2.709521e-04
+3  5.420816e-04  2.617683e-04 -0.0006480708 -2.521269e-04  1.842664e-04
+4  3.938425e-02  3.640583e-01  1.0000000000  9.106755e-01  4.514638e-01
+5  1.913133e-02  1.903504e-02  0.0143610777  1.116117e-02  7.917969e-03
+6 -9.235466e-03 -1.335063e-02 -0.0200660886 -1.634608e-03 -1.056407e-02
+           R7-A          R8-A
+1  3.247486e-06 -2.443376e-04
+2  2.691855e-04  2.996067e-05
+3 -5.194820e-04 -5.025562e-04
+4  4.274690e-01  2.465092e-01
+5  8.028963e-03  3.941527e-03
+6 -1.515120e-02  2.730999e-03</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In the process, the plotted figures are stored to the “figure_spectra” and “figure_similarity” folders. Among the plots of interest, we get back the plotted normalized spectral signatures</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/spectra/Clean_autospectral_spectra.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>A similarity matrix containing the cosine values when comparing one fluorophore against another</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/spectra/Clean_autospectral_similarity_matrix.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>A spectral heatmap showing intensity across detectors for each fluorophore (corresponding to the peak detector and relative height of the other detectors)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/spectra/Clean_autospectral_spectra spectral_heatmap.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And the coefficients, which will play a role later on.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/spectra/Clean_unmixing_matrix spectral_heatmap.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Additionally, there is a .pdf report with the plotted extracted signatures vs.&nbsp;the reference</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/ReferenceReport.png" class="r-stretch"></section>
+<section id="unmixing" class="slide level2">
+<h2>Unmixing</h2>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Now that all the pre-requisites have been assembled, we can now leverage them to unmix the full-stained .fcs files. To do this, lets first provide the file path to their respective folder.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a aria-label="1"></a>FullStainedPath <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, <span class="st">"samples"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Additionally, lets drop the row containing the AF from the spectra object, as different unmixing methods will handle the autofluorescence differently.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a aria-label="1"></a><span class="fu">rownames</span>(spectra)</span>
+<span id="cb34-2"><a aria-label="2"></a>no.af.spectra <span class="ot">&lt;-</span> spectra[ <span class="sc">!</span>(<span class="fu">rownames</span>(spectra) <span class="sc">==</span> <span class="st">"AF"</span>),]</span>
+<span id="cb34-3"><a aria-label="3"></a><span class="fu">rownames</span>(no.af.spectra)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="ols">OLS</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p><code>AutoSpectral</code> has 4 ways to perform unmixing. One of these is Ordinary Least Squares (OLS), which is what most of the spectral flow cytometry unmixing R packages have as a default. While the option exist to unmix individual files, I prefer to use the <code>unmix.folder</code> function to unmix all at the same time. When <code>AutoSpectralRcpp</code> is installed, we can take advantage by setting parallel equal to TRUE, and specifying the number of core threads to allocate for the process (this will vary based on your computers CPU specifications).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a aria-label="1"></a><span class="fu">unmix.folder</span>(</span>
+<span id="cb35-2"><a aria-label="2"></a>  <span class="at">fcs.dir =</span> FullStainedPath,</span>
+<span id="cb35-3"><a aria-label="3"></a>  <span class="at">spectra =</span> spectra,</span>
+<span id="cb35-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb35-5"><a aria-label="5"></a>  <span class="at">flow.control =</span> flow.control,</span>
+<span id="cb35-6"><a aria-label="6"></a>  <span class="at">method =</span> <span class="st">"OLS"</span>, </span>
+<span id="cb35-7"><a aria-label="7"></a>  <span class="at">parallel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb35-8"><a aria-label="8"></a>  <span class="at">threads =</span> <span class="dv">3</span>,</span>
+<span id="cb35-9"><a aria-label="9"></a>  <span class="at">output.dir=</span>OutputLocation</span>
+<span id="cb35-10"><a aria-label="10"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We can then quickly check to make sure everything looks normal to other users not using R for their analysis by opening the resulting .fcs files using commercial software or <a href="../../../course/00_Floreada/index.html">Floreada.io</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<img data-src="images/Oopsie.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Oops! Looks like somewhere in the description/keyword list <code>AutoSpectral</code> still needs to have the P–DISPLAY keyword switched from Lin to Log. However, we can manually switch the axis over and apply a transformation, at which thing everything is back to looking as expected</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<img data-src="images/10_OLSCD45.png" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/11_OLSTcells.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>A small unmixing error for CD4+ T cells which are BV510 negative, but otherwise not bad considering this is a small not-complicated panel. On to the next method!</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="wls">WLS</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p><code>AutoSpectral</code> also provides the option to unmix using Weighted Least Squares. For most cytometers, it mediates this by estimating residual variance across the detectors for each of the single colors (see <a href="https://www.biorxiv.org/content/10.1101/2025.10.27.684855v1">pre-print</a> for the technical implementation details).</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>The setup is essentially the same as with OLS, just switching out the method to instead use “WLS”</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a aria-label="1"></a><span class="fu">unmix.folder</span>(</span>
+<span id="cb36-2"><a aria-label="2"></a>  <span class="at">fcs.dir =</span> FullStainedPath,</span>
+<span id="cb36-3"><a aria-label="3"></a>  <span class="at">spectra =</span> spectra,</span>
+<span id="cb36-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb36-5"><a aria-label="5"></a>  <span class="at">flow.control =</span> flow.control,</span>
+<span id="cb36-6"><a aria-label="6"></a>  <span class="at">method =</span> <span class="st">"WLS"</span>, </span>
+<span id="cb36-7"><a aria-label="7"></a>  <span class="at">parallel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb36-8"><a aria-label="8"></a>  <span class="at">threads =</span> <span class="dv">3</span>,</span>
+<span id="cb36-9"><a aria-label="9"></a>  <span class="at">output.dir=</span>OutputLocation</span>
+<span id="cb36-10"><a aria-label="10"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/10_WLSCD45.png" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/11_WLSTcells.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In this case, the unmixing error on the CD4+ T cells is a little less noticeable than previously.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<h3 id="per-cell-af-extraction">Per-cell AF extraction</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Beyond better signature isolation from the single-color controls (by negative matching and removing variant autofluorescence in advance), <code>AutoSpectral</code> attempts to handle the issue of multiple autofluorescence by isolating autofluorescence signatures from the unstained sample, and then determining at the individual cell level what autofluorescences are likely present. See the <a href="https://www.biorxiv.org/content/10.1101/2025.10.27.684855v1">pre-print</a> for all the technical details behind the implementation. Namely, signatures are isolated, FlowSOM is utilized to identify the likely troublemakers, and then through iterative process what present individual cell determined via identifying least absolute variance for low-squared residuals.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In practice, we need to provide the file.path to our unstained .fcs file to the <code>get.af.spectra</code> function. This unstained .fcs file path should match that of the corresponding tissue type as the full-stained sample being unmixed.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a aria-label="1"></a>UnstainedPath <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, <span class="st">"unmixing_controls"</span>,</span>
+<span id="cb37-2"><a aria-label="2"></a> <span class="st">"Unstained (Cells)_scatter.fcs"</span>)</span>
+<span id="cb37-3"><a aria-label="3"></a></span>
+<span id="cb37-4"><a aria-label="4"></a>spleen.af <span class="ot">&lt;-</span> <span class="fu">get.af.spectra</span>(</span>
+<span id="cb37-5"><a aria-label="5"></a>  <span class="at">unstained.sample =</span> UnstainedPath,</span>
+<span id="cb37-6"><a aria-label="6"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb37-7"><a aria-label="7"></a>  <span class="at">spectra =</span> spectra,</span>
+<span id="cb37-8"><a aria-label="8"></a>  <span class="at">refine =</span> <span class="cn">TRUE</span> </span>
+<span id="cb37-9"><a aria-label="9"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>When this is then, we get back a few plot outputs to the autofluorescence folder. We can see all 100 unstained signature variants that ended up in the <a href="https://github.com/saeyslab/FlowSOM">FlowSOM</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/autofluorescence/Autofluorescence spectra Autofluorescence spectra.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>We can also visualize at which detectors these differences are most manifested.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/autofluorescence/Autofluorescence spectra Autofluorescence variation.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And via the heatmap get a rough idea of the overall heterogeneity gradient</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/autofluorescence/Autofluorescence spectra spectral_heatmap.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Additionally, we can see how the iteration process of identifying autofluorescences for use in the unmixing plays out as the variance around the negative decreases going from no AF extraction, to first pass and second pass.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/autofluorescence/Unstained (Cells).fcs _ Autofluorescence spectra _No_AF_Extraction.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="outputs/autofluorescence/Unstained (Cells).fcs_Autofluorescence spectra_PerCell_AF_Extraction_First_Pass.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="outputs/autofluorescence/Unstained (Cells).fcs_Autofluorescence spectra_PerCell_AF_Extraction_Second_Pass.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Additionally, we get back a .csv contianing the fluorescent signatures for each of the variant autofluorescence signatures, which can be used for after-the-fact unmixing.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>To proceed, we modify the <code>unmix.folder()</code> function by switching method to “AutoSpectral”, and providing some addition arguments.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a aria-label="1"></a><span class="fu">unmix.folder</span>(</span>
+<span id="cb38-2"><a aria-label="2"></a>  <span class="at">fcs.dir =</span> FullStainedPath,</span>
+<span id="cb38-3"><a aria-label="3"></a>  <span class="at">spectra =</span> spectra,</span>
+<span id="cb38-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb38-5"><a aria-label="5"></a>  <span class="at">flow.control =</span> flow.control,</span>
+<span id="cb38-6"><a aria-label="6"></a>  <span class="at">method =</span> <span class="st">"AutoSpectral"</span>, </span>
+<span id="cb38-7"><a aria-label="7"></a>  <span class="at">af.spectra =</span> spleen.af,</span>
+<span id="cb38-8"><a aria-label="8"></a>  <span class="at">file.suffix =</span> <span class="st">"per-cell AF extraction"</span>,</span>
+<span id="cb38-9"><a aria-label="9"></a>  <span class="at">parallel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb38-10"><a aria-label="10"></a>  <span class="at">threads =</span> <span class="dv">3</span>,</span>
+<span id="cb38-11"><a aria-label="11"></a>  <span class="at">output.dir=</span>OutputLocation</span>
+<span id="cb38-12"><a aria-label="12"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/13_AutoSpectralAFUnmixing.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>And last but not least, you can factor fluorophore signature variation as well.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>With everything successfully run, we can proceed and visualize the result on unmixing</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<img data-src="images/16_WithAFCD45.png" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/16_WithAFTcells.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<h3 id="fluorophore-optimization-and-per-cell-af">Fluorophore optimization and per-cell AF</h3>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>Finally, some of the variation in unmixing may be due to the fluorophores themselves shifting to a small degree (think of a smaller branch breaking off a larger tandem fluorophore). As long as above the cutoff (&gt;0.98 on cosine) <code>AutoSpectral</code> will attempt to estimate on a per-cell basis via a simialr mechanisms as was implemented to determine the autofluorescent variants.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a aria-label="1"></a>variants <span class="ot">&lt;-</span> <span class="fu">get.spectral.variants</span>(</span>
+<span id="cb39-2"><a aria-label="2"></a>  <span class="at">control.dir =</span> control.dir,</span>
+<span id="cb39-3"><a aria-label="3"></a>  <span class="at">control.def.file =</span> control.file,</span>
+<span id="cb39-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb39-5"><a aria-label="5"></a>  <span class="at">spectra =</span> spectra,</span>
+<span id="cb39-6"><a aria-label="6"></a>  <span class="at">af.spectra =</span> spleen.af, </span>
+<span id="cb39-7"><a aria-label="7"></a>  <span class="at">parallel =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb39-8"><a aria-label="8"></a>  <span class="at">refine =</span> <span class="cn">TRUE</span> </span>
+<span id="cb39-9"><a aria-label="9"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/14_FluorophoreVariationQuant.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>This in turn results with a compilation of signature variants for the individual fluorophores, which then gets integrated into the unmixing process as documented in the <a href="https://www.biorxiv.org/content/10.1101/2025.10.27.684855v1">pre-print</a>. For our dataset, individual fluorophores varied a bit in the extent this was an issue, as can be seen from the saved plots</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="outputs/signatureVariants/7-AAD_variants.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="outputs/signatureVariants/Spark Blue 550_variants.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="outputs/signatureVariants/BV510_variants.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="outputs/signatureVariants/BV605_variants.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>To run with per-cell AF extraction and fluorophore optimization, we still keep the method set to “AutoSpectral”, but also provide a spectra.variants argument, passing in our variants object.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fragment">
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a aria-label="1"></a><span class="fu">unmix.folder</span>(</span>
+<span id="cb40-2"><a aria-label="2"></a>  <span class="at">fcs.dir =</span> FullStainedPath,</span>
+<span id="cb40-3"><a aria-label="3"></a>  <span class="at">spectra =</span> spectra,</span>
+<span id="cb40-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb40-5"><a aria-label="5"></a>  <span class="at">flow.control =</span> flow.control,</span>
+<span id="cb40-6"><a aria-label="6"></a>  <span class="at">method =</span> <span class="st">"AutoSpectral"</span>, </span>
+<span id="cb40-7"><a aria-label="7"></a>  <span class="at">af.spectra =</span> spleen.af,</span>
+<span id="cb40-8"><a aria-label="8"></a>  <span class="at">spectra.variants =</span> variants,</span>
+<span id="cb40-9"><a aria-label="9"></a>  <span class="at">file.suffix =</span> <span class="st">"per-cell AF and fluorophore optimization"</span>,</span>
+<span id="cb40-10"><a aria-label="10"></a>  <span class="at">parallel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb40-11"><a aria-label="11"></a>  <span class="at">speed=</span><span class="st">"slow"</span>,</span>
+<span id="cb40-12"><a aria-label="12"></a>  <span class="at">threads =</span> <span class="dv">3</span>,</span>
+<span id="cb40-13"><a aria-label="13"></a>  <span class="at">output.dir=</span>OutputLocation</span>
+<span id="cb40-14"><a aria-label="14"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/15_FullSuiteOutput.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>With the unmixing complete, we can now visualize the output .fcs files to contrast against the other unmixing methods.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/17_WithBothCD45.png" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/17_WithBothTcells.png" class="r-stretch"></section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="take-away" class="title-slide slide level1 center">
+<h1>Take Away</h1>
+<div class="fragment">
+<div title=".">
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>.</strong></p>
+</div>
+<div class="callout-content">
+<p>In this walk-through, we show-cased a simple implementation of the <code>AutoSpectral</code> workflow. Unlike many of the other R packages we have covered during the course, <code>AutoSpectral</code> is in no shortage of documentation, so I highly recommend checking out the additional resources links under the Additional Resources section.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/TakeAway.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/TakeAway2.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+
+<img data-src="images/TakeAway3.jpg" class="r-stretch"></section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="additional-resources" class="title-slide slide level1 center">
+<h1>Additional Resources</h1>
+<p><a href="https://github.com/DrCytometer/AutoSpectral">AutoSpectral GitHub repository</a> GitHub repository for AutoSpectral. Oliver Burton is active when it comes to both documentation and addressing any bugs encountered via the repository Issues page.</p>
+</section>
+<section class="slide level2">
+
+<p><a href="https://drcytometer.github.io/AutoSpectral/">Autospectral Vignettes</a> The pkdgown website with a total of 17 vignette articles covering the various finer details of how to use AutoSpectral.</p>
+</section>
+<section class="slide level2">
+
+<p><a href="https://www.biorxiv.org/content/10.1101/2025.10.27.684855v1">AutoSpectral Pre-Print</a> The pre-print article describing the underlying methodology and all the finer details I am not qualified to explain.</p>
+</section>
+<section class="slide level2">
+
+<p><a href="https://www.colibri-cytometry.com/search?q=AutoSpectral">Colibri Cytometry</a> Additional blogpost explainers that Oliver has written about AutoSpectral, some overlap with the vignettes, some completely new.</p>
+</section>
+<section class="slide level2">
+
+<div class="fragment">
+
+</div>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img data-src="https://www.gnu.org/graphics/agplv3-with-text-162x68.png" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img data-src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" alt="CC BY-SA 4.0"></a></p>
+</div>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
