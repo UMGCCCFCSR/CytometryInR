@@ -1,0 +1,358 @@
+---
+title: "Luciernaga Integration - Blue"
+author: "David Rach"
+date: 08-28-2026
+format:
+  html:
+    toc: true
+    toc-depth: 5
+execute:
+  echo: true
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
+
+For screen-shot slides, click [here](/course/SDY3080/LuciernagaIntegration_Blue_slides.qmd)
+
+<br>
+
+---
+
+# Background
+
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. This walk-through if for the "Blue" laser.
+
+- To return to the main walk-through (including UV fluorophores), click [here](/course/SDY3080/LuciernagaIntegration.qmd)
+- For the violet fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd)
+- For the blue fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Blue.qmd)
+- For the yellow-green fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_YellowGreen.qmd)
+- For the red fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Red.qmd)
+- For the unstained samples walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Unstained.qmd)
+
+# Walk-through
+
+## Set Up
+
+Attach your R packages to the local environment via the `library()` call. 
+
+```{r}
+library(dplyr)
+library(purrr)
+library(flowWorkspace)
+library(Luciernaga)
+library(ggplot2)
+```
+
+Designate your file paths to the storage and output folder locations. 
+
+```{r}
+#StorageLocation <- file.path("course", "SDY3080", "data", "SDY3080")
+StorageLocation <- file.path("data", "SDY3080")
+
+#OutputLocation <- file.path("course", "SDY3080", "outputs")
+OutputLocation <- file.path("outputs")
+```
+
+Bring in the pre-gated GatingSet object (which was carried out as part of the [Signature Matrices](/course/SDY3080/SignatureMatrices.qmd) walkthrough).
+
+```{r}
+CellSCPath <- file.path(OutputLocation, "CellsSC_GS_Amplified.gs")
+CellsSC_GatingSet <- load_gs(CellSCPath)
+```
+
+And bring in the template needed to run the `LuciernagaIntegration()` wrapper function (which we generated [here](/course/SDY3080/LuciernagaIntegration.qmd#assembling-template)). 
+
+```{r}
+#| echo: FALSE
+SaveThisTemplateHere <- file.path(OutputLocation, "KeptCells.csv")
+KeptCells <- read.csv(SaveThisTemplateHere, check.names=FALSE)
+```
+
+And with that, we are set! 
+
+### Blue
+
+![](images/Blue_Laser.png)
+
+All fluorophores for the first two lasers examined, three more to go. Next up we have the Blue laser. While still subject to a little bit of autofluorescence in the early wavelengths around "B3-A", but after that things become simpler... or at least, they would've except for whoever decided to add PerCP-Cy5.5 to the panel... oh wait, that was me, well, we all learn from our mistakes eventually.
+
+We can go ahead and get started and see if we can identify anything concerning in terms of degrading tandems or bad antigen/fluorophore combinations resulting in autofluorescence residuals. 
+
+#### FITC
+
+First up, we have our [FITC](https://www.biolegend.com/en-us/products/alexa-fluor-488-anti-human-cd3-antibody-2726) fluorophore, conjugated with [CD3](https://en.wikipedia.org/wiki/CD3_(immunology))
+
+```{r}
+FITC <- LuciernagaIntegration(template=KeptCells[17,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+```
+
+As increasingly routine at this point, we can check the "LinearSlices_Plot" output, to see what effect would have been on the signature if we had split the region we designated within our "positive" gate into 10% bins across. 
+
+```{r}
+Plot <- FITC$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+No obvious differences, lets next check the `LuciernagaQC()` output to see what the grouped individual cell normalized signatures stored under "LuciernagaQC_Signatures" look like. 
+
+```{r}
+Plot <- FITC$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+And we get back a single-signature variant, which giventhat FITC conjugated to an anti-CD3 antibody is going to be bright is kind of expected. Lets compare our retrieved signature vs. the reference using `QC_SimilarFluorophores()`  before moving on to the next fluorophore. 
+ 
+```{r}
+Data <- FITC$AveragedSignature_Data 
+```
+
+```{r}
+#| eval: FALSE
+QC_WhatsThis(x="Average", columnname="Cluster",
+ data=Data, NumberHits=22, NumberDetectors=64, returnPlots=FALSE)
+```
+
+:::{.callout-tip title="Pass"}
+Only one signature is present for our FITC cell single-color unmixing control, so we can safely move on to the next fluorophore without worrying if we need to adjust the gate further. 
+:::
+
+#### Spark Blue 550
+
+Next on the Blue laser docket, we have [Spark Blue 550](https://www.biolegend.com/en-us/products/spark-blue-550-anti-human-cd3-antibody-18495), also conjugated with [CD3](https://en.wikipedia.org/wiki/CD3_(immunology)). Since this antigen is high-density, it should pair well with the less-bright Spark Blue 550. We will see if it is sufficiently bright to render any autofluorescence found on the "B3-A" detector neglible to the overall signature. 
+
+```{r}
+SparkBlue550 <- LuciernagaIntegration(template=KeptCells[18,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+```
+
+Accessing the "LinearSlices_Plot" output, we can see what the effect would have been on the signature if we had split the region inside our "positive" gate into 10% bins across. 
+
+```{r}
+Plot <- SparkBlue550$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+No major difference in signature across the 10% bins, outside a bit of a smidge around "V7-A". Lets next check the `LuciernagaQC()` grouped individual cell normalized signatures output stored under "LuciernagaQC_Signatures". 
+
+```{r}
+Plot <- SparkBlue550$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+Interesting, when grouping based on individual cell signatures, we can find a few that must not have been as brightly stained, with the residual autofluorescence ending up contributing more to the overall signature at "V7-A". Lets check our `QC_Amalgamate()` output to see where the median signature ends up at. 
+
+```{r}
+Plot <- SparkBlue550$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+The average seems to be shifted upwards, interesting. How common are the various signatures across the cells in the gated region? 
+
+```{r}
+Plot <- SparkBlue550$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+Most of the signatures seem to have secondary peaks at "V7-A" with either 30-40% the height of the primary "B3-A" detector. Lets contrast the median "Average" signature to the signatures with the dimmest and brigtest "V7-A" detector contributions and see how this differs vs. the reference. 
+
+```{r}
+Data <- SparkBlue550$AveragedSignature_Data |>
+  filter(Cluster %in% c("B3_10-V7_02", "Average", "B3_10-V7_05"))
+```
+
+```{r}
+Plot <- QC_WhatsThis(x="B3_10-V7_02", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)
+Plot[[1]]
+plotly::ggplotly(Plot[[2]]) #0.98
+```
+
+```{r}
+Plot <- QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)
+Plot[[1]]
+plotly::ggplotly(Plot[[2]]) #1.00
+```
+
+```{r}
+Plot <- QC_WhatsThis(x="B3_10-V7_05", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)
+Plot[[1]]
+plotly::ggplotly(Plot[[2]]) #0.98
+```
+
+Interesting, so the variants with both higher and lower "V7" are those that are more distinct compared to the reference. Not by much, but if we visualized the difference in the cosine values, we would see the following
+
+```{r}
+#| code-fold: TRUE
+cos_vals <- c(1, 0.98)
+theta <- acos(cos_vals)
+
+df <- data.frame(
+  label = paste0("cos = ", cos_vals),
+  angle_deg = round(theta * 180 / pi, 1),
+  x = sin(theta),
+  y = cos(theta)
+)
+
+ggplot(df) +
+  geom_segment(aes(x = 0, y = 0, xend = x, yend = y, color = label),
+               arrow = arrow(length = unit(0.25, "cm")),
+               linewidth = 1) +
+  coord_fixed(xlim = c(-0.1, 1), ylim = c(-0.1, 1.1)) +
+  geom_hline(yintercept = 0, color = "grey80") +
+  geom_vline(xintercept = 0, color = "grey80") +
+  labs(x = NULL, y = NULL, color = "Vector",
+       title = NULL) +
+  theme_bw()
+```
+
+
+:::{.callout-tip title="Pass"}
+Spark Blue 550 appears to be in good shape for the majority of the cells that are represented, matching the reference control. The variants that have a cosine of 0.98 are only 7% of overall cells, so if we really wanted to reduce their contribution, we could try shifting the gate slightly to the right (given the antigen is CD3, it is not like we don't have enough cells to be able to do this.)
+:::
+
+#### PerCP-Cy5.5
+
+Alright, worst fluorophore, [PerCP-Cy5.5](https://www.biolegend.com/en-us/products/percp-cyanine5-5-anti-human-cd26-antibody-10205), you are up :/. For this panel, it is conjugated to [CD26](https://en.wikipedia.org/wiki/Dipeptidyl_peptidase-4), which should be present on various T cell subsets. So it has the potential to be sufficiently bright. However, this will depend on the overall brightness of the PerCP-Cy5.5, which will depend on how the tandem inside the individual fluorophore vial is doing.
+
+```{r}
+WorstFluorophore <- LuciernagaIntegration(template=KeptCells[19,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+```
+
+Lets start by glancing at our "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region in our "positive" gate into 10% bins across. 
+
+```{r}
+Plot <- WorstFluorophore$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+We can see clear distinct step-ladders for our "V7-A", "UV7-A" and "B3-A" peaks. From this view, the 5 peaks of PerCP-Cy5.5 appear to be consistent, although some are showing signs of some variation, similar to what we saw for the APC-Fire 810 fluorophore during [Week 12](/course/12_SpectralSignatures/index.qmd#apc-fire-810). 
+
+Lets see what is hiding behind the curtain in this case, lets examine the `LuciernagaQC()` output to see what happens when we group individiual cell normalized signatures based on their shared peaks of relative similar heights. 
+
+```{r}
+Plot <- WorstFluorophore$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+We have another fuzzy [caterpillar](https://en.wikipedia.org/wiki/Pyrrharctia_isabella), albeit less fuzzy than [BUV737](/course/SDY3080/LuciernagaIntegration.qmd#buv737)! We have presence of autofluorescence residual step-ladders for most of the signatures, but also examining the area around 4/5 PerCP-Cy5.5 peaks, we can see they have their own version of step-ladders. 
+
+It is likely we have some tandem degradation, alongside maybe not sufficiently bright antibody-fluorophore combination that is leaving the stained cells relatively dim overall. 
+
+Checking the `QC_Amalgamate()` output, lets see where the median signature ends up at when we include all the cells within the positive gated region. 
+
+```{r}
+Plot <- WorstFluorophore$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+Alright, moment of truth, how are the different signature variants represented across the gated cells?
+
+```{r}
+Plot <- WorstFluorophore$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+So 3 signatures with more than 10% representation, all relatively similar to each other. Lets go ahead and grab these, as well as the "Average", and compare them to each other and the reference signature using `QC_WhatsThis()`.
+
+```{r}
+Data <- WorstFluorophore$AveragedSignature_Data |>
+   filter(Cluster %in% c("B9_10-YG6_07-V13_06","Average", "B9_10-YG6_06-V13_06", "B9_10-YG6_06-V13_05"))
+```
+
+```{r}
+QC_WhatsThis(x="B9_10-YG6_07-V13_06", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #0.99
+```
+
+```{r}
+QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #0.99
+```
+
+```{r}
+QC_WhatsThis(x="B9_10-YG6_06-V13_06", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #0.99
+```
+
+```{r}
+QC_WhatsThis(x="B9_10-YG6_06-V13_05", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE) #0.99
+```
+
+So overall, these more abundant signature variants are close to their reference control. But what about the others 10-20%? 
+
+```{r}
+Data <- WorstFluorophore$AveragedSignature_Data |>
+   filter(Cluster %in% c("B9_10-YG6_07-V13_07","B9_10-YG6_05-V13_05", "B9_10-YG6_05-V13_07", "B9_10-YG6_05-V13_06"))
+```
+
+```{r}
+QC_WhatsThis(x="B9_10-YG6_07-V13_07", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE) #0.96
+```
+
+```{r}
+QC_WhatsThis(x="B9_10-YG6_05-V13_07", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE) #0.96
+```
+
+```{r}
+QC_WhatsThis(x="B9_10-YG6_05-V13_06", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE) #0.97
+```
+
+If we visualized the difference in these angles, we would see the following
+
+```{r}
+#| code-fold: TRUE
+cos_vals <- c(1, 0.99, 0.97, 0.96)
+theta <- acos(cos_vals)
+
+df <- data.frame(
+  label = paste0("cos = ", cos_vals),
+  angle_deg = round(theta * 180 / pi, 1),
+  x = sin(theta),
+  y = cos(theta)
+)
+
+ggplot(df) +
+  geom_segment(aes(x = 0, y = 0, xend = x, yend = y, color = label),
+               arrow = arrow(length = unit(0.25, "cm")),
+               linewidth = 1) +
+  coord_fixed(xlim = c(-0.1, 1), ylim = c(-0.1, 1.1)) +
+  geom_hline(yintercept = 0, color = "grey80") +
+  geom_vline(xintercept = 0, color = "grey80") +
+  labs(x = NULL, y = NULL, color = "Vector",
+       title = NULL) +
+  theme_bw()
+```
+ 
+
+:::{.callout-caution title="Caution"}
+Overall, the cells within our gated region are mostly representative of the reference "PerCP-Cy5.5" signature, not exact, but close enough we can't rule out just manufacturer difference as far as the Cy5.5 conjugation. 
+
+We have somewhere between 10-20% in rougher shape with additional autofluorescence leftovers in the overall signature, but if we tighten up the gate, and shift it to right we can reduce these, and likely have this cell single-color control work well enough for this particular experiment. Whether this is the case for the other acquisition days remains a question for another day.  
+:::
+
+# Redirects
+
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser.  This walk-through was for the Blue laser fluorophores. 
+
+- To return to the main walk-through (including UV fluorophores), click [here](/course/SDY3080/LuciernagaIntegration.qmd)
+- For the violet fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd)
+- For the blue fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Blue.qmd)
+- For the yellow-green fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_YellowGreen.qmd)
+- For the red fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Red.qmd)
+- For the unstained samples walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Unstained.qmd)
+
+![](images/TakeAway4.jpg)
+
+# Additional Resources
+
+[Luciernaga Vignette - Reference Library](https://davidrach.github.io/Luciernaga/articles/QualityControl.html#comparing-normalized-signatures)
+
+[Luciernaga Vignette - Fluorescent Signatures](https://davidrach.github.io/Luciernaga/articles/FluorescenceSignatures.html)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::

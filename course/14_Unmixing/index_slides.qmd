@@ -20,9 +20,7 @@ execute:
 [![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 :::
 
-For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
-
-For screen-shot slides, click [here](/course/03_InsideFCSFile/slides.qmd)
+For the YouTube livestream recordings, see [here](https://www.youtube.com/live/5a6c9W5eGZU?si=t86v3nqVbtFtKG1c&t=97)
 
 <br>
 
@@ -512,7 +510,7 @@ OldFashionedUnmix <- function(x){
      transformation=FALSE, truncate_max_range = FALSE)
     TheRawMatrix <- flowCore::exprs(TheRawFCS)
     TheRawDataFrame <- data.frame(TheRawMatrix, check.names=FALSE)
-    return(TheRawMatrix)
+    return(TheRawDataFrame)
 }
 ```
 
@@ -537,7 +535,7 @@ head(Exprs[[1]], 3) # [[1]] breaking out of the list object
 
 ::: {.fragment}
 ::: {.callout-tip title="."}
-With this done, we will need to isolate the detector columns (snce it will be their values we will need for unmixing) from the other columns ("Time", "SSC", "FSC" and "SSC-B"). We will still want to retain these columns, as following unmixing we will need to add them back to our unmixed .fcs file so we can gate based off scatter. 
+With this done, we will need to isolate the detector columns (since it will be their values we will need for unmixing) from the other columns ("Time", "SSC", "FSC" and "SSC-B"). We will still want to retain these columns, as following unmixing we will need to add them back to our unmixed .fcs file so we can gate based off scatter. 
 :::
 :::
 
@@ -3306,6 +3304,7 @@ Alright, moment of truth. Let's open it in either [Floreada.io](/course/00_Flore
 
 ---
 
+
 ![](images/03_TcellSubsets.png)
 
 ---
@@ -3358,7 +3357,7 @@ As you saw from the process, the main elements involved are actually processing 
 
 ::: {.fragment}
 ::: {.callout-tip title="."}
-Due to a conference break, we will resume the primary material in a couple weeks looking at algorithms that can help us screen our unmixed .fcs files for instrumental issues arising from fluidic and laser instability. We will also explore some additional comparison metrics in the form of spreading matrices and staining index in the bonus content over the next couple weeks. 
+Next time in the primary course material, we will look at how to evaluate our unmixing outputs, with the following week set to look at various algorithms that can help us screen our unmixed .fcs files for instrumental issues arising from fluidic and laser instability. We will also explore some additional comparison metrics in the form of spreading matrices and staining index in the bonus content over the next couple weeks. 
 :::
 :::
 
@@ -3412,6 +3411,10 @@ One of the first packages that I encountered that implemented unmixing in R was 
 
 For these 2 packages ([flowUnmix](https://github.com/hally166/flowUnmix/tree/main/R), and [Autospectral](https://github.com/DrCytometer/AutoSpectral/tree/master/R)), dive into their GitHub repositories and open their R folder. Check the .R files for any with an "unmixing-something-or-order" style name and examine it. Try reading your way through the code until you encounter the function that actually carries out the unmixing. Look up that functions original package, and check the help file. Take a screenshot, and report back. Feel free to repeat for any unmixing methods of interest (OLS, NNLS, WLS, etc.) 
 :::
+
+---
+
+![](images/TakeAway1.jpg)
 
 ---
 

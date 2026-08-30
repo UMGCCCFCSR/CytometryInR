@@ -13,7 +13,9 @@ toc-depth: 5
 [![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 :::
 
-For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
+For the YouTube livestream recordings, see [here](https://www.youtube.com/live/5a6c9W5eGZU?si=t86v3nqVbtFtKG1c&t=97)
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/5a6c9W5eGZU?si=t86v3nqVbtFtKG1c&amp;start=97" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 For screen-shot slides, click [here](/course/14_Unmixing/index_slides.qmd)
 
@@ -237,7 +239,7 @@ OldFashionedUnmix <- function(x){
      transformation=FALSE, truncate_max_range = FALSE)
     TheRawMatrix <- flowCore::exprs(TheRawFCS)
     TheRawDataFrame <- data.frame(TheRawMatrix, check.names=FALSE)
-    return(TheRawMatrix)
+    return(TheRawDataFrame)
 }
 ```
 
@@ -250,7 +252,7 @@ Exprs <- map(.x=fcs_files[1], .f=OldFashionedUnmix)
 head(Exprs[[1]], 3) # [[1]] breaking out of the list object
 ```
 
-With this done, we will need to isolate the detector columns (snce it will be their values we will need for unmixing) from the other columns ("Time", "SSC", "FSC" and "SSC-B"). We will still want to retain these columns, as following unmixing we will need to add them back to our unmixed .fcs file so we can gate based off scatter. 
+With this done, we will need to isolate the detector columns (since it will be their values we will need for unmixing) from the other columns ("Time", "SSC", "FSC" and "SSC-B"). We will still want to retain these columns, as following unmixing we will need to add them back to our unmixed .fcs file so we can gate based off scatter. 
 
  Rather than directly specifying which columns, we can use the `dplyr` packages `select()` and `matches()` functions in combination to grab any column whose column name matches a particular character string (or strings when separated by "|"). So for the case above, we could within `matches()` place "FSC|SSC|Time" to enable these columns to be grabbed. 
 
@@ -2368,7 +2370,7 @@ In this walk-through, we have culminated some of the elements we have been build
 
 As you saw from the process, the main elements involved are actually processing the data needed to unmix, and after unmix, formatting to prepare the unmixed .fcs file with the new columns. The actual unmixing function at the heart is rather swapable. Likewise, it is possible to swap this step out entirely for faster implementations in lower-level programming languages like Fortran, C++ and Rust which is what several R packages do behind the scenes. 
 
-Due to a conference break, we will resume the primary material in a couple weeks looking at algorithms that can help us screen our unmixed .fcs files for instrumental issues arising from fluidic and laser instability. We will also explore some additional comparison metrics in the form of spreading matrices and staining index in the bonus content over the next couple weeks. 
+Next time in the primary course material, we will look at how to evaluate our unmixing outputs, with the following week set to look at various algorithms that can help us screen our unmixed .fcs files for instrumental issues arising from fluidic and laser instability. We will also explore some additional comparison metrics in the form of spreading matrices and staining index in the bonus content over the next couple weeks. 
 
 Until then, cheers! We are now half way through the original conception of our course. 
 

@@ -6,8 +6,8 @@
 <script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="../../../site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.38">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
 
   <meta name="author" content="David Rach">
   <meta name="dcterms.date" content="2026-05-24">
@@ -21,10 +21,13 @@
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
     */
-    code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
     ul.task-list li input[type="checkbox"] {
@@ -211,7 +214,7 @@
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-David Rach 
+David Rach
 </div>
 </div>
 </div>
@@ -291,11 +294,11 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"DrCytometer/AutoSpectral"</span>)</span>
-<span id="cb1-2"><a></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"DrCytometer/AutoSpectralRcpp"</span>)</span>
-<span id="cb1-3"><a></a></span>
-<span id="cb1-4"><a></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"DrCytometer/AutoSpectral"</span>)</span>
-<span id="cb1-5"><a></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"DrCytometer/AutoSpectralRcpp"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a aria-label="1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"DrCytometer/AutoSpectral"</span>)</span>
+<span id="cb1-2"><a aria-label="2"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"DrCytometer/AutoSpectralRcpp"</span>)</span>
+<span id="cb1-3"><a aria-label="3"></a></span>
+<span id="cb1-4"><a aria-label="4"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"DrCytometer/AutoSpectral"</span>)</span>
+<span id="cb1-5"><a aria-label="5"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"DrCytometer/AutoSpectralRcpp"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -357,9 +360,9 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a></a><span class="co"># bash/shell code</span></span>
-<span id="cb2-2"><a></a>mkdir .p <span class="sc">~</span><span class="er">/</span>.R</span>
-<span id="cb2-3"><a></a>nano <span class="sc">~</span><span class="er">/</span>.R<span class="sc">/</span>Makevars</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a aria-label="1"></a><span class="co"># bash/shell code</span></span>
+<span id="cb2-2"><a aria-label="2"></a>mkdir .p <span class="sc">~</span><span class="er">/</span>.R</span>
+<span id="cb2-3"><a aria-label="3"></a>nano <span class="sc">~</span><span class="er">/</span>.R<span class="sc">/</span>Makevars</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -384,10 +387,10 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a></a><span class="co"># bash/shell code</span></span>
-<span id="cb3-2"><a></a>CXX_STD <span class="ot">=</span> CXX17</span>
-<span id="cb3-3"><a></a>PKG_CXXFLAGS <span class="ot">=</span> <span class="sc">-</span>fopenmp</span>
-<span id="cb3-4"><a></a>PKG_LIBS <span class="ot">=</span> <span class="sc">-</span>fopenmp <span class="sc">-</span>llapack <span class="sc">-</span>lblas</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a aria-label="1"></a><span class="co"># bash/shell code</span></span>
+<span id="cb3-2"><a aria-label="2"></a>CXX_STD <span class="ot">=</span> CXX17</span>
+<span id="cb3-3"><a aria-label="3"></a>PKG_CXXFLAGS <span class="ot">=</span> <span class="sc">-</span>fopenmp</span>
+<span id="cb3-4"><a aria-label="4"></a>PKG_LIBS <span class="ot">=</span> <span class="sc">-</span>fopenmp <span class="sc">-</span>llapack <span class="sc">-</span>lblas</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -472,9 +475,9 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a></a><span class="fu">library</span>(AutoSpectral)</span>
-<span id="cb4-2"><a></a><span class="fu">library</span>(AutoSpectralRcpp)</span>
-<span id="cb4-3"><a></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a aria-label="1"></a><span class="fu">library</span>(AutoSpectral)</span>
+<span id="cb4-2"><a aria-label="2"></a><span class="fu">library</span>(AutoSpectralRcpp)</span>
+<span id="cb4-3"><a aria-label="3"></a><span class="fu">library</span>(dplyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -499,11 +502,11 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a></a><span class="co"># StorageLocation &lt;- file.path("course", "community", "AutoSpectral", "data") </span></span>
-<span id="cb5-2"><a></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co"># For Quarto Render</span></span>
-<span id="cb5-3"><a></a></span>
-<span id="cb5-4"><a></a><span class="co"># OutputLocation &lt;- file.path("course", "community", "AutoSpectral", "outputs")</span></span>
-<span id="cb5-5"><a></a>OutputLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"outputs"</span>) <span class="co"># For Quarto Render</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a aria-label="1"></a><span class="co"># StorageLocation &lt;- file.path("course", "community", "AutoSpectral", "data") </span></span>
+<span id="cb5-2"><a aria-label="2"></a>StorageLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>) <span class="co"># For Quarto Render</span></span>
+<span id="cb5-3"><a aria-label="3"></a></span>
+<span id="cb5-4"><a aria-label="4"></a><span class="co"># OutputLocation &lt;- file.path("course", "community", "AutoSpectral", "outputs")</span></span>
+<span id="cb5-5"><a aria-label="5"></a>OutputLocation <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"outputs"</span>) <span class="co"># For Quarto Render</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -565,10 +568,10 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a></a>asp <span class="ot">&lt;-</span> <span class="fu">get.autospectral.param</span>(</span>
-<span id="cb6-2"><a></a>  <span class="at">cytometer =</span> <span class="st">"aurora"</span>,</span>
-<span id="cb6-3"><a></a>  <span class="at">figures =</span> <span class="cn">TRUE</span> </span>
-<span id="cb6-4"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a aria-label="1"></a>asp <span class="ot">&lt;-</span> <span class="fu">get.autospectral.param</span>(</span>
+<span id="cb6-2"><a aria-label="2"></a>  <span class="at">cytometer =</span> <span class="st">"aurora"</span>,</span>
+<span id="cb6-3"><a aria-label="3"></a>  <span class="at">figures =</span> <span class="cn">TRUE</span> </span>
+<span id="cb6-4"><a aria-label="4"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -618,7 +621,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a></a>control.dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, <span class="st">"unmixing_controls"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a aria-label="1"></a>control.dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, <span class="st">"unmixing_controls"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -643,7 +646,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a></a><span class="fu">create.control.file</span>(control.dir, asp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a aria-label="1"></a><span class="fu">create.control.file</span>(control.dir, asp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -750,8 +753,8 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a></a>CSVFile <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">pattern=</span><span class="st">"fcs_control_file.csv"</span>,</span>
-<span id="cb9-2"><a></a>  <span class="at">full.names=</span><span class="cn">TRUE</span>) <span class="co"># For You</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a aria-label="1"></a>CSVFile <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">pattern=</span><span class="st">"fcs_control_file.csv"</span>,</span>
+<span id="cb9-2"><a aria-label="2"></a>  <span class="at">full.names=</span><span class="cn">TRUE</span>) <span class="co"># For You</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -765,7 +768,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a></a>ControlFile</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a aria-label="1"></a>ControlFile</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                        filename     fluorophore    marker
 1            PD_AD_CD8 BV510 (Cells)_scatter.fcs           BV510       CD8
@@ -867,7 +870,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a></a>ControlFile<span class="sc">$</span>universal.negative <span class="ot">&lt;-</span> <span class="st">"Unstained (Cells)_scatter.fcs"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a aria-label="1"></a>ControlFile<span class="sc">$</span>universal.negative <span class="ot">&lt;-</span> <span class="st">"Unstained (Cells)_scatter.fcs"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -899,11 +902,11 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a></a>ControlFile <span class="ot">&lt;-</span> ControlFile <span class="sc">|&gt;</span> </span>
-<span id="cb13-2"><a></a>  <span class="fu">mutate</span>(<span class="at">channel =</span> <span class="fu">case_when</span>(</span>
-<span id="cb13-3"><a></a>    fluorophore <span class="sc">==</span> <span class="st">"7-AAD"</span> <span class="sc">~</span> <span class="st">"YG4-A"</span>,</span>
-<span id="cb13-4"><a></a>    <span class="cn">TRUE</span> <span class="sc">~</span> channel</span>
-<span id="cb13-5"><a></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a aria-label="1"></a>ControlFile <span class="ot">&lt;-</span> ControlFile <span class="sc">|&gt;</span> </span>
+<span id="cb13-2"><a aria-label="2"></a>  <span class="fu">mutate</span>(<span class="at">channel =</span> <span class="fu">case_when</span>(</span>
+<span id="cb13-3"><a aria-label="3"></a>    fluorophore <span class="sc">==</span> <span class="st">"7-AAD"</span> <span class="sc">~</span> <span class="st">"YG4-A"</span>,</span>
+<span id="cb13-4"><a aria-label="4"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> channel</span>
+<span id="cb13-5"><a aria-label="5"></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -911,7 +914,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a></a>ControlFile</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a aria-label="1"></a>ControlFile</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                        filename     fluorophore    marker
 1            PD_AD_CD8 BV510 (Cells)_scatter.fcs           BV510       CD8
@@ -959,12 +962,12 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a></a>ControlFile <span class="ot">&lt;-</span> ControlFile <span class="sc">|&gt;</span> </span>
-<span id="cb16-2"><a></a>  <span class="fu">mutate</span>(<span class="at">gate.define =</span> <span class="fu">case_when</span>(</span>
-<span id="cb16-3"><a></a>    marker <span class="sc">==</span> <span class="st">"CD45"</span> <span class="sc">~</span> <span class="cn">FALSE</span>,</span>
-<span id="cb16-4"><a></a>    fluorophore <span class="sc">==</span> <span class="st">"AF"</span> <span class="sc">~</span> <span class="cn">FALSE</span>,</span>
-<span id="cb16-5"><a></a>    <span class="cn">TRUE</span> <span class="sc">~</span> gate.define</span>
-<span id="cb16-6"><a></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a aria-label="1"></a>ControlFile <span class="ot">&lt;-</span> ControlFile <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a aria-label="2"></a>  <span class="fu">mutate</span>(<span class="at">gate.define =</span> <span class="fu">case_when</span>(</span>
+<span id="cb16-3"><a aria-label="3"></a>    marker <span class="sc">==</span> <span class="st">"CD45"</span> <span class="sc">~</span> <span class="cn">FALSE</span>,</span>
+<span id="cb16-4"><a aria-label="4"></a>    fluorophore <span class="sc">==</span> <span class="st">"AF"</span> <span class="sc">~</span> <span class="cn">FALSE</span>,</span>
+<span id="cb16-5"><a aria-label="5"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> gate.define</span>
+<span id="cb16-6"><a aria-label="6"></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -972,7 +975,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a></a>ControlFile</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a aria-label="1"></a>ControlFile</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                        filename     fluorophore    marker
 1            PD_AD_CD8 BV510 (Cells)_scatter.fcs           BV510       CD8
@@ -1020,13 +1023,13 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a></a>ControlFile<span class="sc">$</span>gate.name <span class="ot">&lt;-</span> <span class="st">"lymphocytes"</span></span>
-<span id="cb19-2"><a></a></span>
-<span id="cb19-3"><a></a>ControlFile <span class="ot">&lt;-</span> ControlFile <span class="sc">|&gt;</span> </span>
-<span id="cb19-4"><a></a>  <span class="fu">mutate</span>(<span class="at">gate.name =</span> <span class="fu">case_when</span>(</span>
-<span id="cb19-5"><a></a>    fluorophore <span class="sc">==</span> <span class="st">"7-AAD"</span> <span class="sc">~</span> <span class="st">"dead"</span>,</span>
-<span id="cb19-6"><a></a>    <span class="cn">TRUE</span> <span class="sc">~</span> gate.name</span>
-<span id="cb19-7"><a></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a aria-label="1"></a>ControlFile<span class="sc">$</span>gate.name <span class="ot">&lt;-</span> <span class="st">"lymphocytes"</span></span>
+<span id="cb19-2"><a aria-label="2"></a></span>
+<span id="cb19-3"><a aria-label="3"></a>ControlFile <span class="ot">&lt;-</span> ControlFile <span class="sc">|&gt;</span> </span>
+<span id="cb19-4"><a aria-label="4"></a>  <span class="fu">mutate</span>(<span class="at">gate.name =</span> <span class="fu">case_when</span>(</span>
+<span id="cb19-5"><a aria-label="5"></a>    fluorophore <span class="sc">==</span> <span class="st">"7-AAD"</span> <span class="sc">~</span> <span class="st">"dead"</span>,</span>
+<span id="cb19-6"><a aria-label="6"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> gate.name</span>
+<span id="cb19-7"><a aria-label="7"></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1034,7 +1037,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a></a>ControlFile</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a aria-label="1"></a>ControlFile</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                                        filename     fluorophore    marker
 1            PD_AD_CD8 BV510 (Cells)_scatter.fcs           BV510       CD8
@@ -1083,11 +1086,11 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a></a>UpdatedName <span class="ot">&lt;-</span> <span class="st">"fcs_control_file_updated.csv"</span></span>
-<span id="cb22-2"><a></a></span>
-<span id="cb22-3"><a></a></span>
-<span id="cb22-4"><a></a>StoreHere <span class="ot">&lt;-</span> UpdatedName <span class="co"># For You</span></span>
-<span id="cb22-5"><a></a><span class="fu">write.csv</span>(ControlFile, StoreHere, <span class="at">row.names=</span><span class="cn">FALSE</span>) <span class="co"># For You</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a aria-label="1"></a>UpdatedName <span class="ot">&lt;-</span> <span class="st">"fcs_control_file_updated.csv"</span></span>
+<span id="cb22-2"><a aria-label="2"></a></span>
+<span id="cb22-3"><a aria-label="3"></a></span>
+<span id="cb22-4"><a aria-label="4"></a>StoreHere <span class="ot">&lt;-</span> UpdatedName <span class="co"># For You</span></span>
+<span id="cb22-5"><a aria-label="5"></a><span class="fu">write.csv</span>(ControlFile, StoreHere, <span class="at">row.names=</span><span class="cn">FALSE</span>) <span class="co"># For You</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1119,9 +1122,9 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a></a>control.file <span class="ot">&lt;-</span> StoreHere</span>
-<span id="cb23-2"><a></a></span>
-<span id="cb23-3"><a></a><span class="fu">check.control.file</span>(control.dir, <span class="at">control.def.file=</span>control.file, asp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a aria-label="1"></a>control.file <span class="ot">&lt;-</span> StoreHere</span>
+<span id="cb23-2"><a aria-label="2"></a></span>
+<span id="cb23-3"><a aria-label="3"></a><span class="fu">check.control.file</span>(control.dir, <span class="at">control.def.file=</span>control.file, asp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1187,14 +1190,14 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a></a>gate.lymphocyte <span class="ot">&lt;-</span> <span class="fu">define.gate.landmarks</span>(</span>
-<span id="cb24-2"><a></a>  <span class="at">control.file =</span> control.file,</span>
-<span id="cb24-3"><a></a>  <span class="at">control.dir =</span> control.dir,</span>
-<span id="cb24-4"><a></a>  <span class="at">asp =</span> asp,</span>
-<span id="cb24-5"><a></a>  <span class="at">n.cells =</span> <span class="dv">2000</span>,</span>
-<span id="cb24-6"><a></a>  <span class="at">percentile =</span> <span class="dv">70</span>,</span>
-<span id="cb24-7"><a></a>  <span class="at">gate.name =</span> <span class="st">"lymphocytes"</span></span>
-<span id="cb24-8"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a aria-label="1"></a>gate.lymphocyte <span class="ot">&lt;-</span> <span class="fu">define.gate.landmarks</span>(</span>
+<span id="cb24-2"><a aria-label="2"></a>  <span class="at">control.file =</span> control.file,</span>
+<span id="cb24-3"><a aria-label="3"></a>  <span class="at">control.dir =</span> control.dir,</span>
+<span id="cb24-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb24-5"><a aria-label="5"></a>  <span class="at">n.cells =</span> <span class="dv">2000</span>,</span>
+<span id="cb24-6"><a aria-label="6"></a>  <span class="at">percentile =</span> <span class="dv">70</span>,</span>
+<span id="cb24-7"><a aria-label="7"></a>  <span class="at">gate.name =</span> <span class="st">"lymphocytes"</span></span>
+<span id="cb24-8"><a aria-label="8"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1267,14 +1270,14 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a></a>gate.dead <span class="ot">&lt;-</span> <span class="fu">define.gate.landmarks</span>(</span>
-<span id="cb25-2"><a></a>  <span class="at">control.file =</span> control.file,</span>
-<span id="cb25-3"><a></a>  <span class="at">control.dir =</span> control.dir,</span>
-<span id="cb25-4"><a></a>  <span class="at">asp =</span> asp,</span>
-<span id="cb25-5"><a></a>  <span class="at">n.cells =</span> <span class="dv">2000</span>,</span>
-<span id="cb25-6"><a></a>  <span class="at">percentile =</span> <span class="dv">70</span>,</span>
-<span id="cb25-7"><a></a>  <span class="at">gate.name =</span> <span class="st">"dead"</span></span>
-<span id="cb25-8"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a aria-label="1"></a>gate.dead <span class="ot">&lt;-</span> <span class="fu">define.gate.landmarks</span>(</span>
+<span id="cb25-2"><a aria-label="2"></a>  <span class="at">control.file =</span> control.file,</span>
+<span id="cb25-3"><a aria-label="3"></a>  <span class="at">control.dir =</span> control.dir,</span>
+<span id="cb25-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb25-5"><a aria-label="5"></a>  <span class="at">n.cells =</span> <span class="dv">2000</span>,</span>
+<span id="cb25-6"><a aria-label="6"></a>  <span class="at">percentile =</span> <span class="dv">70</span>,</span>
+<span id="cb25-7"><a aria-label="7"></a>  <span class="at">gate.name =</span> <span class="st">"dead"</span></span>
+<span id="cb25-8"><a aria-label="8"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1343,10 +1346,10 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a></a>my.gates <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
-<span id="cb26-2"><a></a>  <span class="st">"lymphocytes"</span> <span class="ot">=</span> gate.lymphocyte,</span>
-<span id="cb26-3"><a></a>  <span class="st">"dead"</span> <span class="ot">=</span> gate.dead</span>
-<span id="cb26-4"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a aria-label="1"></a>my.gates <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb26-2"><a aria-label="2"></a>  <span class="st">"lymphocytes"</span> <span class="ot">=</span> gate.lymphocyte,</span>
+<span id="cb26-3"><a aria-label="3"></a>  <span class="st">"dead"</span> <span class="ot">=</span> gate.dead</span>
+<span id="cb26-4"><a aria-label="4"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1371,13 +1374,13 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a></a>flow.control <span class="ot">&lt;-</span> <span class="fu">define.flow.control</span>(</span>
-<span id="cb27-2"><a></a>  <span class="at">control.dir =</span> control.dir,</span>
-<span id="cb27-3"><a></a>  <span class="at">control.def.file =</span> control.file,</span>
-<span id="cb27-4"><a></a>  <span class="at">asp =</span> asp,</span>
-<span id="cb27-5"><a></a>  <span class="at">gate.list =</span> my.gates,</span>
-<span id="cb27-6"><a></a>  <span class="at">color.palette =</span> <span class="st">"rainbow"</span></span>
-<span id="cb27-7"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a aria-label="1"></a>flow.control <span class="ot">&lt;-</span> <span class="fu">define.flow.control</span>(</span>
+<span id="cb27-2"><a aria-label="2"></a>  <span class="at">control.dir =</span> control.dir,</span>
+<span id="cb27-3"><a aria-label="3"></a>  <span class="at">control.def.file =</span> control.file,</span>
+<span id="cb27-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb27-5"><a aria-label="5"></a>  <span class="at">gate.list =</span> my.gates,</span>
+<span id="cb27-6"><a aria-label="6"></a>  <span class="at">color.palette =</span> <span class="st">"rainbow"</span></span>
+<span id="cb27-7"><a aria-label="7"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1648,7 +1651,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a></a>flow.control <span class="ot">&lt;-</span> <span class="fu">clean.controls</span>(flow.control, asp) <span class="co"># Figure Clean Controls</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a aria-label="1"></a>flow.control <span class="ot">&lt;-</span> <span class="fu">clean.controls</span>(flow.control, asp) <span class="co"># Figure Clean Controls</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1745,7 +1748,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a></a>spectra <span class="ot">&lt;-</span> <span class="fu">get.fluorophore.spectra</span>(flow.control, asp) <span class="co">#Figure Scatter #Figure Spectra</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a aria-label="1"></a>spectra <span class="ot">&lt;-</span> <span class="fu">get.fluorophore.spectra</span>(flow.control, asp) <span class="co">#Figure Scatter #Figure Spectra</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1794,12 +1797,12 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a></a>SpectraTablePath <span class="ot">&lt;-</span> <span class="st">"table_spectra"</span> <span class="co"># For You</span></span>
-<span id="cb30-2"><a></a></span>
-<span id="cb30-3"><a></a>SpectraCSV <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path=</span>SpectraTablePath,</span>
-<span id="cb30-4"><a></a>  <span class="at">pattern=</span><span class="st">"Clean_autospectral_spectra.csv"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)  <span class="co"># For You</span></span>
-<span id="cb30-5"><a></a></span>
-<span id="cb30-6"><a></a>SpectraCSVData <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(SpectraCSV, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a aria-label="1"></a>SpectraTablePath <span class="ot">&lt;-</span> <span class="st">"table_spectra"</span> <span class="co"># For You</span></span>
+<span id="cb30-2"><a aria-label="2"></a></span>
+<span id="cb30-3"><a aria-label="3"></a>SpectraCSV <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="at">path=</span>SpectraTablePath,</span>
+<span id="cb30-4"><a aria-label="4"></a>  <span class="at">pattern=</span><span class="st">"Clean_autospectral_spectra.csv"</span>, <span class="at">full.names=</span><span class="cn">TRUE</span>)  <span class="co"># For You</span></span>
+<span id="cb30-5"><a aria-label="5"></a></span>
+<span id="cb30-6"><a aria-label="6"></a>SpectraCSVData <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(SpectraCSV, <span class="at">check.names=</span><span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -1813,7 +1816,7 @@ David Rach
 
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a></a>SpectraCSVData</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a aria-label="1"></a>SpectraCSVData</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                          UV1-A         UV2-A         UV3-A         UV4-A
 1           BV510 -2.727532e-04 -3.382485e-05  0.0005592826  0.0025985403
@@ -2051,7 +2054,7 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a></a>FullStainedPath <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, <span class="st">"samples"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a aria-label="1"></a>FullStainedPath <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, <span class="st">"samples"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2076,9 +2079,9 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a></a><span class="fu">rownames</span>(spectra)</span>
-<span id="cb34-2"><a></a>no.af.spectra <span class="ot">&lt;-</span> spectra[ <span class="sc">!</span>(<span class="fu">rownames</span>(spectra) <span class="sc">==</span> <span class="st">"AF"</span>),]</span>
-<span id="cb34-3"><a></a><span class="fu">rownames</span>(no.af.spectra)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a aria-label="1"></a><span class="fu">rownames</span>(spectra)</span>
+<span id="cb34-2"><a aria-label="2"></a>no.af.spectra <span class="ot">&lt;-</span> spectra[ <span class="sc">!</span>(<span class="fu">rownames</span>(spectra) <span class="sc">==</span> <span class="st">"AF"</span>),]</span>
+<span id="cb34-3"><a aria-label="3"></a><span class="fu">rownames</span>(no.af.spectra)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2104,16 +2107,16 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a></a><span class="fu">unmix.folder</span>(</span>
-<span id="cb35-2"><a></a>  <span class="at">fcs.dir =</span> FullStainedPath,</span>
-<span id="cb35-3"><a></a>  <span class="at">spectra =</span> spectra,</span>
-<span id="cb35-4"><a></a>  <span class="at">asp =</span> asp,</span>
-<span id="cb35-5"><a></a>  <span class="at">flow.control =</span> flow.control,</span>
-<span id="cb35-6"><a></a>  <span class="at">method =</span> <span class="st">"OLS"</span>, </span>
-<span id="cb35-7"><a></a>  <span class="at">parallel =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb35-8"><a></a>  <span class="at">threads =</span> <span class="dv">3</span>,</span>
-<span id="cb35-9"><a></a>  <span class="at">output.dir=</span>OutputLocation</span>
-<span id="cb35-10"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a aria-label="1"></a><span class="fu">unmix.folder</span>(</span>
+<span id="cb35-2"><a aria-label="2"></a>  <span class="at">fcs.dir =</span> FullStainedPath,</span>
+<span id="cb35-3"><a aria-label="3"></a>  <span class="at">spectra =</span> spectra,</span>
+<span id="cb35-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb35-5"><a aria-label="5"></a>  <span class="at">flow.control =</span> flow.control,</span>
+<span id="cb35-6"><a aria-label="6"></a>  <span class="at">method =</span> <span class="st">"OLS"</span>, </span>
+<span id="cb35-7"><a aria-label="7"></a>  <span class="at">parallel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb35-8"><a aria-label="8"></a>  <span class="at">threads =</span> <span class="dv">3</span>,</span>
+<span id="cb35-9"><a aria-label="9"></a>  <span class="at">output.dir=</span>OutputLocation</span>
+<span id="cb35-10"><a aria-label="10"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2225,16 +2228,16 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a></a><span class="fu">unmix.folder</span>(</span>
-<span id="cb36-2"><a></a>  <span class="at">fcs.dir =</span> FullStainedPath,</span>
-<span id="cb36-3"><a></a>  <span class="at">spectra =</span> spectra,</span>
-<span id="cb36-4"><a></a>  <span class="at">asp =</span> asp,</span>
-<span id="cb36-5"><a></a>  <span class="at">flow.control =</span> flow.control,</span>
-<span id="cb36-6"><a></a>  <span class="at">method =</span> <span class="st">"WLS"</span>, </span>
-<span id="cb36-7"><a></a>  <span class="at">parallel =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb36-8"><a></a>  <span class="at">threads =</span> <span class="dv">3</span>,</span>
-<span id="cb36-9"><a></a>  <span class="at">output.dir=</span>OutputLocation</span>
-<span id="cb36-10"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a aria-label="1"></a><span class="fu">unmix.folder</span>(</span>
+<span id="cb36-2"><a aria-label="2"></a>  <span class="at">fcs.dir =</span> FullStainedPath,</span>
+<span id="cb36-3"><a aria-label="3"></a>  <span class="at">spectra =</span> spectra,</span>
+<span id="cb36-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb36-5"><a aria-label="5"></a>  <span class="at">flow.control =</span> flow.control,</span>
+<span id="cb36-6"><a aria-label="6"></a>  <span class="at">method =</span> <span class="st">"WLS"</span>, </span>
+<span id="cb36-7"><a aria-label="7"></a>  <span class="at">parallel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb36-8"><a aria-label="8"></a>  <span class="at">threads =</span> <span class="dv">3</span>,</span>
+<span id="cb36-9"><a aria-label="9"></a>  <span class="at">output.dir=</span>OutputLocation</span>
+<span id="cb36-10"><a aria-label="10"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2308,15 +2311,15 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a></a>UnstainedPath <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, <span class="st">"unmixing_controls"</span>,</span>
-<span id="cb37-2"><a></a> <span class="st">"Unstained (Cells)_scatter.fcs"</span>)</span>
-<span id="cb37-3"><a></a></span>
-<span id="cb37-4"><a></a>spleen.af <span class="ot">&lt;-</span> <span class="fu">get.af.spectra</span>(</span>
-<span id="cb37-5"><a></a>  <span class="at">unstained.sample =</span> UnstainedPath,</span>
-<span id="cb37-6"><a></a>  <span class="at">asp =</span> asp,</span>
-<span id="cb37-7"><a></a>  <span class="at">spectra =</span> spectra,</span>
-<span id="cb37-8"><a></a>  <span class="at">refine =</span> <span class="cn">TRUE</span> </span>
-<span id="cb37-9"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a aria-label="1"></a>UnstainedPath <span class="ot">&lt;-</span> <span class="fu">file.path</span>(StorageLocation, <span class="st">"unmixing_controls"</span>,</span>
+<span id="cb37-2"><a aria-label="2"></a> <span class="st">"Unstained (Cells)_scatter.fcs"</span>)</span>
+<span id="cb37-3"><a aria-label="3"></a></span>
+<span id="cb37-4"><a aria-label="4"></a>spleen.af <span class="ot">&lt;-</span> <span class="fu">get.af.spectra</span>(</span>
+<span id="cb37-5"><a aria-label="5"></a>  <span class="at">unstained.sample =</span> UnstainedPath,</span>
+<span id="cb37-6"><a aria-label="6"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb37-7"><a aria-label="7"></a>  <span class="at">spectra =</span> spectra,</span>
+<span id="cb37-8"><a aria-label="8"></a>  <span class="at">refine =</span> <span class="cn">TRUE</span> </span>
+<span id="cb37-9"><a aria-label="9"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2465,18 +2468,18 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a></a><span class="fu">unmix.folder</span>(</span>
-<span id="cb38-2"><a></a>  <span class="at">fcs.dir =</span> FullStainedPath,</span>
-<span id="cb38-3"><a></a>  <span class="at">spectra =</span> spectra,</span>
-<span id="cb38-4"><a></a>  <span class="at">asp =</span> asp,</span>
-<span id="cb38-5"><a></a>  <span class="at">flow.control =</span> flow.control,</span>
-<span id="cb38-6"><a></a>  <span class="at">method =</span> <span class="st">"AutoSpectral"</span>, </span>
-<span id="cb38-7"><a></a>  <span class="at">af.spectra =</span> spleen.af,</span>
-<span id="cb38-8"><a></a>  <span class="at">file.suffix =</span> <span class="st">"per-cell AF extraction"</span>,</span>
-<span id="cb38-9"><a></a>  <span class="at">parallel =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb38-10"><a></a>  <span class="at">threads =</span> <span class="dv">3</span>,</span>
-<span id="cb38-11"><a></a>  <span class="at">output.dir=</span>OutputLocation</span>
-<span id="cb38-12"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a aria-label="1"></a><span class="fu">unmix.folder</span>(</span>
+<span id="cb38-2"><a aria-label="2"></a>  <span class="at">fcs.dir =</span> FullStainedPath,</span>
+<span id="cb38-3"><a aria-label="3"></a>  <span class="at">spectra =</span> spectra,</span>
+<span id="cb38-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb38-5"><a aria-label="5"></a>  <span class="at">flow.control =</span> flow.control,</span>
+<span id="cb38-6"><a aria-label="6"></a>  <span class="at">method =</span> <span class="st">"AutoSpectral"</span>, </span>
+<span id="cb38-7"><a aria-label="7"></a>  <span class="at">af.spectra =</span> spleen.af,</span>
+<span id="cb38-8"><a aria-label="8"></a>  <span class="at">file.suffix =</span> <span class="st">"per-cell AF extraction"</span>,</span>
+<span id="cb38-9"><a aria-label="9"></a>  <span class="at">parallel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb38-10"><a aria-label="10"></a>  <span class="at">threads =</span> <span class="dv">3</span>,</span>
+<span id="cb38-11"><a aria-label="11"></a>  <span class="at">output.dir=</span>OutputLocation</span>
+<span id="cb38-12"><a aria-label="12"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2551,15 +2554,15 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a></a>variants <span class="ot">&lt;-</span> <span class="fu">get.spectral.variants</span>(</span>
-<span id="cb39-2"><a></a>  <span class="at">control.dir =</span> control.dir,</span>
-<span id="cb39-3"><a></a>  <span class="at">control.def.file =</span> control.file,</span>
-<span id="cb39-4"><a></a>  <span class="at">asp =</span> asp,</span>
-<span id="cb39-5"><a></a>  <span class="at">spectra =</span> spectra,</span>
-<span id="cb39-6"><a></a>  <span class="at">af.spectra =</span> spleen.af, </span>
-<span id="cb39-7"><a></a>  <span class="at">parallel =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb39-8"><a></a>  <span class="at">refine =</span> <span class="cn">TRUE</span> </span>
-<span id="cb39-9"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a aria-label="1"></a>variants <span class="ot">&lt;-</span> <span class="fu">get.spectral.variants</span>(</span>
+<span id="cb39-2"><a aria-label="2"></a>  <span class="at">control.dir =</span> control.dir,</span>
+<span id="cb39-3"><a aria-label="3"></a>  <span class="at">control.def.file =</span> control.file,</span>
+<span id="cb39-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb39-5"><a aria-label="5"></a>  <span class="at">spectra =</span> spectra,</span>
+<span id="cb39-6"><a aria-label="6"></a>  <span class="at">af.spectra =</span> spleen.af, </span>
+<span id="cb39-7"><a aria-label="7"></a>  <span class="at">parallel =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb39-8"><a aria-label="8"></a>  <span class="at">refine =</span> <span class="cn">TRUE</span> </span>
+<span id="cb39-9"><a aria-label="9"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
@@ -2624,20 +2627,20 @@ David Rach
 </div>
 <div class="fragment">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a></a><span class="fu">unmix.folder</span>(</span>
-<span id="cb40-2"><a></a>  <span class="at">fcs.dir =</span> FullStainedPath,</span>
-<span id="cb40-3"><a></a>  <span class="at">spectra =</span> spectra,</span>
-<span id="cb40-4"><a></a>  <span class="at">asp =</span> asp,</span>
-<span id="cb40-5"><a></a>  <span class="at">flow.control =</span> flow.control,</span>
-<span id="cb40-6"><a></a>  <span class="at">method =</span> <span class="st">"AutoSpectral"</span>, </span>
-<span id="cb40-7"><a></a>  <span class="at">af.spectra =</span> spleen.af,</span>
-<span id="cb40-8"><a></a>  <span class="at">spectra.variants =</span> variants,</span>
-<span id="cb40-9"><a></a>  <span class="at">file.suffix =</span> <span class="st">"per-cell AF and fluorophore optimization"</span>,</span>
-<span id="cb40-10"><a></a>  <span class="at">parallel =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb40-11"><a></a>  <span class="at">speed=</span><span class="st">"slow"</span>,</span>
-<span id="cb40-12"><a></a>  <span class="at">threads =</span> <span class="dv">3</span>,</span>
-<span id="cb40-13"><a></a>  <span class="at">output.dir=</span>OutputLocation</span>
-<span id="cb40-14"><a></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a aria-label="1"></a><span class="fu">unmix.folder</span>(</span>
+<span id="cb40-2"><a aria-label="2"></a>  <span class="at">fcs.dir =</span> FullStainedPath,</span>
+<span id="cb40-3"><a aria-label="3"></a>  <span class="at">spectra =</span> spectra,</span>
+<span id="cb40-4"><a aria-label="4"></a>  <span class="at">asp =</span> asp,</span>
+<span id="cb40-5"><a aria-label="5"></a>  <span class="at">flow.control =</span> flow.control,</span>
+<span id="cb40-6"><a aria-label="6"></a>  <span class="at">method =</span> <span class="st">"AutoSpectral"</span>, </span>
+<span id="cb40-7"><a aria-label="7"></a>  <span class="at">af.spectra =</span> spleen.af,</span>
+<span id="cb40-8"><a aria-label="8"></a>  <span class="at">spectra.variants =</span> variants,</span>
+<span id="cb40-9"><a aria-label="9"></a>  <span class="at">file.suffix =</span> <span class="st">"per-cell AF and fluorophore optimization"</span>,</span>
+<span id="cb40-10"><a aria-label="10"></a>  <span class="at">parallel =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb40-11"><a aria-label="11"></a>  <span class="at">speed=</span><span class="st">"slow"</span>,</span>
+<span id="cb40-12"><a aria-label="12"></a>  <span class="at">threads =</span> <span class="dv">3</span>,</span>
+<span id="cb40-13"><a aria-label="13"></a>  <span class="at">output.dir=</span>OutputLocation</span>
+<span id="cb40-14"><a aria-label="14"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </section>
