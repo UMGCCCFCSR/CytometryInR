@@ -1,0 +1,80 @@
+---
+title: "Week 01 Take-home Problems"
+format: html
+toc: TRUE
+---
+
+# Problem 1
+
+
+::: {.callout-tip}
+
+We installed PeacoQC during this session, but we didn’t have time to explore what functions are present within the package. Using what you have learned about accessing documentation, figure out and list what functions it contains:
+
+:::
+
+```{r}
+library(PeacoQC)
+?PeacoQC()
+```
+
+## Problem 1: Answer
+
+Use ?PeacoQC() to navigate to the package help page. Scroll to the bottom fo teh page and select the pacakge Index link. 
+The functions are: PeacoQC(), PeacoQCHeatmap(), PlotPeacoQC(), RemoveDoublets(), RemoveMargins(). 
+
+# Problem 2
+
+
+::: {.callout-tip}
+
+Take a closer look at the list of Bioconductor cytometry packages. Report back on how many there are currently in Bioconductor, the author/maintainer with the most contributed cytometry R packages, and a couple packages that you would be interested in exploring more in-depth later in the course.
+
+:::
+
+
+## Problem 2: Answer
+
+There are currently 72 packages available under [FlowCytometry](https://www.bioconductor.org/packages/release/BiocViews.html#___FlowCytometry) on Bioconductor. Mike Jiang is the author with the most contriutions of 10 packages. 
+
+I am interested in exploring the flowViz() and flowClust() package sin more depth later in the course. I am also interested in the flowClean() function as I have utilised this as a plug-in for Flow v.10 would be interested to see how to use with package in R. 
+
+# Problem 3
+
+
+::: {.callout-tip}
+
+There is another way to install R packages, using the newer pak package. Positron uses this when installing suggested dependencies.
+
+After learning more about it via the documentation and it’s pkgdown website, I would like you to attempt to install the following three R packages using this newer method: “broom”, “cytoMEM”, “DillonHammill/CytoExploreR”.
+
+Take screenshots, and in a quarto markdown document, describe how the installation process differed from what you saw for install.packages(), install() and install_github().
+
+:::
+
+```{r}
+#install.packages("pak")
+library(pak)
+
+#pak::pkg_install("broom")
+#pak::pkg_install("cytoMEM")
+
+#pak::pkg_install("rlbarter/superheat")
+#pak::pkg_install("DillonHammill/CytoExploreR")
+```
+
+## Problem 3: Answer
+
+Installing the broom() and cytoMEM() functions went smoothly using the pak() install function. Although the broom function is located on CRAN and the cytoMEM on Bioconductor they are both able to be installed using the same function which makes it easier to install compared to identifying the correct repository first then using the install.package() or BiocManager::install() functions. 
+
+![](/images/pak_install_screenshot.png)
+
+Github functions can also be installed using the same pak:pkg_install() function but the pacakge needs to be installed using the user account/ package name. Whilst trying to install the CytoExploreR function I came across the following error:
+
+![](/images/CytoExplorerR_install_error.png)
+
+This error occurred as the package had a dependency package called superheat. The superheat package is another Github package and therefore isn't located on the CRAN or Bioconductor repositories. To fix this error I first needed to install the superheat package and then install CytoExploreR.
+
+![](//images/CytoExplorerR_install_success.png)
+
+It seems the pak() install function is able to install dependency packages that are available on CRAN or Bioconductor but not Github. 
