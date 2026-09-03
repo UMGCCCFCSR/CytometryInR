@@ -16,7 +16,7 @@ execute:
 [![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 :::
 
-For the YouTube recording, see [here](https://www.youtube.com/live/F8FzbdMk_no?si=jynqtsOS4jzqhbfh&t=217)
+For the YouTube recording, see [here](https://www.youtube.com/live/nviugr9cLFc?si=4gbWKfNCoAhtVi55&t=84)
 
 For screen-shot slides, click [here](/course/SDY3080/LuciernagaIntegration_Violet_slides.qmd)
 
@@ -200,7 +200,7 @@ Data <- BV421$AveragedSignature_Data |>
    filter(Cluster %in% c("V3_10-V2_10-UV7_05", "Average", "V3_10-V2_10-UV6_02"))
 ```
 
-Lets pass these individually to `QC_SimilarFluorophores()` and gage the difference for the cosine values vs. the reference. 
+Lets pass these individually to `QC_WhatsThis()` and gage the difference for the cosine values vs. the reference. 
 
 ```{r}
 QC_WhatsThis(x="V3_10-V2_10-UV7_05", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) # 0.89
@@ -291,7 +291,7 @@ Plot <- PacificBlue$LuciernagaQC_Signatures
 plotly::ggplotly(Plot)
 ```
 
-Only one signature present, so the antigen-fluorophore combination is bright enough to drown out any variation. Lets pass these individually to `QC_SimilarFluorophores()` and gage the difference for the cosine values vs. the reference. 
+Only one signature present, so the antigen-fluorophore combination is bright enough to drown out any variation. Lets pass these individually to `QC_WhatsThis()` and gage the difference for the cosine values vs. the reference. 
 
 ```{r}
 Data <- PacificBlue$AveragedSignature_Data |>
@@ -488,7 +488,7 @@ Data <- BV605$AveragedSignature_Data |>
    filter(Cluster %in% c("V10_10-YG3_05-UV10_03", "Average", "V10_10-YG3_04-UV10_02"))
 ```
 
-Lets pass these individually to `QC_SimilarFluorophores()` and gage the difference. 
+Lets pass these individually to `QC_WhatsThis()` and gage the difference. 
 
 ```{r}
 QC_WhatsThis(x="V10_10-YG3_05-UV10_03", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) # 0.99
@@ -753,7 +753,7 @@ Plot <- BV786$ProportionPlot
 plotly::ggplotly(Plot)
 ```
 
-I have seen enough, but for completionist sake, lets pass "Average" to `QC_SimilarFluorophores()` and gage the difference vs. the reference.  
+I have seen enough, but for completionist sake, lets pass "Average" to `QC_WhatsThis()` and gage the difference vs. the reference.  
 
 ```{r}
 Data <- BV786$AveragedSignature_Data 
