@@ -18,7 +18,7 @@ execute:
 
 For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
 
-For screen-shot slides, click [here](/course/community/AutoSpectral/index_slides.qmd)
+For screen-shot slides, click [here](/course/community/AutoSpectral/index_5_slides.qmd)
 
 ![](/images/YouTubeHex.png){width="50%"}
 
@@ -49,32 +49,8 @@ pak::pkg_install("DrCytometer/AutoSpectral")
 pak::pkg_install("DrCytometer/AutoSpectralRcpp")
 ```
 
-Please note, if you are on a **MacOS** or **Linux** operating system, to install `AutoSpectralRcpp` you will likely need to configure some system settings first to allow you to make full use of `OpenMP` (as mentioned by Oliver in the `AutoSpectralRcpp` [README](https://github.com/DrCytometer/AutoSpectralRcpp#installation)). 
+Depending on your operating system, you may need to make some changes to ensure that `OpenMP` is operational to allow for the installation of `AutoSpectralRcpp`. Please see the  `AutoSpectralRcpp` [README](https://github.com/DrCytometer/AutoSpectralRcpp#installation) for current instructions. 
 
-On Debian Linux (Trixie), the steps to are summarized below
-
-First, create and open a personal ~/.R/Makevars file via your terminal
-
-```{r}
-#| eval: FALSE
-
-# bash/shell code
-mkdir .p ~/.R
-nano ~/.R/Makevars
-```
-
-Edit the file by entering the file, before saving the changes and exiting. 
-
-```{r}
-#| eval: FALSE
-
-# bash/shell code
-CXX_STD = CXX17
-PKG_CXXFLAGS = -fopenmp
-PKG_LIBS = -fopenmp -llapack -lblas
-```
-
-Once the Makevars file has been updated, proceed with installing `AutoSpectralRcpp`. 
 
 ## Dataset
 
