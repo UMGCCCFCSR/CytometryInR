@@ -1,7 +1,7 @@
 ---
 title: "Luciernaga Integration"
 author: "David Rach"
-date: 08-19-2026
+date: 08-28-2026
 format:
   html:
     toc: true
@@ -16,9 +16,11 @@ execute:
 [![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 :::
 
-For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
+For the YouTube recording, see [here](https://www.youtube.com/live/nviugr9cLFc?si=4gbWKfNCoAhtVi55&t=84)
 
-For screen-shot slides, click [here]()
+<iframe width="560" height="315" src="https://www.youtube.com/embed/nviugr9cLFc?si=4gbWKfNCoAhtVi55&amp;start=84" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+For screen-shot slides, click [here](/course/SDY3080/LuciernagaIntegration_slides.qmd)
 
 <br>
 
@@ -267,7 +269,7 @@ Data <- BUV395$AveragedSignature_Data |>
    filter(Cluster %in% c("UV2_10", "Average", "UV2_10-V7_03"))
 ```
 
-With this accomplished, we can carry out some of the signature comparison steps we encountered during [Week 13](/course/13_SpectralSimilarities/index.qmd). We can start off by passing each individual signature to  `QC_SimilarFluorophores()` to better gage the differences between them. 
+With this accomplished, we can carry out some of the signature comparison steps we encountered during [Week 13](/course/13_SpectralSimilarities/index.qmd). We can start off by passing each individual signature to  `QC_WhatsThis()` to better gage the differences between them. 
 
 ```{r}
 QC_WhatsThis(x="UV2_10", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE)
@@ -458,7 +460,7 @@ Data <- BUV615$AveragedSignature_Data |>
    filter(Cluster %in% c("UV10_10-YG3_09-V10_02", "Average", "UV10_10-YG3_09-V10_06"))
 ```
 
-Lets pass these individually to `QC_SimilarFluorophores()` and gage the difference. 
+Lets pass these individually to `QC_WhatsThis()` and gage the difference. 
 
 ```{r}
 QC_WhatsThis(x="UV10_10-YG3_09-V10_02", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE)
@@ -628,7 +630,7 @@ Data <- BUV737$AveragedSignature_Data |>
    filter(Cluster %in% c("UV14_10-R5_06-B11_03","UV14_10-R5_05-B11_03", "UV14_10-R5_04-B11_03", "UV14_10-R5_03-B11_02", "Average"))
 ```
 
-Lets pass these individually to `QC_SimilarFluorophores()` and gage the difference. 
+Lets pass these individually to `QC_WhatsThis()` and gage the difference. 
 
 ```{r}
 QC_WhatsThis(x="UV14_10-R5_04-B11_03", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) # 0.92
@@ -670,7 +672,7 @@ ggplot(df) +
 
 Ultimately, this just looks like a mess. Whether its due to a dim antigen-fluorophore combinations or tandem degradation is a story for another day.
 
-:::{.callout-warning}
+:::{.callout-warning title="Fail"}
 
 For BUV737, this one is an immediate NO! The sheer number of variants with different heights around the secondary and tertiary peaks suggest that the tandem likely degraded. 
 
@@ -723,37 +725,75 @@ For BUV805, we only retrieved 1 signature, likely due to the antigen-fluorophore
 
 ![](images/Violet_Laser.png)
 
-Due to the sheer number of `plotly` `ggplotly()` interactive plots that would need to be loaded by the website if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one webpage, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Violet" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd).  
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Violet" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd).  
 
 ### Blue
 
 ![](images/Blue_Laser.png)
 
-Due to the sheer number of `plotly` `ggplotly()` interactive plots that would need to be loaded by the website if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one webpage, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Blue" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_Blue.qmd). 
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Blue" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_Blue.qmd). 
 
-### YellowGreen
+### Yellow-Green
 
 ![](images/YG_Laser.png)
 
-Due to the sheer number of `plotly` `ggplotly()` interactive plots that would need to be loaded by the website if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one webpage, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Yellow-Green" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_YellowGreen.qmd). 
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Yellow-Green" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_YellowGreen.qmd). 
 
 ### Red
 
 ![](images/Red_Laser.png)
 
-Due to the sheer number of `plotly` `ggplotly()` interactive plots that would need to be loaded by the website if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one webpage, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Red" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_Red.qmd). 
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Red" fluorophores has been migrated [here](/course/SDY3080/LuciernagaIntegration_Red.qmd). 
 
 ### Autofluorescence
 
 ![](images/Unstained_Laser.png)
 
-Due to the sheer number of `plotly` `ggplotly()` interactive plots that would need to be loaded by the website if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one webpage, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Unstained" signatures has been migrated [here](/course/SDY3080/LuciernagaIntegration_Unstained.qmd). 
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. The walk-through of the "Unstained" signatures has been migrated [here](/course/SDY3080/LuciernagaIntegration_Unstained.qmd). 
 
 # Take Away
 
-In this walk-through (and its subsetted "Laser" chapters), we have worked our way systematically through the unmixing controls (both single-color and unstained) for this 29-color panel, identifying various problematic cell single-colors that could potentially contribute to unmixing issues in the full-stained samples if their average signature was included as part of the unmixing matrix.
+In this walk-through (and its subsetted "Laser" chapters), we have systematically worked our way through the unmixing controls (both single-color and unstained) for this 29-color panel. Overall, most of the fluorophores were in good shape, only returning a single signature for cells within our gated region, or with signature variants that were highly similar and not likely to cause much trouble at the time of unmixing. 
 
-We will circle back to these during [Week 15](/Schedule.qmd#evaluating-unmixing) and visualize what kind of unmixing errors they would have introduced compared to a more representative fluorophore signature. 
+And then, we also encountered 6 problematic cell single-color unmixing controls. These included
+
+- BUV615
+
+![](images/FAIL_BUV615.png)
+
+- BUV737
+
+![](images/FAIL_BUV737.png)
+
+- BV421
+
+![](images/FAIL_BV421.png)
+
+- PerCP-Cy5.5 (not a proper fail, but a caution)
+
+![](images/FAIL_PerCPCy55.png)
+
+- PE-Cy5
+
+![](images/FAIL_PECy5.png)
+
+- APC-Fire 810
+
+![](images/FAIL_APCFire810.png)
+
+While differing in their extent, BUV737, PE-Cy5 and APC-Fire 810 are in the worst shape, and would likely cause issues with the unmixing of the full-stained samples if they were included within the unmixing matrix.
+
+Likewise, we looked at unstained samples and characterized the autofluorescence variation that is present within. Main things we noticed were shift in secondary peak usage for cord blood vs peripheral blood mononuclear cells, and some interesting variation in the height of the secondary "UV7" detector that ties into how similar the signature compares to our autofluorescence-similar fluorophores. 
+
+- INF052 Ctrl (CBMC)
+
+![](images/CBMCCtrl.png)
+
+- ND006 Ctrl (PBMC)
+
+![](images/AdultPBMCCtrl.png)
+
+We will circle back to these bad unmixing control signatures during [Week 15](/Schedule.qmd#evaluating-unmixing) and evaluate what kind of unmixing errors they would generate compared to full-stained samples that had been unmixed with more representative fluorophore signatures. Until then, have fun looking at your own single-color unmixing controls, and make sure to share any interesting tandem-degradation finds on the [Discussions Page](https://github.com/UMGCCCFCSR/CytometryInR/discussions)
 
 ![](images/TakeAway4.jpg)
 
