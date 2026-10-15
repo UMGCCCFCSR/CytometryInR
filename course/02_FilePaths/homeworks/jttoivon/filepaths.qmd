@@ -1,0 +1,82 @@
+---
+title: Solutions for week02
+author: Jarkko Toivonen
+date: "`r Sys.Date()`"
+format: 
+    html:
+        embed-resources: true
+---
+
+```{r setup}
+library(magrittr)  # For the pipe
+library(fs)
+```
+## Problem 1
+
+> Plug in an external hard-drive or USB into your computer. Manually, create a folder within called “TargetFolder”. Try to programmatically specify the file path to identify the folders and files present on your external drive. Then, try to copy your .fcs files from their current folder on your desktop to the TargetFolder on your drive using R. Remember, just copy, no deletion, you need to walk before you can run :D
+
+```{r}
+fcs_files <- list.files("data", pattern = ".fcs", full.names = TRUE)
+fcs_files
+```
+
+
+```{r}
+usb_stick <- file.path("", "media", "jttoivon", "KINGSTON")
+if (file.exists(usb_stick)) {
+    target <- usb_stick
+} else {
+    target <- file.path("", "tmp")
+}
+target <- file.path(target, "TargetFolder")
+target
+```
+
+```{r}
+dir.create(target)
+```
+
+```{r}
+file.copy(fcs_files, target)
+```
+
+## Problem 2
+
+> In this session, we used list.files() with the “full.names argument” set to TRUE, as well as the basename() function to identify specific files. But what if you wanted a particular directory. Run list.files() with “full.names argument” and “recursive” argument set to TRUE, and then search online to find an R function that would retrieve the “” individual directory folders.
+
+
+```{r}
+all_files <- list.files(".", full.names = TRUE, recursive = TRUE)
+all_files
+```
+
+Split the paths into components.
+
+```{r}
+all_files %>%
+    fs::path_norm() %>%    # Get rid of the "." in the beginning
+    fs::path_split()       # Split into components
+```
+
+## Problem 3
+
+> R packages often come with internal datasets, that are typically used for use in the help documentation examples. These can be accessed through the use of the `system.file()` function. See an example below. 
+
+```{r}
+#| eval: FALSE
+system.file("extdata", package = "FlowSOM")
+```
+
+> Using what we have learned about file.path navigation, search your way down the file.directory of the `FlowSOM` and `flowWorkspace` packages, and identify any .fcs files that are present for use in the documentation. 
+
+```{r}
+system.file("extdata", package = "FlowSOM") %>% 
+    list.files(pattern = "\\.fcs$", full.names = TRUE, recursive = TRUE)
+```
+
+```{r}
+system.file("extdata", package = "flowWorkspace") %>% 
+    list.files(pattern = "\\.fcs$", full.names = TRUE, recursive = TRUE)
+```
+
+No .fcs files found for package flowWorkspace.

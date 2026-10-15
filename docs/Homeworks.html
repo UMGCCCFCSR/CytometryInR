@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.38">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -74,10 +77,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5c153bb687ce49b6c6529d158b94fe28.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-6f6aba0dcc0820cd94830540b68c7d73.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -186,8 +189,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 </div>
       </div> <!-- /container-fluid -->
     </nav>
-  <div id="quarto-announcement" data-announcement-id="517fd7fd2923fd64fe81c4cc75c6fa55" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
-<p>See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
+  <div id="quarto-announcement" data-announcement-id="dc2d9c7bdc53471fb4a7564dd51e6a50" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>Welcome Back! See Course tab for Course Materials, see YouTube tab for livestream recordings</p>
 </div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
 </header>
 <!-- content -->
@@ -238,6 +241,8 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
   <li><a href="#week-10---downsampling-and-concatenation" id="toc-week-10---downsampling-and-concatenation" class="nav-link" data-scroll-target="#week-10---downsampling-and-concatenation">Week 10 - Downsampling and Concatenation</a></li>
   <li><a href="#week-11---data-for-statistics" id="toc-week-11---data-for-statistics" class="nav-link" data-scroll-target="#week-11---data-for-statistics">Week 11 - Data for Statistics</a></li>
   <li><a href="#week-12---spectral-signatures" id="toc-week-12---spectral-signatures" class="nav-link" data-scroll-target="#week-12---spectral-signatures">Week 12 - Spectral Signatures</a></li>
+  <li><a href="#week-13---spectral-similarities" id="toc-week-13---spectral-similarities" class="nav-link" data-scroll-target="#week-13---spectral-similarities">Week 13 - Spectral Similarities</a></li>
+  <li><a href="#week-14---unmixing-in-r" id="toc-week-14---unmixing-in-r" class="nav-link" data-scroll-target="#week-14---unmixing-in-r">Week 14 - Unmixing in R</a></li>
   </ul>
 </nav>
     </div>
@@ -857,6 +862,99 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 </div>
 </div>
 <p>Click <a href="https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+12%22">here</a> to see previous community attempts at answering these optional take-home problems.</p>
+<p>Stay tuned for our <a href="">walk-through</a> answers on Course section completion.</p>
+</section>
+<section id="week-13---spectral-similarities" class="level1">
+<h1>Week 13 - Spectral Similarities</h1>
+<p><img src="./course/13_SpectralSimilarities/images/TakeAway.jpg" class="img-fluid"></p>
+<p>Redirect to <a href="./course/13_SpectralSimilarities/index.html">Week 13</a> content.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Problem 1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We assembled “Dataset”, consisting of the three signature matrices. Use <code>dplyr</code> and <code>stringr</code> to filter for any “APC” fluorophore. Pass this smaller dataset through the various steps from today (visualize, cosine, UDS, kappa), saving images or taking screenshots as appropiate. Provide a summary blurb about the interactions you might encounter if you designed this “all-Red” panel.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Problem 2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Randomly subset the rows of Reference matrix into 4 smaller matrices, consisting of the same number of fluorophores (just with different fluorophores). Pass each through <code>kappa()</code> and see how the rank value changes. Summarize/Elaborate on your findings as a short blurb, does the value track with fluorophore overlap present?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 3">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Problem 3
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In our unmixing-dependent spread (UDS) hotspot, we used only our panel fluorophores as inputs. But what if you wanted to evaluate spread for this panel if 1 or 2 autofluorescences signatures were present? Retrieve the unstained signature(s) from ‘Week 12’, and modify/re-run the cosine and unmixing-dependent spread matrices. After saving the plots as images or taking screenshots, briefly summarize what fluorophores would have been most impacted had you originally also accounted for autofluorescences.</p>
+</div>
+</div>
+<p>Click <a href="https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+13%22">here</a> to see previous community attempts at answering these optional take-home problems.</p>
+<p>Stay tuned for our <a href="">walk-through</a> answers on Course section completion.</p>
+</section>
+<section id="week-14---unmixing-in-r" class="level1">
+<h1>Week 14 - Unmixing in R</h1>
+<p><img src="./course/14_Unmixing/images/TakeAway1.jpg" class="img-fluid"></p>
+<p>Redirect to <a href="./course/14_Unmixing/index.html">Week 14</a> content.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Problem 1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Modify <code>OldFashionedUnmix()</code>’s returnType argument to instead of returning a “.fcs” file or a “residual” plot, to also returned the Unmixed data.frame, as well as the flowFrame (since both can be useful!). Add any conditional statements or arguments as you deem necessary.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Problem 2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We briefly looked at the residual plots, including a case where we left out BUV805 CD4 and saw corresponding increase on those detectors in the residual plot. Rerun this example with a signature matrix missing one of the fluorophores, selecting returnType = “residual” to get back the residual plot. At this point, rerun with returnType = “fcs”, and generate a badly unmixed .fcs file. Then repeat this process with a signature matrix that contains all the signature references. Visualizing the two .fcs files, which fluorophores ended up having messed up unmixing due to the exclusion, and which ones were mostly unaffected?</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 3">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Problem 3
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>One of the first packages that I encountered that implemented unmixing in R was Christopher Hall’s <a href="https://github.com/hally166/flowUnmix">flowUnmix</a> package. Since, several additional R packages have also implemented ways to unmix using various methods. While how they process their unmixing controls to get their signature matrices often vary wildly, at the heart the basic unmixing steps are similar, with choice of unmixing method often just needing to swtich out <code>lsfit()</code> for another function that implements the other method. Since you may be interested in implementing one of these methods on your own in the future, lets go on a treasure hunt.</p>
+<p>For these 2 packages (<a href="https://github.com/hally166/flowUnmix/tree/main/R">flowUnmix</a>, and <a href="https://github.com/DrCytometer/AutoSpectral/tree/master/R">Autospectral</a>), dive into their GitHub repositories and open their R folder. Check the .R files for any with an “unmixing-something-or-order” style name and examine it. Try reading your way through the code until you encounter the function that actually carries out the unmixing. Look up that functions original package, and check the help file. Take a screenshot, and report back. Feel free to repeat for any unmixing methods of interest (OLS, NNLS, WLS, etc.)</p>
+</div>
+</div>
+<p>Click <a href="https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+14%22">here</a> to see previous community attempts at answering these optional take-home problems.</p>
 <p>Stay tuned for our <a href="">walk-through</a> answers on Course section completion.</p>
 
 

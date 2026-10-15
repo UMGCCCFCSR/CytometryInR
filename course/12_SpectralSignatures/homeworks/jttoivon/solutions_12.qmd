@@ -1,0 +1,807 @@
+---
+title: Solutions for week 12
+author: Jarkko Toivonen
+date: today
+format: 
+    html:
+        df-print: kable
+        embed-resources: true
+toc: true
+toc-depth: 5
+---
+
+```{r}
+#| label: setup
+library(tibble)
+library(purrr)
+library(dplyr)
+library(stringr)
+library(ggcyto)
+library(flowGate)
+library(flowWorkspace)
+library(Luciernaga)
+library(magrittr)
+library(openCyto)
+library(tidyr)
+library(broom)
+
+#source("original_functions.R")
+
+data_path <- file.path("data")
+result_path <- file.path("results")
+
+recompute <- FALSE
+```
+
+# Problem 1
+
+> In the example above, we deep dived the APC-Fire 810 single-color control. Since this is just one of the 29-single colors in the panel, check the pData, identify a fluorophore and marker of interest and repeat the process detailed above for your selected fluorophore. Report whether your chosen fluorophore behaved similarly or otherwise in terms of fluorescent signature variants as was the case for APC-Fire 810.
+
+## Load data
+
+```{r}
+fcs_files <- list.files(data_path, pattern=".fcs", full.names=TRUE)
+fcs_files
+```
+
+```{r}
+Bead_FCS <- fcs_files[stringr::str_detect(fcs_files, "Bead")]
+Bead_FCS
+```
+
+```{r}
+Cell_FCS <- fcs_files[stringr::str_detect(fcs_files, "Cells")]
+Cell_FCS
+```
+
+
+```{r}
+UnstainedCell_FCS <- fcs_files[stringr::str_detect(fcs_files, "_Unstained")]
+UnstainedCell_FCS
+```
+
+Read samples.
+
+```{r}
+Beads_cytoset <- load_cytoset_from_fcs(Bead_FCS, truncate_max_range=FALSE, transformation=FALSE)
+BeadsSC_GatingSet <- GatingSet(Beads_cytoset)
+
+Cells_cytoset <- load_cytoset_from_fcs(Cell_FCS, truncate_max_range=FALSE, transformation=FALSE)
+CellsSC_GatingSet <- GatingSet(Cells_cytoset)
+
+UnstainedCells_cytoset <- load_cytoset_from_fcs(UnstainedCell_FCS, truncate_max_range=FALSE, transformation=FALSE)
+CellsUnstained_GatingSet <- GatingSet(UnstainedCells_cytoset)
+```
+
+## Transform data
+
+```{r}
+# Identify biexponential fluorescent detectors, exclude linear ones like FSC
+
+SFC_Parameters <- colnames(CellsUnstained_GatingSet)
+FluorophoresOnly <- SFC_Parameters[!stringr::str_detect(SFC_Parameters, "FSC|SSC|Time")]
+
+# Biexponential values that were optimal for this particular instrument/dataset, yours may vary, see Week 7!
+
+Biexponential <-  flowjo_biexp_trans(channelRange=4096, maxValue=4194304,
+  pos=5.62, neg=0, widthBasis=-1000)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+```
+
+Do the transform.
+
+```{r}
+# Beads Single Colors
+
+transform(BeadsSC_GatingSet, MyBiexTransform)
+```
+
+```{r}
+# Cells Single Colors
+
+transform(CellsSC_GatingSet, MyBiexTransform)
+
+# Cells Unstained
+
+transform(CellsUnstained_GatingSet, MyBiexTransform)
+```
+
+## Automated gating
+
+```{r}
+BeadGatingTable <- tibble::tribble(
+  ~filterId,    ~dims,                          ~subset,  
+  "scatter",    list("FSC-A", "SSC-A"),      "root",     
+  "singlets",   list("FSC-A", "FSC-H"),          "scatter"
+)
+
+
+CellGatingTable <- tibble::tribble(
+  ~filterId,    ~dims,                          ~subset,      
+  "singlets",   list("FSC-A", "FSC-H"),          "root",  
+  "scatter",    list("FSC-A", "SSC-A"),      "singlets",  
+)
+```
+
+
+
+```{r}
+# This version prints the index of specimen, so it is easier to follow
+# where we are going.
+gs_apply_gate_check2 <- function (gs, gate, sample = NULL, AdjustAll = FALSE, ...) 
+{
+    if (methods::is(gs, "GatingSet")) {
+        if (is.null(sample)) {
+            Samples <- seq_along(gs)
+        }
+        else {
+            Samples <- sample
+        }
+        n <- length(Samples)                                 # MODIFIED LINE
+        purrr::walk(.x = Samples, .f = function(sample) {
+            cat(sprintf("Specimen %i/%i\n", sample, n))      # MODIFIED LINE
+            gs_gate_interactive_adjust(gs = gs, gate = gate, 
+                sample = sample, AdjustAll = AdjustAll, ...)
+        })
+    }
+    else {
+        stop("'gs' must be a GatingSet")
+    }
+}
+```
+
+### Beads
+
+Save the result so this can be knitted. For some reason my GatingSet files got corrupted, so
+I added the backend_opt = "copy" option, even though it should be on by default.
+
+```{r}
+filename <- file.path(result_path, "BeadsSC_GatingSet.gs")
+if (! file.exists(filename) || recompute) {
+    flowGate::gs_apply_gating_strategy(BeadsSC_GatingSet, gating_strategy = BeadGatingTable)
+
+    gs_apply_gate_check2(gs=BeadsSC_GatingSet, gate="scatter")
+    gs_apply_gate_check2(gs=BeadsSC_GatingSet, gate="singlets")
+
+    save_gs(BeadsSC_GatingSet, filename, backend_opt = "copy")
+} else {
+    BeadsSC_GatingSet <- load_gs(filename)
+}
+```
+
+### Single-color cells
+
+```{r}
+filename <- file.path(result_path, "CellsSC_GatingSet.gs")
+if (! file.exists(filename) || recompute) {
+    flowGate::gs_apply_gating_strategy(CellsSC_GatingSet, gating_strategy = CellGatingTable)
+
+    gs_apply_gate_check2(gs=CellsSC_GatingSet, gate="scatter")
+    gs_apply_gate_check2(gs=CellsSC_GatingSet, gate="singlets")
+
+    save_gs(CellsSC_GatingSet, filename, backend_opt = "copy")
+} else {
+    CellsSC_GatingSet <- load_gs(filename)
+}
+```
+
+Why doesn't gs_apply_gate_check() function show which speciment it is currently processing? It would be nice, if it would show the specimen name or that x out of y specimen have been checked.
+
+### Unstained
+
+
+```{r}
+filename <- file.path(result_path, "CellsUnstained_GatingSet.gs")
+if (! file.exists(filename) || recompute) {
+    flowGate::gs_apply_gating_strategy(CellsUnstained_GatingSet, gating_strategy = CellGatingTable)
+
+    gs_apply_gate_check2(gs=CellsUnstained_GatingSet, gate="scatter")
+    gs_apply_gate_check2(gs=CellsUnstained_GatingSet, gate="singlets")
+
+    save_gs(CellsUnstained_GatingSet, filename, backend_opt = "copy")
+} else {
+    CellsUnstained_GatingSet <- load_gs(filename)
+}
+```
+
+## Update metadata
+
+### Beads
+
+```{r}
+bead_pd <- pData(BeadsSC_GatingSet)
+
+Updated_bead_pd <- bead_pd |> mutate(
+    raw = str_extract(name, "(?<=DR_)[^(]+(?=\\()"), 
+    Antigen = raw |>
+      str_trim() |>
+      str_extract("^\\S+"), 
+    Fluorophore = raw |>
+      str_trim() |>
+      str_remove("^\\S+\\s+"), 
+    Type = name |>
+      str_extract("(?<=\\()([^)]+)(?=\\))"),
+    raw = NULL
+  )
+
+Updated_bead_pd <- Updated_bead_pd |> relocate(Fluorophore, Antigen, Type, .after="name")
+```
+
+```{r}
+Updated_bead_pd <- Updated_bead_pd |> 
+  mutate(Fluorophore = case_when(
+    Fluorophore == "PE-Vio770" ~ "PE-Vio 770",
+    Fluorophore == "PE-Dazzle594" ~ "PE-Dazzle 594",
+    TRUE ~ Fluorophore
+  ))
+```
+
+```{r}
+Updated_bead_pd <- Updated_bead_pd |> mutate(
+    Antigen = case_when(
+      str_detect(name, "BeadsUnstained") ~ NA_character_,
+      .default = Antigen
+    ),
+    
+    Fluorophore = case_when(
+      str_detect(name, "BeadsUnstained") ~ "BeadUnstained",
+      .default = Fluorophore
+    )
+  )
+```
+
+```{r}
+pData(BeadsSC_GatingSet) <- Updated_bead_pd
+pData(BeadsSC_GatingSet)
+```
+
+```{r}
+filename <- file.path(result_path, "UpdatedBeadMetadata.csv")
+write.csv(Updated_bead_pd, filename, row.names=FALSE)
+```
+
+### Single-color cells
+
+```{r}
+cell_pd <- pData(CellsSC_GatingSet)
+
+Updated_cell_pd <- cell_pd |> mutate(
+    raw = str_extract(name, "(?<=DR_)[^(]+(?=\\()"), 
+    Antigen = raw |>
+      str_trim() |>
+      str_extract("^\\S+"), 
+    Fluorophore = raw |>
+      str_trim() |>
+      str_remove("^\\S+\\s+"), 
+    Type = name |>
+      str_extract("(?<=\\()([^)]+)(?=\\))"),
+    raw = NULL
+  )
+
+Updated_cell_pd <- Updated_cell_pd |> relocate(Fluorophore, Antigen, Type, .after="name")
+
+Updated_cell_pd
+```
+
+```{r}
+Updated_cell_pd <- Updated_cell_pd |> 
+  mutate(Fluorophore = case_when(
+    Fluorophore == "PE-Vio770" ~ "PE-Vio 770",
+    Fluorophore == "PE-Dazzle594" ~ "PE-Dazzle 594",
+    TRUE ~ Fluorophore
+  ))
+```
+
+```{r}
+pData(CellsSC_GatingSet) <- Updated_cell_pd
+pData(CellsSC_GatingSet)
+```
+
+```{r}
+filename <- file.path(result_path, "InitialCellMetadata.csv")
+write.csv(Updated_cell_pd, filename, row.names=FALSE)
+```
+
+Check the results.
+
+```{r}
+plot(CellsSC_GatingSet)
+```
+
+## Alexa Fluor 647 GatingSet
+
+I chose Alexa Fluor 647 as the color.
+
+```{r}
+Alexa_GS <- subset(CellsSC_GatingSet, Fluorophore == "Alexa Fluor 647", realize_view == TRUE)
+
+Alexa_GS
+```
+
+```{r}
+Plots <- Luciernaga::QC_ReferenceLibrary(FluorNameContains="Alexa Fluor 647", returnPlots=TRUE, NumberDetectors=64) #5-laser Aurora #64 detectors
+plotly::ggplotly(Plots[[2]])
+```
+
+Looks like we need the R2 detector.
+
+```{r}
+Alexa_GS %>% colnames() %>% sort()
+```
+
+R2-A to be precise.
+
+Draw the gates for the color and the internal negative.
+
+```{r}
+alexa_filename <- file.path(result_path, "Alexa.gs")
+if (! file.exists(alexa_filename) || recompute) {
+  flowGate::gs_gate_interactive(gs=Alexa_GS, filterId="Alexa", sample=1,
+    dims=list("R2-A"), subset="scatter")
+  plot(Alexa_GS)
+  flowGate::gs_gate_interactive(gs=Alexa_GS, filterId="InternalNegative", sample=1,
+    dims=list("R2-A"), subset="scatter")
+  save_gs(Alexa_GS, alexa_filename, backend_opt = "copy")
+} else {
+  Alexa_GS <- load_gs(alexa_filename)
+}
+```
+
+
+```{r}
+plot(Alexa_GS)
+```
+
+Show the gates.
+
+```{r}
+autoplot(Alexa_GS, "Alexa")
+autoplot(Alexa_GS, "InternalNegative")
+```
+
+## Positive data
+
+```{r}
+PositiveCytoSet <- gs_pop_get_data(Alexa_GS, "Alexa", inverse.transform=TRUE)
+PositiveMatrix <- exprs(PositiveCytoSet[[1]]) #[[1]] used to remove list item, allowing access
+PositiveData <- data.frame(PositiveMatrix, check.names=FALSE)
+head(PositiveData, 3)
+```
+
+```{r}
+summary(PositiveData)
+```
+
+## Negative data
+
+```{r}
+NegativeCytoSet <- gs_pop_get_data(Alexa_GS, "InternalNegative", inverse.transform=TRUE)
+NegativeMatrix <- exprs(NegativeCytoSet[[1]]) #[[1]] used to remove list item, allowing access
+NegativeData <- data.frame(NegativeMatrix, check.names=FALSE)
+head(NegativeData, 3)
+```
+
+```{r}
+summary(NegativeData)
+```
+
+## Positive signature
+
+```{r}
+SFC_Parameters <- colnames(PositiveData)
+PositiveDataSignature <- PositiveData[!stringr::str_detect(colnames(PositiveData), "FSC|SSC|Time")]
+
+head(PositiveDataSignature, 3)
+```
+
+
+```{r}
+PositiveSignature <- PositiveDataSignature |> summarize_all("median") #Alternate: "mean"
+PositiveSignature
+```
+
+```{r}
+PositivePlotData <- PositiveSignature |> mutate(Fluorophore="Alexa") |> relocate(Fluorophore, .before=1)
+
+Plots <- VisualizeSignatures(data=PositivePlotData, columnname="Fluorophore", Normalize = FALSE)
+plotly::ggplotly(Plots)
+```
+
+
+```{r}
+Outputs <- QC_WhatsThis(x="Alexa", columnname="Fluorophore", data=PositivePlotData, NumberDetectors = 64,
+ returnPlots=TRUE, NumberHits = 5)
+Outputs[[1]]
+```
+
+The cosine similarity is high, so the signature is very similar to the reference signature,
+but still below 0.98.
+
+```{r}
+plotly::ggplotly(Outputs[[2]])
+```
+
+Otherwise very similary except for the autofluorescence.
+
+## Negative signature
+
+```{r}
+NegativeDataSignature <- NegativeData[!stringr::str_detect(colnames(NegativeData), "FSC|SSC|Time")]
+
+head(NegativeDataSignature, 3)
+```
+
+
+```{r}
+NegativeSignature <- NegativeDataSignature |> summarize_all("median") #Alternate: "mean"
+NegativeSignature
+```
+
+```{r}
+NegativePlotData <- NegativeSignature |> mutate(Fluorophore="Background") |> relocate(Fluorophore, .before=1)
+
+Plots <- VisualizeSignatures(data=NegativePlotData, columnname="Fluorophore", Normalize = FALSE)
+plotly::ggplotly(Plots)
+```
+
+Peaks at UV7, V7 and B3. This is apperently typical for autofluorescence.
+
+## Subtract background
+
+```{r}
+# dim(PositiveSignature) == dim(NegativeSignature)
+# str(PositiveSignature)
+JustTheFluorophore <- PositiveSignature - NegativeSignature
+JustTheFluorophore
+```
+
+Compare before and after subtraction.
+
+```{r}
+JustTheFluorophorePlot <- JustTheFluorophore |>
+   mutate(Fluorophore="Alexa_Post") |>
+    relocate(Fluorophore, .before=1)
+
+Intermediate <- PositiveSignature |>
+   mutate(Fluorophore="Alexa_Pre") |> 
+   relocate(Fluorophore, .before=1)
+
+JustTheFluorophorePlot2 <- bind_rows(Intermediate, JustTheFluorophorePlot)
+
+Plots <- VisualizeSignatures(data=JustTheFluorophorePlot2,
+ columnname="Fluorophore", Normalize = FALSE)
+
+plotly::ggplotly(Plots)
+```
+
+```{r}
+Outputs <- QC_WhatsThis(x="Alexa_Post", columnname="Fluorophore", data=JustTheFluorophorePlot, NumberDetectors = 64,
+ returnPlots=TRUE, NumberHits = 5)
+```
+
+```{r}
+Outputs[[1]]
+```
+
+```{r}
+plotly::ggplotly(Outputs[[2]])
+```
+
+Perfect match! Unlike in the lecture with APC-Fire 810.
+
+```{r}
+IdentifiedPeakValue <- do.call(pmax,JustTheFluorophore)
+```
+
+```{r}
+Normalized <- JustTheFluorophore/IdentifiedPeakValue
+Normalized <- round(Normalized, 1)
+Normalized
+```
+
+
+
+# Problem 2
+
+> For this example, we gated the positive cells according to the “as bright or brighter” guideline. But what would we have seen if we had included the rest of the positive staining cells? Using flowGate, adjust the gate to include the less bright cells, and report whether this affected the overall signature profiles for the APC-Fire 810 control.
+
+```{r}
+APCFire810_GS <- subset(CellsSC_GatingSet, Fluorophore == "APC-Fire 810", realize_view == TRUE)
+
+APCFire810_GS
+```
+
+```{r}
+Plots <- Luciernaga::QC_ReferenceLibrary(FluorNameContains="APC-Fire 810", returnPlots=TRUE, NumberDetectors=64) #5-laser Aurora #64 detectors
+plotly::ggplotly(Plots[[2]])
+```
+
+Looks like we need the R8 detector.
+
+```{r}
+APCFire810_GS %>% colnames() %>% sort()
+```
+
+R8-A to be precise.
+
+## Original gating
+
+```{r}
+APCFire810_filename <- file.path(result_path, "APCFire810.gs")
+if (! file.exists(APCFire810_filename) || recompute) {
+  flowGate::gs_gate_interactive(gs=APCFire810_GS, filterId="APCFire810", sample=1,
+    dims=list("R8-A"), subset="scatter")
+  plot(APCFire810_GS)
+  flowGate::gs_gate_interactive(gs=APCFire810_GS, filterId="InternalNegative", sample=1,
+    dims=list("R8-A"), subset="scatter")
+  save_gs(APCFire810_GS, APCFire810_filename, backend_opt = "copy")
+} else {
+  APCFire810_GS <- load_gs(APCFire810_filename)
+}
+```
+
+```{r}
+autoplot(APCFire810_GS, "APCFire810")
+```
+
+```{r}
+plot(APCFire810_GS)
+```
+
+## Modified gating
+
+```{r}
+APCFire810_filename2 <- file.path(result_path, "APCFire810_2.gs")
+if (! file.exists(APCFire810_filename2) || recompute) {
+  APCFire810_GS2 <- flowWorkspace::gs_copy_tree_only(APCFire810_GS)
+  gs_apply_gate_check(gs=APCFire810_GS2, gate="APCFire810")
+  plot(APCFire810_GS2)
+  save_gs(APCFire810_GS2, APCFire810_filename2, backend_opt = "copy")
+} else {
+  APCFire810_GS2 <- load_gs(APCFire810_filename2)
+}
+
+```
+
+```{r}
+autoplot(APCFire810_GS2, "APCFire810")
+```
+
+I'm not sure if I understood this correctly. Maybe I should have included
+even those cells that are in the internal negatives as positives?
+
+## Positive data
+
+```{r}
+PositiveCytoSet <- gs_pop_get_data(APCFire810_GS, "APCFire810", inverse.transform=TRUE)
+PositiveData <- exprs(PositiveCytoSet[[1]]) %>%
+  data.frame(check.names=FALSE)
+head(PositiveData, 3)
+```
+
+Modified version of the positive gate.
+
+```{r}
+PositiveCytoSet2 <- gs_pop_get_data(APCFire810_GS2, "APCFire810", inverse.transform=TRUE)
+PositiveData2 <- exprs(PositiveCytoSet2[[1]]) %>%
+  data.frame(check.names=FALSE)
+head(PositiveData2, 3)
+```
+
+```{r}
+summary(PositiveData)
+```
+
+## Negative data
+
+```{r}
+NegativeCytoSet <- gs_pop_get_data(APCFire810_GS, "InternalNegative", inverse.transform=TRUE)
+NegativeData <- exprs(NegativeCytoSet[[1]]) %>% #[[1]] used to remove list item, allowing access
+  data.frame(check.names=FALSE)
+head(NegativeData, 3)
+```
+
+```{r}
+summary(NegativeData)
+```
+
+## Signatures
+
+```{r}
+# SFC_Parameters <- colnames(PositiveData)
+# PositiveDataSignature <- PositiveData[!stringr::str_detect(colnames(PositiveData), "FSC|SSC|Time")]
+PositiveDataSignature <- PositiveData %>% select(!matches("FSC|SSC|Time"))
+PositiveDataSignature2 <- PositiveData2 %>% select(!matches("FSC|SSC|Time"))
+head(PositiveDataSignature, 3)
+```
+
+```{r}
+#NegativeDataSignature <- NegativeData[!stringr::str_detect(colnames(NegativeData), "FSC|SSC|Time")]
+NegativeDataSignature <- NegativeData %>% select(!matches("FSC|SSC|Time"))
+
+head(NegativeDataSignature, 3)
+```
+
+```{r}
+PositiveSignature <- PositiveDataSignature |> summarize_all("median") #Alternate: "mean"
+PositiveSignature
+PositiveSignature2 <- PositiveDataSignature2 |> summarize_all("median") #Alternate: "mean"
+PositiveSignature2
+```
+
+```{r}
+NegativeSignature <- NegativeDataSignature |> summarize_all("median") #Alternate: "mean"
+NegativeSignature
+```
+
+Visualize both versions of the positive data.
+
+```{r}
+PositivePlotData <- PositiveSignature |> mutate(Fluorophore="APCFire810") |> relocate(Fluorophore, .before=1)
+PositivePlotData2 <- PositiveSignature2 |> mutate(Fluorophore="APCFire810_modified") |> relocate(Fluorophore, .before=1)
+
+BothPositives <- bind_rows(PositivePlotData, PositivePlotData2)
+Plots <- VisualizeSignatures(data=BothPositives, columnname="Fluorophore", Normalize = FALSE)
+plotly::ggplotly(Plots)
+```
+
+The signal seems to be weaker in the modified GatingSet.
+
+```{r}
+NegativePlotData <- NegativeSignature |> mutate(Fluorophore="Background") |> relocate(Fluorophore, .before=1)
+
+Plots <- VisualizeSignatures(data=NegativePlotData, columnname="Fluorophore", Normalize = FALSE)
+plotly::ggplotly(Plots)
+```
+
+Peaks at UV7, V7 and B3. This is apperently typical for autofluorescence.
+
+```{r}
+Outputs <- QC_WhatsThis(x="APCFire810", columnname="Fluorophore", data=PositivePlotData, NumberDetectors = 64,
+ returnPlots=TRUE, NumberHits = 5)
+Outputs[[1]]
+```
+
+The cosine similarity is high, so the signature is very similar to the reference signature.
+
+```{r}
+plotly::ggplotly(Outputs[[2]])
+```
+
+Otherwise very similary except for the autofluorescence.
+
+## Subtraction of background
+
+```{r}
+# dim(PositiveSignature) == dim(NegativeSignature)
+# str(PositiveSignature)
+JustTheFluorophore <- PositiveSignature - NegativeSignature
+JustTheFluorophore2 <- PositiveSignature2 - NegativeSignature
+JustTheFluorophore
+```
+
+## Plot
+```{r}
+JustTheFluorophorePlot <- JustTheFluorophore |>
+   mutate(Fluorophore="APCFire810", .before=1) 
+JustTheFluorophorePlot2 <- JustTheFluorophore2 |>
+   mutate(Fluorophore="APCFire810_modified", .before=1) 
+
+# Intermediate <- PositiveSignature |>
+#    mutate(Fluorophore="Alexa_Pre", .before=1) 
+
+JustTheFluorophorePlot_both <- bind_rows(JustTheFluorophorePlot, JustTheFluorophorePlot2)
+```
+
+### Unnormalised
+
+```{r}
+Plots <- VisualizeSignatures(data=JustTheFluorophorePlot_both,
+ columnname="Fluorophore", Normalize = FALSE)
+
+plotly::ggplotly(Plots)
+```
+
+### Normalised
+
+```{r}
+Plots <- VisualizeSignatures(data=JustTheFluorophorePlot_both,
+ columnname="Fluorophore", Normalize = TRUE)
+
+plotly::ggplotly(Plots)
+```
+
+Looks identical.
+
+
+# Problem 3
+
+> An important part of retrieving the fluorescent signature is to subtract the background autofluorescence. This could vary based on donor, cell type or treatment condition. With the tools provided in this walkthrough, compare the autofluorescent signatures for the 3 cell unstained controls, and whether their use as background would have affected the overall APC-Fire 810 extracted signature or not.
+
+Form external negative based on each unstained sample.
+
+## Negative signatures
+
+```{r}
+get_external_negative_signature <- function(gs) {
+  ExternalNegativeCytoSet <- gs_pop_get_data(gs[1], "scatter", inverse.transform=TRUE)
+  ExternalNegativeData <- exprs(ExternalNegativeCytoSet[[1]]) %>% #[[1]] used to remove list item, allowing access
+    data.frame(check.names=FALSE)
+  ExternalNegativeSignature <- ExternalNegativeData %>%
+    select(!matches("FSC|SSC|Time")) |> 
+    summarize_all("median")
+}
+ExternalNegativeSignature1 <- get_external_negative_signature(CellsUnstained_GatingSet[1])
+ExternalNegativeSignature2 <- get_external_negative_signature(CellsUnstained_GatingSet[2])
+ExternalNegativeSignature3 <- get_external_negative_signature(CellsUnstained_GatingSet[3])
+ExternalNegativePlotData1 <- ExternalNegativeSignature1 |>
+   mutate(Fluorophore="ExternalBackground1", .before=1)
+ExternalNegativePlotData2 <- ExternalNegativeSignature2 |>
+   mutate(Fluorophore="ExternalBackground2", .before=1)
+ExternalNegativePlotData3 <- ExternalNegativeSignature3 |>
+   mutate(Fluorophore="ExternalBackground3", .before=1)
+```
+
+Compare the signatures.
+
+```{r}
+CombinedAutofluorescences <- bind_rows(
+  ExternalNegativePlotData1,
+  ExternalNegativePlotData2,
+  ExternalNegativePlotData3)
+
+Plots <- VisualizeSignatures(data=CombinedAutofluorescences,
+ columnname="Fluorophore", Normalize = FALSE)
+
+plotly::ggplotly(Plots)
+```
+
+Normalised version.
+
+```{r}
+Plots <- VisualizeSignatures(data=CombinedAutofluorescences,
+ columnname="Fluorophore", Normalize = TRUE)
+
+plotly::ggplotly(Plots)
+```
+
+The three unstained samples seem to have quite similar autofluorescences.
+
+## Remove background
+
+
+```{r}
+JustTheFluorophore1 <- PositiveSignature - ExternalNegativeSignature1
+JustTheFluorophore2 <- PositiveSignature - ExternalNegativeSignature2
+JustTheFluorophore3 <- PositiveSignature - ExternalNegativeSignature3
+JustTheFluorophorePlot1 <- JustTheFluorophore1 |>
+   mutate(Fluorophore="APCFire810_1", .before=1)
+JustTheFluorophorePlot2 <- JustTheFluorophore2 |>
+   mutate(Fluorophore="APCFire810_2", .before=1)
+JustTheFluorophorePlot3 <- JustTheFluorophore3 |>
+   mutate(Fluorophore="APCFire810_3", .before=1)
+
+
+JustTheFluorophorePlot <- bind_rows(
+  JustTheFluorophorePlot1,
+  JustTheFluorophorePlot2,
+  JustTheFluorophorePlot3)
+
+Plots <- VisualizeSignatures(data=JustTheFluorophorePlot,
+ columnname="Fluorophore", Normalize = FALSE)
+
+plotly::ggplotly(Plots)
+```
+
+Normalize.
+
+
+```{r}
+Plots <- VisualizeSignatures(data=JustTheFluorophorePlot,
+ columnname="Fluorophore", Normalize = TRUE)
+
+plotly::ggplotly(Plots)
+```
+
+No difference in the subtracted signal no matter which of the background samples are used.
+
