@@ -458,13 +458,13 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
       <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../course/community/AutoSpectral/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../course/community/AutoSpectral/index_5.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">AutoSpectral</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../course/community/TRU-OLS/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../course/community/TRU-OLS/index_5.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">TRU-OLS</span></a>
   </div>
 </li>
@@ -569,7 +569,7 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 <p>Welcome to the <a href="../../Schedule.html#unmixing-in-r">fourteenth</a> week of the Cytometry in R course. In this walk-through, we will gather the various coding knowledge building blocks we have been tinkering with since <a href="../../course/09_Functions/index.html">Week 09</a>, and attempt to unmix our raw full-stained .fcs files using the <a href="../../course/12_SpectralSignatures/index.html">spectral signature</a> matrices that we derived from our <a href="../../course/SDY3080/SignatureMatrices.html">unmixing controls</a> (both single-color and unstained). We will also make some necessary formatting changes to the unmixed .fcs files, to avoid visualizing our data as tiny distant dots if they are later opened using commercial software.</p>
 <p>More importantly, we hope to crack open what to many in the commmunity is seen as a <a href="https://en.wikipedia.org/wiki/Black_box">black box</a>. By understanding the underlying mechanics operating behind the curtain, we can gain a greater appreciation of the elements involved in the unmixing process (and hopefully assist with contextualizing/troubleshooting any unmixing errors we might encounter in the future).</p>
 <p>The goal of this <a href="../../course/14_Unmixing/index.html">primary course walkthrough</a> is focused on providing broad detailed look at the unmixing process. Additional details on unmixed .fcs file re-formatting are provided in a separate <a href="../../course/14_Unmixing/unmixing.html">bonus walk-through</a> for those that are interested. In the <a href="../../Schedule.html">upcoming week’s primary walkthrough</a>, we will cover how to systematically evaluate our unmixed .fcs files for unmixing errors, and make decisions on what signature variants to use for unmixing reattempts, etc.</p>
-<p>Additionally, there are two separate community walk-throughs (for <a href="../../course/community/AutoSpectral/index.html">AutoSpectral</a> and <a href="../../course/community/TRU-OLS/index.html">TRU-OLS</a> respectively) focusing on these alternative unmixing approaches already available.</p>
+<p>Additionally, there are two separate community walk-throughs (for <a href="../../course/community/AutoSpectral/index.qmd">AutoSpectral</a> and <a href="../../course/community/TRU-OLS/index.qmd">TRU-OLS</a> respectively) focusing on these alternative unmixing approaches already available.</p>
 <p>And with that, lets get started!</p>
 </section>
 <section id="walk-through" class="level1">
@@ -3336,7 +3336,7 @@ $P40           AF-A             4194304      -111   4192506
 <p>Alright, no immediate red flags! It appears that we have been successful in our quest to unmix the raw .fcs files we retrieved from <a href="../../course/SDY3080/ImmPort.html">ImmPort</a> entirely within R from start to finish.</p>
 <p>As mentioned <a href="../../course/14_Unmixing/index.html#planning">earlier</a>, we used a signature matrix for unmixing that we haven’t fully optimized whether the signatures included were the best candidates, so we still need to evaluate how our unmixing looks, and based on any encountered unmixing errors update our decision making about what signatures we provide to the unmixing matrix.</p>
 <p>We will get to this in the next primary walkthrough, but for now, the main tool in our unmixing arsenal is now set up to handle whichever optimized signature matrix we ultimately decide to provide it with.</p>
-<p>Likewise, beyond using OLS, there are other methods via which we can also unmix. Some like non-negative least squares involve simply swapping out <code>lsfit()</code> for another R function. Others are more involved, and have different inputs, some of which was covered in the <a href="../../course/community/AutoSpectral/index.html">Autospectral</a> as well as <a href="../../course/community/TRU-OLS/index.html">TRU-OLS</a> community walkthroughs.</p>
+<p>Likewise, beyond using OLS, there are other methods via which we can also unmix. Some like non-negative least squares involve simply swapping out <code>lsfit()</code> for another R function. Others are more involved, and have different inputs, some of which was covered in the <a href="../../course/community/AutoSpectral/index.qmd">Autospectral</a> as well as <a href="../../course/community/TRU-OLS/index.qmd">TRU-OLS</a> community walkthroughs.</p>
 </section>
 </section>
 <section id="take-away" class="level1">
