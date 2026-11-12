@@ -1,0 +1,108 @@
+---
+title: "Week 06 Visualising with ggplot2 Take Home Problems"
+toc: TRUE
+---
+
+# Problem 1
+In this session, we created beeswarm-style boxplot to display our T-cell frequencies on the y-axis, and timepoint on the x-axis. Using the concepts covered this week, swap out “timepoint” for the “Condition” variable. Adjust other layer arguments accordingly until you can return a similar plot at the end of the class. Finally, figure out how to switch around the order the Condition values are displayed on the x-axis.
+
+```{r}
+# Load packages
+library(dplyr)
+library(ggplot2)
+library(ggcyto)
+library(CytoML)
+library(ggbeeswarm)
+
+# Load dataset
+Folder <- file.path("data")
+CSVFile <- list.files(Folder, pattern = ".csv", full.names = TRUE)
+Data <- read.csv(CSVFile, check.names = FALSE)
+
+# Amend columns
+Data <- Data |> 
+    mutate(TcellProportion=Tcells_count/CD45_count) |>
+    mutate(TcellFrequency=TcellProportion *100) |>
+    mutate(TcellFrequency=round(TcellFrequency, 1))
+Data$timepoint <- factor(Data$timepoint)
+
+# Plot formatting vectors
+shape_sex <- c("Female" = 22, "Male" = 21)
+fill_sex <- c("Female" = "white", "Male" = "black")
+
+# Plot T-cell frequencies vs. Condition
+ggplot(Data) + aes(x= Condition, y=TcellFrequency) +
+     geom_boxplot(fill = "lightgrey") + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + theme_bw()
+
+# Change condition order on plot
+
+# 1. Change condition from character vector to factor
+Data$Condition <- factor(Data$Condition)
+str(Data$Condition)
+
+# 2. Use levels = to change the order of the factors
+levels(Data$Condition)
+
+Data$Condition <- factor(Data$Condition, levels = c("PPD", "SEB", "Ctrl"))
+levels(Data$Condition)
+
+# 3. Plot updated graph
+ggplot(Data) + aes(x= Condition, y=TcellFrequency) +
+     geom_boxplot(fill = "lightgrey") + geom_beeswarm(size=2.5, cex=2.5, aes(shape=infant_sex, fill=infant_sex)) +
+     scale_shape_manual(values=shape_sex) + scale_fill_manual(values=fill_sex) + theme_bw()
+```
+
+# Problem 2
+Circle back to the CytoML-ggcyto flowplot, and modify it until happy with the visual appearance. You may use any resource on the internet to assist, but you must document your steps so that we can also repeat them.
+
+```{r}
+# Load FlowJo wsp file
+FlowJoWsp <- list.files(path = Folder, pattern = ".wsp", full = TRUE)
+ws <- open_flowjo_xml(FlowJoWsp)
+gs <- flowjo_to_gatingset(ws=ws, name=1, path = Folder, additional.keys = "GROUPNAME")
+
+# Original plot
+Plot <- ggcyto(gs[6], subset="Tcells", aes(x="CD8", y="CD4")) + geom_hex(bins=80) + theme
+
+# Fix sample names
+sampleNames(gs)
+pd <- pData(gs)
+pd$sample_id <- sampleNames(gs)
+pData(gs) <- pd
+
+# Updated plot
+Plot <- ggcyto(gs[6], subset="Tcells", aes(x="CD8", y="CD4")) + geom_hex(bins=80) + labs(x = "CD8 BV650", y = "CD4 BUV805", title = "T Cell Populations") + facet_wrap(~sample_id) + theme_bw() + theme(
+     # change facet strip text
+    strip.text = element_text(size = 14, colour = "red", face = "bold"),
+    # change strip box colour
+    strip.background = element_rect(fill = "grey90"), 
+    # change background grid sizing and colour
+    panel.grid = element_line(linewidth = 0.1, colour = "grey"),
+    #change plot title and axis text
+    plot.title = element_text(size = 16, face = "bold", hjust = 0),
+    axis.title = element_text(size = 14),
+    # Change axis text
+    axis.text = element_text(size = 12, colour = "blue")
+  )
+Plot
+```
+
+# Problem 3
+In Mismatched Assumptions, we saw two examples of a histogram/density overlay showing the distribution of a variable on the x-axis. Similar to what we did during class to show values according to a different data column, try to modify the plot to show data on the basis of group (whether condition, ptype, infant_sex, etc.)
+
+```{r}
+ggplot(Data) + aes(x=Condition) + geom_histogram() 
+ggplot(Data) + aes(x=ptype) + geom_density() 
+
+str(Data$Condition)
+str(Data$ptype)
+```
+
+When copying the histrogram/ density plots from the walkthrough and changing the x-axis to the suggested group columns, an error occurs as a continuous x aesthetic is required but the group data is categorical (factor/ character). geom_bar() can be used for categorical variables instead:
+
+```{r}
+ggplot(Data) + aes(x=Condition) + geom_bar() 
+ggplot(Data) + aes(x=ptype) + geom_bar() 
+ggplot(Data) + aes(x=infant_sex) + geom_bar() 
+```

@@ -1,0 +1,113 @@
+---
+title: "Week 03 - Inside an FCS File Take Home Problems"
+format: html
+toc: TRUE
+---
+
+
+::: {.callout}
+
+# Problem 1
+
+Today’s walkthrough focused on a raw spectral flow cytometry file. Within a subfolder in data you will also find an unmixed .fcs file (2025_07_26…). Using what we learned to day, investigate it, and see if you can catalog the main differences that occured to the keyword, parameters and exprs. Did any keywords get added, changed, deleted entirely? etc.
+
+:::
+
+
+```{r}
+PathToData <- file.path("data/AdditionalFCSFiles")
+Fcs_file <- list.files(PathToData, pattern = "2025_07_26", full.names = TRUE)
+Fcs_file
+
+library(flowCore)
+UnmixedFrame <- read.FCS(filename = Fcs_file, transformation = FALSE, truncate_max_range = FALSE)
+UnmixedFrame
+```
+
+The flowFrame contains 100 cells but only 43 observables compared to the 61 seen in the raw spectral file. There are also only 472 keywords stored in description compared to the 476 seen in the raw file (when transformation = FALSE).
+
+![](images/Screenshot%202026-09-16%20083120.png)
+
+## exprs
+
+Compared to the raw spectral file, the exprs matrix columns are named after the FCS, SSC, and fluorochromes used in the experiment rather than the detector numbers. 
+
+```{r}
+UnmixMFI <- UnmixedFrame@exprs
+head(UnmixMFI,5)
+colnames(UnmixMFI)
+```
+
+## Parameters 
+
+The varMetadata and dimLabels data frames have remained the same. classVersion has also remained the same. The data data.frame now contains 43 rows corresponding to the different fluorochomes used. The description column also contains the markers the fluorochromes are attributed to. 
+
+## Keywords
+
+```{r}
+PathToDataFolder <- file.path("data")
+fcs_files <- list.files(PathToDataFolder, pattern = ".fcs", full.names = TRUE)
+flowFrame <- read.FCS(filename = fcs_files[1], transformation = FALSE, truncate_max_range = FALSE)
+
+DescriptionList <- flowFrame@description
+UnmixDescriptionList <- UnmixedFrame@description
+
+library(waldo)
+compare(DescriptionList, UnmixDescriptionList)
+```
+
+The unmixed file contains an additional detector value column '$PnS' that stores the description of the marker associated with the fluorochromes. The unmixed file also contains addtional columns in the Laser Metadata as a 5th laser was used for this experiment. The raw .fcs file contains additional columns as it contains additional parameter numbers (P44-P49) likely due to a greater number of detectors compared to the number of fluorochromes used.
+
+```{r}
+UnmixDescriptionList$`$P11S`
+UnmixDescriptionList$`$P12S`
+```
+
+
+::: {.callout}
+
+# Problem 2 
+
+Today’s files were for spectral .fcs files from a Cytek Aurora within a subfolder in data you will also find a conventional flow cytometry file (2025-10_22…). Similarly, explore and see if you find any major differences (beyond the different detector or fluorophore names which will vary based on antibody panel used, etc)
+
+:::
+
+
+```{r}
+ContradFcsFile <- list.files(PathToData, pattern = "2025-10_22", full.names = TRUE)
+ContradFcsFile
+
+ContradFlowframe <- read.FCS(filename = ContradFcsFile, transformation = FALSE, truncate_max_range = FALSE)
+ContradDescription <- ContradFlowframe@description
+```
+
+The exprs and parameters are the same but descirption is different. The spectral .fcs file contains 472 keyword whereas the conventional .fcs file only contains 330. 
+
+```{r}
+compare(UnmixDescriptionList, ContradDescription)
+```
+
+There are differences in the order of the keywords for the early Metadata and the conventional .fcs file contains more keywords in this section such as 'FCSversion' and '$SYS' included in the conventional .fcs file that are not present in the spectral file.
+
+There are also difference in the detector value keywords with an additional '$PnG' keyword present in the conventional .fcs file. Using the [Flow Cytometry Standard](https://web.archive.org/web/20150209122542/http://www.isac-net.org/images/stories/documents/Standards/fcs3.1_normativespecification_20090813.pdf) 
+the '$PnG' keyword relates to the gain that was used to amplify the signal for parameter n.
+
+```{r}
+ContradDescription$`$P2G`
+```
+
+
+::: {.callout}
+
+# Problem 3 
+
+If you have access to commercial software, take one of the .fcs files and try to see if you can see similar internal information from within the software. For those without commercial access, try the equivalent process using [Floreada.io](https://floreada.io/analysis).
+
+:::
+
+
+Using floreada, you can access the keyword information by right clicking on the fcs file in the lefthand panel. This will bring up a textbox that you can scroll through to view all the keywords associated with the fcs file.  
+
+![](images/Screenshot%202026-09-16%20104237.png)
+
+![](images/Screenshot%202026-09-16%20104305.png)

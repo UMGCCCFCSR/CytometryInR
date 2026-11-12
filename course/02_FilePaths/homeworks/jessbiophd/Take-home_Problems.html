@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Week 02 - File Paths Take-home Problems</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Take-home_Problems_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Take-home_Problems_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Take-home_Problems_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Take-home_Problems_files/libs/quarto-html/popper.min.js"></script>
+<script src="Take-home_Problems_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Take-home_Problems_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Take-home_Problems_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Take-home_Problems_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Take-home_Problems_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Take-home_Problems_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Take-home_Problems_files/libs/bootstrap/bootstrap-215b371544c282197b31c8aa00ce3677.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Week 02 - File Paths Take-home Problems</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="problem-1" class="level1">
+<h1>Problem 1</h1>
+<p>Plug in an external hard-drive or USB into your computer. Manually, create a folder within called “TargetFolder”. Try to programmatically specify the file path to identify the folders and files present on your external drive. Then, try to copy your .fcs files from their current folder on your desktop to the TargetFolder on your drive using R. Remember, just copy, no deletion, you need to walk before you can run :D</p>
+<section id="problem-1-answer" class="level2">
+<h2 class="anchored" data-anchor-id="problem-1-answer">Problem 1 answer</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">"D:/"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>, <span class="at">recursive =</span> <span class="cn">FALSE</span>) <span class="co"># Folders present on external USB</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "D:/6648 WBIP"                 "D:/Flow data"                
+[3] "D:/SIMON"                     "D:/System Volume Information"
+[5] "D:/TargetFolder"             </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">"D:/"</span>, <span class="at">full.names =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>) <span class="co"># All files present on external USB</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "6648 WBIP/6648 Calculations.xlsx"                                                                                
+  [2] "6648 WBIP/6648 Data.pzfx"                                                                                        
+  [3] "6648 WBIP/6648 WB IP panel Abs.xlsx"                                                                             
+  [4] "6648 WBIP/template.wspt"                                                                                         
+  [5] "6648 WBIP/template2_secondsinglecellgate.wspt"                                                                   
+  [6] "6648 WBIP/Wk14 12Nov25/A01 Unstained sample WLSM.fcs"                                                            
+  [7] "6648 WBIP/Wk14 12Nov25/A02 044HAFDC WLSM.fcs"                                                                    
+  [8] "6648 WBIP/Wk14 12Nov25/A03 109HCHI WLSM.fcs"                                                                     
+  [9] "6648 WBIP/Wk14 12Nov25/A04 109HMED WLSM.fcs"                                                                     
+ [10] "6648 WBIP/Wk14 12Nov25/A05 357GHCC WLSM.fcs"                                                                     
+ [11] "6648 WBIP/Wk14 12Nov25/A06 417HGAC WLSM.fcs"                                                                     
+ [12] "6648 WBIP/Wk14 12Nov25/B01 449IIB WLSM.fcs"                                                                      
+ [13] "6648 WBIP/Wk14 12Nov25/B02 558IKAB WLSM.fcs"                                                                     
+ [14] "6648 WBIP/Wk14 12Nov25/B03 633AODC WLSM.fcs"                                                                     
+ [15] "6648 WBIP/Wk14 12Nov25/B05 671ECDL WLSM.fcs"                                                                     
+ [16] "6648 WBIP/Wk14 12Nov25/B06 729EHEC WLSM.fcs"                                                                     
+ [17] "6648 WBIP/Wk14 12Nov25/C01 768EIBE WLSM.fcs"                                                                     
+ [18] "6648 WBIP/Wk14 12Nov25/C02 802HAHDC WLSM.fcs"                                                                    
+ [19] "6648 WBIP/Wk14 12Nov25/C03 978AIAD WLSM.fcs"                                                                     
+ [20] "6648 WBIP/Wk14 12Nov25/C05 980ABAHD WLSM.fcs"                                                                    
+ [21] "6648 WBIP/Wk14 12Nov25/C06 980BEECC WLSM.fcs"                                                                    
+ [22] "6648 WBIP/Wk14 12Nov25/D01 980BEEJ WLSM.fcs"                                                                     
+ [23] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing15May26/A01 Unstained WLSM.fcs"       
+ [24] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing15May26/A02 980ABAGC -1 Nil WLSM.fcs" 
+ [25] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing15May26/A03 980ABAGC -1 Mtb WLSM.fcs" 
+ [26] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing15May26/A04 980ABAGC -1 PMA WLSM.fcs" 
+ [27] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing15May26/A05 980ABAGC 2 Nil WLSM.fcs"  
+ [28] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing15May26/A06 980ABAGC 2 Mtb WLSM.fcs"  
+ [29] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing15May26/B01 980ABAGC 2 PMA WLSM.fcs"  
+ [30] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing15May26/B02 980ABAGC 4 Nil WLSM.fcs"  
+ [31] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing15May26/B03 980ABAGC 4 Mtb WLSM.fcs"  
+ [32] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing15May26/B04 980ABAGC 4 PMA WLSM.fcs"  
+ [33] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing15May26/B05 980ABAGC 8 Nil WLSM.fcs"  
+ [34] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing15May26/B06 980ABAGC 8 Mtb WLSM.fcs"  
+ [35] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing15May26/C01 980ABAGC 8 PMA WLSM.fcs"  
+ [36] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing15May26/C02 980ABAGE 2 PMA WLSM.fcs"  
+ [37] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing18Mar26/A01 Unstained WLSM.fcs"       
+ [38] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing18Mar26/A02 980ABAGC -1 Nil WLSM.fcs" 
+ [39] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing18Mar26/A03 980ABAGC -1 Mtb WLSM.fcs" 
+ [40] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing18Mar26/A04 980ABAGC -1 PMA WLSM.fcs" 
+ [41] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing18Mar26/A05 980ABAGC 2 Nil WLSM.fcs"  
+ [42] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing18Mar26/A06 980ABAGC 2 Mtb WLSM.fcs"  
+ [43] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing18Mar26/B01 980ABAGC 2 PMA WLSM.fcs"  
+ [44] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing18Mar26/B02 980ABAGC 4 Nil WLSM.fcs"  
+ [45] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing18Mar26/B03 980ABAGC 4 Mtb WLSM.fcs"  
+ [46] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing18Mar26/B04 980ABAGC 4 PMA WLSM.fcs"  
+ [47] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing18Mar26/B05 980ABAGC 8 Nil WLSM.fcs"  
+ [48] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing18Mar26/B06 980ABAGC 8 Mtb WLSM.fcs"  
+ [49] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing18Mar26/C01 980ABAGC 8 PMA WLSM.fcs"  
+ [50] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 1/Sample Group - 1/Unmixing18Mar26/C02 980ABAGE 2 PMA WLSM.fcs"  
+ [51] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing15May26/A01 Unstained WLSM1.fcs"      
+ [52] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing15May26/A02 980ABAGC -1 Nil WLSM1.fcs"
+ [53] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing15May26/A03 980ABAGC -1 Mtb WLSM1.fcs"
+ [54] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing15May26/A04 980ABAGC -1 PMA WLSM1.fcs"
+ [55] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing15May26/A05 980ABAGC 2 Nil WLSM1.fcs" 
+ [56] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing15May26/A06 980ABAGC 2 Mtb WLSM1.fcs" 
+ [57] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing15May26/B01 980ABAGC 2 PMA WLSM1.fcs" 
+ [58] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing15May26/B02 980ABAGC 4 Nil WLSM1.fcs" 
+ [59] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing15May26/B03 980ABAGC 4 Mtb WLSM1.fcs" 
+ [60] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing15May26/B04 980ABAGC 4 PMA WLSM1.fcs" 
+ [61] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing15May26/B05 980ABAGC 8 Nil WLSM1.fcs" 
+ [62] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing15May26/B06 980ABAGC 8 Mtb WLSM1.fcs" 
+ [63] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing15May26/C01 980ABAGC 8 PMA WLSM1.fcs" 
+ [64] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing15May26/C02 980ABAGE 2 PMA WLSM1.fcs" 
+ [65] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing18Mar26/A01 Unstained WLSM.fcs"       
+ [66] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing18Mar26/A02 980ABAGC -1 Nil WLSM.fcs" 
+ [67] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing18Mar26/A03 980ABAGC -1 Mtb WLSM.fcs" 
+ [68] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing18Mar26/A04 980ABAGC -1 PMA WLSM.fcs" 
+ [69] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing18Mar26/A05 980ABAGC 2 Nil WLSM.fcs"  
+ [70] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing18Mar26/A06 980ABAGC 2 Mtb WLSM.fcs"  
+ [71] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing18Mar26/B01 980ABAGC 2 PMA WLSM.fcs"  
+ [72] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing18Mar26/B02 980ABAGC 4 Nil WLSM.fcs"  
+ [73] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing18Mar26/B03 980ABAGC 4 Mtb WLSM.fcs"  
+ [74] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing18Mar26/B04 980ABAGC 4 PMA WLSM.fcs"  
+ [75] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing18Mar26/B05 980ABAGC 8 Nil WLSM.fcs"  
+ [76] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing18Mar26/B06 980ABAGC 8 Mtb WLSM.fcs"  
+ [77] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing18Mar26/C01 980ABAGC 8 PMA WLSM.fcs"  
+ [78] "Flow data/980ABAGC_20May26/24 Tube Rack (5mL) - 2/Sample Group - 1/Unmixing18Mar26/C02 980ABAGE 2 PMA WLSM.fcs"  
+ [79] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/A01 Unstained Raw.fcs"                             
+ [80] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/A02 LiveDeadBlue Raw.fcs"                          
+ [81] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/A03 [RY775] Raw.fcs"                               
+ [82] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/A04 APC-Fire750 Raw.fcs"                           
+ [83] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/A05 PacBlue Raw.fcs"                               
+ [84] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/A06 BV570 Raw.fcs"                                 
+ [85] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/A07 SparkBlue-550 Raw.fcs"                         
+ [86] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/A08 SparkNIR-685 Raw.fcs"                          
+ [87] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/A09 PE-AF610 Raw.fcs"                              
+ [88] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/A10 BUV615 Raw.fcs"                                
+ [89] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/A11 PE-Fire810 Raw.fcs"                            
+ [90] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/A12 FITC Raw.fcs"                                  
+ [91] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/B01 BUV805 Raw.fcs"                                
+ [92] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/B02 RB780 Raw.fcs"                                 
+ [93] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/B03 BV510 Raw.fcs"                                 
+ [94] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/B04 BV605 Raw.fcs"                                 
+ [95] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/B05 BV785 Raw.fcs"                                 
+ [96] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/B06 PE-Cy5 Raw.fcs"                                
+ [97] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/B07 AF555 Raw.fcs"                                 
+ [98] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/B08 [RB613] Raw.fcs"                               
+ [99] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/B09 BUV496 Raw.fcs"                                
+[100] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/B10 PE-Fire640 Raw.fcs"                            
+[101] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/B11 APC Raw.fcs"                                   
+[102] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/B12 RY586 Raw.fcs"                                 
+[103] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/C01 PerCP Raw.fcs"                                 
+[104] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/C02 BV711 Raw.fcs"                                 
+[105] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/C03 BUV563 Raw.fcs"                                
+[106] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/C04 AF647 Raw.fcs"                                 
+[107] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/C05 SB645 Raw.fcs"                                 
+[108] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/C06 BUV395 Raw.fcs"                                
+[109] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/C07 PE-Dazzle594 Raw.fcs"                          
+[110] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/C08 PE-Cy7 Raw.fcs"                                
+[111] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/C09 PE Raw.fcs"                                    
+[112] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/C10 BV650 Raw.fcs"                                 
+[113] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/C11 AF700 Raw.fcs"                                 
+[114] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/C12 V450 Raw.fcs"                                  
+[115] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/D01 RB705 Raw.fcs"                                 
+[116] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/D02 PE-Vio615 Raw.fcs"                             
+[117] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/D03 BV421 Raw.fcs"                                 
+[118] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/D04 PerCP-Cy5.5 Raw.fcs"                           
+[119] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/D05 BUV737 Raw.fcs"                                
+[120] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/A01 Unstained WLSM.fcs"                   
+[121] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/A02 LiveDeadBlue WLSM.fcs"                
+[122] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/A03 [RY775] WLSM.fcs"                     
+[123] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/A04 APC-Fire750 WLSM.fcs"                 
+[124] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/A05 PacBlue WLSM.fcs"                     
+[125] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/A06 BV570 WLSM.fcs"                       
+[126] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/A07 SparkBlue-550 WLSM.fcs"               
+[127] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/A08 SparkNIR-685 WLSM.fcs"                
+[128] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/A09 PE-AF610 WLSM.fcs"                    
+[129] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/A10 BUV615 WLSM.fcs"                      
+[130] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/A11 PE-Fire810 WLSM.fcs"                  
+[131] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/A12 FITC WLSM.fcs"                        
+[132] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/B01 BUV805 WLSM.fcs"                      
+[133] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/B02 RB780 WLSM.fcs"                       
+[134] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/B03 BV510 WLSM.fcs"                       
+[135] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/B04 BV605 WLSM.fcs"                       
+[136] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/B05 BV785 WLSM.fcs"                       
+[137] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/B06 PE-Cy5 WLSM.fcs"                      
+[138] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/B07 AF555 WLSM.fcs"                       
+[139] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/B08 [RB613] WLSM.fcs"                     
+[140] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/B09 BUV496 WLSM.fcs"                      
+[141] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/B10 PE-Fire640 WLSM.fcs"                  
+[142] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/B11 APC WLSM.fcs"                         
+[143] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/B12 RY586 WLSM.fcs"                       
+[144] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/C01 PerCP WLSM.fcs"                       
+[145] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/C02 BV711 WLSM.fcs"                       
+[146] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/C03 BUV563 WLSM.fcs"                      
+[147] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/C04 AF647 WLSM.fcs"                       
+[148] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/C05 SB645 WLSM.fcs"                       
+[149] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/C06 BUV395 WLSM.fcs"                      
+[150] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/C07 PE-Dazzle594 WLSM.fcs"                
+[151] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/C08 PE-Cy7 WLSM.fcs"                      
+[152] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/C09 PE WLSM.fcs"                          
+[153] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/C10 BV650 WLSM.fcs"                       
+[154] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/C11 AF700 WLSM.fcs"                       
+[155] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/C12 V450 WLSM.fcs"                        
+[156] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/D01 RB705 WLSM.fcs"                       
+[157] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/D02 PE-Vio615 WLSM.fcs"                   
+[158] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/D03 BV421 WLSM.fcs"                       
+[159] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/D04 PerCP-Cy5.5 WLSM.fcs"                 
+[160] "Flow data/ERA4TB/6274_Batch1_18Mar26/Single Positive Controls/Unmixing/D05 BUV737 WLSM.fcs"                      
+[161] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/A01 Unstained WLSM.fcs"                                     
+[162] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/A02 Unstained WLSM.fcs"                                     
+[163] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/A03 Unstained WLSM.fcs"                                     
+[164] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/B02 036KHC WLSM.fcs"                                        
+[165] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/B03 036KHC WLSM.fcs"                                        
+[166] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/B04 036KHC WLSM.fcs"                                        
+[167] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/B06 671ECED WLSM.fcs"                                       
+[168] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/B07 671ECED WLSM.fcs"                                       
+[169] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/B08 671ECED WLSM.fcs"                                       
+[170] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/B10 980ABAGE WLSM.fcs"                                      
+[171] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/B11 980ABAGE WLSM.fcs"                                      
+[172] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/B12 980ABAGE WLSM.fcs"                                      
+[173] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/C02 036KHC WLSM.fcs"                                        
+[174] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/C03 036KHC WLSM.fcs"                                        
+[175] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/C04 036KHC WLSM.fcs"                                        
+[176] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/C06 671ECED WLSM.fcs"                                       
+[177] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/C07 671ECED WLSM.fcs"                                       
+[178] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/C08 671ECED WLSM.fcs"                                       
+[179] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/C10 980ABAGE WLSM.fcs"                                      
+[180] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/C11 980ABAGE WLSM.fcs"                                      
+[181] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/C12 980ABAGE WLSM.fcs"                                      
+[182] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/D02 036KHC WLSM.fcs"                                        
+[183] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/D03 036KHC WLSM.fcs"                                        
+[184] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/D04 036KHC WLSM.fcs"                                        
+[185] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/D06 671ECED WLSM.fcs"                                       
+[186] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/D07 671ECED WLSM.fcs"                                       
+[187] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/D08 671ECED WLSM.fcs"                                       
+[188] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/D10 980ABAGE WLSM.fcs"                                      
+[189] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/D11 980ABAGE WLSM.fcs"                                      
+[190] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/D12 980ABAGE WLSM.fcs"                                      
+[191] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/E02 036KHC WLSM.fcs"                                        
+[192] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/E03 036KHC WLSM.fcs"                                        
+[193] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/E04 036KHC WLSM.fcs"                                        
+[194] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/E06 671ECED WLSM.fcs"                                       
+[195] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/E07 671ECED WLSM.fcs"                                       
+[196] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/E08 671ECED WLSM.fcs"                                       
+[197] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/E10 980ABAGE WLSM.fcs"                                      
+[198] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/E11 980ABAGE WLSM.fcs"                                      
+[199] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/E12 980ABAGE WLSM.fcs"                                      
+[200] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/F02 036KHC WLSM.fcs"                                        
+[201] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/F03 036KHC WLSM.fcs"                                        
+[202] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/F04 036KHC WLSM.fcs"                                        
+[203] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/F06 671ECED WLSM.fcs"                                       
+[204] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/F07 671ECED WLSM.fcs"                                       
+[205] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/F08 671ECED WLSM.fcs"                                       
+[206] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/F10 980ABAGE WLSM.fcs"                                      
+[207] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/F11 980ABAGE WLSM.fcs"                                      
+[208] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/F12 980ABAGE WLSM.fcs"                                      
+[209] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/G02 036KHC WLSM.fcs"                                        
+[210] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/G03 036KHC WLSM.fcs"                                        
+[211] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/G04 036KHC WLSM.fcs"                                        
+[212] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/G06 671ECED WLSM.fcs"                                       
+[213] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/G07 671ECED WLSM.fcs"                                       
+[214] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/G08 671ECED WLSM.fcs"                                       
+[215] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/G10 980ABAGE WLSM.fcs"                                      
+[216] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/G11 980ABAGE WLSM.fcs"                                      
+[217] "Flow data/ERA4TB/6274_Batch1_18Mar26/Unmixing19Mar26/G12 980ABAGE WLSM.fcs"                                      
+[218] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/A01 Unstained WLSM.fcs"                         
+[219] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/A02 LiveDeadBlue WLSM.fcs"                      
+[220] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/A03 [RY775] WLSM.fcs"                           
+[221] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/A04 APC-Fire750 WLSM.fcs"                       
+[222] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/A05 PacBlue WLSM.fcs"                           
+[223] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/A06 BV570 WLSM.fcs"                             
+[224] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/A07 SparkBlue-550 WLSM.fcs"                     
+[225] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/A08 SparkNIR-685 WLSM.fcs"                      
+[226] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/A09 PE-AF610 WLSM.fcs"                          
+[227] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/A10 BUV615 WLSM.fcs"                            
+[228] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/A11 PE-Fire810 WLSM.fcs"                        
+[229] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/A12 FITC WLSM.fcs"                              
+[230] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/B01 BUV805 WLSM.fcs"                            
+[231] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/B02 RB780 WLSM.fcs"                             
+[232] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/B03 BV510 WLSM.fcs"                             
+[233] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/B04 BV605 WLSM.fcs"                             
+[234] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/B05 BV785 WLSM.fcs"                             
+[235] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/B06 PE-Cy5 WLSM.fcs"                            
+[236] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/B07 BUV496 WLSM.fcs"                            
+[237] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/B08 [RB613] WLSM.fcs"                           
+[238] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/B09 AF555 WLSM.fcs"                             
+[239] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/B10 PE-Fire640 WLSM.fcs"                        
+[240] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/B11 APC WLSM.fcs"                               
+[241] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/B12 RY586 WLSM.fcs"                             
+[242] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/C01 PerCP WLSM.fcs"                             
+[243] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/C02 BV711 WLSM.fcs"                             
+[244] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/C03 BUV563 WLSM.fcs"                            
+[245] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/C04 AF647 WLSM.fcs"                             
+[246] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/C05 SB645 WLSM.fcs"                             
+[247] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/C06 BUV395 WLSM.fcs"                            
+[248] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/C07 PE-Dazzle594 WLSM.fcs"                      
+[249] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/C08 PE WLSM.fcs"                                
+[250] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/C09 PE-Cy7 WLSM.fcs"                            
+[251] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/C10 BV650 WLSM.fcs"                             
+[252] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/C11 AF700 WLSM.fcs"                             
+[253] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/C12 V450 WLSM.fcs"                              
+[254] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/D01 RB705 WLSM.fcs"                             
+[255] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/D02 PE-Vio615 WLSM.fcs"                         
+[256] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/D03 BV421 WLSM.fcs"                             
+[257] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/D04 PerCP-Cy5.5 WLSM.fcs"                       
+[258] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (deep) - 1/D05 BUV737 WLSM.fcs"                            
+[259] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/B02 037KCHF NIL -1 WLSM.fcs"               
+[260] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/B03 037KCHF MTB -1 WLSM.fcs"               
+[261] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/B04 037KCHF PMA -1 WLSM.fcs"               
+[262] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/B06 053GHF NIL -1 WLSM.fcs"                
+[263] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/B07 053GHF MTB  WLSM.fcs"                  
+[264] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/B08 053GHF PMA -1 WLSM.fcs"                
+[265] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/B10 542BGE NIL -1 WLSM.fcs"                
+[266] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/B11 542BGE MTB -1 WLSM.fcs"                
+[267] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/B12 542BGE PMA -1 WLSM.fcs"                
+[268] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/C02 037KCHF NIL 2 WLSM.fcs"                
+[269] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/C03 037KCHF MTB 2 WLSM.fcs"                
+[270] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/C04 037KCHF PMA 2 WLSM.fcs"                
+[271] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/C06 053GHF NIL 2 WLSM.fcs"                 
+[272] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/C07 053GHF MTB 2 WLSM.fcs"                 
+[273] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/C08 053GHF PMA 2 WLSM.fcs"                 
+[274] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/C10 542BGE NIL 2 WLSM.fcs"                 
+[275] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/C11 542BGE MTB 2 WLSM.fcs"                 
+[276] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/C12 542BGE PMA 2 WLSM.fcs"                 
+[277] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/D02 037KCHF NIL 4 WLSM.fcs"                
+[278] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/D03 037KCHF MTB 4 WLSM.fcs"                
+[279] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/D04 037KCHF PMA 4 WLSM.fcs"                
+[280] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/D06 053GHF NIL 4 WLSM.fcs"                 
+[281] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/D07 053GHF MTB 4 WLSM.fcs"                 
+[282] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/D08 053GHF PMA 4 WLSM.fcs"                 
+[283] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/D10 542BGE NIL 4 WLSM.fcs"                 
+[284] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/D11 542BGE MTB 4 WLSM.fcs"                 
+[285] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/D12 542BGE PMA 4 WLSM.fcs"                 
+[286] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/E02 037KCHF NIL 8 WLSM.fcs"                
+[287] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/E03 037KCHF MTB 8 WLSM.fcs"                
+[288] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/E04 037KCHF PMA 8 WLSM.fcs"                
+[289] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/E06 053GHF NIL 8 WLSM.fcs"                 
+[290] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/E07 053GHF MTB 8 WLSM.fcs"                 
+[291] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/E08 053GHF PMA 8 WLSM.fcs"                 
+[292] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/E10 542BGE NIL 8 WLSM.fcs"                 
+[293] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/E11 542BGE MTB 8 WLSM.fcs"                 
+[294] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/E12 542BGE PMA 8 WLSM.fcs"                 
+[295] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/F02 037KCHF NIL 10 WLSM.fcs"               
+[296] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/F03 037KCHF MTB 10 WLSM.fcs"               
+[297] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/F04 037KCHF PMA 10 WLSM.fcs"               
+[298] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/F06 053GHF NIL 10 WLSM.fcs"                
+[299] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/F07 053GHF MTB 10 WLSM.fcs"                
+[300] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/F08 053GHF PMA 10 WLSM.fcs"                
+[301] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/F10 542BGE NIL 10 WLSM.fcs"                
+[302] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/F11 542BGE MTB 10 WLSM.fcs"                
+[303] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/F12 542BGE PMA 10 WLSM.fcs"                
+[304] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/G02 037KCHF NIL 12 WLSM.fcs"               
+[305] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/G03 037KCHF MTB 12 WLSM.fcs"               
+[306] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/G04 037KCHF PMA 12 WLSM.fcs"               
+[307] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/G06 053GHF NIL 12 WLSM.fcs"                
+[308] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/G07 053GHF MTB 12 WLSM.fcs"                
+[309] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/G08 053GHF PMA 12 WLSM.fcs"                
+[310] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/G10 542BGE NIL 12 WLSM.fcs"                
+[311] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/G11 542BGE MTB 12 WLSM.fcs"                
+[312] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 1/G12 542BGE PMA 12 WLSM.fcs"                
+[313] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/A01 Unstained WLSM.fcs"                    
+[314] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/A02 980ABAGE Wk2 Control WLSM.fcs"         
+[315] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/B02 037KCHF NIL -1 WLSM.fcs"               
+[316] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/B03 037KCHF MTB -1 WLSM.fcs"               
+[317] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/B04 037KCHF PMA -1 WLSM.fcs"               
+[318] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/B06 053GHF NIL -1 WLSM.fcs"                
+[319] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/B07 053GHF MTB  WLSM.fcs"                  
+[320] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/B08 053GHF PMA -1 WLSM.fcs"                
+[321] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/B10 542BGE NIL -1 WLSM.fcs"                
+[322] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/B11 542BGE MTB -1 WLSM.fcs"                
+[323] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/B12 542BGE PMA -1 WLSM.fcs"                
+[324] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/C02 037KCHF NIL 2 WLSM.fcs"                
+[325] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/C03 037KCHF MTB 2 WLSM.fcs"                
+[326] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/C04 037KCHF PMA 2 WLSM.fcs"                
+[327] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/C06 053GHF NIL 2 WLSM.fcs"                 
+[328] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/C07 053GHF MTB 2 WLSM.fcs"                 
+[329] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/C08 053GHF PMA 2 WLSM.fcs"                 
+[330] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/C10 542BGE NIL 2 WLSM.fcs"                 
+[331] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/C11 542BGE MTB 2 WLSM.fcs"                 
+[332] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/C12 542BGE PMA 2 WLSM.fcs"                 
+[333] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/D02 037KCHF NIL 4 WLSM.fcs"                
+[334] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/D03 037KCHF MTB 4 WLSM.fcs"                
+[335] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/D04 037KCHF PMA 4 WLSM.fcs"                
+[336] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/D06 053GHF NIL 4 WLSM.fcs"                 
+[337] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/D07 053GHF MTB 4 WLSM.fcs"                 
+[338] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/D08 053GHF PMA 4 WLSM.fcs"                 
+[339] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/D10 542BGE NIL 4 WLSM.fcs"                 
+[340] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/D11 542BGE MTB 4 WLSM.fcs"                 
+[341] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/D12 542BGE PMA 4 WLSM.fcs"                 
+[342] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/E02 037KCHF NIL 8 WLSM.fcs"                
+[343] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/E03 037KCHF MTB 8 WLSM.fcs"                
+[344] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/E04 037KCHF PMA 8 WLSM.fcs"                
+[345] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/E06 053GHF NIL 8 WLSM.fcs"                 
+[346] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/E07 053GHF MTB 8 WLSM.fcs"                 
+[347] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/E08 053GHF PMA 8 WLSM.fcs"                 
+[348] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/E10 542BGE NIL 8 WLSM.fcs"                 
+[349] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/E11 542BGE MTB 8 WLSM.fcs"                 
+[350] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/E12 542BGE PMA 8 WLSM.fcs"                 
+[351] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/F02 037KCHF NIL 10 WLSM.fcs"               
+[352] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/F03 037KCHF MTB 10 WLSM.fcs"               
+[353] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/F04 037KCHF PMA 10 WLSM.fcs"               
+[354] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/F06 053GHF NIL 10 WLSM.fcs"                
+[355] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/F07 053GHF MTB 10 WLSM.fcs"                
+[356] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/F08 053GHF PMA 10 WLSM.fcs"                
+[357] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/F10 542BGE NIL 10 WLSM.fcs"                
+[358] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/F11 542BGE MTB 10 WLSM.fcs"                
+[359] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/F12 542BGE PMA 10 WLSM.fcs"                
+[360] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/G02 037KCHF NIL 12 WLSM.fcs"               
+[361] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/G03 037KCHF MTB 12 WLSM.fcs"               
+[362] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/G04 037KCHF PMA 12 WLSM.fcs"               
+[363] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/G06 053GHF NIL 12 WLSM.fcs"                
+[364] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/G07 053GHF MTB 12 WLSM.fcs"                
+[365] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/G08 053GHF PMA 12 WLSM.fcs"                
+[366] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/G10 542BGE NIL 12 WLSM.fcs"                
+[367] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/G11 542BGE MTB 12 WLSM.fcs"                
+[368] "Flow data/ERA4TB/ERA4TB_Batch2_22July26/96 Well Plate (half deep) - 2/G12 542BGE PMA 12 WLSM.fcs"                
+[369] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/B02 548FBGG -1 Nil WLSM.fcs"                
+[370] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/B03 548FBGG -1 Mtb WLSM.fcs"                
+[371] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/B04 548FBGG -1 PMA WLSM.fcs"                
+[372] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/B06 671ECDI -1 Nil WLSM.fcs"                
+[373] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/B07 671ECDI -1 Mtb WLSM.fcs"                
+[374] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/B08 671ECDI -1 PMA WLSM.fcs"                
+[375] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/B10 970CIG -1 Nil WLSM.fcs"                 
+[376] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/B11 970CIG -1 Mtb WLSM.fcs"                 
+[377] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/B12 970CIG -1 PMA WLSM.fcs"                 
+[378] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/C02 548FBGG 2 Nil WLSM.fcs"                 
+[379] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/C03 548FBGG 2 Mtb WLSM.fcs"                 
+[380] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/C04 548FBGG 2 PMA WLSM.fcs"                 
+[381] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/C06 671ECDI 2 Nil WLSM.fcs"                 
+[382] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/C07 671ECDI 2 Mtb WLSM.fcs"                 
+[383] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/C08 671ECDI 2 PMA WLSM.fcs"                 
+[384] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/C10 970CIG 2 Nil WLSM.fcs"                  
+[385] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/C11 970CIG 2 Mtb WLSM.fcs"                  
+[386] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/C12 970CIG 2 PMA WLSM.fcs"                  
+[387] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/D02 548FBGG 4 Nil WLSM.fcs"                 
+[388] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/D03 548FBGG 4 Mtb WLSM.fcs"                 
+[389] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/D04 548FBGG 4 PMA WLSM.fcs"                 
+[390] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/D06 671ECDI 4 Nil WLSM.fcs"                 
+[391] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/D07 671ECDI 4 Mtb WLSM.fcs"                 
+[392] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/D08 671ECDI 4 PMA WLSM.fcs"                 
+[393] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/D10 970CIG 4 Nil WLSM.fcs"                  
+[394] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/D11 970CIG 4 Mtb WLSM.fcs"                  
+[395] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/D12 970CIG 4 PMA WLSM.fcs"                  
+[396] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/E02 548FBGG 8 Nil WLSM.fcs"                 
+[397] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/E03 548FBGG 8 Mtb WLSM.fcs"                 
+[398] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/E04 548FBGG 8 PMA WLSM.fcs"                 
+[399] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/E06 671ECDI 8 Nil WLSM.fcs"                 
+[400] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/E07 671ECDI 8 Mtb WLSM.fcs"                 
+[401] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/E08 671ECDI 8 PMA WLSM.fcs"                 
+[402] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/E10 970CIG 8 Nil WLSM.fcs"                  
+[403] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/E11 970CIG 8 Mtb WLSM.fcs"                  
+[404] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/E12 970CIG 8 PMA WLSM.fcs"                  
+[405] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/F02 548FBGG 10 Nil WLSM.fcs"                
+[406] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/F03 548FBGG 10 Mtb WLSM.fcs"                
+[407] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/F04 548FBGG 10 PMA WLSM.fcs"                
+[408] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/F06 671ECDI 10 Nil WLSM.fcs"                
+[409] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/F07 671ECDI 10 Mtb WLSM.fcs"                
+[410] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/F08 671ECDI 10 PMA WLSM.fcs"                
+[411] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/F10 970CIG 10 Nil WLSM.fcs"                 
+[412] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/F11 970CIG 10 Mtb WLSM.fcs"                 
+[413] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/F12 970CIG 10 PMA WLSM.fcs"                 
+[414] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/G02 548FBGG 12 Nil WLSM.fcs"                
+[415] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/G03 548FBGG 12 Mtb WLSM.fcs"                
+[416] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/G04 548FBGG 12 PMA WLSM.fcs"                
+[417] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/G06 671ECDI 12 Nil WLSM.fcs"                
+[418] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/G07 671ECDI 12 Mtb WLSM.fcs"                
+[419] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/G08 671ECDI 12 PMA WLSM.fcs"                
+[420] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/G10 970CIG 12 Nil WLSM.fcs"                 
+[421] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/G11 970CIG 12 Mtb WLSM.fcs"                 
+[422] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 1/G12 970CIG 12 PMA WLSM.fcs"                 
+[423] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/A01 Unstained Control WLSM.fcs"             
+[424] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/A02 908ABAGE 2 PMA (Batch control) WLSM.fcs"
+[425] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/B02 548FBGG -1 Nil WLSM.fcs"                
+[426] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/B03 548FBGG -1 Mtb WLSM.fcs"                
+[427] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/B04 548FBGG -1 PMA WLSM.fcs"                
+[428] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/B06 671ECDI -1 Nil WLSM.fcs"                
+[429] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/B07 671ECDI -1 Mtb WLSM.fcs"                
+[430] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/B08 671ECDI -1 PMA WLSM.fcs"                
+[431] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/B10 970CIG -1 Nil WLSM.fcs"                 
+[432] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/B11 970CIG -1 Mtb WLSM.fcs"                 
+[433] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/B12 970CIG -1 PMA WLSM.fcs"                 
+[434] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/C02 548FBGG 2 Nil WLSM.fcs"                 
+[435] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/C03 548FBGG 2 Mtb WLSM.fcs"                 
+[436] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/C04 548FBGG 2 PMA WLSM.fcs"                 
+[437] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/C06 671ECDI 2 Nil WLSM.fcs"                 
+[438] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/C07 671ECDI 2 Mtb WLSM.fcs"                 
+[439] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/C08 671ECDI 2 PMA WLSM.fcs"                 
+[440] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/C10 970CIG 2 Nil WLSM.fcs"                  
+[441] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/C11 970CIG 2 Mtb WLSM.fcs"                  
+[442] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/C12 970CIG 2 PMA WLSM.fcs"                  
+[443] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/D02 548FBGG 4 Nil WLSM.fcs"                 
+[444] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/D03 548FBGG 4 Mtb WLSM.fcs"                 
+[445] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/D04 548FBGG 4 PMA WLSM.fcs"                 
+[446] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/D06 671ECDI 4 Nil WLSM.fcs"                 
+[447] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/D07 671ECDI 4 Mtb WLSM.fcs"                 
+[448] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/D08 671ECDI 4 PMA WLSM.fcs"                 
+[449] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/D10 970CIG 4 Nil WLSM.fcs"                  
+[450] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/D11 970CIG 4 Mtb WLSM.fcs"                  
+[451] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/D12 970CIG 4 PMA WLSM.fcs"                  
+[452] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/E02 548FBGG 8 Nil WLSM.fcs"                 
+[453] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/E03 548FBGG 8 Mtb WLSM.fcs"                 
+[454] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/E04 548FBGG 8 PMA WLSM.fcs"                 
+[455] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/E06 671ECDI 8 Nil WLSM.fcs"                 
+[456] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/E07 671ECDI 8 Mtb WLSM.fcs"                 
+[457] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/E08 671ECDI 8 PMA WLSM.fcs"                 
+[458] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/E10 970CIG 8 Nil WLSM.fcs"                  
+[459] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/E11 970CIG 8 Mtb WLSM.fcs"                  
+[460] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/E12 970CIG 8 PMA WLSM.fcs"                  
+[461] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/F02 548FBGG 10 Nil WLSM.fcs"                
+[462] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/F03 548FBGG 10 Mtb WLSM.fcs"                
+[463] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/F04 548FBGG 10 PMA WLSM.fcs"                
+[464] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/F06 671ECDI 10 Nil WLSM.fcs"                
+[465] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/F07 671ECDI 10 Mtb WLSM.fcs"                
+[466] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/F08 671ECDI 10 PMA WLSM.fcs"                
+[467] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/F10 970CIG 10 Nil WLSM.fcs"                 
+[468] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/F11 970CIG 10 Mtb WLSM.fcs"                 
+[469] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/F12 970CIG 10 PMA WLSM.fcs"                 
+[470] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/G02 548FBGG 12 Nil WLSM.fcs"                
+[471] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/G03 548FBGG 12 Mtb WLSM.fcs"                
+[472] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/G04 548FBGG 12 PMA WLSM.fcs"                
+[473] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/G06 671ECDI 12 Nil WLSM.fcs"                
+[474] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/G07 671ECDI 12 Mtb WLSM.fcs"                
+[475] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/G08 671ECDI 12 PMA WLSM.fcs"                
+[476] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/G10 970CIG 12 Nil WLSM.fcs"                 
+[477] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/G11 970CIG 12 Mtb WLSM.fcs"                 
+[478] "Flow data/ERA4TB/ERA4TB_Batch3_06Aug26/96 Well Plate (half deep) - 2/G12 970CIG 12 PMA WLSM.fcs"                 
+[479] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/A01 Unstained WLSM.fcs"                          
+[480] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/A02 LiveDeadBlue WLSM.fcs"                       
+[481] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/A03 [RY775] WLSM.fcs"                            
+[482] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/A04 APC-Fire750 WLSM.fcs"                        
+[483] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/A05 PacBlue WLSM.fcs"                            
+[484] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/A06 BV570 WLSM.fcs"                              
+[485] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/A07 SparkBlue-550 WLSM.fcs"                      
+[486] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/A08 SparkNIR-685 WLSM.fcs"                       
+[487] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/A09 BUV661 WLSM.fcs"                             
+[488] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/A10 BUV615 WLSM.fcs"                             
+[489] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/A11 PE-Fire810 WLSM.fcs"                         
+[490] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/A12 FITC WLSM.fcs"                               
+[491] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/B01 BUV805 WLSM.fcs"                             
+[492] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/B02 [RB780] WLSM.fcs"                            
+[493] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/B03 BV510 WLSM.fcs"                              
+[494] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/B04 BV605 WLSM.fcs"                              
+[495] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/B05 BV785 WLSM.fcs"                              
+[496] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/B06 PE-Cy5 WLSM.fcs"                             
+[497] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/B07 BUV496 WLSM.fcs"                             
+[498] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/B08 [RB613] WLSM.fcs"                            
+[499] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/B09 AF555 WLSM.fcs"                              
+[500] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/B10 PE-Fire640 WLSM.fcs"                         
+[501] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/B11 APC WLSM.fcs"                                
+[502] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/B12 RY586 WLSM.fcs"                              
+[503] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/C01 PerCP WLSM.fcs"                              
+[504] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/C02 BV711 WLSM.fcs"                              
+[505] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/C03 BUV563 WLSM.fcs"                             
+[506] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/C04 AF647 WLSM.fcs"                              
+[507] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/C05 SB645 WLSM.fcs"                              
+[508] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/C06 BUV395 WLSM.fcs"                             
+[509] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/C07 PE-Dazzle594 WLSM.fcs"                       
+[510] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/C08 PE WLSM.fcs"                                 
+[511] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/C09 PE-Cy7 WLSM.fcs"                             
+[512] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/C10 BV650 WLSM.fcs"                              
+[513] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/C11 AF700 WLSM.fcs"                              
+[514] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/C12 V450 WLSM.fcs"                               
+[515] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/D01 RB705 WLSM.fcs"                              
+[516] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/D02 PE-Vio615 WLSM.fcs"                          
+[517] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/D03 BV421 WLSM.fcs"                              
+[518] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/D04 PerCP-Cy5.5 WLSM.fcs"                        
+[519] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (deep) - 1/D05 BUV737 WLSM.fcs"                             
+[520] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/A01 Unstained control WLSM.fcs"             
+[521] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/A02 980ABAGE 2 PMA (Batch control) WLSM.fcs"
+[522] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/B02 036KHC -1 Nil WLSM.fcs"                 
+[523] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/B03 036KHC -1 Mtb WLSM.fcs"                 
+[524] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/B04 036KHC -1 PMA WLSM.fcs"                 
+[525] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/B06 958EBFH -1 Nil WLSM.fcs"                
+[526] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/B07 958EBFH -1 Mtb WLSM.fcs"                
+[527] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/B08 958EBFH -1 PMA WLSM.fcs"                
+[528] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/B10 978AIK -1 Nil WLSM.fcs"                 
+[529] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/B11 978AIK -1 Mtb WLSM.fcs"                 
+[530] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/B12 978AIK -1 PMA WLSM.fcs"                 
+[531] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/C02 036KHC 2 Nil WLSM.fcs"                  
+[532] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/C03 036KHC 2 Mtb WLSM.fcs"                  
+[533] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/C04 036KHC 2 PMA WLSM.fcs"                  
+[534] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/C06 958EBFH 2 Nil WLSM.fcs"                 
+[535] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/C07 958EBFH 2 Mtb WLSM.fcs"                 
+[536] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/C08 958EBFH 2 PMA WLSM.fcs"                 
+[537] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/C10 978AIK 2 Nil WLSM.fcs"                  
+[538] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/C11 978AIK 2 Mtb WLSM.fcs"                  
+[539] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/C12 978AIK 2 PMA WLSM.fcs"                  
+[540] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/D02 036KHC 4 Nil WLSM.fcs"                  
+[541] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/D03 036KHC 4 Mtb WLSM.fcs"                  
+[542] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/D04 036KHC 4 PMA WLSM.fcs"                  
+[543] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/D06 958EBFH 4 Nil WLSM.fcs"                 
+[544] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/D07 958EBFH 4 Mtb WLSM.fcs"                 
+[545] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/D08 958EBFH 4 PMA WLSM.fcs"                 
+[546] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/D10 978AIK 4 Nil WLSM.fcs"                  
+[547] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/D11 978AIK 4 Mtb WLSM.fcs"                  
+[548] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/D12 978AIK 4 PMA WLSM.fcs"                  
+[549] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/E02 036KHC 8 Nil WLSM.fcs"                  
+[550] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/E03 036KHC 8 Mtb WLSM.fcs"                  
+[551] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/E04 036KHC 8 PMA WLSM.fcs"                  
+[552] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/E06 958EBFH 8 Nil WLSM.fcs"                 
+[553] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/E07 958EBFH 8 Mtb WLSM.fcs"                 
+[554] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/E08 958EBFH 8 PMA WLSM.fcs"                 
+[555] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/E10 978AIK 8 Nil WLSM.fcs"                  
+[556] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/E11 978AIK 8 Mtb WLSM.fcs"                  
+[557] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/E12 978AIK 8 PMA WLSM.fcs"                  
+[558] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/F02 036KHC 10 Nil WLSM.fcs"                 
+[559] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/F03 036KHC 10 Mtb WLSM.fcs"                 
+[560] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/F04 036KHC 10 PMA WLSM.fcs"                 
+[561] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/F06 958EBFH 10 Nil WLSM.fcs"                
+[562] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/F07 958EBFH 10 Mtb WLSM.fcs"                
+[563] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/F08 958EBFH 10 PMA WLSM.fcs"                
+[564] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/F10 978AIK 10 Nil WLSM.fcs"                 
+[565] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/F11 978AIK 10 Mtb WLSM.fcs"                 
+[566] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/F12 978AIK 10 PMA WLSM.fcs"                 
+[567] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/G02 036KHC 12 Nil WLSM.fcs"                 
+[568] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/G03 036KHC 12 Mtb WLSM.fcs"                 
+[569] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/G04 036KHC 12 PMA WLSM.fcs"                 
+[570] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/G06 958EBFH 12 Nil WLSM.fcs"                
+[571] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/G07 958EBFH 12 Mtb WLSM.fcs"                
+[572] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/G08 958EBFH 12 PMA WLSM.fcs"                
+[573] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/G10 978AIK 12 Nil WLSM.fcs"                 
+[574] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/G11 978AIK 12 Mtb WLSM.fcs"                 
+[575] "Flow data/ERA4TB/ERA4TB_Batch4_13Aug26/96 Well Plate (half deep) - 1/G12 978AIK 12 PMA WLSM.fcs"                 
+[576] "Flow data/ERA4TB/ERA4TB_CD24AbTitration_07Aug26/Sample Group - 1/B02 CD24 BUV661 D0 WLSM.fcs"                    
+[577] "Flow data/ERA4TB/ERA4TB_CD24AbTitration_07Aug26/Sample Group - 1/B03 CD24 BUV661 D1 WLSM.fcs"                    
+[578] "Flow data/ERA4TB/ERA4TB_CD24AbTitration_07Aug26/Sample Group - 1/B04 CD24 BUV661 D2 WLSM.fcs"                    
+[579] "Flow data/ERA4TB/ERA4TB_CD24AbTitration_07Aug26/Sample Group - 1/B05 CD24 BUV661 D3 WLSM.fcs"                    
+[580] "Flow data/ERA4TB/ERA4TB_CD24AbTitration_07Aug26/Sample Group - 1/B06 CD24 PE AF610 WLSM.fcs"                     
+[581] "Flow data/ERA4TB/ERA4TB_CD24AbTitration_07Aug26/Sample Group - 1/C01 Unstained control WLSM.fcs"                 
+[582] "Flow data/ERA4TB/ERA4TB_CD24AbTitration_07Aug26/Single Positive Controls/A01 Unstained WLSM.fcs"                 
+[583] "Flow data/ERA4TB/ERA4TB_CD24AbTitration_07Aug26/Single Positive Controls/A02 AF700 WLSM.fcs"                     
+[584] "Flow data/ERA4TB/ERA4TB_CD24AbTitration_07Aug26/Single Positive Controls/A03 SparkNIR-685 WLSM.fcs"              
+[585] "Flow data/ERA4TB/ERA4TB_CD24AbTitration_07Aug26/Single Positive Controls/A04 BUV661 WLSM.fcs"                    
+[586] "Flow data/ERA4TB/ERA4TB_CD24AbTitration_07Aug26/Single Positive Controls/A05 PE-AF610 WLSM.fcs"                  
+[587] "Flow data/ERA4TB/ERA4TB_CD24AbTitration_07Aug26/Single Positive Controls/A06 FITC WLSM.fcs"                      
+[588] "Flow data/ERA4TB/ERA4TB_CD24AbTitration_07Aug26/Single Positive Controls/B01 LiveDeadFixableBlue WLSM.fcs"       
+[589] "Flow data/ERA4TB/FMM retest 25.06.25/B05 UNS cells WLSM.fcs"                                                     
+[590] "Flow data/ERA4TB/FMM retest 25.06.25/B06 Surface panel WLSM.fcs"                                                 
+[591] "SIMON/2024.10.14 - Correlation and PCA/correlationTab_correlation_plot.svg"                                      
+[592] "SIMON/2024.10.14 - Correlation and PCA/pcaAnalysisTab_plot_ind_cos2_correlation.svg"                             
+[593] "SIMON/2024.10.14 - Correlation and PCA/pcaAnalysisTab_plot_scree.svg"                                            
+[594] "SIMON/2024.10.14 - Correlation and PCA/pcaAnalysisTab_plot_var_cos2_correlation (1).svg"                         
+[595] "SIMON/2024.10.14 - Correlation and PCA/pcaAnalysisTab_plot_var_cos2_correlation.svg"                             
+[596] "SIMON/All_cynos/18.02.25 - contribution of variables species.png"                                                
+[597] "SIMON/All_cynos/18.02.25 - Correlation matrix"                                                                   
+[598] "SIMON/All_cynos/18.02.25 - PCA outcome.png"                                                                      
+[599] "SIMON/All_cynos/18.05.25 - PCA species.png"                                                                      
+[600] "SIMON/All_cynos/2025.02.17 - All cynomolgus.csv"                                                                 
+[601] "SIMON/All_cynos/2025.02.17 - All_cynomolgus_trimmed.csv"                                                         
+[602] "SIMON/All_cynos/2025.02.17 - All_cynomolgus_trimmed_pca_analysis (1).Rdata"                                      
+[603] "SIMON/All_cynos/2025.02.17 - All_cynomolgus_trimmed_pca_analysis_species.Rdata"                                  
+[604] "SIMON/All_cynos/April/2025.04.05 - All_cyno_simple.csv"                                                          
+[605] "SIMON/All_cynos/datasetExport (5).Rdata"                                                                         
+[606] "SIMON/API Key - PANDORA.txt"                                                                                     
+[607] "SIMON/Download queue/2025.02.17-all_cynomolgus_trimmed.csv (1).tar.gz"                                           
+[608] "SIMON/Exports/correlationTab_correlation_plot.svg"                                                               
+[609] "SIMON/Exports/datasetExport (1).Rdata"                                                                           
+[610] "SIMON/Exports/datasetExport (2).Rdata"                                                                           
+[611] "SIMON/Exports/datasetExport (3).Rdata"                                                                           
+[612] "SIMON/Exports/Mauririan_cyno_0.05.svg"                                                                           
+[613] "SIMON/Exports/Mauritian_cyno_0.01.svg"                                                                           
+[614] "SIMON/Exports/Mauritian_cyno_all_0.01.svg"                                                                       
+[615] "SIMON/Exports/Mauritian_cyno_all_0.05.svg"                                                                       
+[616] "SIMON/Exports/pcaAnalysisTab_plot_scree.svg"                                                                     
+[617] "SIMON/Spreadsheets/2024.10.13 - Mauritian_AvgBaseline.csv"                                                       
+[618] "SIMON/Spreadsheets/2024.10.18 - Mauritian and Chinese.csv"                                                       
+[619] "SIMON/Spreadsheets/2024.10.18 - Mauritian and Chinese1 NEW.csv"                                                  
+[620] "SIMON/Spreadsheets/2024.10.18 - Mauritian and Chinese1.csv"                                                      
+[621] "SIMON/Spreadsheets/Mauritian_cynomolgus_all_data.csv"                                                            
+[622] "SIMON/Spreadsheets/Mauritian_cynomolgus_cell_data.csv"                                                           
+[623] "SIMON/Study_2_data/2025.05.21 - All_study_2.csv"                                                                 
+[624] "System Volume Information/FVE2.{24e6f0ae-6a00-4f73-984b-75ce9942852d}"                                           
+[625] "System Volume Information/FVE2.{aff97bac-a69b-45da-aba1-2cfbce434750}.1"                                         
+[626] "System Volume Information/FVE2.{aff97bac-a69b-45da-aba1-2cfbce434750}.2"                                         
+[627] "System Volume Information/FVE2.{da392a22-cae0-4f0f-9a30-b8830385d046}"                                           
+[628] "System Volume Information/FVE2.{e40ad34d-dae9-4bc7-95bd-b16218c10f72}.1"                                         
+[629] "System Volume Information/FVE2.{e40ad34d-dae9-4bc7-95bd-b16218c10f72}.2"                                         
+[630] "System Volume Information/FVE2.{e40ad34d-dae9-4bc7-95bd-b16218c10f72}.3"                                         
+[631] "System Volume Information/IndexerVolumeGuid"                                                                     
+[632] "System Volume Information/WPSettings.dat"                                                                        </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>TargetFolder <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"D:"</span>, <span class="st">"TargetFolder"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>Transfer_Files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">pattern =</span> <span class="st">".fcs"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>, <span class="at">recursive =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">file.copy</span>(<span class="at">from =</span> Transfer_Files, <span class="at">to =</span> TargetFolder)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="problem-2" class="level1">
+<h1>Problem 2</h1>
+<p>In this session, we used list.files() with the “full.names argument” set to TRUE, as well as the basename() function to identify specific files. But what if you wanted a particular directory. Run list.files() with “full.names argument” and “recursive” argument set to TRUE, and then search online to find an R function that would retrieve the “” individual directory folders.</p>
+<section id="problem-2-answer" class="level2">
+<h2 class="anchored" data-anchor-id="problem-2-answer">Problem 2 answer:</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(<span class="at">path =</span> <span class="st">"."</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "./data/CellCounts3L_AB_02_INF052_00.fcs"                                                                  
+ [2] "./data/CellCounts3L_AB_02_ND050_02.fcs"                                                                   
+ [3] "./data/CellCounts4L_AB_03_INF134_00.fcs"                                                                  
+ [4] "./data/CellCounts4L_AB_03_NY068_03.fcs"                                                                   
+ [5] "./data/CellCounts4L_AB_04_INF124-7_00_01.fcs"                                                             
+ [6] "./data/CellCounts4L_AB_04_ND006_04.fcs"                                                                   
+ [7] "./data/CellCounts4L_AB_05_INF019-0_00_01.fcs"                                                             
+ [8] "./data/CellCounts4L_AB_05_ND050_05.fcs"                                                                   
+ [9] "./data/target/CellCounts3L_AB_02_INF052_00.fcs"                                                           
+[10] "./data/target/CellCounts3L_AB_02_ND050_02.fcs"                                                            
+[11] "./data/target2/CellCounts3L_AB_02_INF052_00.fcs"                                                          
+[12] "./data/target2/CellCounts3L_AB_02_ND050_02.fcs"                                                           
+[13] "./data/target3/CellCounts3L_AB_02_INF052_00.fcs"                                                          
+[14] "./data/target3/CellCounts4L_AB_03_INF134_00.fcs"                                                          
+[15] "./data/target3/CellCounts4L_AB_04_INF124-7_00_01.fcs"                                                     
+[16] "./data/target3/CellCounts4L_AB_05_INF019-0_00_01.fcs"                                                     
+[17] "./README.md"                                                                                              
+[18] "./Take-home_Problems.qmd"                                                                                 
+[19] "./Take-home_Problems.rmarkdown"                                                                           
+[20] "./Week02_filepaths.html"                                                                                  
+[21] "./Week02_filepaths.qmd"                                                                                   
+[22] "./Week02_filepaths_files/libs/bootstrap/bootstrap-215b371544c282197b31c8aa00ce3677.min.css"               
+[23] "./Week02_filepaths_files/libs/bootstrap/bootstrap-icons.css"                                              
+[24] "./Week02_filepaths_files/libs/bootstrap/bootstrap-icons.woff"                                             
+[25] "./Week02_filepaths_files/libs/bootstrap/bootstrap.min.js"                                                 
+[26] "./Week02_filepaths_files/libs/clipboard/clipboard.min.js"                                                 
+[27] "./Week02_filepaths_files/libs/quarto-html/anchor.min.js"                                                  
+[28] "./Week02_filepaths_files/libs/quarto-html/popper.min.js"                                                  
+[29] "./Week02_filepaths_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css"
+[30] "./Week02_filepaths_files/libs/quarto-html/quarto.js"                                                      
+[31] "./Week02_filepaths_files/libs/quarto-html/tabsets/tabsets.js"                                             
+[32] "./Week02_filepaths_files/libs/quarto-html/tippy.css"                                                      
+[33] "./Week02_filepaths_files/libs/quarto-html/tippy.umd.min.js"                                               </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">basename</span>(Transfer_Files)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "CellCounts3L_AB_02_INF052_00.fcs"     
+[2] "CellCounts3L_AB_02_ND050_02.fcs"      
+[3] "CellCounts4L_AB_03_INF134_00.fcs"     
+[4] "CellCounts4L_AB_03_NY068_03.fcs"      
+[5] "CellCounts4L_AB_04_INF124-7_00_01.fcs"
+[6] "CellCounts4L_AB_04_ND006_04.fcs"      
+[7] "CellCounts4L_AB_05_INF019-0_00_01.fcs"
+[8] "CellCounts4L_AB_05_ND050_05.fcs"      </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.dirs</span>(<span class="at">path =</span> <span class="st">"."</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>, <span class="at">recursive =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "./.git"                   "./.gitignore"            
+[3] "./data"                   "./images"                
+[5] "./Week02_filepaths_files"</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="problem-3" class="level1">
+<h1>Problem 3</h1>
+<p>R packages often come with internal datasets, that are typically used for use in the help documentation examples. These can be accessed through the use of the system.file() function. See an example below.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="at">package =</span> <span class="st">"FlowSOM"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "C:/Users/Jessica.Williams/AppData/Local/R/win-library/4.5/FlowSOM/extdata"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">system.file</span>(<span class="st">"extdata"</span>, <span class="at">package =</span> <span class="st">"flowWorkspace"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "C:/Users/Jessica.Williams/AppData/Local/R/win-library/4.5/flowWorkspace/extdata"</code></pre>
+</div>
+</div>
+<p>Using what we have learned about file.path navigation, search your way down the file.directory of the FlowSOM and flowWorkspace packages, and identify any .fcs files that are present for use in the documentation.</p>
+<section id="problem-3-answer" class="level2">
+<h2 class="anchored" data-anchor-id="problem-3-answer">Problem 3 answer</h2>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>FlowSOMData <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"C:/Users/Jessica.Williams/AppData/Local/R/win-library/4.5/FlowSOM"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>FlowWorkspaceData <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"C:/Users/Jessica.Williams/AppData/Local/R/win-library/4.5/flowWorkspace"</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">list.dirs</span>(FlowSOMData, <span class="at">full.names =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] ""         "doc"      "extdata"  "help"     "html"     "libs"     "libs/x64"
+[8] "Meta"     "R"       </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.dirs</span>(FlowWorkspaceData, <span class="at">full.names =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] ""                      "doc"                   "extdata"              
+ [4] "help"                  "html"                  "include"              
+ [7] "include/flowWorkspace" "javascript"            "lib"                  
+[10] "lib/x64"               "libs"                  "libs/x64"             
+[13] "Meta"                  "R"                    </code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(FlowSOMData, <span class="at">pattern =</span> <span class="st">".fcs"</span>, <span class="at">full.names =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "extdata/68983.fcs"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">list.files</span>(FlowWorkspaceData, <span class="at">pattern =</span> <span class="st">".fcs"</span>, <span class="at">full.names =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>character(0)</code></pre>
+</div>
+</div>
+<p>The FlowSOM pacakge contains one .fcs file whereas flowWorkspace doesn’t contain any .fcs files in the package directory.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

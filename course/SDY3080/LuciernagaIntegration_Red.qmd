@@ -1,0 +1,560 @@
+---
+title: "Luciernaga Integration - Red"
+author: "David Rach"
+date: 08-28-2026
+format:
+  html:
+    toc: true
+    toc-depth: 5
+execute:
+  echo: true
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+For the YouTube recording, see [here](https://www.youtube.com/live/nviugr9cLFc?si=4gbWKfNCoAhtVi55&t=84)
+
+For screen-shot slides, click [here](/course/SDY3080/LuciernagaIntegration_Red_slides.qmd)
+
+<br>
+
+---
+
+# Background
+
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. This walk-through if for the "Red" laser fluorophores.
+
+- To return to the main walk-through (including UV fluorophores), click [here](/course/SDY3080/LuciernagaIntegration.qmd)
+- For the violet fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd)
+- For the blue fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Blue.qmd)
+- For the yellow-green fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_YellowGreen.qmd)
+- For the red fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Red.qmd)
+- For the unstained samples walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Unstained.qmd)
+
+# Walk-through
+
+## Set Up
+
+Attach your R packages to the local environment via the `library()` call. 
+
+```{r}
+library(dplyr)
+library(purrr)
+library(flowWorkspace)
+library(Luciernaga)
+library(ggplot2)
+```
+
+Designate your file paths to the storage and output folder locations. 
+
+```{r}
+#StorageLocation <- file.path("course", "SDY3080", "data", "SDY3080")
+StorageLocation <- file.path("data", "SDY3080")
+
+#OutputLocation <- file.path("course", "SDY3080", "outputs")
+OutputLocation <- file.path("outputs")
+```
+
+Bring in the pre-gated GatingSet object (which was carried out as part of the [Signature Matrices](/course/SDY3080/SignatureMatrices.qmd) walkthrough).
+
+```{r}
+CellSCPath <- file.path(OutputLocation, "CellsSC_GS_Amplified.gs")
+CellsSC_GatingSet <- load_gs(CellSCPath)
+```
+
+And bring in the template needed to run the `LuciernagaIntegration()` wrapper function (which we generated [here](/course/SDY3080/LuciernagaIntegration.qmd#assembling-template)). 
+
+```{r}
+#| echo: FALSE
+SaveThisTemplateHere <- file.path(OutputLocation, "KeptCells.csv")
+KeptCells <- read.csv(SaveThisTemplateHere, check.names=FALSE)
+```
+
+And with that, we are set! 
+
+### Red
+
+![](images/Red_Laser.png)
+
+Having navigated our way through all the fluorophores for the last four lasers, we now reach the Red laser fluorophores. Similar to the Yellow-Green, for most PBMCs, we will not typically be encountering autofluorescence peaks, but might encounter tandem degradation style scenarios. Only time will tell, so lets go ahead and get started. 
+
+#### APC
+
+First up, we have [APC](https://www.biolegend.com/en-us/products/apc-anti-human-cd16-antibody-565), which for this panel is conjugated to [CD16](https://en.wikipedia.org/wiki/CD16). Given that it is expressed on NK cells, we should have enough events, and for the cells that express it we should expect to have a reasonably bright signal. 
+
+```{r}
+APC <- LuciernagaIntegration(template=KeptCells[24,], gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+```
+
+Lets take a look at the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region we had grabbed in our "positive" gate into 10% bins across based on MFI for the peak-detector.  
+
+```{r}
+Plot <- APC$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+No obvious signature variants across the bins. With this noted, we can next check the `LuciernagaQC()` output to see how the grouped individual cell normalized signatures output stored under "LuciernagaQC_Signatures" are behaving. 
+
+```{r}
+Plot <- APC$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+And as we might anticipate, we end up retrieving just a single signature. Before we call it, lets compare it to the reference using `QC_WhatsThis()`
+
+```{r}
+Data <- APC$AveragedSignature_Data
+```
+
+```{r}
+Plot <- QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)
+Plot[[1]]
+plotly::ggplotly(Plot[[2]])
+```
+
+:::{.callout-tip title="Pass"}
+For our APC unmixing control, we only get back a single signature from cells within our positive gated region, and the signature matches the reference. We are good to proceed to the next fluorophore. 
+:::
+
+#### Alexa Fluor 647
+
+Next on the roster, we have [Alexa Fluor 647](https://www.biolegend.com/en-us/products/alexa-fluor-647-anti-human-tcr-valpha7-2-antibody-12403), conjugated to [Va7.2](https://en.wikipedia.org/wiki/Mucosal-associated_invariant_T_cell). This V-alpha chain would be found on subsets of T cells, importantly, the Mucosal-associated Invariant T cells (MAITs). 
+
+```{r}
+AF647 <- LuciernagaIntegration(template=KeptCells[25,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+```
+
+Lets first take a look at the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region we had grabbed in our "positive" gate into 10% bins across based on MFI for the peak-detector. 
+
+```{r}
+Plot <- AF647$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+With no obvious differences encountered, lets check the `LuciernagaQC()` output to see if grouping individual cell normalized signatures based on shared peaks of relatively similar height shows any hidden differences 
+
+```{r}
+Plot <- AF647$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+Alright, the red laser fluorophores are making our lives simpler! (so far). Lets pass the signature data to `QC_WhatsThis()` and gage the difference vs. the reference. 
+
+```{r}
+Data <- AF647$AveragedSignature_Data 
+```
+
+```{r}
+Plot <- QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=22, NumberDetectors=64, returnPlots=TRUE)
+Plot[[1]]
+plotly::ggplotly(Plot[[2]])
+```
+
+:::{.callout-tip title="Pass"}
+For our Alexa Fluor 647 unmixing control, we only get back a single signature from cells within our positive gated region, and the signature matches the reference. We are good to proceed to the next fluorophore. 
+:::
+
+#### APC-R700
+
+Up next, we run into [APC-R700](https://www.bdbiosciences.com/en-us/products/reagents/flow-cytometry-reagents/research-reagents/single-color-antibodies-ruo/apc-r700-mouse-anti-human-cd107a.565184), which is conjugated to [CD107A](https://en.wikipedia.org/wiki/LAMP1). 
+
+In terms of signatures, this one should be interesting, since the antibody was added to the cells during the stimulation with PMA-ionomycin. Any cells that degranulated in response would expose CD107a on their cell membrane, where it would be latched onto by the antibody-fluorophore. Subsequently, if re-internalized, the cell would still remain stained for APC-R700
+
+However, there is also the risk that the additional exposure in culture may have resulted in non-specific staining for the fluorophore across all cells regardless if they degranulated. Additionally, being in culture with metabollically active cells for the extended period could mean the fluorophore was exposed to reactive-oxygen species (ROS) for longer, and may have degraded. 
+
+So if nothing else, lets see what information we can glean from this cell single-color unmixing control. 
+
+```{r}
+APCR700 <- LuciernagaIntegration(template=KeptCells[26,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+```
+
+Starting off with the "LinearSlices_Plot", lets see what the effect would have been on the signature if we had split the cells within our "positive" gate across 10% bins based on MFI for the peak-detector.  
+
+```{r}
+Plot <- APCR700$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+So far so good, no immediately noticible variation across the bins. Lets next check out the `LuciernagaQC()` output to see what grouped individual cell normalized signatures stashed under "LuciernagaQC_Signatures" are up to. 
+
+```{r}
+Plot <- APCR700$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+We end up with two signature variants, slightly different for their second "YG7" peak (likely due to how the rounding process happens behind the scenes in `LuciernagaQC()`). Lets visualize where the median signature ends up for comparison. 
+
+```{r}
+Plot <- APCR700$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+And the "ProportionPlot"
+
+```{r}
+Plot <- APCR700$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+So rather equally split between the two, which adds to the argument the difference is likely a bit of noise in the detector measurement. Lets compare these two signature variants vs. the reference signature using `QC_WhatsThis()`
+
+```{r}
+Data <- APCR700$AveragedSignature_Data |>
+   filter(Cluster %in% c("R4_10-YG7_06-V13_02", "R4_10-YG7_05-V13_02"))
+```
+
+```{r}
+QC_WhatsThis(x="R4_10-YG7_06-V13_02", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #0.99
+```
+
+```{r}
+QC_WhatsThis(x="R4_10-YG7_05-V13_02", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #0.99
+```
+
+So both signatures end up with a cosine of 0.99. If we visualized these cosines, we get the following
+
+```{r}
+#| code-fold: TRUE
+cos_vals <- c(1, 0.99)
+theta <- acos(cos_vals)
+
+df <- data.frame(
+  label = paste0("cos = ", cos_vals),
+  angle_deg = round(theta * 180 / pi, 1),
+  x = sin(theta),
+  y = cos(theta)
+)
+
+ggplot(df) +
+  geom_segment(aes(x = 0, y = 0, xend = x, yend = y, color = label),
+               arrow = arrow(length = unit(0.25, "cm")),
+               linewidth = 1) +
+  coord_fixed(xlim = c(-0.1, 1), ylim = c(-0.1, 1.1)) +
+  geom_hline(yintercept = 0, color = "grey80") +
+  geom_vline(xintercept = 0, color = "grey80") +
+  labs(x = NULL, y = NULL, color = "Vector",
+       title = NULL) +
+  theme_bw()
+```
+
+And lets check vs. the reference in the signature plot. 
+
+```{r}
+QC_WhatsThis(x="R4_10-YG7_05-V13_02", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)[[2]] |> plotly::ggplotly()
+```
+
+:::{.callout-tip title="Pass"}
+Our APC-R700 is in good shape, with both signature variants being identical to each other, with the only difference vs. the reference being slightly off in a couple of locations that are likely to be instrumental. We are safe to proceed to the next fluorophore. 
+:::
+
+#### Zombie NIR
+
+We finally reach our [viability](https://www.biolegend.com/en-us/products/zombie-nir-fixable-viability-kit-8657) dye [Zombie NIR](https://www.biolegend.com/en-us/products/zombie-nir-fixable-viability-kit-8657)! Its mechanism of action is to link to exposed amines, which causes all cells to be positive for it (how bright being an effect of how well you titrated). However, for necrotic/apoptotic cells with holes in the membrane, the dye stains all the intracellular amines, resulting in our ability to discriminate these dead cells based on their brighter signal. 
+
+In this case, it is safer to just assume we are not going to be able to use the internal negative default for `LuciernagaIntegration()`, and just go ahead and use an external unstained. 
+
+Copying our previuous code over from [PE-Cy5](), we can retrieve the Unstained GatingSet we pre-gated in a [previous walkthrough](/course/SDY3080/SetUp.qmd#cells---unstained) using `load_gs()`. For this Zombie NIR control, the cells used where cord blood mononuclear cells, so we need to retrieve the INF052 Ctrl specimen
+
+```{r}
+UnstainedHere <- file.path(OutputLocation, "CellsUnstained_GS.gs")
+Unstained_GatingSet <- load_gs(UnstainedHere)
+# pData(Unstained_GatingSet)
+Unstained_GatingSet <- subset(Unstained_GatingSet, stringr::str_detect(name, "INF052-Ctrl_Unstained"))
+```
+
+```{r}
+plot(Unstained_GatingSet)
+```
+
+With this done, we can go ahead and run `LuciernagaIntegration()`, using the external background arguments. 
+
+```{r}
+ZombieNIR <- LuciernagaIntegration(template=KeptCells[27,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE,
+ externalAF_gs = Unstained_GatingSet, externalAF_gs_index = 1,
+ externalAF_gs_gate = "scatter")[[1]] # Square brackets to loose list notation
+```
+
+With this done, lets take a look at the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region we had grabbed in our "positive" gate into 10% bins across based on MFI for the peak-detector. 
+
+```{r}
+Plot <- ZombieNIR$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+Based on getting back fairly uniform variants, it looks like our staining is sufficiently bright, as no evidence of leftover autofluorescence peaks can be seen. We can next check out the `LuciernagaQC()` output to see if when we group individual cell normalized signatures we see anything different. 
+
+```{r}
+Plot <- ZombieNIR$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+When we visualize based on individual cells, we see a few cells have some variation around their individual fluorophore peaks, although the differences appear to be minor. Lets check the `QC_Amalgate()` output to see where the median signature ends up. 
+
+```{r}
+Plot <- ZombieNIR$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+And then follow up by checking our "ProportionPlot" to see if any variant signature is predominantly present
+
+```{r}
+Plot <- ZombieNIR$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+So three main signatures, with 16% of our cells within the gagte actually having "R7-A" detector as their primary co-equal peak alongside "R6-A". Is this instrumental noise? *hand-waves-in-it-depends*
+
+Lets retrieve the three main signatures, and compare them against the reference signature using `QC_WhatsThis()` 
+
+```{r}
+Data <- ZombieNIR$AveragedSignature_Data |>
+   filter(Cluster %in% c("R7_10-R6_10-B13_03", "R6_10-B13_03-V15_03", "R6_10-B12_03-V15_03"))
+```
+
+```{r}
+QC_WhatsThis(x="R7_10-R6_10-B13_03", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #1
+```
+
+```{r}
+QC_WhatsThis(x="R6_10-B13_03-V15_03", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #1
+```
+
+```{r}
+QC_WhatsThis(x="R6_10-B12_03-V15_03", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=FALSE) #1
+```
+
+:::{.callout-tip title="Pass"}
+Our Zombie NIR viability dye looks to be properly titrated and bright, with the three signature variants being essentially identical to each other and to the reference control. We are good to proceed to the next fluorophore.
+:::
+
+#### APC-Fire 750
+
+And for our final previously unexplored fluorophore we have [APC-Fire 750](https://www.biolegend.com/en-us/products/apc-fire-750-anti-human-cd27-antibody-13716), which is conjugated with [CD27](https://en.wikipedia.org/wiki/CD27). Since CD27 is widely expressed by many T cell subsets, the antigen-by-fluorophore combination is likely to result in a bright signal. However, being an APC tandem, we might encounter issues with tandem degradation, so this may yet proove interesting. 
+
+```{r}
+APCFire750 <- LuciernagaIntegration(template=KeptCells[28,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+```
+
+We can first take a look at the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region within our "positive" gate into 10% bins across based on MFI for the peak-detector.  
+
+```{r}
+Plot <- APCFire750$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+After a rather uneventful last couple of fluorophores, we have some subtle hints of variation, notably, a little over autofluorescence background subtraction for "V8-A", and a bit of a step-ladder appearance around the "R2-A" detector. The later is reminiscent to what we saw with the tandem degradation observed for APC-Fire 810 back during the [Week 12](/course/12_SpectralSignatures/index.qmd#apc-fire-810) walk-through. 
+
+Lets go ahead and check out the `LuciernagaQC()` output to see what signature variants we get back when we group individual cell normalized signatures based on shared peaks of relatively similar heights.
+
+```{r}
+Plot <- APCFire750$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+Wooh! The step-ladder appearance persist, with the peak around the "YG10-A" detector being slightly different across the variants. However, we also get additional signal in "R1/R2-A", for some, which is where we would anticipate the parent "APC" signature to be. Lets check the `QC_Amalgamate()` output to see where the median signature ends up by comparison. 
+
+```{r}
+Plot <- APCFire750$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+So closer to the variants without "R1/R2-A" contribution. To confirm, lets check the "ProportionPlot" to see how the signature variants are represented across cells in our gated region. 
+
+```{r}
+Plot <- APCFire750$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+So two of three more abundant signatures have little "R1/R2-A" contribution, while the other does have some contribution, which aligns with what we saw for the amalgamated plot. 
+
+Lets retrieve the underlying data, and `filter()` the median "Average" signature, as well as the variants with minimal and maxinum "R1/R2-A" contributions. We can then pass these individually to `QC_WhatsThis_()` and gage the difference vs. the reference. 
+
+```{r}
+Data <- APCFire750$AveragedSignature_Data |>
+   filter(Cluster %in% c("R7_10-R8_07-YG10_02", "Average", "R7_10-R8_09-YG10_03"))
+```
+
+```{r}
+QC_WhatsThis(x="R7_10-R8_07-YG10_02", columnname="Cluster", data=Data, NumberHits=15, NumberDetectors=64, returnPlots=FALSE) #1
+```
+
+```{r}
+QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=15, NumberDetectors=64, returnPlots=FALSE) #1
+```
+
+```{r}
+QC_WhatsThis(x="R7_10-R8_09-YG10_03", columnname="Cluster", data=Data, NumberHits=15, NumberDetectors=64, returnPlots=FALSE) #0.98
+```
+
+If we visualized the difference in these angles, we would see the following
+
+```{r}
+#| code-fold: TRUE
+cos_vals <- c(1, 0.98)
+theta <- acos(cos_vals)
+
+df <- data.frame(
+  label = paste0("cos = ", cos_vals),
+  angle_deg = round(theta * 180 / pi, 1),
+  x = sin(theta),
+  y = cos(theta)
+)
+
+ggplot(df) +
+  geom_segment(aes(x = 0, y = 0, xend = x, yend = y, color = label),
+               arrow = arrow(length = unit(0.25, "cm")),
+               linewidth = 1) +
+  coord_fixed(xlim = c(-0.1, 1), ylim = c(-0.1, 1.1)) +
+  geom_hline(yintercept = 0, color = "grey80") +
+  geom_vline(xintercept = 0, color = "grey80") +
+  labs(x = NULL, y = NULL, color = "Vector",
+       title = NULL) +
+  theme_bw()
+```
+
+Before we call it, lets compare the median signature against the reference signature
+
+```{r}
+QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=10, NumberDetectors=64, returnPlots=TRUE)[[2]] |> plotly::ggplotly()
+```
+
+:::{.callout-tip title="Pass"}
+Overall, our APC-Fire 750 signature is matching the reference, and is found widely across most of the cells within the gate. We are starting to pick up a few cells showing some tandem degradation signal, but it is overall contributing little to the overall signature. To be safe, I would move the gate a little to the right to hopefully reduce their contribution in favor of brighter staining cells in terms of MFI, that might have more intact APC-Fire 750 bound. 
+:::
+
+
+#### APC-Fire 810
+
+And we are now back to the first fluorophore we examined back in the [Week 12](/course/12_SpectralSignatures/index.qmd#apc-fire-810) walk-through; [APC-Fire 810](https://www.biolegend.com/en-us/products/apcfire-810-anti-human-cd38-antibody-19464), conjugated to [CD38](https://en.wikipedia.org/wiki/CD38). Since this marker is fairly prevalent on cord blood mononuclear cells that were used for this cell single-color unmixing control, the combination should be bright. Should, as we saw previously, biology still has a say. 
+
+```{r}
+APCFire810 <- LuciernagaIntegration(template=KeptCells[29,],
+ gs=CellsSC_GatingSet, GuessSimilar=TRUE)[[1]] # Square brackets to loose list notation
+```
+
+We can take a look at the "LinearSlices_Plot", to see what effect would have been on the signature if we had split the region we gated in our "positive" gate into 10% bins across based on MFI for the peak-detector.  
+
+```{r}
+Plot <- APCFire810$LinearSlices_Plot
+plotly::ggplotly(Plot)
+```
+
+Once again, minor step ladder for the autofluorescence region around "V7-A", but more concerningly the bit of step-ladder around the "R1/R2-A" detector. We can check the `LuciernagaQC()` output to see what signatures we get back when we group individual cell normalized signatures based on shared peaks of relatively similar height. 
+
+```{r}
+Plot <- APCFire810$LuciernagaQC_Signatures
+plotly::ggplotly(Plot)
+```
+
+And yup, after having gone through the full panel of fluorophores, this is the most dramatic example of tandem degradation so far. Lets visualize the same data an alternative fashion, checking to see where the median signature ends up by comparison. 
+
+```{r}
+Plot <- APCFire810$LuciernagaQC_AmalgamatedPlot
+plotly::ggplotly(Plot)
+```
+
+Overall, the median signature ends up halfway up the step-ladder (by contrast, for [APC-Fire 750](/course/SDY3080/LuciernagaIntegration_Red.qmd#apc-fire-750) it was still toward the bottom of the "R1/R2-A" detector). We can check the proportion plot to measure the distribution of cells based on their signature variant
+
+```{r}
+Plot <- APCFire810$ProportionPlot
+plotly::ggplotly(Plot)
+```
+
+Overall, most signatures end up with "R1-A" as their secondary peak, with the majority of the cells having heights between 30-60% of the main "R8-A" peak height. Lets compare the signatures with minimal and maxinum "R1-A" detector contributions alongside the median "Average" signature vs. the reference control, using `QC_WhatsThis()` 
+
+```{r}
+Data <- APCFire810$AveragedSignature_Data |>
+   filter(Cluster %in% c("R8_10-R1_09-YG5_04", "Average", "R8_10-R1_02-YG5_01"))
+```
+
+```{r}
+Plot <- QC_WhatsThis(x="R8_10-R1_09-YG5_04", columnname="Cluster", data=Data, NumberHits=64, NumberDetectors=64, returnPlots=TRUE) # 0.64
+Plot[[1]]
+plotly::ggplotly(Plot[[2]])
+```
+
+```{r}
+Plot <- QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE) #0.88
+Plot[[1]]
+plotly::ggplotly(Plot[[2]])
+```
+
+```{r}
+Plot <- QC_WhatsThis(x="R8_10-R1_02-YG5_01", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE) #0.98
+Plot[[1]]
+plotly::ggplotly(Plot[[2]])
+```
+
+So 0.64, 0.88 and 0.98 respectively in terms of cosine. If we visualized the difference in these angles, we would see the following
+
+```{r}
+#| code-fold: TRUE
+cos_vals <- c(1, 0.98, 0.88, 0.64)
+theta <- acos(cos_vals)
+
+df <- data.frame(
+  label = paste0("cos = ", cos_vals),
+  angle_deg = round(theta * 180 / pi, 1),
+  x = sin(theta),
+  y = cos(theta)
+)
+
+ggplot(df) +
+  geom_segment(aes(x = 0, y = 0, xend = x, yend = y, color = label),
+               arrow = arrow(length = unit(0.25, "cm")),
+               linewidth = 1) +
+  coord_fixed(xlim = c(-0.1, 1), ylim = c(-0.1, 1.1)) +
+  geom_hline(yintercept = 0, color = "grey80") +
+  geom_vline(xintercept = 0, color = "grey80") +
+  labs(x = NULL, y = NULL, color = "Vector",
+       title = NULL) +
+  theme_bw()
+```
+
+And finally contrasting the median signature compared to the reference
+
+```{r}
+QC_WhatsThis(x="Average", columnname="Cluster", data=Data, NumberHits=5, NumberDetectors=64, returnPlots=TRUE)[[2]] |> plotly::ggplotly()
+```
+
+:::{.callout-warning title="Fail"}
+
+To many warning signs for this fluorophore. The median signature is substantially far away from the reference control, and the proportion of cells with the signature still intact are few. It is very evident that tandem degradation is occuring, and there is substantial amount of APC alone bound to the cell surface. 
+
+However, this brings up an interesting question. Given that both APC and APC-Fire 810 are present in the same panel, what is the best approach for unmixing? If we give accurate signature references for both, we maxize separation between both fluorophores, but we might confuse the signal arising from CD38-APC-via-degradation for CD16-APC. 
+
+Vice versa, if we provide the degraded signature with substantial APC presence, we might not have overcounting issues, but does the resolution between the two markers result in a nightmare trying to resolve between them. 
+
+We will explore these questions next time in the [Evaluating Unmixing](/Schedule.qmd#evaluating-unmixing) walk-through. 
+:::
+
+# Redirects
+
+Due to the sheer number of `plotly` `ggplotly()` interactive plots that the website would need to load if we had visualized all the `LuciernagaIntegration()` plots for the 29-fluorophore panel in one go, we have broken the exploration of the fluorophore outputs by laser. This walk-through was for the Red laser fluorophores. 
+
+- To return to the main walk-through (including UV fluorophores), click [here](/course/SDY3080/LuciernagaIntegration.qmd)
+- For the violet fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Violet.qmd)
+- For the blue fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Blue.qmd)
+- For the yellow-green fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_YellowGreen.qmd)
+- For the red fluorophore walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Red.qmd)
+- For the unstained samples walk-through, click [here](/course/SDY3080/LuciernagaIntegration_Unstained.qmd)
+
+![](images/TakeAway4.jpg)
+
+# Additional Resources
+
+[Luciernaga Vignette - Reference Library](https://davidrach.github.io/Luciernaga/articles/QualityControl.html#comparing-normalized-signatures)
+
+[Luciernaga Vignette - Fluorescent Signatures](https://davidrach.github.io/Luciernaga/articles/FluorescenceSignatures.html)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
