@@ -1,0 +1,784 @@
+## Take-home Problems
+# Problem 1
+Load a dataset into R, gate it however you like, and then export out a population of interest as their own .fcs files. Open them in either Floreada.io or the commercial software of your choice, and take a screenshot of how they look by two markers of interest.
+
+```{r}
+# Load required packages
+library(flowWorkspace)
+library(flowGate)
+library(dplyr)
+library(ggplot2)
+library(purrr)
+```
+
+```{r}
+# Set Storage Location for data files
+StorageLocation <- file.path("homeworks/data")
+
+fcs_files <- list.files(StorageLocation, pattern=".fcs", full.names=TRUE)
+fcs_files
+
+# Create GatingSet
+aurora_cytoset <- load_cytoset_from_fcs(fcs_files, truncate_max_range=FALSE, transformation = FALSE)
+
+aurora_gatingset <- GatingSet(aurora_cytoset)
+aurora_parameters <- colnames(aurora_gatingset)
+FluorophoresOnly <- aurora_parameters[!stringr::str_detect(aurora_parameters, "FSC|SSC|Time")]
+
+FluorophoresOnly
+
+# Apply Biexponential Transformation
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=2, widthBasis=-500)
+MyBiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+transform(aurora_gatingset, MyBiexTransform)
+```
+
+```{r}
+# Apply Gating
+
+GatingTable <- tibble::tribble(
+  ~filterId,    ~dims,                          ~subset,      
+  "singlets",   list("FSC-A", "FSC-H"),          "root",      
+  "live",       list("FSC-A", "Live Dead 876"),   "singlets",  
+  "Tcells",     list("CD3", "CD45"),             "live",     
+  "CD4+",       list("CD8", "CD4"),              "Tcells",   
+  "CD8+",       list("CD8", "CD4"),              "Tcells",   
+  "DN",         list("CD8", "CD4"),              "Tcells",  
+)
+
+flowGate::gs_apply_gating_strategy(aurora_gatingset, GatingTable)
+
+plot(aurora_gatingset)
+```
+
+```{r}
+# Export Population of Interest
+cd3_cells <- gh_pop_get_data(aurora_gatingset[[1]],
+"Tcells",
+returnType="flowFrame")
+
+write.FCS(cd3_cells, filename="cd3_cells.fcs")
+```
+
+![](/homeworks/Problem1.png)
+
+# Problem 2
+In the example for Downsampling() we only changed one keyword (GUID), after substituting in our desired addon right before the .fcs. Since keyword use might vary by manufacturer, create a couple additional arguments for Downsampling() that allow you to change out the values for some additional keywords.
+
+```{r}
+# assign gatingset to object
+x <- aurora_gatingset[[1]]
+x
+
+# Explore Keywords to modify
+ff <- read.FCS(fcs_files[1])
+keyword(ff)
+# Create Downsampling Function
+Downsampling <- function(
+    x,
+    subset,
+    inverse.transform = TRUE,
+    DownsampleCount,
+    addon,
+    StorageLocation,
+    returnType = "fcs"
+){
+
+  EventsInTheGate <- gs_pop_get_data(
+    x,
+    subset,
+    inverse.transform = inverse.transform
+  )
+
+  MeasurementData <- exprs(EventsInTheGate[[1]])
+
+  MeasurementDataFramed <- as.data.frame(
+    MeasurementData,
+    check.names = FALSE
+  )
+
+  # If DownsampleCount is a proportion (e.g. 0.1)
+  if (DownsampleCount < 1) {
+
+    Count <- nrow(MeasurementDataFramed)
+    Count <- as.numeric(Count)
+    Count <- round(Count * DownsampleCount, 0)
+
+    DownsampleCount <- Count
+
+  }
+
+  Downsampled_DataFrame <- slice_sample(
+    MeasurementDataFramed,
+    n = min(DownsampleCount, nrow(MeasurementDataFramed)),
+    replace = FALSE
+  )
+
+  DownsampledMatrix <- as.matrix(Downsampled_DataFrame)
+
+  flowFrame <- EventsInTheGate[[1, returnType = "flowFrame"]]
+
+  OriginalParameters <- parameters(flowFrame)
+  OriginalDescription <- keyword(flowFrame)
+
+  # Preserve original metadata
+  OriginalGUID <- OriginalDescription$GUID
+
+  # Create new filename
+  UpdatedName <- paste0("_", addon, ".fcs")
+  UpdatedGUID <- sub("\\.fcs$", UpdatedName, OriginalGUID)
+
+  # Update keywords
+  OriginalDescription$GUID <- UpdatedGUID
+  OriginalDescription$DOWNSAMPLED <- "TRUE"
+  OriginalDescription$ORIGINAL_POPULATION <- subset
+  OriginalDescription$DOWNSAMPLE_COUNT <- as.character(nrow(Downsampled_DataFrame))
+  OriginalDescription$ORIGINAL_EVENT_COUNT <- as.character(nrow(MeasurementDataFramed))
+  OriginalDescription$ADDON <- addon
+  OriginalDescription$ORIGINAL_GUID <- OriginalGUID
+
+  NewFCS <- new(
+    "flowFrame",
+    exprs = DownsampledMatrix,
+    parameters = OriginalParameters,
+    description = OriginalDescription
+  )
+
+StoreFCSFileHere <- file.path(StorageLocation, UpdatedGUID)
+
+if (returnType == "data.frame") {
+
+  return(Downsampled_DataFrame)
+
+} else if (returnType == "flowFrame") {
+
+  return(NewFCS)
+
+} else {
+
+  if (!dir.exists(StorageLocation)) {
+    dir.create(StorageLocation, recursive = TRUE)
+  }
+
+  write.FCS(
+    NewFCS,
+    filename = StoreFCSFileHere
+  )
+
+  return(StoreFCSFileHere)
+}
+}
+
+Data <- map(
+  .x = aurora_gatingset[1],
+  .f = Downsampling,
+  subset = "CD8+",
+  DownsampleCount = 2500,
+  addon = "CD8",
+  StorageLocation = StorageLocation
+)
+
+Data
+```
+
+```{r}
+# Verify New Keywords
+ff <- read.FCS(Data[[1]])
+
+keyword(ff)[c(
+  "GUID",
+  "DOWNSAMPLED",
+  "ORIGINAL_POPULATION",
+  "DOWNSAMPLE_COUNT",
+  "ORIGINAL_EVENT_COUNT",
+  "ADDON",
+  "ORIGINAL_GUID"
+)]
+
+```
+
+![](/homeworks/Problem2.png)
+
+# Problem 3
+Trickier - After concatenating out an .fcs file for a cell subset of your choice, reload it back into R, extract out both the exprs matrix, and the description list. Using the keywords that got added, figure out a way using dplyr to revert the numeric keys (denoted by “_key”) in the exprs matrix back to their original character values as recorded in the keywords.
+
+```{r}
+#' Concatenate Internal
+#' 
+#' @param x TBD
+#' @param y TBD
+#' @param metadata TBD
+#' 
+#' @importFrom dplyr filter bind_cols
+#' 
+KeywordAppend <- function(x, y, metadata) {
+  df <- y
+  rownames(metadata) <- NULL
+  AddThisRow <- metadata |> filter(name %in% x)
+  ExpandedData <- bind_cols(df, AddThisRow)
+  return(ExpandedData)
+}
+
+#' Concatenate Internal
+#' 
+#' @param DictionaryList TBD
+#' @param data TBD
+#' 
+#' @importFrom dplyr left_join select rename
+#' @importFrom tidyselect all_of
+#' @importFrom rlang sym
+#' 
+KeywordTranslate <- function(DictionaryList, data) {
+
+  for (Entry in DictionaryList) {
+    ColumnName <- names(Entry)[1] 
+    KeyName <- names(Entry)[2]
+
+    data <- data |> dplyr::left_join(Entry, by = ColumnName) |>
+      dplyr::select(-tidyselect::all_of(ColumnName)) |> dplyr::rename(!!ColumnName := !!rlang::sym(KeyName))
+  }
+
+  return(data)
+}
+
+#' Concatenate Internal
+#' 
+#' @param x TBD
+#' @param data TBD
+#' 
+#' @importFrom dplyr select pull
+#' @importFrom tidyselect all_of
+#' @importFrom tibble tibble
+#' 
+#' 
+ColumnToKeyword <- function(x, data){
+  IndividualColumn <- data |> dplyr::select(tidyselect::all_of(x))
+  
+  if(!is.numeric(IndividualColumn)){ # Is not numeric
+    Values <- IndividualColumn |> dplyr::pull(x) |> unique()
+
+    Dictionary <- tibble::tibble(Values = Values, Values_Key = seq(1000, by = 1000, length.out = length(Values)))
+    colnames(Dictionary) <- gsub("Values", x, colnames(Dictionary))
+    return(Dictionary)
+  } else { # Is numeric already
+    Values <- IndividualColumn |> dplyr::pull(x) |> unique()
+    Dictionary <- tibble::tibble(Values = Values, Values_Key = Values)
+    colnames(Dictionary) <- gsub("Values", x, colnames(Dictionary))
+    return(Dictionary)
+  }
+}
+
+#' Concatenate Internal
+#' 
+#' @param flowFrame TBD
+#' @param NewColumns TBD
+#' 
+#' @importFrom flowCore pData parameters
+#' 
+ParameterUpdate <- function(flowFrame, NewColumns){
+	NewColumnLength <- ncol(NewColumns)
+	NewColumnNames <- colnames(NewColumns)
+	OldParameters <- pData(parameters(flowFrame))
+	NewParameter <- max(as.integer(gsub("\\$P", "", rownames(OldParameters)))) + 1
+	NewParameter <- seq(NewParameter, length.out = NewColumnLength)
+	NewParameter <- paste0("$P", NewParameter)
+	
+	UpdatedParameters <- do.call(rbind, lapply(NewColumnNames, function(i){
+						vec <- NewColumns[,i]
+						rg <- range(vec)
+						data.frame(name = i, desc = NA, range = diff(rg) + 1, minRange = rg[1], maxRange = rg[2])
+					}))
+	rownames(UpdatedParameters) <- NewParameter
+	return(UpdatedParameters)
+}
+
+#' Concatenates together .fcs files present in the GatingSet on the
+#'  basis of a given gate
+#' 
+#' @param gs A GatingSet object
+#' @param subset The gate from which to retrieve cell counts from 
+#' @param inverse.transform Whether to revert values back to their
+#' original untransformed values before export as an .fcs file, default
+#' is set to TRUE
+#' @param DownsampleCount The desired number of cells to downsample from
+#' each gated population. If value is less than 1, subsets out the 
+#' equivalent proportion from that specimen
+#' @param addon An additional character value to add before .fcs in the GUID
+#' keyword to tell the downsampled file apart from the original. 
+#' @param StorageLocation A file.path to the folder you want to store the new downsampled
+#' fcs file to. Default NULL results in .fcs file being stored in current working directory
+#' @param returnType Whether to return as a "fcs" file (default), or "flowFrame" or "data.frame"
+#' @param desiredCols A vector containing the names of the columns from the pData metadata
+#' that need to be added as keywords to the concatenated .fcs file. 
+#' @param specimenIndex Which specimen in the GatingSet to use as the metadata
+#' framework for the new fcs file. Default is set to 1. 
+#' @param filename Desired name for the concatenated file, default is MyConcatenatedFCS
+#' 
+#' @importFrom flowCore pData parameters keyword exprs write.FCS
+#' @importFrom flowWorkspace gs_pop_get_data
+#' @importFrom dplyr select bind_rows
+#' @importFrom tidyselect all_of
+#' @importFrom purrr map map2 flatten
+#' 
+Concatenate <- function(gs, subset, inverse.transform=TRUE, DownsampleCount,
+  addon, StorageLocation=NULL, returnType="flowFrame", desiredCols,
+  specimenIndex=1, filename="MyConcatenatedFCS"){
+
+  Metadata <- flowCore::pData(gs)
+  DesiredMetadata <- Metadata |> dplyr::select(tidyselect::all_of(desiredCols))
+
+  dataFrameList <- purrr::map(.x=gs, subset=subset, .f=Downsampling,
+   DownsampleCount=DownsampleCount, addon=addon, returnType="data.frame",
+  inverse.transform=inverse.transform, StorageLocation=StorageLocation)
+
+  TheFileNames <- DesiredMetadata |> dplyr::pull(name)
+
+  ExpandedDataframes <- purrr::map2(.x=TheFileNames, .y=dataFrameList,
+   .f=KeywordAppend, metadata=DesiredMetadata)
+
+  CombinedData <- dplyr::bind_rows(ExpandedDataframes)
+
+  NewData <- CombinedData |> dplyr::select(tidyselect::all_of(desiredCols))
+  OldData <- CombinedData |> dplyr::select(!tidyselect::all_of(desiredCols))
+
+  Dictionaries <- purrr::map(.x=desiredCols, .f=ColumnToKeyword, data=NewData)
+
+  EventsInTheGate <- flowWorkspace::gs_pop_get_data(gs[[specimenIndex]], subset,
+   inverse.transform=inverse.transform)
+  flowFrame <- EventsInTheGate[[1, returnType = "flowFrame"]]
+  OriginalParameters <- flowCore::parameters(flowFrame)
+  OriginalDescription <- flowCore::keyword(flowFrame)
+
+  NewKeywords <- purrr::flatten(Dictionaries)
+  NewDescriptions <- c(OriginalDescription, NewKeywords)
+
+  TranslatedNewData <- KeywordTranslate(data=NewData, DictionaryList=Dictionaries)
+
+  NewDataMatrix <- as.matrix(TranslatedNewData)
+  OldDataMatrix <- as.matrix(OldData)
+
+  new_fcs <- new("flowFrame", exprs=OldDataMatrix, parameters=OriginalParameters,
+                 description=NewDescriptions)
+
+  NewParameters <- ParameterUpdate(flowFrame=new_fcs, NewColumns=NewDataMatrix)
+
+  pd <- pData(parameters(new_fcs))
+  pd <- rbind(pd, NewParameters)
+  new_fcs@exprs <- cbind(exprs(new_fcs), NewDataMatrix)
+  pData(parameters(new_fcs)) <- pd
+  new_pid <- rownames(pd)
+  new_kw <- new_fcs@description
+
+  for (i in new_pid){
+    new_kw[paste0(i,"B")] <- new_kw["$P1B"] #Unclear Purpose
+    new_kw[paste0(i,"E")] <- "0,0"
+    new_kw[paste0(i,"N")] <- pd[[i,1]]
+    #new_kw[paste0(i,"V")] <- new_kw["$P1V"] # Extra Unclear Purpose
+    new_kw[paste0(i,"R")] <- pd[[i,5]]
+    new_kw[paste0(i,"DISPLAY")] <- "LIN"
+    new_kw[paste0(i,"TYPE")] <- "Identity"
+    new_kw[paste0("flowCore_", i,"Rmax")] <- pd[[i,5]]
+    new_kw[paste0("flowCore_", i,"Rmin")] <- pd[[i,4]]
+  }
+  
+  UpdatedParameters <- parameters(new_fcs)
+  UpdatedExprs <- exprs(new_fcs)
+
+  UpdatedFCS <- new("flowFrame", exprs=UpdatedExprs, parameters=UpdatedParameters, description=new_kw)
+
+  AssembledName <- paste0(filename, ".fcs")
+  UpdatedFCS@description$GUID <- AssembledName
+  UpdatedFCS@description$`$FIL` <- AssembledName 
+  #UpdatedFCS@description$CREATOR <- "CytometryInR_2026"
+  #UpdatedFCS@description$GROUPNAME <- filename
+  #UpdatedFCS@description$TUBENAME <- filename
+  #UpdatedFCS@description$USERSETTINGNAME <- filename
+  #Date <- Sys.time()
+  #Date <- as.Date(Date)
+  #UpdatedFCS@description$`$DATE` <- Date
+
+  if (is.null(StorageLocation)){StorageLocation <- getwd()}
+
+  StoreFCSFileHere <- file.path(StorageLocation, AssembledName)
+  
+  if (returnType == "fcs"){
+    flowCore::write.FCS(UpdatedFCS, filename = StoreFCSFileHere, delimiter="#") # Write out .fcs file
+  } else if (returnType == "data.frame"){
+    return(Downsampled_DataFrame) #Return data.frame without metadata
+  } else {
+    return(UpdatedFCS) #All other criterias return a flowFrame with metadata
+    }
+}
+
+# Extract Metadata
+
+ExtractConcatenatedMetadata <- function(
+    flowFrame,
+    desiredKeywords = NULL
+) {
+
+  Description <- flowCore::keyword(flowFrame)
+
+  # Keep keyword entries that contain a single usable value
+  ScalarKeywords <- purrr::keep(
+    Description,
+    function(x) {
+      !is.null(x) &&
+        length(x) == 1 &&
+        !is.list(x) &&
+        !isS4(x)
+    }
+  )
+
+  Metadata <- purrr::map_dfr(
+    names(ScalarKeywords),
+    function(KeywordName) {
+
+      tibble::tibble(
+        Keyword = KeywordName,
+        Value = as.character(ScalarKeywords[[KeywordName]])
+      )
+    }
+  )
+
+  if (!is.null(desiredKeywords)) {
+
+    Metadata <- Metadata |>
+      dplyr::filter(Keyword %in% desiredKeywords)
+  }
+
+  Metadata
+}
+
+CurrentMetadata <- pData(aurora_gatingset)
+CurrentMetadata
+
+# Concatenate Subpopulation
+ConcatenatedResult <- Concatenate(
+  gs = aurora_gatingset,
+  subset = "CD4+",
+  inverse.transform = TRUE,
+  DownsampleCount = 2500,
+  addon = "CD4",
+  StorageLocation = "homeworks/data",
+  returnType = "fcs",
+  desiredCols = c(
+    "name"
+    # Add other real columns from pData(aurora_gatingset) here
+  ),
+  specimenIndex = 1,
+  filename = "Aurora_CD4_Concatenated_WithMetadata"
+)
+```
+
+```{r}
+# Load Concatenated FCS
+library(flowCore)
+
+ff <- read.FCS(
+  "homeworks/data/Aurora_CD4_Concatenated_WithMetadata.fcs",
+  transformation = FALSE,
+  truncate_max_range = FALSE
+)
+
+expr_matrix <- exprs(ff)
+expr_matrix
+
+description_list <- keyword(ff)
+description_list
+
+expr_df <- as.data.frame(
+  expr_matrix,
+  check.names = FALSE
+)
+
+# Reverse translate keywords 
+ReverseKeywordTranslate <- function(
+    data,
+    description,
+    desiredCols
+) {
+
+  Output <- data
+
+  for (ColumnName in desiredCols) {
+
+    KeyName <- paste0(
+      ColumnName,
+      "_Key"
+    )
+
+    # Validate that the metadata column exists in exprs data
+    if (!ColumnName %in% colnames(Output)) {
+
+      stop(
+        paste0(
+          "Column '",
+          ColumnName,
+          "' is not present in the expression data. ",
+          "Available metadata-like columns are: ",
+          paste(
+            intersect(
+              desiredCols,
+              colnames(Output)
+            ),
+            collapse = ", "
+          )
+        )
+      )
+    }
+
+    # Validate that both dictionary keywords exist
+    if (is.null(description[[ColumnName]])) {
+
+      stop(
+        paste0(
+          "Keyword '",
+          ColumnName,
+          "' is not present in the FCS description."
+        )
+      )
+    }
+
+    if (is.null(description[[KeyName]])) {
+
+      stop(
+        paste0(
+          "Keyword '",
+          KeyName,
+          "' is not present in the FCS description."
+        )
+      )
+    }
+
+    OriginalValues <- as.character(
+      unlist(description[[ColumnName]])
+    )
+
+    NumericKeys <- as.numeric(
+      unlist(description[[KeyName]])
+    )
+
+    if (length(OriginalValues) != length(NumericKeys)) {
+
+      stop(
+        paste0(
+          "Dictionary length mismatch for '",
+          ColumnName,
+          "': ",
+          length(OriginalValues),
+          " original values versus ",
+          length(NumericKeys),
+          " numeric keys."
+        )
+      )
+    }
+
+    ReverseDictionary <- tibble::tibble(
+      NumericKey = NumericKeys,
+      OriginalValue = OriginalValues
+    )
+
+    # FCS numeric storage can sometimes introduce floating-point values,
+    # so standardize the event key column before joining.
+    Output[[ColumnName]] <- as.numeric(
+      Output[[ColumnName]]
+    )
+
+    Output <- Output |>
+      dplyr::left_join(
+        ReverseDictionary,
+        by = stats::setNames(
+          "NumericKey",
+          ColumnName
+        )
+      ) |>
+      dplyr::select(
+        -tidyselect::all_of(ColumnName)
+      ) |>
+      dplyr::rename(
+        !!ColumnName := OriginalValue
+      )
+  }
+
+  return(Output)
+}
+```
+
+```{r}
+
+# Restore Keywords
+RestoredData <- ReverseKeywordTranslate(
+  data = expr_df,
+  description = description_list,
+  desiredCols = "name"
+)
+
+# Inspect Restored values
+count(
+  RestoredData,
+  name
+)
+
+count(
+  expr_df,
+  name
+)
+```
+
+```{r}
+# Identify MetaDataColumns
+EncodedKeywordNames <- grep(
+  "_Key$",
+  names(description_list),
+  value = TRUE
+)
+
+MetadataColumns <- sub(
+  "_Key$",
+  "",
+  EncodedKeywordNames
+)
+
+MetadataColumns <- intersect(
+  MetadataColumns,
+  colnames(expr_df)
+)
+
+MetadataColumns
+
+# Translate MetadataColumns
+RestoredData <- ReverseKeywordTranslate(
+  data = expr_df,
+  description = description_list,
+  desiredCols = MetadataColumns
+)
+
+```
+
+```{r}
+#Create CSV file showing comparion of keywords added and revereted back to original character values
+
+library(dplyr)
+
+#------------------------------------------
+# Extract dictionary stored in keywords
+#------------------------------------------
+
+OriginalValues <- description_list[["name"]] |>
+  as.character() |>
+  trimws() |>
+  strsplit("\\s+") |>
+  unlist()
+
+NumericKeys <- description_list[["name_Key"]] |>
+  as.character() |>
+  trimws() |>
+  strsplit("\\s+") |>
+  unlist() |>
+  as.numeric()
+
+NameDictionary <- tibble::tibble(
+  Original_Value = OriginalValues,
+  Numeric_Key = NumericKeys
+)
+
+NameDictionary
+
+#------------------------------------------
+# Restore original values to exprs data
+#------------------------------------------
+
+RestoredData <- expr_df |>
+  mutate(
+    name = as.numeric(name)
+  ) |>
+  left_join(
+    NameDictionary,
+    by = c("name" = "Numeric_Key")
+  ) |>
+  select(-name) |>
+  rename(
+    name = Original_Value
+  )
+
+# Verify restored values
+RestoredData |>
+  count(name)
+
+#------------------------------------------
+# Count events BEFORE translation
+#------------------------------------------
+
+EncodedCounts <- expr_df |>
+  mutate(
+    name = as.numeric(name)
+  ) |>
+  count(
+    name,
+    name = "Events"
+  ) |>
+  rename(
+    Numeric_Key = name
+  )
+
+EncodedCounts
+
+#------------------------------------------
+# Count events AFTER translation
+#------------------------------------------
+
+RestoredCounts <- RestoredData |>
+  count(
+    name,
+    name = "Events_After"
+  ) |>
+  rename(
+    Original_Value = name
+  )
+
+RestoredCounts
+
+#------------------------------------------
+# Build verification report
+#------------------------------------------
+
+HomeworkReport <- NameDictionary |>
+  left_join(
+    EncodedCounts,
+    by = "Numeric_Key"
+  ) |>
+  left_join(
+    RestoredCounts,
+    by = "Original_Value"
+  ) |>
+  mutate(
+    Translation_Verified =
+      !is.na(Events) &
+      !is.na(Events_After) &
+      Events == Events_After
+  )
+
+HomeworkReport
+
+#------------------------------------------
+# Export to CSV
+#------------------------------------------
+
+OutputCSV <- file.path(
+  "homeworks",
+  "data",
+  "Homework_ReverseTranslation_Verification.csv"
+)
+
+write.csv(
+  HomeworkReport,
+  file = OutputCSV,
+  row.names = FALSE
+)
+
+OutputCSV
+
+
+```
