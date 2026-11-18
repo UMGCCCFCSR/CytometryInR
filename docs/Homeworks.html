@@ -80,7 +80,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-2bdd27f1b46cb9d469bd582ab29e3c10.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-6f6aba0dcc0820cd94830540b68c7d73.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -243,6 +243,7 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
   <li><a href="#week-12---spectral-signatures" id="toc-week-12---spectral-signatures" class="nav-link" data-scroll-target="#week-12---spectral-signatures">Week 12 - Spectral Signatures</a></li>
   <li><a href="#week-13---spectral-similarities" id="toc-week-13---spectral-similarities" class="nav-link" data-scroll-target="#week-13---spectral-similarities">Week 13 - Spectral Similarities</a></li>
   <li><a href="#week-14---unmixing-in-r" id="toc-week-14---unmixing-in-r" class="nav-link" data-scroll-target="#week-14---unmixing-in-r">Week 14 - Unmixing in R</a></li>
+  <li><a href="#week-15---evaluating-unmixing" id="toc-week-15---evaluating-unmixing" class="nav-link" data-scroll-target="#week-15---evaluating-unmixing">Week 15 - Evaluating Unmixing</a></li>
   </ul>
 </nav>
     </div>
@@ -955,6 +956,52 @@ gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
 </div>
 </div>
 <p>Click <a href="https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+14%22">here</a> to see previous community attempts at answering these optional take-home problems.</p>
+<p>Stay tuned for our <a href="">walk-through</a> answers on Course section completion.</p>
+</section>
+<section id="week-15---evaluating-unmixing" class="level1">
+<h1>Week 15 - Evaluating Unmixing</h1>
+<p><img src="./course/15_EvaluatingUnmixing/images/TakeAway.jpg" class="img-fluid"></p>
+<p>Redirect to <a href="./course/15_EvaluatingUnmixing/index.html">Week 15</a> content.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 1">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Problem 1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For the final unmixed .fcs files, screen through them one more time and see if you can identify any remaining unmixing errors that were not yet addressed. As you identify them, make mental notes whether the MFI shifts they introduce are enough to substantially shift where the positive and negative populations start and end. We will circle back to these unmixing issues in the unsupervised analysis section to determine whether they are sufficiently different enough to introduce batch effects.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Problem 2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At the beginning of the walk-through, we checked the residual plots for the full-stained .fcs files using the original unmixing matrix. Generate residual plots using the final unmixing matrix, visualize them with with <code>ggplotly()</code>, and characterize how the residuals shifted between specimens going from the initial unmixing with one autofluorescence, to the final unmixed version with 3.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Problem 3">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Problem 3
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>At a couple points, we swapped in alternate signatures, generated hotspot matrices, and subtracted them to identify the regions we expected to see improvement. But at the end of the walk-through, we added additional autofluorescent signatures to the matrix rather than swapping. Figure out how to implement a hotspot difference plot that would allow you to compare the final matrix vs.&nbsp;the original while working around the issue of different dimensions due to the additional autofluorescent rows. Report back which fluorophores showed the greatest magnitude changes, for better or worse.</p>
+</div>
+</div>
+<p>Click <a href="https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+15%22">here</a> to see previous community attempts at answering these optional take-home problems.</p>
 <p>Stay tuned for our <a href="">walk-through</a> answers on Course section completion.</p>
 
 
