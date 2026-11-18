@@ -13,9 +13,11 @@ toc-depth: 5
 [![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 :::
 
-For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
+For the YouTube livestream recording, see [here](https://www.youtube.com/live/ArMYM1Gr6DI?si=Tp55c74vbKz0WLK3&t=192)
 
-For screen-shot slides, click [here](/course/03_InsideFCSFile/slides.qmd)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/ArMYM1Gr6DI?si=Tp55c74vbKz0WLK3&amp;start=192" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+For screen-shot slides, click [here](/course/12_SpectralSignatures/slides.qmd)
 
 <br>
 
@@ -33,6 +35,16 @@ While the focus of the primary course material is on providing context while bui
 
 
 # Walk Through
+
+:::{.callout-important title="Housekeeping"}
+As we do [every week](/course/02_FilePaths/index.qmd), on GitHub, [sync](/course/00_Homeworks/index.qmd#sync-your-fork) your forked version of the CytometryInR course to bring in the most recent updates. Then within Positron, [pull](/course/00_Homeworks/index.qmd#pull-to-local) in those changes to your local computer. 
+
+For YouTube walkthrough of this process, click [here](https://www.youtube.com/live/Zfctacqpe90?si=a7Ad61kj6_UDNkGw&t=32)
+
+After [setting up](/course/00_Git/index.qmd#new-folder-from-template) a "Week12" project folder, copy over the contents of "course/12_SpectralSignatures/data" to that folder. This will hopefully prevent merge issues next week when attempting to pull in new course material. Once you have your new project folder organized, remember to [commit](/course/00_Git/index.qmd#push) and push your changes to GitHub to maintain remote version control. 
+
+If you encounter issues syncing due to the Take-Home Problem merge conflict, see this [walkthrough](https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/). The updated homework submission protocol can be found [here](https://umgcccfcsr.github.io/CytometryInR/course/00_BonusContent/PullConflicts/UpdatedPullRequest)
+:::
 
 ## Dataset
 
@@ -1190,7 +1202,7 @@ plotly::ggplotly(Plot)
 
 Please note, in our experience, some of the quirkier unmixing errors that we encounter are often tied to those individual cells having autofluorescences in the UV8 or B3 regions that don't follow what other cells are doing. Since unmixing occurs at the individual cell level, these can matter as we will see in two weeks for the [unmixing](/Schedule.qmd#unmixing-in-r) walk-through. 
 
-And previewing nex ttime, lets see how these cell signatures differ from each other in terms of cosine value (i.e. similarity for those who speak Cytek Aurora)
+And previewing next time, lets see how these cell signatures differ from each other in terms of cosine value (i.e. similarity for those who speak Cytek Aurora)
 
 ```{r}
 Plot <- INF052Ctrl$CosineSimilarityPlot
@@ -1292,7 +1304,7 @@ In the example above, we deep dived the APC-Fire 810 single-color control. Since
 
 :::
 
-:::{.callout-tip title="Problem 3"}
+:::{.callout-tip title="Problem 2"}
 For this example, we gated the positive cells according to the "as bright or brighter" guideline. But what would we have seen if we had included the rest of the positive staining cells? Using `flowGate`, adjust the gate to include the less bright cells, and report whether this affected the overall signature profiles for the APC-Fire 810 control.
 :::
 

@@ -1,5 +1,5 @@
 ---
-title: "Clean up gates for Signature Retrieval"
+title: "Clean up Gates for Signature Retrieval"
 author: "David Rach"
 date: 07-05-2026
 format:
@@ -16,9 +16,11 @@ execute:
 [![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
 :::
 
-For the YouTube livestream schedule, see [here](https://www.youtube.com/@cytometryinr)
+For the YouTube livestream recording, see [here](https://youtu.be/QCx0tAEZaMA?si=v9mtvSy7JD9U489M&t=18)
 
-For screen-shot slides, click [here](/course/03_InsideFCSFile/slides.qmd)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/QCx0tAEZaMA?si=v9mtvSy7JD9U489M&amp;start=18" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+For screen-shot slides, click [here](/course/SDY3080/SetUp_slides.qmd)
 
 <br>
 
@@ -538,6 +540,8 @@ AllDNs <- purrr::map(.x=Unstained_GatingSet, subset="scatter", .f=Downsampling, 
 During this walk-through, we have loaded in our unmixing controls (both single-color and unstained) into their own respective GatingSets, transformed and applied initial gates. We in turn using the new `flowGate` functions  double checked and validated these initial gate placements across each individual, modifying the individually applied gates as necessary, ensuring that everything was correctly applied before saving the GatingSets as intermediate .gs for future use. Hopefully, this will payoff further downstream in the analysis by limiting the effect that antibody aggregates, debris, doublets and dead cells end up getting selected along with cells of interest may have on the final derived signatures. 
 
 In the next portion of this walk-through, we will orchestrate the creation of individual gates for every single-color in our panel, allowing for the derivation of the single-color unmixing matrix that is needed to retrieve the normalized fluorescent signatures, as well as later on for use in unmixing the full-stained controls. 
+
+![](images/TakeAway2.jpg)
 
 # Additional Resources
 

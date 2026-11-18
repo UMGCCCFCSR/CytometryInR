@@ -1,0 +1,169 @@
+---
+title: "Week 07 - Applying transformations Take Home Problems"
+toc: TRUE
+---
+
+# Problem 1
+We had not selected FSC and SSC parameters in this attempt, as they are normally displayed in the linear scale. Include them in the list of fluorophores to be transformed, and see how this impacts the visualization (imitating what could accidentally happen in practice if they were left in)
+
+```{r}
+# Load libraries
+library(flowWorkspace)
+library(ggcyto)
+library(dplyr)
+library(stringr)
+
+# Load data
+Folder <- file.path("data")
+fcs_files <- list.files(Folder, ".fcs", full.names = TRUE)
+fcs_files <- fcs_files[stringr::str_detect(fcs_files, "2025")]
+
+# Load data into a gating set object
+cytoset <- load_cytoset_from_fcs(fcs_files, truncate_max_range = FALSE, transformation = FALSE)
+gs <- GatingSet(cytoset)
+
+# Column names to be transformed (including FSC and SSC)
+Parameters <- colnames(gs)
+Parameters
+
+# Transform data and apply to gating set
+BiexTransform <- transformerList(Parameters, flowjo_biexp_trans())
+BiexTransform
+
+flowWorkspace::transform(gs, BiexTransform)
+
+# plot transformed FSC vs. SSC data
+ggcyto(gs[1], subset="root",
+ aes(x="FSC-A", y="SSC-A")) + geom_hex(bins=100)
+
+ggcyto(gs[1], subset="root",
+ aes(x="FSC-A", y="FSC-H")) + geom_hex(bins=100)
+```
+
+I had expected that applying the transformation to all parameters would distort the FSC and SSC as they are usually displayed in a linear scale. However, the plots have remained the same, it appears the transformation does not apply to these parameters. 
+
+# Problem 2
+For the SFC data, I showed the setup for both Logicle and Biexponential, but didn’t have time to dive into the Logicle transformation. Select a couple markers of interest for the SFC data, visualize and screenshot the before, and then attempt to customize the biexponential arguments to best visualize the underlying data, and then repeat for Logicle. Take screenshots of both and compare/contrast the difference.
+
+```{r}
+# Identify markers of interest: IFNg and IL-2
+markernames(gs)
+
+# Plot before transformation
+cytoset <- load_cytoset_from_fcs(fcs_files, truncate_max_range = FALSE, transformation = FALSE)
+gs <- GatingSet(cytoset)
+
+before <- ggcyto(gs[1], subset="root",
+ aes(x="IFNg", y="IL-2")) + geom_hex(bins=100)
+before
+
+# Plot after biexponential transformation
+Biexponential <- flowjo_biexp_trans()
+BiexTransform <- transformerList(Parameters, Biexponential)
+gs_Biex <- flowWorkspace::transform(gs, BiexTransform)
+
+after_biex <- ggcyto(gs_Biex[1], subset="root",
+ aes(x="IFNg", y="IL-2")) + geom_hex(bins=100)
+after_biex
+
+# Adjusted biexponential plot
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=0, widthBasis=-500)
+BiexTransform <- transformerList(Parameters, Biexponential)
+gs_Biex <- flowWorkspace::transform(gs, BiexTransform)
+
+adjusted_biex <- ggcyto(gs_Biex[1], subset="root",
+ aes(x="IFNg", y="IL-2")) + geom_hex(bins=100)
+adjusted_biex
+
+# Plot after logicle transformation
+LogicleTransform <- transformerList(Parameters, logicle_trans())
+gs_transform <- flowWorkspace::transform(gs, LogicleTransform)
+
+after_logicle <- ggcyto(gs_transform[1], subset="root",
+ aes(x="IFNg", y="IL-2")) + geom_hex(bins=100)
+after_logicle
+
+# Look up logicle transformation documentation to identify available adjustments
+?logicle_trans
+?logicleTransform
+
+# Default logicle transform arguments = logicle_trans(w = 0.5, t = 262144, m = 4.5, a = 0)
+# Adjust arguments to customise visualisation
+Logicle <- logicle_trans(w = 0.5, t = 262144, m = 5, a = 0)
+LogicleTransform <- transformerList(Parameters, Logicle)
+gs_transform <- flowWorkspace::transform(gs, LogicleTransform)
+
+adjusted_logicle <- ggcyto(gs_transform[1], subset="root",
+ aes(x="IFNg", y="IL-2")) + geom_hex(bins=100)
+adjusted_logicle
+```
+
+I find that the logicle transformation is more difficult to customize than biexponential. 
+
+# Problem 3
+There are two asinh style transformations provided by the flowWorkspace package. Using the mass cytometry data, select two metal markers of interest, visualize each, customize the arguments until you have properly visualized the underlying populations, and see if you can spot any major differences between the methods.
+
+```{r}
+# Load data
+Folder <- file.path("data")
+fcs_files <- list.files(Folder, ".fcs", full.names = TRUE)
+MC_files <- fcs_files[stringr::str_detect(fcs_files, "G1_2")]
+
+# Load data into a gating set object
+MC_cytoset <- load_cytoset_from_fcs(MC_files, truncate_max_range = FALSE, transformation = FALSE)
+MC_GatingSet <- GatingSet(MC_cytoset)
+
+# Column names to be transformed
+MC_Parameters <- colnames(MC_GatingSet)
+MC_MarkersInterest <- MC_Parameters[!str_detect("Barcode|Beads", MC_Parameters)]
+
+# Plot before transformation
+before <- ggcyto(MC_GatingSet[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+before
+
+# Asinh transformations
+Asinh <- flowjo_fasinh_trans()
+AsinhTransform <- transformerList(MC_MarkersInterest, Asinh)
+AsinhTransform1 <- flowWorkspace::transform(MC_GatingSet, AsinhTransform)
+
+AsinhGML <- asinhtGml2_trans()
+AsinhGMLTransform <- transformerList(MC_MarkersInterest, AsinhGML)
+AsinhTransform2 <- flowWorkspace::transform(MC_GatingSet, AsinhGMLTransform)
+
+# Plot transformed data 
+asinh_plot <- ggcyto(AsinhTransform1[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+asinh_plot
+
+asinhGML_plot <- ggcyto(AsinhTransform2[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+asinhGML_plot
+
+# Customize transformation arguments
+?flowjo_fasinh
+?asinhtGml2
+
+# asinh default arguments are: flowjo_fasinh(m = 4, t = 12000, a = 0.7, length = 256)
+# asinhGML default arguments are: asinhtGml2(parameters = "FSC-H", T = 1000, M = 4.5, A = 0, transformationId="myASinH1")
+
+Asinh <- flowjo_fasinh_trans(m = 4, t = 24000, a = 0.7, length = 256)
+AsinhTransform <- transformerList(MC_MarkersInterest, Asinh)
+AsinhTransform1 <- flowWorkspace::transform(MC_GatingSet, AsinhTransform)
+
+asinh_plot1 <- ggcyto(AsinhTransform1[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+asinh_plot1
+
+
+AsinhGML <- asinhtGml2_trans(T = 2000, M = 4.5, A = 0)
+AsinhGMLTransform <- transformerList(MC_MarkersInterest, AsinhGML)
+AsinhTransform2 <- flowWorkspace::transform(MC_GatingSet, AsinhGMLTransform)
+
+asinhGML_plot1 <- ggcyto(AsinhTransform2[1], subset="root",
+ aes( x="Nd145Di", y="Nd146Di")) + geom_hex(bins=100)
+asinhGML_plot1
+```
+
+Visually, both asinh transformation plots look very similar and both use similar arguments for customizing the plots. I find that changing the asinh arguments doesn't adjust the plots as much as changing the arguments for the biexponential transformation on the SFC data. 

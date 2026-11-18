@@ -1,0 +1,55 @@
+---
+title: "Week 02 - File Paths Take-home Problems"
+format: html
+---
+
+# Problem 1
+
+Plug in an external hard-drive or USB into your computer. Manually, create a folder within called “TargetFolder”. Try to programmatically specify the file path to identify the folders and files present on your external drive. Then, try to copy your .fcs files from their current folder on your desktop to the TargetFolder on your drive using R. Remember, just copy, no deletion, you need to walk before you can run :D
+
+## Problem 1 answer
+```{r}
+list.files(path = "D:/", full.names = TRUE, recursive = FALSE) # Folders present on external USB
+list.files(path = "D:/", full.names = FALSE, recursive = TRUE) # All files present on external USB
+
+TargetFolder <- file.path("D:", "TargetFolder")
+Transfer_Files <- list.files("data", pattern = ".fcs", full.names = TRUE, recursive = FALSE)
+file.copy(from = Transfer_Files, to = TargetFolder)
+```
+
+# Problem 2
+
+In this session, we used list.files() with the “full.names argument” set to TRUE, as well as the basename() function to identify specific files. But what if you wanted a particular directory. Run list.files() with “full.names argument” and “recursive” argument set to TRUE, and then search online to find an R function that would retrieve the “” individual directory folders.
+
+## Problem 2 answer:
+```{r}
+list.files(path = ".", full.names = TRUE, recursive = TRUE)
+basename(Transfer_Files)
+
+list.dirs(path = ".", full.names = TRUE, recursive = FALSE)
+```
+
+# Problem 3
+
+R packages often come with internal datasets, that are typically used for use in the help documentation examples. These can be accessed through the use of the system.file() function. See an example below.
+```{r}
+system.file("extdata", package = "FlowSOM")
+system.file("extdata", package = "flowWorkspace")
+```
+
+Using what we have learned about file.path navigation, search your way down the file.directory of the FlowSOM and flowWorkspace packages, and identify any .fcs files that are present for use in the documentation.
+
+## Problem 3 answer
+
+```{r}
+FlowSOMData <- file.path("C:/Users/Jessica.Williams/AppData/Local/R/win-library/4.5/FlowSOM")
+FlowWorkspaceData <- file.path("C:/Users/Jessica.Williams/AppData/Local/R/win-library/4.5/flowWorkspace")
+
+list.dirs(FlowSOMData, full.names = FALSE, recursive = TRUE)
+list.dirs(FlowWorkspaceData, full.names = FALSE, recursive = TRUE)
+
+list.files(FlowSOMData, pattern = ".fcs", full.names = FALSE, recursive = TRUE)
+list.files(FlowWorkspaceData, pattern = ".fcs", full.names = FALSE, recursive = TRUE)
+```
+
+The FlowSOM pacakge contains one .fcs file whereas flowWorkspace doesn't contain any .fcs files in the package directory. 

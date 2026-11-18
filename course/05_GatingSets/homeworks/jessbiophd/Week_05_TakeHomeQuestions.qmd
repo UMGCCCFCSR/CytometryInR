@@ -1,0 +1,101 @@
+---
+title: "Week 05 - Gating Sets Take Home Questions"
+format: html
+toc: TRUE 
+---
+
+# Problem 1 
+
+Using what you learned last week in Introduction to Tidyverse, for the imported GatingSet, retrieve the data.frame from cell counts per gate and attempt to mutate a new column showing percent of the parent gate. Remember, this is intentionally tricky at this point, we will go over how to efficiently do this in a few weeks.
+
+```{r}
+#Load packages into local environment 
+library(dplyr)
+library(flowCore)
+library(flowWorkspace)
+library(CytoML)
+
+# Set up file path
+Folder <- file.path("data")
+
+# Load gating set data
+FlowJoWsp <- list.files(Folder, pattern = ".wsp", full.names = TRUE)
+FlowJoWsp
+
+ThisWorkspace <- FlowJoWsp[stringr::str_detect(FlowJoWsp, "Opened")]
+ThisWorkspace
+
+ws <- open_flowjo_xml(ThisWorkspace)
+ws
+
+gs <- flowjo_to_gatingset(ws = ws, name = 1, path = Folder, additional.keys = "GROUPNAME")
+gs
+
+# Retrieve the data.frame from cell counts per gate
+Data <- gs_pop_get_count_fast(gs)
+head(Data, 5)
+
+# Mutate new column showing % of parent gate
+NewData <- mutate(Data, Percent_Parent = round(Count / ParentCount *100,2))
+head(NewData, 5)
+```
+
+# Problem 2
+
+As we saw, CytoML can be finicky when names are repeated, or .fcs files are not present. Try removing a couple of the .fcs files from the data folder, and re-run the code. Document what kind of errors result.
+
+```{r}
+Folder1 <- file.path("data1")
+FlowJoWsp <- list.files(Folder1, pattern = ".wsp", full.names = TRUE)
+FlowJoWsp
+
+ThisWorkspace <- FlowJoWsp[stringr::str_detect(FlowJoWsp, "Opened")]
+ThisWorkspace
+
+ws <- open_flowjo_xml(ThisWorkspace)
+ws
+
+gs <- flowjo_to_gatingset(ws = ws, name = 1, path = Folder1, additional.keys = "GROUPNAME")
+gs
+```
+
+Two .fcs files were deleted from the data1 folder. The following error was received:
+[](images/Screenshot%202026-10-17%20141801.png)
+
+# Problem 3
+
+For ggcyto, attempt to generate plots to visualize TNFa and IFNg for the various cell populations, across both Ctrl and SEB samples. In the process, change the bins argument until you end up with a resolution that you would be happy with for your own plots, and write it down.
+
+```{r}
+#Load package into local environment 
+library(ggcyto)
+library(ggplot2)
+
+# Set up file path
+Folder <- file.path("data")
+
+# Load gating set data
+FlowJoWsp <- list.files(Folder, pattern = ".wsp", full.names = TRUE)
+ThisWorkspace <- FlowJoWsp[stringr::str_detect(FlowJoWsp, "Opened")]
+
+ws <- open_flowjo_xml(ThisWorkspace)
+gs <- flowjo_to_gatingset(ws = ws, name = 1, path = Folder, additional.keys = "GROUPNAME")
+
+#SampleNames(gs) contains 6 unique sample names but pData(gs) only has 'name' which contains two unqiue names "00_Ctrl.fcs" "00_SEB.fcs". pData needs to be updated with a column for sample_id otherwise ggplots will combine the control and SEB sample to give two plots. 
+sampleNames(gs)
+pd <- pData(gs)
+pd$sample_id <- sampleNames(gs)
+pData(gs) <- pd
+
+# Plots to visualise TNFa and IFNg from various cell populations
+# CD4+
+ggcyto(gs, subset="CD4+", aes(x="TNFa", y="IFNg")) + geom_hex(bins=80) + facet_wrap(~sample_id)
+
+# CD8+
+ggcyto(gs, subset="CD8+", aes(x="TNFa", y="IFNg")) + geom_hex(bins=80) + facet_wrap(~sample_id)
+
+# CD4-CD8-
+ggcyto(gs, subset="CD4-CD8-", aes(x="TNFa", y="IFNg")) + geom_hex(bins=80) + facet_wrap(~sample_id)
+```
+
+Person preference: bin size =80
