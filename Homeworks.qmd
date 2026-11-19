@@ -380,3 +380,25 @@ For these 2 packages ([flowUnmix](https://github.com/hally166/flowUnmix/tree/mai
 Click [here](https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+14%22) to see previous community attempts at answering these optional take-home problems.
 
 Stay tuned for our [walk-through]() answers on Course section completion. 
+
+# Week 15 - Evaluating Unmixing
+
+![](/course/15_EvaluatingUnmixing/images/TakeAway.jpg)
+
+Redirect to [Week 15](course/15_EvaluatingUnmixing/index.qmd) content.
+
+:::{.callout-tip title="Problem 1"}
+For the final unmixed .fcs files, screen through them one more time and see if you can identify any remaining unmixing errors that were not yet addressed. As you identify them, make mental notes whether the MFI shifts they introduce are enough to substantially shift where the positive and negative populations start and end. We will circle back to these unmixing issues in the unsupervised analysis section to determine whether they are sufficiently different enough to introduce batch effects. 
+:::
+
+:::{.callout-tip title="Problem 2"}
+At the beginning of the walk-through, we checked the residual plots for the full-stained .fcs files using the original unmixing matrix. Generate residual plots using the final unmixing matrix, visualize them with with `ggplotly()`, and characterize how the residuals shifted between specimens going from the initial unmixing with one autofluorescence, to the final unmixed version with 3. 
+:::
+
+:::{.callout-tip title="Problem 3"}
+At a couple points, we swapped in alternate signatures, generated hotspot matrices, and subtracted them to identify the regions we expected to see improvement. But at the end of the walk-through, we added additional autofluorescent signatures to the matrix rather than swapping. Figure out how to implement a hotspot difference plot that would allow you to compare the final matrix vs. the original while working around the issue of different dimensions due to the additional autofluorescent rows.  Report back which fluorophores showed the greatest magnitude changes, for better or worse.
+:::
+
+Click [here](https://github.com/UMGCCCFCSR/CytometryInR/pulls?q=label%3A%22Week+15%22) to see previous community attempts at answering these optional take-home problems.
+
+Stay tuned for our [walk-through]() answers on Course section completion. 
