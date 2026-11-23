@@ -1,0 +1,188 @@
+---
+title: "Week 09 - Functions Take Home Problems"
+toc: TRUE
+---
+
+# Problem 1
+Modify one of the simpler functions (SecondFunction or similar), provide your own argument names, and modify the message(), paste0 or print() functions to print a text style output. Generate a small vector of values, and iterate through your vector using one of the approaches we used.
+
+```{r}
+library(dplyr)
+library(purrr)
+
+# original function
+MySecondFunction <- function(BestFluorophore){
+    message("Unquestionably, the best fluorophore is ", BestFluorophore)
+}
+
+MySecondFunction(BestFluorophore = "APC")
+
+# modified function 
+ModifiedFunction <- function(x){
+    Markers <- sort(x)
+    print(Markers)
+}
+
+# make vector(s)
+Fluorophores1 <- c("APC", "BV421", "BUV395", "PE", "PE-Fire810", "BV785", "PE-Dazzle594", "AF-555", "AF700", "BV605")
+Fluorophores2 <- c("PE-Alexa610", "SB550", "RY775", "PE", "BV510", "FITC")
+Fluorophores3 <- c("PE-Cy7", "Pacific Blue", "AF488", "BUV563", "AF647", "BV785", "PE-Cy5", "V450", "BV605")
+All <- list(Fluorophores1, Fluorophores2, Fluorophores3)
+
+# Test function
+FluorophoresAtoZ <- map(.x = All, .f = ModifiedFunction)
+FluorophoresAtoZ
+```
+
+# Problem 2
+Using the initial framework for the CellConcentration function, retrieve several other keywords that are of interest, and incorporate them into the returned data.frame row.
+
+```{r}
+# Load required packages
+library(flowWorkspace)
+library(flowGate)
+library(ggplot2)
+library(ggcyto)
+library(dplyr)
+library(purrr)
+
+# Retreive GatingSet
+Folder <- file.path("data")
+fcs_files <- list.files(Folder, pattern = ".fcs", full.names = TRUE)
+
+MyCytoset <- load_cytoset_from_fcs(fcs_files, truncate_max_range = FALSE, transformation = FALSE)
+MyGatingSet <- GatingSet(MyCytoset)
+
+# GatingSet Transformation
+MainDetectorsOnly <- c("V3-A", "B4-A", "R1-A")
+
+Biexponential <- flowjo_biexp_trans(channelRange=4096, maxValue=262144,
+     pos=4.5, neg=2, widthBasis=-500)
+MyBiexTransform <- transformerList(MainDetectorsOnly, Biexponential)
+flowWorkspace::transform(MyGatingSet, MyBiexTransform)
+
+# Add gates
+GatingTable <- tibble::tribble(
+  ~filterId,    ~dims,                          ~subset,           
+  "CD45",       list("B4-A", "SSC-A"),            "root",     
+  "CD19",       list("V3-A", "SSC-A"),            "CD45",   
+  "CD14",       list("R1-A", "SSC-A"),            "CD45", 
+  "TandNKcells",  list("V3-A", "SSC-A"),            "CD45",
+)
+
+flowGate::gs_apply_gating_strategy(MyGatingSet, gating_strategy = GatingTable)
+plot(MyGatingSet)
+
+#Identify GatingSet keywords of interest
+keywords <- as.list(keyword(MyGatingSet))
+
+#' This function will figure out the cell concentration
+#'  for a given gated population in an .fcs file
+#'
+#' @param x A GatingSet object (typically iterated in)
+#' @param subset The gate from which to retrieve cell counts from
+#' @param dilutionMultiplier Multiplies the estimated concentration
+#'  to bring correct digits. 
+#' 
+CellConcentration <- function(x, subset, dilutionMultiplier){
+    Date <- keyword(x)$`$DATE` # Day-Month-Year
+    Cytometer <- keyword(x)$`$CYT`
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+    User <- keyword(x)$`$OP`
+    Laser1 <- keyword(x)$`LASER1NAME`
+    Laser2 <- keyword(x)$`LASER2NAME`
+    Laser3 <- keyword(x)$`LASER3NAME`
+    Laser4 <- keyword(x)$`LASER4NAME`
+
+    Volume <- keyword(x)$`$VOL`
+    Volume <- as.numeric(Volume)
+
+    EventsInTheGate <- gs_pop_get_data(x, subset)
+    Cells <- nrow(EventsInTheGate)[[1]] #[[1]] since the output is in a list
+
+    Concentration <- (Cells*1000)/Volume
+    Concentration <- Concentration*dilutionMultiplier
+
+    Data <- data.frame(
+        Date=Date,
+        Cytometer=Cytometer,
+        InstrumentSerial=InstrumentSerial,
+        User=User,
+        Specimen=Specimen,
+        StartTime=StartTime,
+        EndTime=EndTime,
+        Volume=Volume, 
+        Cells=Cells,
+        Concentration=Concentration,
+        Laser1=Laser1,
+        Laser2=Laser2,
+        Laser3=Laser3,
+        Laser4=Laser4
+        )
+
+    return(Data)
+}
+
+Dataset <- purrr::map(.x=MyGatingSet, .f=CellConcentration, subset="CD19", dilutionMultiplier=100) |> bind_rows()
+Dataset
+```
+
+# Problem 3
+For CellConcentration, we retrieved both start and end time. Look up information on lubridate package, convert these times to a time-style format, and from acquired volume derrive uL/min at which each .fcs file was acquired. Did this vary at all across days?
+
+```{r}
+# Look up info on lubridate package
+#?lubridate
+library(lubridate)
+
+CellConcentration <- function(x, subset, dilutionMultiplier){
+    Date <- keyword(x)$`$DATE` # day-month-year
+    InstrumentSerial <- keyword(x)$`$CYTSN`
+    TotalFileEvents <- keyword(x)$`$TOT`
+    Specimen <- keyword(x)$GUID
+    StartTime <- keyword(x)$`$BTIM`
+    EndTime <- keyword(x)$`$ETIM`
+
+    Volume <- keyword(x)$`$VOL`
+    Volume <- as.numeric(Volume)
+
+# Convert times to hms objects
+    StartTime <- hms(StartTime)
+    EndTime <- hms(EndTime)
+    
+# Acquisiotn time in minutes
+    SampleTime <- as.numeric(EndTime - StartTime, units = "mins")
+
+# Flow rate (ul/min)
+    uLMin <- Volume / SampleTime
+
+    EventsInTheGate <- gs_pop_get_data(x, subset)
+    Cells <- nrow(EventsInTheGate)[[1]] #[[1]] since the output is in a list
+
+    Concentration <- (Cells*1000)/Volume
+    Concentration <- Concentration*dilutionMultiplier
+
+    Data <- data.frame(
+        Date=Date,
+        InstrumentSerial=InstrumentSerial,
+        Specimen=Specimen,
+        StartTime=StartTime,
+        EndTime=EndTime,
+        Volume=Volume, 
+        Cells=Cells,
+        Concentration=Concentration,
+        uLmin=uLMin
+        )
+
+    return(Data)
+}
+
+Dataset <- purrr::map(.x=MyGatingSet, .f=CellConcentration, subset="CD19", dilutionMultiplier=100) |> bind_rows()
+Dataset
+```
+
+The flow rate between the samples stays mostly consistent at an appoximate rate of 68ul / minute.
