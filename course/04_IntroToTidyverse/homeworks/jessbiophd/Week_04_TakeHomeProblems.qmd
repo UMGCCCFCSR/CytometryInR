@@ -1,0 +1,80 @@
+---
+title: "Week 04 - Introduction to Tidyverse Take Home Problems"
+format: html
+toc: TRUE
+---
+
+# Problem 1:
+
+Taking a dataset (either todays or one of your own), work through the column-operating functions (select(), rename(), and relocate()). Once this is done, filter() by conditions from two separate columns, arrange in an order that makes sense, and export this “tidy” data as a .csv file.
+
+## Data file upload
+
+```{r}
+filepath <- file.path("data", "Dataset.csv")
+Data <- read.csv(filepath, check.names = FALSE)
+```
+
+## Column operating functions
+
+```{r}
+# library(dplyr)
+
+colnames(Data)
+select(Data[1:10,], "Condition")
+
+DataNew <- rename(Data, GoodCells = nonDebris)
+DataNew |> relocate(Date, .after = bid) |> head(5)
+
+DataNew |> pull(Date) |> unique()
+
+# Dataset to be filtered to remove samples collected on 31-07-2025 and only include 0 timepoint. Condiotn column used to arrange samples in new order. 
+
+TidyData <- DataNew |> filter(!Date %in% "2025-07-31") |> filter(timepoint %in% "0") |> arrange(Condition, .by_group = TRUE)
+
+TidyData |> pull(Date) |> unique() 
+TidyData |> pull(timepoint) |> unique()
+```
+
+## Export 'tidy' file
+
+```{r}
+NewFile <- paste0("TidyDataset", ".csv")
+StorageLocation <- file.path("data", NewFile)
+write.csv(TidyData, StorageLocation, row.names = FALSE)
+```
+
+# Problem 2:
+
+We used the mutate() function to create new columns, but it can also be used to modify existing ones. Various numeric columns are showing way to many significant digits. As was shown, use round() to round all these proportion columns, but use mutate to overwrite the existing column. Export this as it’s own .csv file.
+
+```{r}
+# Take TidyData then mutate decimal columns to 2 dp
+RoundedData <- TidyData |> mutate(round(TidyData[7:31], digit = 2))
+head(RoundedData, 5)
+
+# Export as new .csv file
+NewFile <- paste0("RoundedDataset", ".csv")
+StorageLocation <- file.path("data", NewFile)
+write.csv(RoundedData, StorageLocation, row.names = FALSE)
+```
+
+# Problem 3: 
+
+We can also use mutate() to combine columns. For our dataset, “bid”, “timepoint”, “Condition” are separate columns that originally were all part of the filename for the individual .fcs file. Try to figure out a way to combine them back together using paste0(), and save the new column as “filename”. Once this is done, pull() the contents of this column, and using length() and unique(), try to determine whether there were any duplicates (think innovative ways of using !) 
+
+```{r}
+#load dataset
+filepath <- file.path("data", "Dataset.csv")
+Data <- read.csv(filepath, check.names = FALSE)
+
+# Add filename column with _ separators
+FileData <- mutate(Data, filename = paste0(bid, "_", timepoint, "_", Condition))
+
+# Identify duplicate files
+Filenames <- FileData |> pull(filename)
+
+!length(Filenames) == length(unique(Filenames))
+```
+
+There are no duplicate filenames in the dataset. 

@@ -1,0 +1,169 @@
+---
+title: "Week 08 - Manual and Automated Gating Take Home Problems"
+toc: TRUE
+---
+
+# Problem 1 
+
+Using flowGate, go ahead and create your own series of gates for either our data or your own for any cell populations that might interest you. Once done, save the GatingSet, and then successfully reload it. Add another gate, but intentionally misdraw it. Then proceed to visualize, identify and correct it, before saving again.
+
+```{r}
+# Load required packages
+library(ggplot2)
+library(ggcyto)
+library(flowWorkspace)
+library(flowGate)
+library(openCyto)
+
+# Fetch data
+folder <- file.path("data")
+fcs_files <- list.files(folder, pattern = ".fcs", full.names = TRUE)
+
+# Load data into GatingSet
+cytoset <- load_cytoset_from_fcs(fcs_files, truncate_max_range = FALSE, transformation = FALSE)
+gatingset <- GatingSet(cytoset)
+
+# Apply biexponential transformation
+Parameters <- colnames(gatingset)
+FluorophoresOnly <- Parameters[!stringr::str_detect(Parameters, "FSC|SSC|Time")]
+Biexponential <- flowjo_biexp_trans(channelRange = 4096, maxValue = 262144, pos = 4.5, neg = 2, widthBasis = -500)
+BiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+flowWorkspace::transform(gatingset, BiexTransform)
+ggcyto(gatingset[1], subset = "root", aes(x = "BUV805-A", y = "BV650-A")) + geom_hex(bins=100)
+
+# Identify panel markers for gating strategy 
+markernames(gatingset)
+GatingTable <- tibble::tribble(
+~filterId,    ~dims,                          ~subset,      
+  "singlets",   list("FSC-A", "FSC-H"),          "root",      
+  "live",       list("FSC-A", "Zombie NIR-A"),   "singlets",  
+  "Tcells",     list("CD3", "CD45"),              "live",     
+"Mono",     list("FSC-A", "HLA-DR"),              "live",     
+  "CD4+",       list("CD8", "CD4"),               "Tcells",   
+  "CD8+",       list("CD8", "CD4"),               "Tcells",   
+  "DN",         list("CD8", "CD4"),                "Tcells",  
+"CD4Mem",       list("CD45RA", "CCR7"),               "CD4+",    
+"CD8Mem",       list("CD45RA", "CCR7"),               "CD8+",  
+  "Treg",       list("CD25", "CD127"),               "CD4+",   
+  "Treg+",       list("CD25", "FoxP3"),               "Treg",  
+  "MAIT",       list("CD161", "Va7.2"),               "Tcells",   
+"CytoCD8",       list("CD8", "CD107a"),               "CD8+",   
+)
+
+# Apply gates
+gs_apply_gating_strategy(gatingset, gating_strategy = GatingTable)
+plot(gatingset)
+
+# Save GatingSet
+FolderandName <- file.path("/Users/Jessica.Williams/Downloads/Cytometry_in_R_Week08", "flowGateProblem1GS.gs")
+save_gs(gatingset, FolderandName)
+
+# Reload GatingSet
+Reloadgs <- load_gs(FolderandName)
+plot(Reloadgs)
+
+# Add misdrawn gate
+flowGate::gs_gate_interactive(gs=Reloadgs, filterId="CD161+", sample=1,
+dims=list("CD161"), subset="CD8+")
+
+# Visualise misdrawn gate
+ggcyto::autoplot(Reloadgs[[1]]) + theme_bw()
+
+# Rectify misdrawn gate
+flowGate::gs_gate_interactive(gs=Reloadgs, filterId="CD161+", sample=1,
+dims=list("CD161"), subset="CD8+", regate = TRUE)
+
+ggcyto::autoplot(Reloadgs[[1]]) + theme_bw()
+
+# Saving updated GatingSet
+FolderandName <- file.path("/Users/Jessica.Williams/Downloads/Cytometry_in_R_Week08", "flowGateProblem1GS_CD161.gs")
+save_gs(gatingset, FolderandName)
+```
+
+If you do plan to switch over to R for gating long-term, these skillsets will be essential, as you will need to be confident in your ability to adjust your gates as needed.
+
+# Problem 2
+
+Go ahead and create your own openCyto gate template, extending to whatever cell target population of interest. Visualize the differences, and ensure that the gates are correctly applied for everyone. Set gate_constaint arguments as needed until everything is just right.
+
+```{r}
+# Load openCyto gate template from .csv
+Problem2GatingTemplate <- list.files(folder, pattern = ".csv", full.names = TRUE)
+GatingTemplate <- read.csv(Problem2GatingTemplate[2], check.names = FALSE)
+
+# Load as data table for openCyto
+GatesToApply <- data.table::fread(Problem2GatingTemplate[2])
+FullTemplate <- gatingTemplate(GatesToApply)
+
+# Prepare GatingSet
+cytoset <- load_cytoset_from_fcs(fcs_files, truncate_max_range = FALSE, transformation = FALSE)
+gatingset <- GatingSet(cytoset)
+Parameters <- colnames(gatingset)
+FluorophoresOnly <- Parameters[!stringr::str_detect(Parameters, "FSC|SSC|Time")]
+Biexponential <- flowjo_biexp_trans(channelRange = 4096, maxValue = 262144, pos = 4.5, neg = 2, widthBasis = -500)
+BiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+flowWorkspace::transform(gatingset, BiexTransform)
+
+# Run gt_gating and visualise plots
+gt_gating(FullTemplate, gatingset[6])
+
+#PD1 gating showing 100% positive population using gate_mindensity - other method needed?
+gt_list_methods()
+
+#Used span_gate with min and max values in gating_args for more accruate gating
+ggcyto::autoplot(gatingset[[6]]) + theme_bw()
+```
+
+If you do plan to switch over to R for gating long-term, these skillsets will be essential, as you will need to be confident in your ability to adjust your gates as needed.
+
+**More gating method info can be found here: https://www.bioconductor.org/packages/release/bioc/vignettes/openCyto/inst/doc/HowToAutoGating.html#1D_gating_methods**
+
+# Problem 3 
+
+Re-run your openCyto template, but then add a few additional flowGate on to extend it further. Save the gating set, close out of positron, and successfully reload.
+
+```{r}
+# Re-run openCyto template
+Problem2GatingTemplate <- list.files(folder, pattern = ".csv", full.names = TRUE)
+GatesToApply <- data.table::fread(Problem2GatingTemplate[2])
+FullTemplate <- gatingTemplate(GatesToApply)
+
+cytoset <- load_cytoset_from_fcs(fcs_files, truncate_max_range = FALSE, transformation = FALSE)
+gatingset <- GatingSet(cytoset)
+Parameters <- colnames(gatingset)
+FluorophoresOnly <- Parameters[!stringr::str_detect(Parameters, "FSC|SSC|Time")]
+Biexponential <- flowjo_biexp_trans(channelRange = 4096, maxValue = 262144, pos = 4.5, neg = 2, widthBasis = -500)
+BiexTransform <- transformerList(FluorophoresOnly, Biexponential)
+flowWorkspace::transform(gatingset, BiexTransform)
+
+gt_gating(FullTemplate, gatingset)
+plot(gatingset)
+
+# Add additional flow gates
+AddingTable <- tibble::tribble(
+~filterId,    ~dims,                          ~subset,          
+"Mono",     list("FSC-A", "HLA-DR"),              "live",      
+  "Treg",       list("CD25", "CD127"),               "CD4",   
+  "Treg+",       list("CD25", "FoxP3"),               "Treg",  
+  "MAIT",       list("CD161", "Va7.2"),               "Tcells",     
+)
+gs_apply_gating_strategy(gatingset, gating_strategy = AddingTable)
+
+# Plot final gating strategy
+plot(gatingset)
+
+# Save the gatingset
+FolderandName <- file.path("/Users/Jessica.Williams/Downloads/Cytometry_in_R_Week08", "flowGateProblem3GS.gs")
+save_gs(gatingset, FolderandName)
+
+# Reload gatingset after Positron close down
+library(ggplot2)
+library(ggcyto)
+library(flowWorkspace)
+library(flowGate)
+library(openCyto)
+
+FolderandName <- file.path("/Users/Jessica.Williams/Downloads/Cytometry_in_R_Week08", "flowGateProblem3GS.gs")
+Reloadgs <- load_gs(FolderandName)
+plot(Reloadgs)
+```
